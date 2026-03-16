@@ -421,19 +421,33 @@ async function installConnections(selectedIds, credentials) {
   return installed;
 }
 
-function saveClaudeConfig(mcpConfigs) {
-  // 1. Claude Desktop — claude_desktop_config.json
-  saveToJsonFile(getClaudeDesktopConfigPath(), mcpConfigs, "mcpServers");
+// Nomes antigos que pessoas podem ter nos configs (MCPs individuais)
+const OLD_MCP_NAMES = {
+  pipedrive: ["pipedrive", "pipedrive-mcp"],
+  clickup: ["clickup", "clickup-mcp"],
+  outlook: ["outlook", "outlook-mcp"],
+  zoom: ["zoom", "zoom-mcp"],
+  chatguru: ["chatguru", "chatguru-mcp"],
+  whatsapp: ["whatsapp", "whatsapp-mcp"],
+};
 
-  // 2. Claude Code — ~/.claude.json
-  saveToJsonFile(getClaudeCodeConfigPath(), mcpConfigs, "mcpServers", (config) => {
-    // Claude Code usa formato com "type": "stdio"
-    const codeConfigs = {};
-    for (const [id, cfg] of Object.entries(mcpConfigs)) {
-      codeConfigs[id] = { type: "stdio", ...cfg };
-    }
-    return codeConfigs;
-  });
+function saveClaudeConfig(mcpConfigs) {
+  const desktopPath = getClaudeDesktopConfigPath();
+  const codePath = getClaudeCodeConfigPath();
+
+  // Limpar entradas antigas antes de adicionar as novas
+  cleanOldMcpEntries(desktopPath, mcpConfigs);
+  cleanOldMcpEntries(codePath, mcpConfigs);
+
+  // 1. Claude Desktop — claude_desktop_config.json
+  saveToJsonFile(desktopPath, mcpConfigs, "mcpServers");
+
+  // 2. Claude Code — ~/.claude.json (com type: "stdio")
+  const codeConfigs = {};
+  for (const [id, cfg] of Object.entries(mcpConfigs)) {
+    codeConfigs[id] = { type: "stdio", ...cfg };
+  }
+  saveToJsonFile(codePath, codeConfigs, "mcpServers");
 
   // 3. Permissões — ~/.claude/settings.json
   savePermissions(mcpConfigs);
@@ -441,7 +455,39 @@ function saveClaudeConfig(mcpConfigs) {
   print("  Configuração salva para Claude Code e Claude Desktop.");
 }
 
-function saveToJsonFile(filePath, mcpConfigs, key, transform) {
+function cleanOldMcpEntries(filePath, newConfigs) {
+  if (!fs.existsSync(filePath)) return;
+
+  let config;
+  try {
+    config = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  } catch {
+    return;
+  }
+
+  if (!config.mcpServers) return;
+
+  let cleaned = 0;
+
+  // Para cada MCP que estamos instalando, remover versões antigas
+  for (const newId of Object.keys(newConfigs)) {
+    const oldNames = OLD_MCP_NAMES[newId] || [newId];
+
+    for (const oldName of oldNames) {
+      if (oldName !== newId && config.mcpServers[oldName]) {
+        delete config.mcpServers[oldName];
+        cleaned++;
+      }
+    }
+  }
+
+  if (cleaned > 0) {
+    fs.writeFileSync(filePath, JSON.stringify(config, null, 2));
+    print(`  Removidas ${cleaned} entrada(s) antiga(s) de ${path.basename(filePath)}.`);
+  }
+}
+
+function saveToJsonFile(filePath, mcpConfigs, key) {
   let existing = {};
 
   if (fs.existsSync(filePath)) {
@@ -456,8 +502,7 @@ function saveToJsonFile(filePath, mcpConfigs, key, transform) {
     existing[key] = {};
   }
 
-  const configs = transform ? transform(mcpConfigs) : mcpConfigs;
-  for (const [id, config] of Object.entries(configs)) {
+  for (const [id, config] of Object.entries(mcpConfigs)) {
     existing[key][id] = config;
   }
 
@@ -489,7 +534,7 @@ function savePermissions(mcpConfigs) {
     settings.permissions.allow = [];
   }
 
-  // Permissões base que todo mundo precisa
+  // Permissões base
   const basePermissions = [
     "Bash", "Edit", "Write", "Read", "Glob", "Grep",
     "WebFetch", "WebSearch", "Agent", "Skill", "ToolSearch",
@@ -506,6 +551,18 @@ function savePermissions(mcpConfigs) {
     const wildcard = `mcp__${id}__*`;
     if (!settings.permissions.allow.includes(wildcard)) {
       settings.permissions.allow.push(wildcard);
+    }
+
+    // Limpar permissões de nomes antigos
+    const oldNames = OLD_MCP_NAMES[id] || [];
+    for (const oldName of oldNames) {
+      if (oldName !== id) {
+        const oldWildcard = `mcp__${oldName}__*`;
+        const idx = settings.permissions.allow.indexOf(oldWildcard);
+        if (idx !== -1) {
+          settings.permissions.allow.splice(idx, 1);
+        }
+      }
     }
   }
 
