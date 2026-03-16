@@ -78,7 +78,7 @@ Ou peça ao Claude Code:
 
 ```
 expert-mcps/
-  packages/
+  mcps/
     pipedrive/    — Pipedrive CRM
     clickup/      — ClickUp
     zoom/         — Zoom Team Chat

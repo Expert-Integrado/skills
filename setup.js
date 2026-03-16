@@ -17,7 +17,7 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PACKAGES_DIR = path.join(__dirname, "packages");
+const PACKAGES_DIR = path.join(__dirname, "mcps");
 
 // ─── Credenciais compartilhadas (do app, não do usuário) ────────────────────
 // Estas são credenciais do aplicativo da Expert Integrado, não pessoais.
@@ -146,9 +146,11 @@ const MCPS = [
     credentialType: "playwright_login",
     envVars: [
       { key: "CHATGURU_MODE", value: "readonly" },
-      { key: "CHATGURU_SERVER", value: "17" },
+      { key: "CHATGURU_SERVER", prompt: "  Em qual servidor do ChatGuru você quer logar? (ex: 13, 17): " },
     ],
-    postInstall: async (mcpDir) => {
+    postInstall: async (mcpDir, credentials) => {
+      const server = credentials?.CHATGURU_SERVER || "17";
+
       print("\n  Agora você vai fazer login no ChatGuru.");
       print("  Um navegador vai abrir. Digite seu usuário e senha do ChatGuru.");
       print("  Esse login é feito apenas uma vez — nas próximas vezes será automático.");
@@ -162,7 +164,7 @@ const MCPS = [
           cwd: mcpDir,
           stdio: "inherit",
           timeout: 120000,
-          env: { ...process.env, CHATGURU_SERVER: "17" },
+          env: { ...process.env, CHATGURU_SERVER: server },
         });
         print("\n  Login do ChatGuru concluído!");
       } catch {
@@ -278,31 +280,30 @@ async function collectCredentials(selectedIds) {
     const mcp = MCPS.find((m) => m.id === id);
     credentials[id] = {};
 
-    // Credenciais automáticas (fixas, do app)
-    for (const envVar of mcp.envVars) {
-      if (envVar.value) {
-        credentials[id][envVar.key] = envVar.value;
-      }
-    }
+    // Verificar se tem envVars que precisam de input
+    const hasPrompts = mcp.envVars.some((v) => v.prompt);
 
-    // Credenciais pessoais (o usuário precisa fornecer)
-    if (mcp.credentialType === "personal_key") {
+    if (hasPrompts) {
       print("");
       print(`  ── ${mcp.name} ${"─".repeat(Math.max(0, 45 - mcp.name.length))}`);
 
-      // Mostrar guia passo a passo
+      // Mostrar guia passo a passo (Pipedrive, ClickUp)
       if (mcp.setupGuide) {
         mcp.setupGuide.forEach((line) => print(line));
       }
+    }
 
-      for (const envVar of mcp.envVars) {
-        if (envVar.prompt) {
-          const val = await ask(envVar.prompt);
-          if (val.trim()) {
-            credentials[id][envVar.key] = val.trim();
-          } else {
-            print("  Sem credencial fornecida. Você poderá configurar depois via Claude Code.");
-          }
+    for (const envVar of mcp.envVars) {
+      if (envVar.value) {
+        // Credencial fixa (do app, não do usuário)
+        credentials[id][envVar.key] = envVar.value;
+      } else if (envVar.prompt) {
+        // Precisa perguntar ao usuário
+        const val = await ask(envVar.prompt);
+        if (val.trim()) {
+          credentials[id][envVar.key] = val.trim();
+        } else {
+          print("  Sem valor fornecido. Você poderá configurar depois via Claude Code.");
         }
       }
     }
@@ -359,7 +360,7 @@ async function installMCPs(selectedIds, credentials) {
 
     // Post-install (auth, login, etc.)
     if (mcp.postInstall) {
-      await mcp.postInstall(mcpDir);
+      await mcp.postInstall(mcpDir, credentials[id]);
     }
   }
 
