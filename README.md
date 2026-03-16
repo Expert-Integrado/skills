@@ -39,7 +39,7 @@ O Claude Code faz tudo automaticamente:
 | Ferramenta | O que obter | Onde encontrar |
 |------------|-------------|----------------|
 | **Pipedrive** | API Key pessoal | Pipedrive > Configuracoes > Preferencias pessoais > API |
-| **ClickUp** | API Token pessoal | ClickUp > Settings > Apps > API Token |
+| **ClickUp** | API Token pessoal (requer plano pago) | ClickUp > Settings > Apps > API Token. Se nao tem plano pago, pergunte ao seu gestor se existe uma conta compartilhada. |
 
 ### Autenticacao via navegador (nao precisa de credencial)
 
