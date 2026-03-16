@@ -1,94 +1,194 @@
 #!/usr/bin/env node
 
 /**
- * Expert MCPs — Setup Interativo
+ * Expert Integrado — Setup de Ferramentas (MCPs)
  *
- * Guia o usuario na instalacao dos MCPs da Expert Integrado.
- * Permite escolher quais MCPs instalar, coleta credenciais e
- * configura automaticamente o Claude Code (claude_desktop_config.json).
+ * Onboarding 100% em português.
+ * Auto-detecta Node.js, guia a instalação e configura tudo automaticamente.
  *
  * Uso: node setup.js
  */
 
 import { createInterface } from "readline";
-import { execSync } from "child_process";
+import { execSync, spawn } from "child_process";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const PACKAGES_DIR = path.join(__dirname, "packages");
 
-// ─── Definicao dos MCPs ─────────────────────────────────────────────────────
+// ─── Credenciais compartilhadas (do app, não do usuário) ────────────────────
+// Estas são credenciais do aplicativo da Expert Integrado, não pessoais.
+// O Outlook já tem CLIENT_ID e TENANT_ID embutidos no código (src/config.js).
+// O Zoom precisa das credenciais do app OAuth abaixo.
+
+const ZOOM_APP_CREDENTIALS = {
+  ZOOM_CLIENT_ID: "U2WuOarhRmOD96Njg4B38g",
+  ZOOM_CLIENT_SECRET: "JbhR3QhIXPfi7k3JShq1brRkwn5ebtlQ",
+  ZOOM_REDIRECT_URI: "http://localhost:4488/callback",
+};
+
+// ─── Definição dos MCPs ─────────────────────────────────────────────────────
 
 const MCPS = [
   {
     id: "pipedrive",
     name: "Pipedrive CRM",
-    desc: "Gerenciar deals, pessoas, atividades e notas no Pipedrive",
+    desc: "Deals, contatos, atividades e notas no CRM",
     dir: "pipedrive",
     entry: "index.js",
-    env: [
-      { key: "PIPEDRIVE_API_KEY", label: "API Key do Pipedrive", hint: "Pipedrive > Configuracoes > Pessoal > API" },
-      { key: "PIPEDRIVE_TIMEZONE", label: "Fuso horario", default: "America/Sao_Paulo" },
+    credentialType: "personal_key",
+    setupGuide: [
+      "",
+      "  Como pegar sua API Key do Pipedrive:",
+      "  1. Acesse expertintegrado.pipedrive.com",
+      "  2. Clique no seu avatar (canto superior direito)",
+      "  3. Vá em Configurações > Preferências pessoais > API",
+      "  4. Copie o Token de API pessoal e cole abaixo",
+      "",
     ],
+    envVars: [
+      { key: "PIPEDRIVE_API_KEY", prompt: "  Cole sua API Key do Pipedrive: " },
+      { key: "PIPEDRIVE_TIMEZONE", value: "America/Sao_Paulo" },
+    ],
+    postInstall: async (mcpDir) => {
+      print("\n  Dica: após reiniciar o Claude Code, peça a ele:");
+      print('  > "Roda sync_fields e sync_activity_types no Pipedrive"');
+      print("  Isso sincroniza os campos personalizados da empresa.\n");
+    },
   },
   {
     id: "clickup",
     name: "ClickUp",
-    desc: "Gerenciar tarefas, docs e espacos no ClickUp",
+    desc: "Tarefas, documentos e time tracking",
     dir: "clickup",
     entry: "index.js",
-    env: [
-      { key: "CLICKUP_API_KEY", label: "API Token do ClickUp", hint: "ClickUp > Settings > Apps > API Token" },
+    credentialType: "personal_key",
+    setupGuide: [
+      "",
+      "  Como pegar seu API Token do ClickUp:",
+      "  1. Acesse app.clickup.com",
+      "  2. Clique no seu avatar (canto inferior esquerdo)",
+      "  3. Vá em Settings > Apps",
+      "  4. Em API Token, clique em Generate (ou copie o existente)",
+      "  5. O token começa com pk_",
+      "",
     ],
-  },
-  {
-    id: "zoom",
-    name: "Zoom",
-    desc: "Enviar mensagens, gerenciar canais e contatos no Zoom",
-    dir: "zoom",
-    entry: "index.js",
-    env: [
-      { key: "ZOOM_CLIENT_ID", label: "Client ID do Zoom App", hint: "Zoom Marketplace > App > Credentials" },
-      { key: "ZOOM_CLIENT_SECRET", label: "Client Secret do Zoom App", hint: "Mesmo local do Client ID" },
-      { key: "ZOOM_REDIRECT_URI", label: "Redirect URI", default: "http://localhost:4488/callback" },
+    envVars: [
+      { key: "CLICKUP_API_KEY", prompt: "  Cole seu API Token do ClickUp: " },
     ],
   },
   {
     id: "outlook",
     name: "Outlook / Microsoft 365",
-    desc: "E-mails, calendario e contatos via Microsoft Graph",
+    desc: "E-mails, calendário e contatos",
     dir: "outlook",
     entry: "index.js",
-    env: [
-      { key: "OUTLOOK_CLIENT_ID", label: "Application (Client) ID do Azure", hint: "Azure Portal > App Registrations" },
-      { key: "OUTLOOK_TENANT_ID", label: "Directory (Tenant) ID", hint: "Mesmo local do Client ID" },
+    credentialType: "oauth_auto",
+    envVars: [],
+    postInstall: async (mcpDir) => {
+      print("\n  Agora você vai autorizar o acesso à sua conta Microsoft 365.");
+      print("  Um navegador vai abrir. Faça login com sua conta @expertintegrado.com.br\n");
+
+      const proceed = await ask("  Pressione Enter para abrir o navegador...");
+      try {
+        execSync("node auth.js", {
+          cwd: mcpDir,
+          stdio: "inherit",
+          timeout: 120000,
+        });
+        print("\n  Autenticação do Outlook concluída com sucesso!");
+      } catch {
+        print("\n  A autenticação será necessária depois.");
+        print("  Peça ao Claude Code: \"Roda node auth.js na pasta " + mcpDir + "\"");
+      }
+    },
+  },
+  {
+    id: "zoom",
+    name: "Zoom Team Chat",
+    desc: "Mensagens, canais e contatos do Zoom",
+    dir: "zoom",
+    entry: "index.js",
+    credentialType: "oauth_auto",
+    envVars: [
+      { key: "ZOOM_CLIENT_ID", value: ZOOM_APP_CREDENTIALS.ZOOM_CLIENT_ID },
+      { key: "ZOOM_CLIENT_SECRET", value: ZOOM_APP_CREDENTIALS.ZOOM_CLIENT_SECRET },
+      { key: "ZOOM_REDIRECT_URI", value: ZOOM_APP_CREDENTIALS.ZOOM_REDIRECT_URI },
     ],
-    postInstall: "Apos instalar, execute: cd packages/outlook && node auth.js",
+    postInstall: async (mcpDir) => {
+      print("\n  Agora você vai autorizar o acesso à sua conta Zoom.");
+      print("  Um navegador vai abrir. Faça login com sua conta Zoom da Expert Integrado.\n");
+
+      const proceed = await ask("  Pressione Enter para abrir o navegador...");
+      try {
+        execSync("node auth.js", {
+          cwd: mcpDir,
+          stdio: "inherit",
+          timeout: 120000,
+          env: { ...process.env, ...ZOOM_APP_CREDENTIALS },
+        });
+        print("\n  Autenticação do Zoom concluída com sucesso!");
+      } catch {
+        print("\n  A autenticação será necessária depois.");
+        print("  Peça ao Claude Code: \"Roda npm run auth na pasta " + mcpDir + "\"");
+      }
+    },
   },
   {
     id: "chatguru",
-    name: "ChatGuru",
-    desc: "Ler e enviar mensagens via ChatGuru (WhatsApp Business)",
+    name: "ChatGuru (somente leitura)",
+    desc: "Consultar conversas e mensagens do WhatsApp empresarial",
     dir: "chatguru",
     entry: "index.js",
-    env: [
-      { key: "CHATGURU_MODE", label: "Modo de operacao (full/readonly)", default: "readonly" },
-      { key: "CHATGURU_SERVER", label: "ID do servidor ChatGuru", default: "17" },
-      { key: "CHATGURU_API_KEY", label: "API Key do ChatGuru", hint: "Painel ChatGuru > Configuracoes > Celulares", optional: true },
-      { key: "CHATGURU_ACCOUNT_ID", label: "Account ID do ChatGuru", hint: "Mesmo local da API Key", optional: true },
-      { key: "CHATGURU_PHONE_ID", label: "Phone ID do ChatGuru", hint: "Mesmo local da API Key", optional: true },
+    credentialType: "playwright_login",
+    envVars: [
+      { key: "CHATGURU_MODE", value: "readonly" },
+      { key: "CHATGURU_SERVER", value: "17" },
     ],
+    postInstall: async (mcpDir) => {
+      print("\n  Agora você vai fazer login no ChatGuru.");
+      print("  Um navegador vai abrir. Digite seu usuário e senha do ChatGuru.");
+      print("  Esse login é feito apenas uma vez — nas próximas vezes será automático.");
+      print("");
+      print("  Importante: você terá acesso somente a ler as mensagens");
+      print("  das quais você tem permissão de visualizar.\n");
+
+      const proceed = await ask("  Pressione Enter para abrir o navegador...");
+      try {
+        execSync("node login.js", {
+          cwd: mcpDir,
+          stdio: "inherit",
+          timeout: 120000,
+          env: { ...process.env, CHATGURU_SERVER: "17" },
+        });
+        print("\n  Login do ChatGuru concluído!");
+      } catch {
+        print("\n  O login será necessário depois.");
+        print("  Peça ao Claude Code: \"Roda node login.js na pasta " + mcpDir + "\"");
+      }
+    },
   },
   {
     id: "whatsapp",
-    name: "WhatsApp Web",
-    desc: "Ler e enviar mensagens no WhatsApp via extensao do navegador",
+    name: "WhatsApp Web (pessoal)",
+    desc: "Mensagens no WhatsApp pessoal via extensão do navegador",
     dir: "whatsapp",
     entry: "index.js",
-    env: [],
-    postInstall: "Requer extensao do navegador. Veja: packages/whatsapp/README.md",
+    credentialType: "none",
+    envVars: [],
+    postInstall: async (mcpDir) => {
+      print("\n  O WhatsApp MCP usa uma extensão do navegador.");
+      print("  Para configurar:");
+      print("  1. Abra o Edge ou Chrome");
+      print("  2. Acesse edge://extensions/ (ou chrome://extensions/)");
+      print("  3. Ative o Modo do desenvolvedor");
+      print("  4. Clique em \"Carregar sem compactação\"");
+      print("  5. Selecione a pasta: " + path.join(mcpDir, "extension"));
+      print("  6. Abra web.whatsapp.com e mantenha a aba aberta\n");
+    },
   },
 ];
 
@@ -104,34 +204,55 @@ function print(msg = "") {
   console.log(msg);
 }
 
-function printHeader() {
-  print();
-  print("╔══════════════════════════════════════════════════════╗");
-  print("║         Expert Integrado — Setup de MCPs            ║");
-  print("╚══════════════════════════════════════════════════════╝");
-  print();
+// ─── Verificações automáticas ───────────────────────────────────────────────
+
+function checkNodeVersion() {
+  const version = process.versions.node;
+  const major = parseInt(version.split(".")[0]);
+
+  if (major < 18) {
+    print("  ERRO: Node.js 18 ou superior é necessário.");
+    print(`  Versão detectada: ${version}`);
+    print("  Baixe em: https://nodejs.org/");
+    print("");
+    process.exit(1);
+  }
+
+  print(`  Node.js ${version} detectado. OK.`);
 }
 
-function printStep(num, total, label) {
-  print(`\n── Passo ${num}/${total}: ${label} ${"─".repeat(Math.max(0, 40 - label.length))}\n`);
+function checkGit() {
+  try {
+    const version = execSync("git --version", { stdio: "pipe" }).toString().trim();
+    print(`  ${version} detectado. OK.`);
+    return true;
+  } catch {
+    print("  Git não encontrado (opcional — não impede a instalação).");
+    return false;
+  }
 }
 
-// ─── Passo 1: Selecao de MCPs ──────────────────────────────────────────────
+// ─── Seleção de MCPs ────────────────────────────────────────────────────────
 
 async function selectMCPs() {
-  printStep(1, 3, "Selecionar MCPs");
+  print("");
+  print("═══════════════════════════════════════════════════════");
+  print("  Quais dessas ferramentas você gostaria de instalar?");
+  print("═══════════════════════════════════════════════════════");
+  print("");
 
-  print("MCPs disponiveis:\n");
   MCPS.forEach((mcp, i) => {
     print(`  [${i + 1}] ${mcp.name}`);
     print(`      ${mcp.desc}`);
+    print("");
   });
 
-  print(`\n  [A] Instalar TODOS\n`);
+  print(`  [T] Instalar TODAS`);
+  print("");
 
-  const answer = await ask("Quais MCPs instalar? (numeros separados por virgula, ou A para todos): ");
+  const answer = await ask("  Digite os números separados por vírgula (ex: 1,3,5) ou T para todas: ");
 
-  if (answer.trim().toUpperCase() === "A") {
+  if (answer.trim().toUpperCase() === "T") {
     return MCPS.map((m) => m.id);
   }
 
@@ -141,45 +262,48 @@ async function selectMCPs() {
     .filter((i) => i >= 0 && i < MCPS.length);
 
   if (indices.length === 0) {
-    print("\nNenhum MCP selecionado. Saindo.");
+    print("\n  Nenhuma ferramenta selecionada. Saindo.");
     process.exit(0);
   }
 
   return indices.map((i) => MCPS[i].id);
 }
 
-// ─── Passo 2: Coletar Credenciais ──────────────────────────────────────────
+// ─── Coleta de credenciais ──────────────────────────────────────────────────
 
 async function collectCredentials(selectedIds) {
-  printStep(2, 3, "Credenciais");
-
   const credentials = {};
 
   for (const id of selectedIds) {
     const mcp = MCPS.find((m) => m.id === id);
-    if (!mcp.env || mcp.env.length === 0) {
-      print(`  ${mcp.name}: nenhuma credencial necessaria.`);
-      credentials[id] = {};
-      continue;
-    }
-
-    print(`\n  ${mcp.name}:`);
     credentials[id] = {};
 
-    for (const envVar of mcp.env) {
-      if (envVar.default) {
-        const val = await ask(`    ${envVar.label} [${envVar.default}]: `);
-        credentials[id][envVar.key] = val.trim() || envVar.default;
-      } else {
-        const hint = envVar.hint ? ` (${envVar.hint})` : "";
-        const optLabel = envVar.optional ? " [Enter para pular]" : "";
-        const val = await ask(`    ${envVar.label}${hint}${optLabel}: `);
+    // Credenciais automáticas (fixas, do app)
+    for (const envVar of mcp.envVars) {
+      if (envVar.value) {
+        credentials[id][envVar.key] = envVar.value;
+      }
+    }
 
-        if (!val.trim() && !envVar.optional) {
-          print(`      AVISO: ${envVar.key} e obrigatorio. Voce precisara configurar depois.`);
+    // Credenciais pessoais (o usuário precisa fornecer)
+    if (mcp.credentialType === "personal_key") {
+      print("");
+      print(`  ── ${mcp.name} ${"─".repeat(Math.max(0, 45 - mcp.name.length))}`);
+
+      // Mostrar guia passo a passo
+      if (mcp.setupGuide) {
+        mcp.setupGuide.forEach((line) => print(line));
+      }
+
+      for (const envVar of mcp.envVars) {
+        if (envVar.prompt) {
+          const val = await ask(envVar.prompt);
+          if (val.trim()) {
+            credentials[id][envVar.key] = val.trim();
+          } else {
+            print("  Sem credencial fornecida. Você poderá configurar depois via Claude Code.");
+          }
         }
-
-        credentials[id][envVar.key] = val.trim();
       }
     }
   }
@@ -187,30 +311,34 @@ async function collectCredentials(selectedIds) {
   return credentials;
 }
 
-// ─── Passo 3: Instalar e Configurar ────────────────────────────────────────
+// ─── Instalação ─────────────────────────────────────────────────────────────
 
-async function installAndConfigure(selectedIds, credentials) {
-  printStep(3, 3, "Instalar e configurar");
+async function installMCPs(selectedIds, credentials) {
+  print("");
+  print("═══════════════════════════════════════════════════════");
+  print("  Instalando ferramentas...");
+  print("═══════════════════════════════════════════════════════");
 
-  const packagesDir = path.join(__dirname, "packages");
   const mcpConfigs = {};
-  const postMessages = [];
+  const installed = [];
 
   for (const id of selectedIds) {
     const mcp = MCPS.find((m) => m.id === id);
-    const mcpDir = path.join(packagesDir, mcp.dir);
+    const mcpDir = path.join(PACKAGES_DIR, mcp.dir);
+
+    print(`\n  Instalando ${mcp.name}...`);
 
     // npm install
-    print(`  Instalando ${mcp.name}...`);
     try {
       execSync("npm install --production", { cwd: mcpDir, stdio: "pipe" });
-      print(`    OK`);
+      print("  Dependências instaladas. OK.");
     } catch (err) {
-      print(`    ERRO no npm install: ${err.message}`);
+      print("  ERRO ao instalar dependências. Tente rodar manualmente:");
+      print(`  cd ${mcpDir} && npm install`);
       continue;
     }
 
-    // Criar .env
+    // Criar .env (se tiver credenciais)
     const envContent = Object.entries(credentials[id] || {})
       .filter(([, v]) => v)
       .map(([k, v]) => `${k}=${v}`)
@@ -218,25 +346,33 @@ async function installAndConfigure(selectedIds, credentials) {
 
     if (envContent) {
       fs.writeFileSync(path.join(mcpDir, ".env"), envContent + "\n");
-      print(`    .env criado`);
     }
 
-    // Preparar config para claude_desktop_config.json
-    const entryPath = path.join(mcpDir, mcp.entry).replace(/\\/g, "\\\\");
+    // Config para claude_desktop_config.json
     mcpConfigs[mcp.id] = {
       command: "node",
       args: [path.join(mcpDir, mcp.entry)],
       env: credentials[id] || {},
     };
 
+    installed.push(id);
+
+    // Post-install (auth, login, etc.)
     if (mcp.postInstall) {
-      postMessages.push(`  ${mcp.name}: ${mcp.postInstall}`);
+      await mcp.postInstall(mcpDir);
     }
   }
 
-  // Gerar config para Claude Code
-  print("\n  Gerando configuracao para Claude Code...");
+  // Salvar no claude_desktop_config.json
+  if (installed.length > 0) {
+    print("\n  Configurando o Claude Desktop...");
+    saveClaudeConfig(mcpConfigs);
+  }
 
+  return installed;
+}
+
+function saveClaudeConfig(mcpConfigs) {
   const configPath = getClaudeConfigPath();
   let existingConfig = {};
 
@@ -252,31 +388,21 @@ async function installAndConfigure(selectedIds, credentials) {
     existingConfig.mcpServers = {};
   }
 
-  // Merge — preserva MCPs existentes, adiciona/atualiza os novos
   for (const [id, config] of Object.entries(mcpConfigs)) {
-    const mcp = MCPS.find((m) => m.id === id);
-    const key = `${mcp.id}-mcp`;
-    existingConfig.mcpServers[key] = config;
+    existingConfig.mcpServers[id] = config;
   }
 
-  // Garantir diretorio existe
   const configDir = path.dirname(configPath);
   if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir, { recursive: true });
   }
 
   fs.writeFileSync(configPath, JSON.stringify(existingConfig, null, 2));
-  print(`    Salvo em: ${configPath}`);
-
-  return postMessages;
+  print(`  Salvo em: ${configPath}`);
 }
 
 function getClaudeConfigPath() {
-  // Windows: %APPDATA%/Claude/claude_desktop_config.json
-  // macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
-  // Linux: ~/.config/claude/claude_desktop_config.json
   const platform = process.platform;
-
   if (platform === "win32") {
     return path.join(process.env.APPDATA || "", "Claude", "claude_desktop_config.json");
   } else if (platform === "darwin") {
@@ -289,46 +415,60 @@ function getClaudeConfigPath() {
 // ─── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
-  printHeader();
-
-  // Verificar Node.js
-  const nodeVersion = process.versions.node;
-  const major = parseInt(nodeVersion.split(".")[0]);
-  if (major < 18) {
-    print(`ERRO: Node.js 18+ e necessario. Versao atual: ${nodeVersion}`);
-    process.exit(1);
-  }
-  print(`Node.js ${nodeVersion} detectado. OK.\n`);
-
-  // Passo 1
-  const selectedIds = await selectMCPs();
-  print(`\nSelecionados: ${selectedIds.map((id) => MCPS.find((m) => m.id === id).name).join(", ")}`);
-
-  // Passo 2
-  const credentials = await collectCredentials(selectedIds);
-
-  // Passo 3
-  const postMessages = await installAndConfigure(selectedIds, credentials);
-
-  // Resumo final
-  print("\n╔══════════════════════════════════════════════════════╗");
-  print("║                  Setup concluido!                    ║");
-  print("╚══════════════════════════════════════════════════════╝\n");
-
-  print("MCPs instalados:");
-  selectedIds.forEach((id) => {
-    const mcp = MCPS.find((m) => m.id === id);
-    print(`  - ${mcp.name}`);
-  });
-
-  if (postMessages.length > 0) {
-    print("\nAcoes pendentes:");
-    postMessages.forEach((msg) => print(msg));
-  }
-
-  print("\nProximo passo: reinicie o Claude Code para carregar os MCPs.");
+  print("");
+  print("╔══════════════════════════════════════════════════════════╗");
+  print("║    Expert Integrado — Setup de Ferramentas de IA        ║");
+  print("╚══════════════════════════════════════════════════════════╝");
   print("");
 
+  // Verificações automáticas
+  print("  Verificando seu ambiente...");
+  print("");
+  checkNodeVersion();
+  checkGit();
+  print("");
+
+  // Seleção
+  const selectedIds = await selectMCPs();
+
+  const selectedNames = selectedIds.map((id) => MCPS.find((m) => m.id === id).name);
+  print(`\n  Selecionados: ${selectedNames.join(", ")}`);
+
+  // Credenciais
+  const credentials = await collectCredentials(selectedIds);
+
+  // Instalação
+  const installed = await installMCPs(selectedIds, credentials);
+
+  // Resumo
+  print("");
+  print("╔══════════════════════════════════════════════════════════╗");
+  print("║                  Instalação concluída!                  ║");
+  print("╚══════════════════════════════════════════════════════════╝");
+  print("");
+
+  if (installed.length > 0) {
+    print("  Ferramentas instaladas:");
+    installed.forEach((id) => {
+      const mcp = MCPS.find((m) => m.id === id);
+      print(`    - ${mcp.name}`);
+    });
+
+    print("");
+    print("  Próximo passo:");
+    print("  Feche e reabra o Claude Code (ou Claude Desktop).");
+    print("  As ferramentas vão aparecer automaticamente.");
+    print("");
+    print("  Para testar, peça ao Claude:");
+    print('  > "Lista meus deals no Pipedrive"');
+    print('  > "Mostra meus compromissos de amanhã"');
+    print('  > "Quais tarefas eu tenho no ClickUp?"');
+    print("");
+    print("  Se algo não funcionar, peça ao responsável pela TI");
+    print("  ou consulte a documentação no ClickUp.");
+  }
+
+  print("");
   rl.close();
 }
 
