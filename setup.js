@@ -168,20 +168,55 @@ const CONNECTIONS = [
     dir: "chatguru",
     entry: "index.js",
     credentialType: "playwright_login",
-    envVars: [
-      { key: "CHATGURU_MODE", value: "readonly" },
-      { key: "CHATGURU_SERVER", prompt: "  Em qual servidor do ChatGuru você acessa? (ex: 13, 17): " },
-    ],
+    envVars: [],
+    collectCustomCredentials: async (askFn, printFn) => {
+      const creds = {};
+
+      printFn("");
+      printFn("  ── ChatGuru ─────────────────────────────────────────────");
+      printFn("");
+      printFn("  O ChatGuru tem dois tipos de acesso:");
+      printFn("");
+      printFn("    1. Consulta — Você consegue ler as conversas que tem");
+      printFn("       permissão de ver. É o acesso padrão para todos.");
+      printFn("");
+      printFn("    2. Completo — Além de ler, você pode enviar mensagens,");
+      printFn("       registrar contatos e adicionar notas. Esse acesso é");
+      printFn("       apenas para diretores e gerentes que possuem uma");
+      printFn("       chave especial (API key).");
+      printFn("");
+
+      const modeAnswer = await askFn("  Você tem uma chave de API do ChatGuru? (s/N): ");
+
+      if (modeAnswer.trim().toLowerCase() === "s") {
+        creds.CHATGURU_MODE = "full";
+        const apiKey = await askFn("  Cole sua chave de API do ChatGuru: ");
+        if (apiKey.trim()) {
+          creds.CHATGURU_API_KEY = apiKey.trim();
+        }
+      } else {
+        creds.CHATGURU_MODE = "readonly";
+      }
+
+      const server = await askFn("  Em qual servidor do ChatGuru você acessa? (ex: 13, 17): ");
+      creds.CHATGURU_SERVER = server.trim() || "17";
+
+      return creds;
+    },
     postInstall: async (mcpDir, credentials) => {
       const server = credentials?.CHATGURU_SERVER || "17";
+      const mode = credentials?.CHATGURU_MODE || "readonly";
 
       print("");
-      print("  Para conectar o ChatGuru, um navegador vai abrir.");
-      print("  Digite seu usuário e senha do ChatGuru normalmente.");
-      print("  Esse login é feito apenas uma vez — depois será automático.");
+      if (mode === "readonly") {
+        print("  Modo: somente consulta (leitura de conversas).");
+      } else {
+        print("  Modo: acesso completo (leitura + envio de mensagens).");
+      }
       print("");
-      print("  Você terá acesso somente para consultar as conversas");
-      print("  que você já tem permissão de visualizar.\n");
+      print("  Agora vamos fazer seu login no ChatGuru.");
+      print("  Um navegador vai abrir. Digite seu usuário e senha normalmente.");
+      print("  Esse login é feito apenas uma vez — depois será automático.\n");
 
       const proceed = await ask("  Pressione Enter para abrir o navegador...");
       try {
@@ -293,6 +328,13 @@ async function collectCredentials(selectedIds) {
   for (const id of selectedIds) {
     const conn = CONNECTIONS.find((c) => c.id === id);
     credentials[id] = {};
+
+    // Coleta customizada (ChatGuru, etc.)
+    if (conn.collectCustomCredentials) {
+      const customCreds = await conn.collectCustomCredentials(ask, print);
+      Object.assign(credentials[id], customCreds);
+      continue;
+    }
 
     const hasPrompts = conn.envVars.some((v) => v.prompt);
 
@@ -418,6 +460,59 @@ function getClaudeConfigPath() {
   }
 }
 
+// ─── Skill de onboard de memória ────────────────────────────────────────────
+
+async function installOnboardSkill() {
+  const skillSrc = path.join(__dirname, "skills", "onboard");
+  const homeDir = process.env.HOME || process.env.USERPROFILE || "";
+  const skillDest = path.join(homeDir, ".claude", "skills", "onboard");
+
+  if (!fs.existsSync(skillSrc)) return;
+
+  print("");
+  print("  ── Configuração de memória ──────────────────────────────");
+  print("");
+  print("  O Claude pode aprender sobre você, sua função e a empresa");
+  print("  para te ajudar de forma personalizada no dia a dia.");
+  print("");
+
+  const answer = await ask("  Gostaria de ativar essa função? (S/n): ");
+
+  if (answer.trim().toLowerCase() === "n") {
+    print("  Sem problemas! Você pode ativar depois pedindo ao Claude:");
+    print('  > "Faz meu onboard de memória"');
+    return;
+  }
+
+  try {
+    // Copiar skill para ~/.claude/skills/onboard/
+    copyDirRecursive(skillSrc, skillDest);
+    print("  Função de memória ativada!");
+    print("  Após reiniciar o Claude, peça: \"Faz meu onboard de memória\"");
+  } catch (err) {
+    print("  Não foi possível ativar agora.");
+    print("  Peça ao responsável pela TI para ajudar.");
+  }
+}
+
+function copyDirRecursive(src, dest) {
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest, { recursive: true });
+  }
+
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+
+    if (entry.isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
 // ─── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -445,6 +540,9 @@ async function main() {
   // Instalação
   const installed = await installConnections(selectedIds, credentials);
 
+  // Instalar skill de onboard de memória
+  await installOnboardSkill();
+
   // Resumo final
   print("");
   print("  ════════════════════════════════════════════════════════");
@@ -461,8 +559,14 @@ async function main() {
 
     print("");
     print("  Agora feche e reabra o Claude.");
-    print("  Depois é só pedir o que precisar, por exemplo:");
     print("");
+    print("  Depois, peça ao Claude:");
+    print('    "Faz meu onboard de memória"');
+    print("");
+    print("  Isso vai configurar o Claude com informações sobre você,");
+    print("  sua função e a empresa — para que ele te ajude melhor.");
+    print("");
+    print("  Exemplos do que você pode pedir depois:");
     print('    "Mostra meus deals no Pipedrive"');
     print('    "Quais compromissos eu tenho amanhã?"');
     print('    "Quais tarefas estão atrasadas no ClickUp?"');
