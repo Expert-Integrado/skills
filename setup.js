@@ -422,34 +422,102 @@ async function installConnections(selectedIds, credentials) {
 }
 
 function saveClaudeConfig(mcpConfigs) {
-  const configPath = getClaudeConfigPath();
-  let existingConfig = {};
+  // 1. Claude Desktop — claude_desktop_config.json
+  saveToJsonFile(getClaudeDesktopConfigPath(), mcpConfigs, "mcpServers");
 
-  if (fs.existsSync(configPath)) {
+  // 2. Claude Code — ~/.claude.json
+  saveToJsonFile(getClaudeCodeConfigPath(), mcpConfigs, "mcpServers", (config) => {
+    // Claude Code usa formato com "type": "stdio"
+    const codeConfigs = {};
+    for (const [id, cfg] of Object.entries(mcpConfigs)) {
+      codeConfigs[id] = { type: "stdio", ...cfg };
+    }
+    return codeConfigs;
+  });
+
+  // 3. Permissões — ~/.claude/settings.json
+  savePermissions(mcpConfigs);
+
+  print("  Configuração salva para Claude Code e Claude Desktop.");
+}
+
+function saveToJsonFile(filePath, mcpConfigs, key, transform) {
+  let existing = {};
+
+  if (fs.existsSync(filePath)) {
     try {
-      existingConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+      existing = JSON.parse(fs.readFileSync(filePath, "utf-8"));
     } catch {
-      // config corrompido, recriar
+      // corrompido, manter vazio
     }
   }
 
-  if (!existingConfig.mcpServers) {
-    existingConfig.mcpServers = {};
+  if (!existing[key]) {
+    existing[key] = {};
   }
 
-  for (const [id, config] of Object.entries(mcpConfigs)) {
-    existingConfig.mcpServers[id] = config;
+  const configs = transform ? transform(mcpConfigs) : mcpConfigs;
+  for (const [id, config] of Object.entries(configs)) {
+    existing[key][id] = config;
   }
 
-  const configDir = path.dirname(configPath);
-  if (!fs.existsSync(configDir)) {
-    fs.mkdirSync(configDir, { recursive: true });
+  const dir = path.dirname(filePath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
   }
 
-  fs.writeFileSync(configPath, JSON.stringify(existingConfig, null, 2));
+  fs.writeFileSync(filePath, JSON.stringify(existing, null, 2));
 }
 
-function getClaudeConfigPath() {
+function savePermissions(mcpConfigs) {
+  const homeDir = process.env.HOME || process.env.USERPROFILE || "";
+  const settingsPath = path.join(homeDir, ".claude", "settings.json");
+
+  let settings = {};
+  if (fs.existsSync(settingsPath)) {
+    try {
+      settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
+    } catch {
+      // corrompido, recriar
+    }
+  }
+
+  if (!settings.permissions) {
+    settings.permissions = {};
+  }
+  if (!settings.permissions.allow) {
+    settings.permissions.allow = [];
+  }
+
+  // Permissões base que todo mundo precisa
+  const basePermissions = [
+    "Bash", "Edit", "Write", "Read", "Glob", "Grep",
+    "WebFetch", "WebSearch", "Agent", "Skill", "ToolSearch",
+  ];
+
+  for (const perm of basePermissions) {
+    if (!settings.permissions.allow.includes(perm)) {
+      settings.permissions.allow.push(perm);
+    }
+  }
+
+  // Wildcards para cada MCP instalado
+  for (const id of Object.keys(mcpConfigs)) {
+    const wildcard = `mcp__${id}__*`;
+    if (!settings.permissions.allow.includes(wildcard)) {
+      settings.permissions.allow.push(wildcard);
+    }
+  }
+
+  const dir = path.dirname(settingsPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+}
+
+function getClaudeDesktopConfigPath() {
   const platform = process.platform;
   if (platform === "win32") {
     return path.join(process.env.APPDATA || "", "Claude", "claude_desktop_config.json");
@@ -458,6 +526,11 @@ function getClaudeConfigPath() {
   } else {
     return path.join(process.env.HOME || "", ".config", "claude", "claude_desktop_config.json");
   }
+}
+
+function getClaudeCodeConfigPath() {
+  const homeDir = process.env.HOME || process.env.USERPROFILE || "";
+  return path.join(homeDir, ".claude.json");
 }
 
 // ─── Skill de onboard de memória ────────────────────────────────────────────
