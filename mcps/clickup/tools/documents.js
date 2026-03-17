@@ -80,10 +80,21 @@ The doc can be linked to a list, folder, or space via the parent object.`,
         return okText(`No pages found in document \`${params.doc_id}\`.`);
       }
 
-      let msg = `**Pages in document \`${params.doc_id}\`:**\n\n`;
-      for (const page of pages) {
-        msg += `- **${page.title || "(untitled)"}** (ID: \`${page.id}\`)\n`;
+      // Flatten nested pages recursively
+      function flattenPages(list, depth = 0) {
+        let lines = [];
+        for (const page of list) {
+          const indent = "  ".repeat(depth);
+          lines.push(`${indent}- **${page.title || "(untitled)"}** (ID: \`${page.id}\`)`);
+          if (Array.isArray(page.pages) && page.pages.length > 0) {
+            lines = lines.concat(flattenPages(page.pages, depth + 1));
+          }
+        }
+        return lines;
       }
+
+      let msg = `**Pages in document \`${params.doc_id}\`:**\n\n`;
+      msg += flattenPages(pages).join("\n");
       return okText(msg);
     }
   );
