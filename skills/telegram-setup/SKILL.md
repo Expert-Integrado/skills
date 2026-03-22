@@ -69,33 +69,43 @@ Se nao fizer isso, o bot vai travar em todas as mensagens subsequentes.
 
 ## Etapa 6: Habilitar transcricao de audio
 
-Por padrao, o Claude Code nao sabe transcrever audios. Para habilitar, e preciso apontar para o Whisper que ja esta instalado pelo Voice AI.
+Por padrao, o Claude Code nao transcreve audios automaticamente. Para habilitar, e preciso usar o Python instalado junto com o Voice AI, que ja tem o Whisper disponivel.
 
-### Localizar o Whisper
+### Localizar o Python com Whisper
 
-O Whisper instalado pelo Voice AI fica em:
+O Python com Whisper instalado pelo Voice AI fica em:
 
 ```plaintext
-C:\Users\SEU_USUARIO\AppData\Local\Python\pythoncore-3.14-64\Scripts\whisper.exe
+C:\Users\SEU_USUARIO\AppData\Local\Python\bin\python.exe
 ```
 
-Substituir `SEU_USUARIO` pelo nome do seu usuario do Windows.
+Substituir `SEU_USUARIO` pelo nome do seu usuario do Windows (ex: `Eric Luciano`).
 
 Para confirmar, abra o terminal do Claude Code e rode:
 
 ```bash
-!"C:\Users\SEU_USUARIO\AppData\Local\Python\pythoncore-3.14-64\Scripts\whisper.exe" --help
+!"C:\Users\SEU_USUARIO\AppData\Local\Python\bin\python.exe" -c "import whisper; print('ok')"
 ```
 
-Se aparecer a lista de opcoes, esta funcionando.
+Se aparecer `ok`, esta funcionando.
 
-**Atencao:** o Whisper nao esta no PATH do sistema — sempre use o caminho completo.
+**Atencao:** o Python nao esta no PATH do sistema — sempre use o caminho completo.
 
 ### Como o Claude transcreve o audio
 
-Quando um audio chega pelo Telegram, o Claude Code recebe o arquivo (formato `.oga`) e roda o Whisper automaticamente. Nao e necessaria nenhuma configuracao adicional — o Claude ja sabe usar o executavel pelo caminho completo.
+Quando um audio chega pelo Telegram, o Claude Code recebe o arquivo `.oga` e usa o Python para transcrever. O comando que o Claude usa internamente e:
 
-Modelo recomendado: `base` com `--language pt` para portugues.
+```python
+import whisper
+model = whisper.load_model('base')
+path = r'C:\Users\SEU_USUARIO\.claude\channels\telegram\inbox\nome-do-arquivo.oga'
+result = model.transcribe(path, language='pt')
+print(result['text'])
+```
+
+**Regra critica sobre caminhos:** o arquivo de audio DEVE ser passado com caminho Windows (`C:\...`), nunca Unix (`/c/...`). O ffmpeg — chamado internamente pelo Whisper — nao reconhece caminhos no formato Unix no Windows. Usar sempre raw string `r'...'` para evitar problemas com barras invertidas.
+
+Modelo recomendado: `base` com `language='pt'` para portugues.
 
 ## Troubleshooting
 
@@ -118,14 +128,15 @@ Depois reiniciar com `claude --channels plugin:telegram@claude-plugins-official`
 - **Causa:** selecionou "Yes" em vez de "Yes, and don't ask again"
 - **Fix:** fechar e reabrir o Claude Code com `--channels`. Na proxima mensagem, selecionar a opcao 2.
 
-### Whisper nao encontrado ("comando nao reconhecido")
+### Audio chega mas nao e transcrito
 
-- **Sintoma:** audio chega mas nao transcreve
-- **Causa:** Whisper nao esta no PATH do sistema
-- **Fix:** sempre usar o caminho completo:
+- **Sintoma:** audio chega, Claude recebe o arquivo, mas nao transcreve ou da erro
+- **Causa 1:** Python nao esta no PATH — precisa usar o caminho completo
+- **Causa 2 (mais comum):** o caminho do arquivo de audio esta no formato Unix (`/c/Users/...`) em vez de Windows (`C:\Users\...`) — o ffmpeg nao entende formato Unix no Windows
+- **Fix:** garantir que o Claude use o Python pelo caminho completo E passe o path do audio no formato Windows com raw string:
 
-```plaintext
-C:\Users\SEU_USUARIO\AppData\Local\Python\pythoncore-3.14-64\Scripts\whisper.exe
+```bash
+!"C:\Users\SEU_USUARIO\AppData\Local\Python\bin\python.exe" -c "import whisper; model = whisper.load_model('base'); result = model.transcribe(r'C:\caminho\do\arquivo.oga', language='pt'); print(result['text'])"
 ```
 
 ### Bot parou de responder do nada
@@ -146,7 +157,7 @@ claude --channels plugin:telegram@claude-plugins-official
 | Iniciar com Telegram | `claude --channels plugin:telegram@claude-plugins-official` | Obrigatorio toda vez que abrir o Claude Code. |
 | Parear conta | `/telegram:access pair CODIGO` | Codigo de 6 chars aparece no chat do bot. |
 | Matar processos duplicados | `!powershell -Command "Get-Process bun -ErrorAction SilentlyContinue \| Stop-Process -Force"` | Usar se o bot parar de responder. |
-| Testar Whisper | `!"C:\...\whisper.exe" --help` | Verificar se o caminho esta correto. |
+| Testar Python/Whisper | `!"C:\Users\SEU_USUARIO\AppData\Local\Python\bin\python.exe" -c "import whisper; print('ok')"` | Verificar se o Python com Whisper esta acessivel. |
 | Resetar tudo | `/telegram:configure TOKEN` + reiniciar | Limpa config e reconfigura. |
 
 ## Limitacoes
