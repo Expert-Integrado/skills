@@ -808,6 +808,29 @@ server.tool(
     if (found) {
       person_id = found.id;
       log.push(`Pessoa já existia (${found.via}): "${found.name}" (ID ${person_id})`);
+
+      // Garantir que pessoa existente tenha email, telefone e org preenchidos
+      try {
+        const existingPerson = await pipedriveRequest(`/persons/${person_id}`);
+        const p = existingPerson.data;
+        const updates = {};
+        if (email && (!p.email || !p.email.some((e) => e.value))) {
+          updates.email = [{ value: email, primary: true }];
+        }
+        if (cleanPhone && (!p.phone || !p.phone.some((ph) => ph.value))) {
+          updates.phone = [{ value: cleanPhone, primary: true }];
+        }
+        if (org_id && !p.org_id) {
+          updates.org_id = org_id;
+        }
+        if (Object.keys(updates).length > 0) {
+          await pipedriveRequest(`/persons/${person_id}`, { method: "PUT", body: JSON.stringify(updates) });
+          const updated = Object.keys(updates).map(k => k === "org_id" ? "organização" : k);
+          log.push(`Dados de contato atualizados: ${updated.join(", ")}`);
+        }
+      } catch (e) {
+        console.warn(`[pipedrive-mcp] Aviso ao atualizar dados de contato: ${e.message}`);
+      }
     }
 
     if (!person_id) {
