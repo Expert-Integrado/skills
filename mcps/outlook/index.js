@@ -16,6 +16,9 @@ import { updateEvent, updateEventSchema } from "./src/tools/update-event.js";
 import { deleteEvent, deleteEventSchema } from "./src/tools/delete-event.js";
 import { replyEmail, replyEmailSchema } from "./src/tools/reply-email.js";
 import { downloadAttachment, downloadAttachmentSchema } from "./src/tools/download-attachment.js";
+import { forwardEmail, forwardEmailSchema } from "./src/tools/forward-email.js";
+import { createContact, createContactSchema } from "./src/tools/create-contact.js";
+import { moveEmail, moveEmailSchema } from "./src/tools/move-email.js";
 
 const server = new McpServer({
   name: "outlook-mcp",
@@ -199,6 +202,54 @@ server.tool(
       return { content: [{ type: "text", text: result }] };
     } catch (err) {
       return { content: [{ type: "text", text: errMsg(err, "baixar anexo") }], isError: true };
+    }
+  }
+);
+
+// ─── Ferramenta: Encaminhar E-mail ───────────────────────────────────────────
+
+server.tool(
+  "encaminhar_email",
+  "Encaminha um e-mail existente para um ou mais destinatários, com comentário opcional acima do conteúdo encaminhado",
+  forwardEmailSchema.shape,
+  async (params) => {
+    try {
+      const result = await forwardEmail(params);
+      return { content: [{ type: "text", text: result }] };
+    } catch (err) {
+      return { content: [{ type: "text", text: errMsg(err, "encaminhar e-mail") }], isError: true };
+    }
+  }
+);
+
+// ─── Ferramenta: Criar Contato ────────────────────────────────────────────────
+
+server.tool(
+  "criar_contato",
+  "Cria um novo contato na agenda do Outlook com nome, e-mail, telefone, empresa e cargo",
+  createContactSchema.shape,
+  async (params) => {
+    try {
+      const result = await createContact(params);
+      return { content: [{ type: "text", text: result }] };
+    } catch (err) {
+      return { content: [{ type: "text", text: errMsg(err, "criar contato") }], isError: true };
+    }
+  }
+);
+
+// ─── Ferramenta: Mover E-mail ─────────────────────────────────────────────────
+
+server.tool(
+  "mover_email",
+  "Move um e-mail para uma pasta específica do Outlook. Cria a pasta automaticamente se não existir.",
+  moveEmailSchema.shape,
+  async (params) => {
+    try {
+      const result = await moveEmail(params);
+      return { content: [{ type: "text", text: result }] };
+    } catch (err) {
+      return { content: [{ type: "text", text: errMsg(err, "mover e-mail") }], isError: true };
     }
   }
 );
