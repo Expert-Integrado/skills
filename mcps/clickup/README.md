@@ -68,6 +68,19 @@ The onboarding will automatically:
 4. Click **Apps** in the sidebar
 5. Copy your **API Token** (starts with `pk_`)
 
+## Alternative: OAuth Token (for users without a paid ClickUp account)
+
+If a team member **does not have a paid ClickUp account** and cannot generate a personal `pk_` token, use the OAuth flow instead.
+
+This applies only to **local Claude Code** users. If using Claude Code online (claude.ai), authenticate directly via OAuth2 — no extra setup needed.
+
+- **[oauth-gestor.md](./docs/oauth-gestor.md)** — For the account owner: create the OAuth app and generate tokens for your team
+- **[oauth-usuario.md](./docs/oauth-usuario.md)** — For team members: authorize the app and configure the MCP
+
+The `access_token` generated via OAuth works as a drop-in replacement for the personal API key — just use it in the same places you'd use `pk_...`.
+
+---
+
 ## Alternative: API Key via Environment Variable
 
 You can also pass the API key as an env var (takes priority over config.json):
