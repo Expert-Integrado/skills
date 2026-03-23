@@ -48,7 +48,7 @@ export async function listEvents(params) {
   const endISO = fim.toISOString();
   const top = Math.min(quantidade, 500);
 
-  const endpoint = `/me/calendarView?startDateTime=${startISO}&endDateTime=${endISO}&$top=${top}&$orderby=start/dateTime&$select=id,subject,start,end,location,organizer,isAllDay,bodyPreview,webLink,showAs`;
+  const endpoint = `/me/calendarView?startDateTime=${startISO}&endDateTime=${endISO}&$top=${top}&$orderby=start/dateTime&$select=id,subject,start,end,location,organizer,isAllDay,bodyPreview,webLink,showAs,attendees`;
 
   const result = await graphRequestPaginated(endpoint, 1000);
 
@@ -98,7 +98,24 @@ export async function listEvents(params) {
     const diaInteiro = ev.isAllDay ? " [Dia inteiro]" : "";
     const status = ev.showAs ? `\n   Status: ${statusMap[ev.showAs] || ev.showAs}` : "";
 
-    return `${i + 1}. ${ev.subject || "(sem título)"}${diaInteiro}\n   Horário: ${inicioEv}${fimEv}${local}${orgStr}${status}`;
+    // Participantes (attendees) — exibe nome e email de cada convidado
+    const participantes = (ev.attendees || [])
+      .filter(a => a.emailAddress && a.emailAddress.address)
+      .map(a => {
+        const nome = a.emailAddress.name || "";
+        const email = a.emailAddress.address || "";
+        const resposta = a.status?.response || "";
+        const respostaMap = { accepted: "confirmado", declined: "recusado", tentativelyAccepted: "provisorio", none: "sem resposta", notResponded: "sem resposta" };
+        const respostaStr = respostaMap[resposta] || resposta;
+        return nome && nome !== email
+          ? `${nome} <${email}> (${respostaStr})`
+          : `${email} (${respostaStr})`;
+      });
+    const participantesStr = participantes.length > 0
+      ? `\n   Participantes: ${participantes.join(", ")}`
+      : "";
+
+    return `${i + 1}. ${ev.subject || "(sem título)"}${diaInteiro}\n   Horário: ${inicioEv}${fimEv}${local}${orgStr}${participantesStr}${status}`;
   });
 
   const dataExibicao = inicio.toLocaleDateString("pt-BR", { timeZone: fuso }); // inicio é construído com offset explícito, seguro

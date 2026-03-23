@@ -79,12 +79,35 @@ export async function readEmails(params) {
     ? `&$filter=${encodeURIComponent(filterParts.join(" and "))}`
     : "";
 
-  const endpoint = `/me/mailFolders/${pasta}/messages?$top=${top}${orderbyQuery}&$select=id,subject,from,receivedDateTime,isRead,bodyPreview${filterQuery}${searchQuery}`;
+  const endpoint = `/me/mailFolders/${pasta}/messages?$top=${top}${orderbyQuery}&$select=id,subject,from,receivedDateTime,isRead,bodyPreview,body${filterQuery}${searchQuery}`;
 
   const result = await graphRequestPaginated(endpoint, top);
 
   if (!result || !result.value || result.value.length === 0) {
     return "Nenhum e-mail encontrado.";
+  }
+
+  // Extrai texto plano do body HTML — remove tags, decodifica entidades, limpa espaços
+  function stripHtml(html) {
+    if (!html) return "";
+    return html
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/p>/gi, "\n")
+      .replace(/<\/div>/gi, "\n")
+      .replace(/<\/tr>/gi, "\n")
+      .replace(/<\/li>/gi, "\n")
+      .replace(/<[^>]+>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/[ \t]+/g, " ")
+      .trim();
   }
 
   const emails = result.value.map((msg, i) => {
@@ -93,9 +116,13 @@ export async function readEmails(params) {
       : msg.from?.emailAddress?.address || "Desconhecido";
     const data = new Date(msg.receivedDateTime).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
     const lido = msg.isRead ? "✓" : "●";
-    const preview = msg.bodyPreview?.substring(0, 100) || "";
 
-    return `${i + 1}. [${lido}] ${msg.subject || "(sem assunto)"}\n   De: ${de}\n   Data: ${data}\n   ${preview}...`;
+    // Usa corpo completo (text/plain via stripHtml) com limite de 800 chars
+    const bodyContent = msg.body?.content
+      ? stripHtml(msg.body.content).substring(0, 800)
+      : msg.bodyPreview?.substring(0, 200) || "";
+
+    return `${i + 1}. [${lido}] ${msg.subject || "(sem assunto)"}\n   De: ${de}\n   Data: ${data}\n   ${bodyContent}`;
   });
 
   const titulo = `E-mails (${pasta}) — ${emails.length} encontrado(s):\n${"─".repeat(50)}\n`;
