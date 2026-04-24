@@ -276,7 +276,9 @@ Use para: "manda pra Marcos: oi", "envia a imagem X pra Maria", "responde aquela
 O parametro "to" aceita nome, telefone ou chat_id (igual ao "read").
 Tipos suportados: text (padrao), image, audio, video, document.
 Para reply (responder mensagem especifica): passe reply_to com o UUID da mensagem.
-Para midia: passe media_url com URL publica do arquivo.`,
+Para midia: passe media_url com URL publica do arquivo.
+
+REGRA OBRIGATORIA: Antes de usar esta ferramenta, SEMPRE mostre ao usuario o destinatario e o conteudo da mensagem e peca confirmacao explicita. NUNCA envie sem que o usuario diga "sim", "confirma", "pode enviar" ou equivalente. Se o usuario nao confirmou explicitamente, NAO chame esta tool — pergunte primeiro.`,
   {
     to: z.string().describe("Destinatario: nome, telefone ou chat_id"),
     content: z.string().default("").describe("Texto ou legenda da midia"),
@@ -448,11 +450,105 @@ Use quando: o usuario pedir status, antes de enviar mensagens importantes, ou ao
   }
 );
 
-// ─── 7. zapi_action ──────────────────────────────────────────────────────────
+// ─── 7. sync_groups ──────────────────────────────────────────────────────────
+server.tool(
+  "sync_groups",
+  `Sincroniza nomes de grupos do WhatsApp buscando diretamente da Z-API (GET /chats).
+Use quando nomes de grupos estiverem faltando ou desatualizados no banco do Supabase.
+O webhook da Z-API nem sempre envia chatName para grupos — esta tool corrige isso manualmente.
+Retorna: total de grupos encontrados na Z-API, quantos foram atualizados no banco, e quais nao foram encontrados.`,
+  {
+    dry_run: z.boolean().default(false).describe("Se true, lista o que seria atualizado sem salvar nada no banco"),
+  },
+  async ({ dry_run }) => {
+    try {
+      if (!ZAPI_BASE) return err("Credenciais Z-API nao configuradas (ZAPI_INSTANCE_ID/ZAPI_TOKEN).");
+
+      // Busca todos os chats da Z-API
+      const res = await fetch(`${ZAPI_BASE}/chats`, { headers: zapiHeaders() });
+      if (!res.ok) return err(`Z-API ${res.status}: ${await res.text()}`);
+
+      const raw = await res.json();
+      // Z-API pode retornar { value: [...] } ou diretamente array
+      const allChats = Array.isArray(raw) ? raw : (raw.value || raw.chats || raw.data || []);
+
+      // Filtra apenas grupos
+      const groups = allChats.filter((c) => c.isGroup === true || c.is_group === true || c.type === "group");
+
+      if (!groups.length) {
+        return ok({
+          message: "Nenhum grupo encontrado na Z-API.",
+          total_chats: allChats.length,
+          total_groups: 0,
+        });
+      }
+
+      const updated = [];
+      const not_found = [];
+
+      for (const group of groups) {
+        // Z-API usa formatos variados para ID e nome do grupo
+        const rawPhone = (group.phone || group.id || group.chatId || "").toString();
+        const phone = rawPhone.replace(/[^0-9]/g, "");
+        const name = group.name || group.chatName || group.subject || group.groupName || null;
+
+        if (!phone || !name) continue;
+
+        if (dry_run) {
+          updated.push({ phone, name, dry_run: true });
+          continue;
+        }
+
+        // chat_id de grupos pode ter formatos diferentes dependendo do provider
+        const candidateIds = [
+          `${phone}@g.us`,
+          `${phone}-group`,
+          phone,
+          rawPhone,
+        ];
+
+        let matched = false;
+        for (const chat_id of candidateIds) {
+          const { data: rows, error } = await supabase
+            .from("chats")
+            .update({ chat_name: name })
+            .eq("chat_id", chat_id)
+            .eq("is_group", true)
+            .select("chat_id");
+
+          if (!error && rows?.length > 0) {
+            updated.push({ chat_id, name });
+            matched = true;
+            break;
+          }
+        }
+
+        if (!matched) {
+          not_found.push({ phone, name, reason: "chat_id nao encontrado no banco" });
+        }
+      }
+
+      return ok({
+        total_groups_in_zapi: groups.length,
+        updated_count: updated.length,
+        not_found_count: not_found.length,
+        updated,
+        ...(not_found.length > 0 && { not_found }),
+        dry_run,
+      });
+    } catch (e) {
+      return err(e.message);
+    }
+  }
+);
+
+// ─── 8. zapi_action ──────────────────────────────────────────────────────────
 server.tool(
   "zapi_action",
   `Executa qualquer acao avancada da Z-API diretamente.
 Use quando as tools acima nao cobrirem o caso (operacoes infrequentes).
+
+ATENCAO: Para acoes que enviam mensagens (send-poll, forward-message, edit-message), aplica a mesma REGRA OBRIGATORIA do "send": mostre ao usuario o que sera enviado e peca confirmacao antes de chamar esta tool.
 
 Actions disponiveis e seus params:
 - mark-read: { phone } — marca todas mensagens do chat como lidas
