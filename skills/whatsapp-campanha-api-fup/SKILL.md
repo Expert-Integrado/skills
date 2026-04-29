@@ -9,7 +9,7 @@ Skill para campanhas de follow-up onde a mensagem e disparada pelo aparelho da *
 
 > **Seguranca:** todas as credenciais (PD_TOKEN, CG_KEY, CG_ACCT, phone_id) ficam APENAS no JSON local de config (`claude-sync/claude_desktop_config*.json`) — nunca hardcoded nesta skill nem em scripts versionados. A skill esta no GitHub publico (`expertintegrado/skills`); secret nunca pode aparecer aqui.
 
-A diferenca pra `campanha-disparo-massa`: nao usa multipart, nao precisa de delay, nao precisa de fallback +9, nao precisa de chat_add prévio, nao agenda Call. So dispara o template e registra.
+A diferenca pra `campanha-disparo-massa`: nao usa multipart, nao precisa de delay, nao agenda Call. So dispara o template e registra. Tem fallback 12↔13 chars no phone e fallback `chat_add` quando o chat ainda nao existe — ver armadilhas #7 e #8.
 
 ---
 
@@ -325,7 +325,7 @@ Leonardo, lembrei do Funnel Max porque vocês operam 350 leads/dia e a recupera�
 
 7. **Fallback 12↔13 chars E NECESSARIO** — alguns DDDs registraram historico no aparelho oficial sem o "9" prefix (12 chars) e outros com (13 chars). Pipedrive guarda como o lead digitou. Quando F2 retorna `"Chat não encontrado."` (HTTP 400), tentar a forma alternativa antes de marcar erro: se veio 13 chars com 9 na pos 4, tentar sem; se veio 12 chars, tentar com 9. Caso confirmado: deal #1048 (Jeferson) — Pipedrive `5547997565906`, ChatGuru `554797565906`. **O template do batch ja faz esse fallback automatico.**
 
-8. **Sem necessidade de chat_add previo** — `dialog_execute` ja cria o contexto. So `chat_update_custom_fields` ja registra o contato.
+8. **Fallback `chat_add` em F2.1** — quando `chat_update_custom_fields` retorna `"Chat não encontrado."` mesmo apos fallback 12↔13, o chat ainda nao existe na base do ChatGuru (lead nunca conversou pelo aparelho oficial). Engine tenta `chat_add` com `text=' '` (espaco em branco — registra sem disparar mensagem, miolo vai depois pelo dialog/template). Se chat_add ok: aguarda 8s e refaz F2. Se chat_add falha ou F2 ainda falha: marca atividade de erro no Pipedrive (numero provavelmente invalido/sem WhatsApp ativo, precisa correcao manual). **Importante:** `text=' '` e a chave — `text=miolo` retorna `"Mensagem inicial inválida"` no aparelho oficial.
 
 9. **PARAMETRO E `key`, NAO `api_key`** — a API REST do ChatGuru aceita `key=<token>`, nao `api_key`. Se rescrever a funcao `cg_call` do zero, conferir esse detalhe — caso contrario TODAS as chamadas voltam HTTP 400 com `"key ou account_id não informado(s)"`. Confirmado em sessao com Sonnet 4.6 que reescreveu sem consultar a skill e travou o batch inteiro.
 
