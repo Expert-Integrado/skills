@@ -30,6 +30,8 @@ A diferenca pra `whatsapp-campanha-api-fup`: aparelho diferente (chip vs API ofi
 | Atividade registro — subject | `Mensagem de ativação` |
 | Atividade registro — type | `whatsapp` (done=1, dono = Expert Integrado) |
 | Atividade follow-up — type | `call` (dono = SDR) |
+| Em caso de erro — stage destino | `Lead Mapeado` (id 64, pipeline Prospeccao) |
+| Em caso de erro — label adicional | `ERRO DE DISPARO` (id 390, preserva labels existentes) |
 | Sleep default entre leads | `30s` (anti-banimento) |
 | Offset msg 2 / msg 3 | `+1min` / `+2min` apos chat_add |
 | Endpoints | `https://expertintegrado.pipedrive.com/api/v1` + `https://s13.expertintegrado.app/api/v1` |
@@ -185,7 +187,7 @@ Imprime o que faria sem chamar APIs.
 
 9. **PARAMETRO E `key`, NAO `api_key`** na API REST do ChatGuru. Confirmado em sessao com modelo que reescreveu sem consultar a skill — todas as chamadas voltam HTTP 400 com `key ou account_id não informado(s)`. **A engine ja usa `key`** corretamente.
 
-10. **Numero invalido no Pipedrive** — alguns leads tem phones bagunçados (sem DDI 55, prefixos invalidos como `90347`, digitos a mais). API ChatGuru retorna 400 "Chat nao existe". A engine registra em `errs` e segue. **chat_add ja faz fallback 12<->13 chars** (via `chat_add_with_fallback`) antes de marcar erro — se o phone original veio 12 chars, tenta com 9; se veio 13, tenta sem. Listar pendentes no fim do batch pro usuario corrigir manualmente, depois re-rodar (dedup pula os ja feitos).
+10. **Numero invalido no Pipedrive** — alguns leads tem phones bagunçados (sem DDI 55, prefixos invalidos como `90347`, digitos a mais). API ChatGuru retorna 400 "Chat nao existe". A engine registra em `errs` e segue. **chat_add ja faz fallback 12<->13 chars** (via `chat_add_with_fallback`) antes de marcar erro — se o phone original veio 12 chars, tenta com 9; se veio 13, tenta sem. Quando chat_add falha mesmo apos fallback, alem de logar o erro a engine: (a) cria task "Erro de disparo" (dono Expert Integrado, done=0), (b) move o deal pra stage `Lead Mapeado` (id 64), (c) adiciona label `ERRO DE DISPARO` (id 390) preservando labels existentes. Sai do funil ativo, fica facil de filtrar/triagem manual.
 
 13. **Nome do contato mal preenchido no Pipedrive** — alguns leads tem como nome um email (`fulano@dominio.com`), titulo profissional (`Psicóloga Fátima Cruz`), bot greeting (`Opa`, `Hola 👋`, `Quero Automatizar Funis`) ou nome de empresa (`Mister Massas`). A funcao `_clean_first_name` filtra esses casos: extrai segundo nome quando o primeiro eh titulo (Psicóloga -> Fátima), descarta emails com digitos, e cai em `amigo(a)` quando nao consegue extrair nome decente. Resultado: a saudacao "Oi {first_name}" nunca fica esquisita ("Oi Psicóloga,", "Oi Adrianocs16,").
 

@@ -25,6 +25,8 @@ A diferenca pra `campanha-disparo-massa`: nao usa multipart, nao precisa de dela
 | Atividade sucesso — type | `whatsapp` (done=1) |
 | Atividade erro — subject | `Erro de disparo` |
 | Atividade erro — type | `task` (done=0) |
+| Em caso de erro — stage destino | `Lead Mapeado` (id 64, pipeline Prospeccao) |
+| Em caso de erro — label adicional | `ERRO DE DISPARO` (id 390, preserva labels existentes) |
 | Sem delay entre leads | API oficial nao tem risco de banimento |
 | Endpoints | `https://expertintegrado.pipedrive.com/api/v1` + `https://s13.expertintegrado.app/api/v1` |
 
@@ -326,6 +328,8 @@ Leonardo, lembrei do Funnel Max porque vocês operam 350 leads/dia e a recupera�
 7. **Fallback 12↔13 chars E NECESSARIO** — alguns DDDs registraram historico no aparelho oficial sem o "9" prefix (12 chars) e outros com (13 chars). Pipedrive guarda como o lead digitou. Quando F2 retorna `"Chat não encontrado."` (HTTP 400), tentar a forma alternativa antes de marcar erro: se veio 13 chars com 9 na pos 4, tentar sem; se veio 12 chars, tentar com 9. Caso confirmado: deal #1048 (Jeferson) — Pipedrive `5547997565906`, ChatGuru `554797565906`. **O template do batch ja faz esse fallback automatico.**
 
 8. **Fallback `chat_add` em F2.1** — quando `chat_update_custom_fields` retorna `"Chat não encontrado."` mesmo apos fallback 12↔13, o chat ainda nao existe na base do ChatGuru (lead nunca conversou pelo aparelho oficial). Engine tenta `chat_add` com `text=' '` (espaco em branco — registra sem disparar mensagem, miolo vai depois pelo dialog/template). Se chat_add ok: aguarda 8s e refaz F2. Se chat_add falha ou F2 ainda falha: marca atividade de erro no Pipedrive (numero provavelmente invalido/sem WhatsApp ativo, precisa correcao manual). **Importante:** `text=' '` e a chave — `text=miolo` retorna `"Mensagem inicial inválida"` no aparelho oficial.
+
+9. **Em caso de erro: move pra Lead Mapeado + label ERRO DE DISPARO** — quando o disparo falha (F2 + F2.1 + fallback de phone tudo esgotado), alem de criar a task "Erro de disparo", a engine tambem: (a) move o deal pra stage `Lead Mapeado` (id 64, pipeline Prospeccao 7), (b) adiciona o label `ERRO DE DISPARO` (id 390) preservando labels existentes. Resultado: deal sai do funil ativo de prospeccao, fica facil de filtrar pra triagem manual (basta filtrar por label 390). O atendente corrige o telefone no Pipedrive e re-roda o batch — dedup pula os ja feitos e o deal pode ser reprocessado se voltar pra etapa ativa.
 
 9. **PARAMETRO E `key`, NAO `api_key`** — a API REST do ChatGuru aceita `key=<token>`, nao `api_key`. Se rescrever a funcao `cg_call` do zero, conferir esse detalhe — caso contrario TODAS as chamadas voltam HTTP 400 com `"key ou account_id não informado(s)"`. Confirmado em sessao com Sonnet 4.6 que reescreveu sem consultar a skill e travou o batch inteiro.
 
