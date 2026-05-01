@@ -507,34 +507,32 @@ async function enrichWithTranscriptions(messages) {
 
 // ─── SERVER ──────────────────────────────────────────────────────────────────
 
-const server = new McpServer({ name: "whatsapp-agent", version: "2.5.0" });
+const server = new McpServer({ name: "whatsapp-agent", version: "2.6.0" });
 
 // ─── 1. inbox ────────────────────────────────────────────────────────────────
 server.tool(
   "inbox",
   `Mostra as conversas recentes do WhatsApp com as ultimas mensagens de cada uma.
-Use para: "quem me mandou mensagem?", "tem msg nao lida?", "o que tem no WhatsApp?".
+Use para: "quem me mandou mensagem?", "o que tem no WhatsApp?".
 
 Filtros disponiveis:
-- unread_only: so chats com mensagens nao lidas
 - since: ISO timestamp, so atividade apos a data
 - waiting_on: "eric" (lead respondeu por ultimo, eu devo responder), "lead" (eu respondi por ultimo, espera deles), "none"
 - exclude_groups: ignora grupos (default false)
 - category_slugs: array de slugs (use list_categories pra ver opcoes). Se passar, so retorna chats que TEM PELO MENOS UMA dessas categorias.
 - exclude_categories: array de slugs. Chats com QUALQUER uma dessas categorias sao filtrados fora.
 
-Retorna: lista de chats com nome, ultima msg, timestamp, contagem nao lidos, categorias atribuidas, waiting_on.
+Retorna: lista de chats com nome, ultima msg, timestamp, categorias atribuidas, waiting_on.
 Mensagens de audio incluem campo transcription transcrito automaticamente.`,
   {
     limit: z.number().int().min(1).max(50).default(15),
-    unread_only: z.boolean().default(false).describe("Se true, retorna apenas chats com mensagens nao lidas"),
     since: z.string().optional().describe("ISO timestamp — so chats com atividade apos esta data"),
     waiting_on: z.enum(["eric", "lead", "none"]).optional().describe("Filtra por quem deve responder agora"),
     exclude_groups: z.boolean().default(false).describe("Se true, ignora grupos (so 1:1)"),
     category_slugs: z.array(z.string()).optional().describe("So chats que tem pelo menos uma dessas categorias"),
     exclude_categories: z.array(z.string()).optional().describe("Chats com qualquer uma dessas categorias sao filtrados fora"),
   },
-  async ({ limit, unread_only, since, waiting_on: waitingFilter, exclude_groups, category_slugs, exclude_categories }) => {
+  async ({ limit, since, waiting_on: waitingFilter, exclude_groups, category_slugs, exclude_categories }) => {
     try {
       // Quando ha filtro de categoria, vai pela view v_chats_with_categories pra
       // ja vir com category_slugs no resultado e poder filtrar via .contains().
@@ -544,12 +542,11 @@ Mensagens de audio incluem campo transcription transcrito automaticamente.`,
         .from(useCategoryView ? "v_chats_with_categories" : "v_chats_with_contact")
         .select(useCategoryView
           ? "chat_id,chat_name,is_group,last_message_at,last_received_at,last_sent_at,category_slugs"
-          : "chat_id,chat_name,contact_name,is_group,last_message_at,last_received_at,last_sent_at,unread_count")
+          : "chat_id,chat_name,contact_name,is_group,last_message_at,last_received_at,last_sent_at")
         .order("last_message_at", { ascending: false, nullsFirst: false })
         .order("chat_id", { ascending: true })
         .limit(useCategoryView ? Math.max(limit * 5, 100) : limit); // pega mais quando filtra por categoria
 
-      if (unread_only && !useCategoryView) q = q.gt("unread_count", 0);
       if (since) q = q.gt("last_message_at", since);
       if (exclude_groups) q = q.eq("is_group", false);
       if (category_slugs?.length) q = q.overlaps("category_slugs", category_slugs);
@@ -571,19 +568,15 @@ Mensagens de audio incluem campo transcription transcrito automaticamente.`,
         return true;
       }).slice(0, limit);
 
-      // Se foi pela view de categorias, busca contact_name + unread_count separado
+      // Se foi pela view de categorias, busca contact_name separado
       let contactById = {};
       if (useCategoryView && chats.length) {
         const ids = chats.map(c => c.chat_id);
         const { data: enriched } = await supabase
           .from("v_chats_with_contact")
-          .select("chat_id,contact_name,unread_count")
+          .select("chat_id,contact_name")
           .in("chat_id", ids);
         contactById = Object.fromEntries((enriched || []).map(e => [e.chat_id, e]));
-        // Aplica unread_only aqui se foi pedido
-        if (unread_only) {
-          chats = chats.filter(c => (contactById[c.chat_id]?.unread_count || 0) > 0);
-        }
       }
 
       // Categorias por chat — quando NAO veio pela view, busca avulso
@@ -626,7 +619,6 @@ Mensagens de audio incluem campo transcription transcrito automaticamente.`,
           chat_id: c.chat_id,
           name: enriched.contact_name || c.contact_name || c.chat_name,
           is_group: c.is_group,
-          unread: enriched.unread_count ?? c.unread_count ?? 0,
           categories: categoriesByChat[c.chat_id] || [],
           last_message_at: c.last_message_at,
           last_received_at: c.last_received_at,
