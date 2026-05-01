@@ -11,6 +11,7 @@ const ZAPI_INSTANCE_ID = process.env.ZAPI_INSTANCE_ID;
 const ZAPI_TOKEN = process.env.ZAPI_TOKEN;
 const ZAPI_CLIENT_TOKEN = process.env.ZAPI_CLIENT_TOKEN;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const AGENT_NAME = process.env.AGENT_NAME || "unknown-agent";  // identifica esta instancia em audit log
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   console.error("ERRO: SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY sao obrigatorios.");
@@ -506,7 +507,7 @@ async function enrichWithTranscriptions(messages) {
 
 // ─── SERVER ──────────────────────────────────────────────────────────────────
 
-const server = new McpServer({ name: "whatsapp-agent", version: "2.4.0" });
+const server = new McpServer({ name: "whatsapp-agent", version: "2.5.0" });
 
 // ─── 1. inbox ────────────────────────────────────────────────────────────────
 server.tool(
@@ -809,10 +810,13 @@ FLUXO OBRIGATORIO (duas chamadas):
         return err(`media_url e obrigatorio para mensagens do tipo "${type}".`);
       }
 
+      // Passa confirmed=true E agent_name pro server-side guard + audit log (Edge Function v8+)
       const body = {
         chat_id: resolved.chat_id,
         content,
         message_type: type,
+        confirmed: true,             // gate cliente ja validou (linha 670+); server-side dobra
+        agent_name: AGENT_NAME,      // identifica esta instancia em messages.sent_by_agent_name
         ...(media_url && { media_url }),
         ...(file_name && { file_name }),
         ...(reply_to && { quoted_msg_id: reply_to }),
