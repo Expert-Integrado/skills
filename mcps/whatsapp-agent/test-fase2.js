@@ -19,15 +19,15 @@ function check(name, ok, detail="") {
   else { fail++; failures.push({name,detail}); console.log(`  FAIL  ${name}  ::  ${detail}`); }
 }
 
-const TEST_CHAT_ID = "554896561958"; // Cesar Barboza
+const TEST_CHAT_ID = "553171720654"; // Tiago Guedes — fixture limpa
 
-console.log("\n=== Setup: marca Cesar Barboza como cliente+trabalho ===");
+console.log("\n=== Setup: marca fixture como cliente+equipe ===");
 const { data: clienteCat } = await supabase.from("categories").select("id").eq("slug", "cliente").single();
-const { data: trabalhoCat } = await supabase.from("categories").select("id").eq("slug", "trabalho").single();
+const { data: equipeCat } = await supabase.from("categories").select("id").eq("slug", "equipe").single();
 await supabase.from("chat_categories").delete().eq("chat_id", TEST_CHAT_ID);
 await supabase.from("chat_categories").upsert([
   { chat_id: TEST_CHAT_ID, category_id: clienteCat.id, assigned_by: "manual" },
-  { chat_id: TEST_CHAT_ID, category_id: trabalhoCat.id, assigned_by: "manual" },
+  { chat_id: TEST_CHAT_ID, category_id: equipeCat.id, assigned_by: "manual" },
 ], { onConflict: "chat_id,category_id" });
 
 console.log("\n=== Test 1: v_chats_with_categories — overlap funciona ===");
@@ -42,15 +42,15 @@ check("Cesar Barboza esta no resultado de cliente",
   clientes?.find(c => c.chat_id === TEST_CHAT_ID),
   `found: ${!!clientes?.find(c => c.chat_id === TEST_CHAT_ID)}`);
 
-console.log("\n=== Test 2: filtro multi-categoria (cliente OU trabalho) ===");
-const { data: clientesOrTrabalho } = await supabase
+console.log("\n=== Test 2: filtro multi-categoria (cliente OU equipe) ===");
+const { data: clientesOrEquipe } = await supabase
   .from("v_chats_with_categories")
   .select("chat_id,category_slugs")
-  .overlaps("category_slugs", ["cliente", "trabalho"]);
-check("overlaps com 2 slugs retorna union", clientesOrTrabalho?.length >= 1,
-  `total: ${clientesOrTrabalho?.length}`);
-check("Cesar aparece (tem cliente E trabalho)",
-  clientesOrTrabalho?.find(c => c.chat_id === TEST_CHAT_ID),
+  .overlaps("category_slugs", ["cliente", "equipe"]);
+check("overlaps com 2 slugs retorna union", clientesOrEquipe?.length >= 1,
+  `total: ${clientesOrEquipe?.length}`);
+check("fixture aparece (tem cliente E equipe)",
+  clientesOrEquipe?.find(c => c.chat_id === TEST_CHAT_ID),
   "found");
 
 console.log("\n=== Test 3: filtro waiting_on=eric (lead respondeu por ultimo) ===");
@@ -76,7 +76,7 @@ const { data: catRow } = await supabase
 check("read traz array de slugs", Array.isArray(catRow?.category_slugs),
   `slugs: ${catRow?.category_slugs?.join(",")}`);
 check("slugs ordenados alfabeticamente",
-  JSON.stringify(catRow?.category_slugs) === JSON.stringify(["cliente","trabalho"]),
+  JSON.stringify(catRow?.category_slugs) === JSON.stringify(["cliente","equipe"]),
   `got: ${JSON.stringify(catRow?.category_slugs)}`);
 
 console.log("\n=== Test 5: filtro composto (categoria + waiting_on) ===");

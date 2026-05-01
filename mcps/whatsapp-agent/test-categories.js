@@ -27,7 +27,7 @@ function check(name, condition, detail = "") {
   else           { fail++; failures.push({name, detail}); console.log(`  FAIL  ${name}  ::  ${detail}`); }
 }
 
-const TEST_CHAT_ID = "554896561958"; // Cesar Barboza — chat real, single 1:1, perene
+const TEST_CHAT_ID = "553171720654"; // Tiago Guedes | Antiescola — sem categoria real atribuida (fixture limpa)
 
 console.log("\n=== Setup: garante limpeza de teste anterior ===");
 await supabase.from("chat_categories").delete().eq("chat_id", TEST_CHAT_ID);
@@ -35,11 +35,11 @@ await supabase.from("chat_categories").delete().eq("chat_id", TEST_CHAT_ID);
 console.log("\n=== Test 1: list_categories retorna seed ===");
 const { data: cats } = await supabase.from("categories").select("slug,label").order("slug");
 const slugs = (cats || []).map(c => c.slug);
-check("9 categorias seed presentes", slugs.length >= 9,
-  `slugs: ${slugs.slice(0, 9).join(",")}`);
-check("seed inclui pessoal+familia+saude+trabalho",
-  ["pessoal","familia","saude","trabalho"].every(s => slugs.includes(s)),
-  `tem: ${["pessoal","familia","saude","trabalho"].filter(s => slugs.includes(s)).join(",")}`);
+check("10 categorias seed presentes", slugs.length >= 10,
+  `slugs: ${slugs.join(",")}`);
+check("seed inclui pessoal+familia+equipe+resolver+parceiro",
+  ["pessoal","familia","equipe","resolver","parceiro"].every(s => slugs.includes(s)),
+  `tem: ${["pessoal","familia","equipe","resolver","parceiro"].filter(s => slugs.includes(s)).join(",")}`);
 check("slugs sao normalizados (sem acento, lowercase)",
   slugs.every(s => /^[a-z0-9_-]+$/.test(s)),
   `valida: ${slugs.every(s => /^[a-z0-9_-]+$/.test(s))}`);
@@ -49,7 +49,7 @@ const { data: clienteCat } = await supabase.from("categories").select("id").eq("
 const { error: insErr } = await supabase.from("chat_categories").upsert([
   { chat_id: TEST_CHAT_ID, category_id: clienteCat.id, assigned_by: "manual" }
 ], { onConflict: "chat_id,category_id" });
-check("inseriu cliente em Cesar Barboza", !insErr, insErr?.message || "OK");
+check("inseriu cliente em fixture", !insErr, insErr?.message || "OK");
 
 const { data: applied1 } = await supabase
   .from("chat_categories").select("category_id").eq("chat_id", TEST_CHAT_ID);
@@ -62,9 +62,9 @@ const { error: insErr2 } = await supabase.from("chat_categories").upsert([
 check("upsert duplicado nao falha (idempotente)", !insErr2, insErr2?.message || "OK");
 
 console.log("\n=== Test 4: multi-categoria — chat com 2 categorias ===");
-const { data: trabalhoCat } = await supabase.from("categories").select("id").eq("slug", "trabalho").single();
+const { data: equipeCat } = await supabase.from("categories").select("id").eq("slug", "equipe").single();
 await supabase.from("chat_categories").upsert([
-  { chat_id: TEST_CHAT_ID, category_id: trabalhoCat.id, assigned_by: "llm", confidence: 0.85 }
+  { chat_id: TEST_CHAT_ID, category_id: equipeCat.id, assigned_by: "llm", confidence: 0.85 }
 ], { onConflict: "chat_id,category_id" });
 const { data: applied2 } = await supabase.from("chat_categories")
   .select("category_id,assigned_by,confidence").eq("chat_id", TEST_CHAT_ID);
@@ -79,7 +79,7 @@ const { data: viewRow } = await supabase.from("v_chats_with_categories")
 check("view retorna o chat", !!viewRow, `chat_name=${viewRow?.chat_name}`);
 check("view agrega 2 slugs", viewRow?.category_slugs?.length === 2, `slugs=${viewRow?.category_slugs?.join(",")}`);
 check("slugs ordenados alfabeticamente",
-  JSON.stringify(viewRow?.category_slugs) === JSON.stringify(["cliente","trabalho"]),
+  JSON.stringify(viewRow?.category_slugs) === JSON.stringify(["cliente","equipe"]),
   `got=${JSON.stringify(viewRow?.category_slugs)}`);
 
 console.log("\n=== Test 6: filtro por categoria via array overlap ===");
@@ -91,8 +91,8 @@ check("query 'WHERE cliente IN slugs' funciona",
 
 console.log("\n=== Test 7: uncategorize remove ===");
 const { error: delErr } = await supabase.from("chat_categories")
-  .delete().eq("chat_id", TEST_CHAT_ID).eq("category_id", trabalhoCat.id);
-check("removeu trabalho", !delErr, delErr?.message || "OK");
+  .delete().eq("chat_id", TEST_CHAT_ID).eq("category_id", equipeCat.id);
+check("removeu equipe", !delErr, delErr?.message || "OK");
 
 const { data: applied3 } = await supabase.from("chat_categories")
   .select("category_id").eq("chat_id", TEST_CHAT_ID);
