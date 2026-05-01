@@ -506,38 +506,100 @@ async function enrichWithTranscriptions(messages) {
 
 // ─── SERVER ──────────────────────────────────────────────────────────────────
 
-const server = new McpServer({ name: "whatsapp-agent", version: "2.3.0" });
+const server = new McpServer({ name: "whatsapp-agent", version: "2.4.0" });
 
 // ─── 1. inbox ────────────────────────────────────────────────────────────────
 server.tool(
   "inbox",
   `Mostra as conversas recentes do WhatsApp com as ultimas mensagens de cada uma.
 Use para: "quem me mandou mensagem?", "tem msg nao lida?", "o que tem no WhatsApp?".
-Parametros opcionais: limit (padrao 15), unread_only (so nao lidos), since (ISO timestamp).
-Retorna: lista de chats com nome do contato, ultima msg, timestamp, contagem nao lidos.
-Mensagens de audio incluem campo transcription com o conteudo transcrito automaticamente (requer OPENAI_API_KEY).`,
+
+Filtros disponiveis:
+- unread_only: so chats com mensagens nao lidas
+- since: ISO timestamp, so atividade apos a data
+- waiting_on: "eric" (lead respondeu por ultimo, eu devo responder), "lead" (eu respondi por ultimo, espera deles), "none"
+- exclude_groups: ignora grupos (default false)
+- category_slugs: array de slugs (use list_categories pra ver opcoes). Se passar, so retorna chats que TEM PELO MENOS UMA dessas categorias.
+- exclude_categories: array de slugs. Chats com QUALQUER uma dessas categorias sao filtrados fora.
+
+Retorna: lista de chats com nome, ultima msg, timestamp, contagem nao lidos, categorias atribuidas, waiting_on.
+Mensagens de audio incluem campo transcription transcrito automaticamente.`,
   {
     limit: z.number().int().min(1).max(50).default(15),
     unread_only: z.boolean().default(false).describe("Se true, retorna apenas chats com mensagens nao lidas"),
     since: z.string().optional().describe("ISO timestamp — so chats com atividade apos esta data"),
+    waiting_on: z.enum(["eric", "lead", "none"]).optional().describe("Filtra por quem deve responder agora"),
+    exclude_groups: z.boolean().default(false).describe("Se true, ignora grupos (so 1:1)"),
+    category_slugs: z.array(z.string()).optional().describe("So chats que tem pelo menos uma dessas categorias"),
+    exclude_categories: z.array(z.string()).optional().describe("Chats com qualquer uma dessas categorias sao filtrados fora"),
   },
-  async ({ limit, unread_only, since }) => {
+  async ({ limit, unread_only, since, waiting_on: waitingFilter, exclude_groups, category_slugs, exclude_categories }) => {
     try {
+      // Quando ha filtro de categoria, vai pela view v_chats_with_categories pra
+      // ja vir com category_slugs no resultado e poder filtrar via .contains().
+      const useCategoryView = !!(category_slugs?.length || exclude_categories?.length);
+
       let q = supabase
-        .from("v_chats_with_contact")
-        .select("chat_id,chat_name,contact_name,is_group,last_message_at,last_received_at,last_sent_at,unread_count")
+        .from(useCategoryView ? "v_chats_with_categories" : "v_chats_with_contact")
+        .select(useCategoryView
+          ? "chat_id,chat_name,is_group,last_message_at,last_received_at,last_sent_at,category_slugs"
+          : "chat_id,chat_name,contact_name,is_group,last_message_at,last_received_at,last_sent_at,unread_count")
         .order("last_message_at", { ascending: false, nullsFirst: false })
         .order("chat_id", { ascending: true })
-        .limit(limit);
+        .limit(useCategoryView ? Math.max(limit * 5, 100) : limit); // pega mais quando filtra por categoria
 
-      if (unread_only) q = q.gt("unread_count", 0);
+      if (unread_only && !useCategoryView) q = q.gt("unread_count", 0);
       if (since) q = q.gt("last_message_at", since);
+      if (exclude_groups) q = q.eq("is_group", false);
+      if (category_slugs?.length) q = q.overlaps("category_slugs", category_slugs);
 
-      const { data: chats, error } = await q;
+      const { data: rawChats, error } = await q;
       if (error) return err(error.message);
 
+      // Aplica filtros client-side: waiting_on, exclude_categories
+      let chats = (rawChats || []).filter(c => {
+        if (waitingFilter) {
+          const recv = c.last_received_at ? new Date(c.last_received_at).getTime() : 0;
+          const sent = c.last_sent_at ? new Date(c.last_sent_at).getTime() : 0;
+          const w = recv > sent ? "eric" : (sent > recv ? "lead" : "none");
+          if (w !== waitingFilter) return false;
+        }
+        if (exclude_categories?.length && c.category_slugs) {
+          if (c.category_slugs.some(s => exclude_categories.includes(s))) return false;
+        }
+        return true;
+      }).slice(0, limit);
+
+      // Se foi pela view de categorias, busca contact_name + unread_count separado
+      let contactById = {};
+      if (useCategoryView && chats.length) {
+        const ids = chats.map(c => c.chat_id);
+        const { data: enriched } = await supabase
+          .from("v_chats_with_contact")
+          .select("chat_id,contact_name,unread_count")
+          .in("chat_id", ids);
+        contactById = Object.fromEntries((enriched || []).map(e => [e.chat_id, e]));
+        // Aplica unread_only aqui se foi pedido
+        if (unread_only) {
+          chats = chats.filter(c => (contactById[c.chat_id]?.unread_count || 0) > 0);
+        }
+      }
+
+      // Categorias por chat — quando NAO veio pela view, busca avulso
+      let categoriesByChat = {};
+      if (!useCategoryView && chats.length) {
+        const ids = chats.map(c => c.chat_id);
+        const { data: catRows } = await supabase
+          .from("v_chats_with_categories")
+          .select("chat_id,category_slugs")
+          .in("chat_id", ids);
+        categoriesByChat = Object.fromEntries((catRows || []).map(r => [r.chat_id, r.category_slugs || []]));
+      } else {
+        categoriesByChat = Object.fromEntries(chats.map(c => [c.chat_id, c.category_slugs || []]));
+      }
+
       // Buscar ultima mensagem de cada chat (com id para poder transcrever audios)
-      const chatIds = (chats || []).map((c) => c.chat_id);
+      const chatIds = chats.map((c) => c.chat_id);
       const { data: lastMsgs } = await supabase
         .from("messages")
         .select("id,chat_id,content,message_type,from_me,created_at")
@@ -549,22 +611,22 @@ Mensagens de audio incluem campo transcription com o conteudo transcrito automat
         if (!lastByChat[m.chat_id]) lastByChat[m.chat_id] = m;
       }
 
-      // Transcreve audios das ultimas mensagens em batch
       const lastMsgsList = Object.values(lastByChat);
       const enrichedList = await enrichWithTranscriptions(lastMsgsList);
       const enrichedByChat = Object.fromEntries(enrichedList.map(m => [m.chat_id, m]));
 
-      const result = (chats || []).map((c) => {
+      const result = chats.map((c) => {
         const msg = enrichedByChat[c.chat_id];
-        // Quem deve responder agora? Se ultima recebida > ultima enviada, bola tah com Eric
         const recv = c.last_received_at ? new Date(c.last_received_at).getTime() : 0;
         const sent = c.last_sent_at ? new Date(c.last_sent_at).getTime() : 0;
         const waiting_on = recv > sent ? "eric" : (sent > recv ? "lead" : "none");
+        const enriched = contactById[c.chat_id] || {};
         return {
           chat_id: c.chat_id,
-          name: c.contact_name || c.chat_name,
+          name: enriched.contact_name || c.contact_name || c.chat_name,
           is_group: c.is_group,
-          unread: c.unread_count || 0,
+          unread: enriched.unread_count ?? c.unread_count ?? 0,
+          categories: categoriesByChat[c.chat_id] || [],
           last_message_at: c.last_message_at,
           last_received_at: c.last_received_at,
           last_sent_at: c.last_sent_at,
@@ -631,9 +693,19 @@ Mensagens de audio incluem campo transcription com o conteudo transcrito automat
 
       const enriched = await enrichWithTranscriptions(data || []);
 
+      // Categorias atribuidas a este chat (uteis pro contexto do agente)
+      const { data: catRow } = await supabase
+        .from("v_chats_with_categories")
+        .select("category_slugs,category_labels,linked_pipedrive_person_id")
+        .eq("chat_id", resolved.chat_id)
+        .single();
+
       return ok({
         chat_id: resolved.chat_id,
         chat_name: resolved.chat_name,
+        categories: catRow?.category_slugs || [],
+        category_labels: catRow?.category_labels || [],
+        ...(catRow?.linked_pipedrive_person_id && { linked_pipedrive_person_id: catRow.linked_pipedrive_person_id }),
         messages: enriched.reverse(),
         count: enriched.length,
       });
@@ -766,18 +838,20 @@ server.tool(
   "search",
   `Busca texto nas mensagens do WhatsApp.
 Use para: "vc falou alguma coisa sobre reuniao?", "o que o Pedro disse sobre o contrato?".
-Pode filtrar por chat especifico (parametro "chat") e por periodo (after/before).
+Pode filtrar por chat especifico (parametro "chat"), categoria (category_slugs), e periodo (after/before).
 Retorna mensagens com contexto: chat de origem, remetente e timestamp.
 Mensagens de audio nos resultados incluem campo transcription automaticamente.`,
   {
     query: z.string().min(2).describe("Texto a buscar"),
     chat: z.string().optional().describe("Limitar busca a um chat especifico (nome ou chat_id)"),
     search_in: z.enum(["content", "chat_name", "both"]).default("both").describe("Onde buscar: content (texto das msgs), chat_name (nome do contato/grupo), ou both (default)"),
+    category_slugs: z.array(z.string()).optional().describe("Limitar busca a chats com pelo menos uma destas categorias (ex: ['saude','familia'])"),
+    exclude_categories: z.array(z.string()).optional().describe("Filtrar fora chats com qualquer uma destas categorias"),
     limit: z.number().int().min(1).max(50).default(20),
     after: z.string().optional().describe("ISO timestamp — so mensagens apos esta data"),
     before: z.string().optional().describe("ISO timestamp — so mensagens antes desta data"),
   },
-  async ({ query, chat, search_in, limit, after, before }) => {
+  async ({ query, chat, search_in, category_slugs, exclude_categories, limit, after, before }) => {
     try {
       let chat_id = null;
       if (chat) {
@@ -787,17 +861,49 @@ Mensagens de audio nos resultados incluem campo transcription automaticamente.`,
         chat_id = resolved.chat_id;
       }
 
+      // Resolve set de chat_ids permitidos quando ha filtro de categoria
+      let allowedChatIds = null;
+      if (category_slugs?.length || exclude_categories?.length) {
+        let cq = supabase.from("v_chats_with_categories").select("chat_id,category_slugs");
+        if (category_slugs?.length) cq = cq.overlaps("category_slugs", category_slugs);
+        const { data: catChats } = await cq;
+        let ids = (catChats || []).map(c => c.chat_id);
+        if (exclude_categories?.length) {
+          const { data: excluded } = await supabase
+            .from("v_chats_with_categories")
+            .select("chat_id")
+            .overlaps("category_slugs", exclude_categories);
+          const excludedSet = new Set((excluded || []).map(e => e.chat_id));
+          ids = ids.length
+            ? ids.filter(id => !excludedSet.has(id))
+            : null; // nada a filtrar se categoria_slugs nao foi passado
+          if (!category_slugs?.length) {
+            // Apenas exclude — pega todos exceto os excluidos
+            const { data: allChats } = await supabase
+              .from("v_chats_with_contact").select("chat_id");
+            ids = (allChats || []).map(c => c.chat_id).filter(id => !excludedSet.has(id));
+          }
+        }
+        allowedChatIds = ids;
+        if (allowedChatIds && allowedChatIds.length === 0) {
+          return ok({ query, search_in, chats: [], messages: [], message_count: 0,
+            note: "Filtro de categoria nao retornou nenhum chat — sem o que buscar." });
+        }
+      }
+
       const result = { query, search_in };
 
       // Busca em chat_name (contatos/grupos) — fix #9, com scoring v2.2.0
       if (search_in === "chat_name" || search_in === "both") {
         const qNorm = normalize(query);
-        const { data: chats } = await supabase
+        let cq = supabase
           .from("v_chats_with_contact")
           .select("chat_id,chat_name,contact_name,is_group,last_message_at,last_received_at")
           .order("last_message_at", { ascending: false, nullsFirst: false })
           .order("chat_id", { ascending: true })
           .limit(1500);
+        if (allowedChatIds) cq = cq.in("chat_id", allowedChatIds);
+        const { data: chats } = await cq;
         const ranked = (chats || []).map(c => {
           const { score, kind } = scoreNameMatch(qNorm, c);
           return { ...c, _score: score > 0 ? applyChatBoost(score, c) : 0, _kind: kind };
@@ -814,7 +920,7 @@ Mensagens de audio nos resultados incluem campo transcription automaticamente.`,
         }));
       }
 
-      // Busca em content (mensagens) — comportamento original
+      // Busca em content (mensagens) — comportamento original + filtro de categoria
       if (search_in === "content" || search_in === "both") {
         let q = supabase
           .from("v_messages_with_sender")
@@ -824,6 +930,7 @@ Mensagens de audio nos resultados incluem campo transcription automaticamente.`,
           .limit(limit);
 
         if (chat_id) q = q.eq("chat_id", chat_id);
+        if (allowedChatIds) q = q.in("chat_id", allowedChatIds);
         if (after) q = q.gt("created_at", after);
         if (before) q = q.lt("created_at", before);
 
