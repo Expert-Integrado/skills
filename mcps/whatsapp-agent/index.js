@@ -507,7 +507,17 @@ async function enrichWithTranscriptions(messages) {
 
 // ─── SERVER ──────────────────────────────────────────────────────────────────
 
-const server = new McpServer({ name: "whatsapp-agent", version: "2.6.0" });
+const server = new McpServer({ name: "whatsapp-agent", version: "2.7.0" });
+
+// Auto-calcula tempo de typing baseado em tipo+content (humanize=true).
+// Heuristica: ~30 chars/seg = velocidade de digitacao confortavel. Cap em 15s (limite Z-API).
+function humanizedTypingSeconds(type, content) {
+  const len = (content || "").length;
+  if (type === "text")            return Math.min(15, Math.max(1, Math.ceil(len / 30)));
+  if (type === "audio" || type === "ptt") return 3;  // "Gravando audio..."
+  if (type === "image" || type === "video") return 2;
+  return 1; // document
+}
 
 // ─── 1. inbox ────────────────────────────────────────────────────────────────
 server.tool(
@@ -718,6 +728,13 @@ Tipos suportados: text (padrao), image, audio, video, document.
 Para reply (responder mensagem especifica): passe reply_to com o UUID da mensagem.
 Para midia: passe media_url com URL publica do arquivo.
 
+Simulacao de comportamento humano (Z-API delayMessage/delayTyping):
+- humanize=true (padrao): calcula automaticamente delay_typing baseado em tamanho+tipo
+  do conteudo (ex: texto curto=1s, texto longo=15s, audio=3s "gravando audio").
+  Override explicito via delay_typing.
+- delay_typing (0-15s): tempo mostrando "Digitando..." / "Gravando audio..." pro destinatario
+- delay_message (0-15s): atraso geral antes de enviar (alem do typing)
+
 FLUXO OBRIGATORIO (duas chamadas):
 1a chamada — SEM confirmed: mostre ao usuario destinatario + conteudo, aguarde confirmacao. O MCP vai bloquear e retornar o resumo para exibir ao usuario.
 2a chamada — COM confirmed: true: so apos o usuario confirmar explicitamente ("sim", "confirma", "pode enviar").`,
@@ -730,8 +747,11 @@ FLUXO OBRIGATORIO (duas chamadas):
     reply_to: z.string().optional().describe("UUID da mensagem para responder (quote reply)"),
     confirmed: z.boolean().default(false).describe("OBRIGATORIO true para enviar. So passe true apos mostrar destinatario+conteudo ao usuario e receber confirmacao explicita."),
     allow_new: z.boolean().default(false).describe("Se true, permite enviar para numeros que ainda nao existem em chats (primeiro contato). Cria entrada em chats automaticamente. Use para dispatch consciente."),
+    humanize: z.boolean().default(true).describe("Se true (padrao), calcula delay_typing automaticamente baseado em tamanho+tipo. Passe false pra desligar simulacao humana."),
+    delay_typing: z.number().int().min(0).max(15).optional().describe("Override do delay de digitacao (0-15s). Se passado, ignora humanize."),
+    delay_message: z.number().int().min(0).max(15).optional().describe("Atraso geral antes de enviar (0-15s, alem do typing)."),
   },
-  async ({ to, content, type, media_url, file_name, reply_to, confirmed, allow_new }) => {
+  async ({ to, content, type, media_url, file_name, reply_to, confirmed, allow_new, humanize, delay_typing, delay_message }) => {
     if (!confirmed) {
       return {
         content: [{
@@ -802,6 +822,12 @@ FLUXO OBRIGATORIO (duas chamadas):
         return err(`media_url e obrigatorio para mensagens do tipo "${type}".`);
       }
 
+      // Resolve delay_typing efetivo: explicito > humanize auto > nada
+      const effectiveDelayTyping =
+        delay_typing !== undefined
+          ? delay_typing
+          : (humanize ? humanizedTypingSeconds(type, content) : undefined);
+
       // Passa confirmed=true E agent_name pro server-side guard + audit log (Edge Function v8+)
       const body = {
         chat_id: resolved.chat_id,
@@ -812,6 +838,8 @@ FLUXO OBRIGATORIO (duas chamadas):
         ...(media_url && { media_url }),
         ...(file_name && { file_name }),
         ...(reply_to && { quoted_msg_id: reply_to }),
+        ...(effectiveDelayTyping !== undefined && { delay_typing: effectiveDelayTyping }),
+        ...(delay_message !== undefined && { delay_message }),
       };
 
       const res = await fetch(SEND_MESSAGE_URL, {
