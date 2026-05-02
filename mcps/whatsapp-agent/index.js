@@ -603,12 +603,13 @@ Mensagens de audio incluem campo transcription transcrito automaticamente.`,
       }
 
       // Buscar ultima mensagem de cada chat (com id para poder transcrever audios)
+      // Usa message_ts (data ORIGINAL da mensagem no WhatsApp), nao created_at (data de insercao no banco)
       const chatIds = chats.map((c) => c.chat_id);
       const { data: lastMsgs } = await supabase
         .from("messages")
-        .select("id,chat_id,content,message_type,from_me,created_at")
+        .select("id,chat_id,content,message_type,from_me,message_ts,created_at")
         .in("chat_id", chatIds)
-        .order("created_at", { ascending: false });
+        .order("message_ts", { ascending: false, nullsFirst: false });
 
       const lastByChat = {};
       for (const m of lastMsgs || []) {
@@ -684,12 +685,12 @@ Mensagens de audio incluem campo transcription com o conteudo transcrito automat
 
       let q = supabase
         .from("v_messages_with_sender")
-        .select("id,message_type,content,direction,from_me,sender_contact_name,sender_phone,created_at")
+        .select("id,message_type,content,direction,from_me,sender_contact_name,sender_phone,message_ts,created_at")
         .eq("chat_id", resolved.chat_id)
-        .order("created_at", { ascending: false })
+        .order("message_ts", { ascending: false, nullsFirst: false })
         .limit(limit);
 
-      if (before) q = q.lt("created_at", before);
+      if (before) q = q.lt("message_ts", before);
 
       const { data, error } = await q;
       if (error) return err(error.message);
@@ -948,15 +949,15 @@ Mensagens de audio nos resultados incluem campo transcription automaticamente.`,
       if (search_in === "content" || search_in === "both") {
         let q = supabase
           .from("v_messages_with_sender")
-          .select("id,chat_id,chat_display_name,chat_is_group,content,message_type,from_me,sender_contact_name,created_at,direction")
+          .select("id,chat_id,chat_display_name,chat_is_group,content,message_type,from_me,sender_contact_name,message_ts,created_at,direction")
           .ilike("content", `%${query}%`)
-          .order("created_at", { ascending: false })
+          .order("message_ts", { ascending: false, nullsFirst: false })
           .limit(limit);
 
         if (chat_id) q = q.eq("chat_id", chat_id);
         if (allowedChatIds) q = q.in("chat_id", allowedChatIds);
-        if (after) q = q.gt("created_at", after);
-        if (before) q = q.lt("created_at", before);
+        if (after) q = q.gt("message_ts", after);
+        if (before) q = q.lt("message_ts", before);
 
         const { data, error } = await q;
         if (error) return err(error.message);
@@ -1012,7 +1013,7 @@ Reaproveita a logica do cron transcribe-queue: prefere Supabase Storage, fallbac
           .eq("chat_id", resolved.chat_id)
           .in("message_type", Array.from(AUDIO_TYPES))
           .or("content.is.null,content.eq.")
-          .order("created_at", { ascending: false })
+          .order("message_ts", { ascending: false, nullsFirst: false })
           .limit(limit);
         if (error) return err(error.message);
         candidates = data || [];
