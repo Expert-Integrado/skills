@@ -1,0 +1,10 @@
+{
+  "name": "email-cleaner",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Skill email-cleaner do Eric — limpa inbox Outlook via Graph API.",
+  "dependencies": {
+    "@azure/msal-node": "^2.16.2"
+  }
+}
