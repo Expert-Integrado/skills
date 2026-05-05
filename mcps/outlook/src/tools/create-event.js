@@ -46,10 +46,14 @@ export const createEventSchema = z.object({
     .describe(
       "Obrigatório true ao criar o 11º compromisso da hora (ou múltiplos de 10)."
     ),
+  mostrar_como: z
+    .enum(["free", "busy", "tentative", "oof", "workingElsewhere"])
+    .optional()
+    .describe("Status de disponibilidade: free (disponível), busy (ocupado), tentative (provisório), oof (ausente), workingElsewhere (trabalhando em outro local). Padrão do Outlook: busy."),
 });
 
 export async function createEvent(params) {
-  const { titulo, inicio, fim, descricao, local, convidados, dia_inteiro, fuso_horario, confirmacao } = params;
+  const { titulo, inicio, fim, descricao, local, convidados, dia_inteiro, fuso_horario, confirmacao, mostrar_como } = params;
 
   // 1. Garante que não há campos de recorrência no payload
   validateNotRecurring(params);
@@ -96,6 +100,7 @@ export async function createEvent(params) {
       },
     }),
     ...(attendees.length > 0 && { attendees }),
+    ...(mostrar_como && { showAs: mostrar_como }),
   };
 
   const result = await graphRequest("POST", "/me/events", event);
