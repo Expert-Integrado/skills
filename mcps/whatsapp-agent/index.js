@@ -610,7 +610,7 @@ async function enrichWithTranscriptions(messages) {
 
 // ─── SERVER ──────────────────────────────────────────────────────────────────
 
-const server = new McpServer({ name: "whatsapp-agent", version: "2.7.0" });
+const server = new McpServer({ name: "whatsapp-agent", version: "2.9.0" });
 
 // Auto-calcula tempo de typing baseado em tipo+content (humanize=true).
 // Heuristica: ~30 chars/seg = velocidade de digitacao confortavel. Cap em 15s (limite Z-API).
@@ -786,10 +786,20 @@ Mensagens de audio incluem campo transcription com o conteudo transcrito automat
         });
       }
 
+      // Coleta chat_ids equivalentes via lid_mapping pra cobrir @lid orfaos
+      // que escaparam do merge (issue #1). Quando resolved.chat_id e numerico,
+      // une mensagens dos LIDs mapeados pra esse phone na mesma thread.
+      const chatIds = [resolved.chat_id];
+      if (/^\d+$/.test(String(resolved.chat_id))) {
+        const { data: lids } = await supabase
+          .from("lid_mapping").select("lid").eq("phone", resolved.chat_id);
+        if (lids?.length) chatIds.push(...lids.map(r => r.lid));
+      }
+
       let q = supabase
         .from("v_messages_with_sender")
         .select("id,message_type,content,direction,from_me,sender_contact_name,sender_phone,message_ts,created_at")
-        .eq("chat_id", resolved.chat_id)
+        .in("chat_id", chatIds)
         .order("message_ts", { ascending: false, nullsFirst: false })
         .limit(limit);
 
