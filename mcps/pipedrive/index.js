@@ -2275,6 +2275,101 @@ server.tool(
   }
 );
 
+// ─── MERGE ────────────────────────────────────────────────────────────────────
+// Merge nativo da API do Pipedrive. O registro em `source_id` é DELETADO e seus
+// dados (atividades, notas, deals/pessoas vinculados, etc.) são herdados pelo
+// registro em `target_id`, que sobrevive. Operação irreversível.
+
+server.tool(
+  "merge_persons",
+  "Mescla duas pessoas do Pipedrive. A pessoa em `source_id` é DELETADA e suas atividades, notas e deals são herdados pela pessoa em `target_id`. Use para resolver duplicatas. Operação IRREVERSÍVEL — confirme com o usuário antes de chamar.",
+  {
+    source_id: z.number().describe("ID da pessoa que será DELETADA (perdedor da mesclagem)"),
+    target_id: z.number().describe("ID da pessoa que SOBREVIVE e herda os dados (vencedor)"),
+  },
+  async ({ source_id, target_id }) => {
+    if (source_id === target_id) {
+      return { content: [{ type: "text", text: "Erro: source_id e target_id são iguais. Forneça IDs diferentes." }] };
+    }
+    try {
+      const result = await pipedriveRequest(`/persons/${source_id}/merge`, {
+        method: "PUT",
+        body: JSON.stringify({ merge_with_id: target_id }),
+      });
+      const merged = result.data || {};
+      const url = `https://${COMPANY_DOMAIN}.pipedrive.com/person/${target_id}`;
+      return {
+        content: [{
+          type: "text",
+          text: `Pessoa ${source_id} mesclada em ${target_id}.\nNome final: ${merged.name || "—"}\n${url}`,
+        }],
+      };
+    } catch (err) {
+      return { content: [{ type: "text", text: `Erro ao mesclar pessoas: ${err.message}` }] };
+    }
+  }
+);
+
+server.tool(
+  "merge_deals",
+  "Mescla dois negócios do Pipedrive. O negócio em `source_id` é DELETADO e suas atividades/notas são herdadas pelo negócio em `target_id`. Use para resolver deals duplicados. Operação IRREVERSÍVEL — confirme com o usuário antes de chamar.",
+  {
+    source_id: z.number().describe("ID do negócio que será DELETADO (perdedor da mesclagem)"),
+    target_id: z.number().describe("ID do negócio que SOBREVIVE e herda os dados (vencedor)"),
+  },
+  async ({ source_id, target_id }) => {
+    if (source_id === target_id) {
+      return { content: [{ type: "text", text: "Erro: source_id e target_id são iguais. Forneça IDs diferentes." }] };
+    }
+    try {
+      const result = await pipedriveRequest(`/deals/${source_id}/merge`, {
+        method: "PUT",
+        body: JSON.stringify({ merge_with_id: target_id }),
+      });
+      const merged = result.data || {};
+      const url = `https://${COMPANY_DOMAIN}.pipedrive.com/deal/${target_id}`;
+      return {
+        content: [{
+          type: "text",
+          text: `Negócio ${source_id} mesclado em ${target_id}.\nTítulo final: ${merged.title || "—"}\n${url}`,
+        }],
+      };
+    } catch (err) {
+      return { content: [{ type: "text", text: `Erro ao mesclar negócios: ${err.message}` }] };
+    }
+  }
+);
+
+server.tool(
+  "merge_organizations",
+  "Mescla duas organizações do Pipedrive. A organização em `source_id` é DELETADA e suas pessoas/deals/atividades são herdadas pela organização em `target_id`. Use para resolver duplicatas de empresa. Operação IRREVERSÍVEL — confirme com o usuário antes de chamar.",
+  {
+    source_id: z.number().describe("ID da organização que será DELETADA (perdedor da mesclagem)"),
+    target_id: z.number().describe("ID da organização que SOBREVIVE e herda os dados (vencedor)"),
+  },
+  async ({ source_id, target_id }) => {
+    if (source_id === target_id) {
+      return { content: [{ type: "text", text: "Erro: source_id e target_id são iguais. Forneça IDs diferentes." }] };
+    }
+    try {
+      const result = await pipedriveRequest(`/organizations/${source_id}/merge`, {
+        method: "PUT",
+        body: JSON.stringify({ merge_with_id: target_id }),
+      });
+      const merged = result.data || {};
+      const url = `https://${COMPANY_DOMAIN}.pipedrive.com/organization/${target_id}`;
+      return {
+        content: [{
+          type: "text",
+          text: `Organização ${source_id} mesclada em ${target_id}.\nNome final: ${merged.name || "—"}\n${url}`,
+        }],
+      };
+    } catch (err) {
+      return { content: [{ type: "text", text: `Erro ao mesclar organizações: ${err.message}` }] };
+    }
+  }
+);
+
 // ─── START ────────────────────────────────────────────────────────────────────
 
 const transport = new StdioServerTransport();
