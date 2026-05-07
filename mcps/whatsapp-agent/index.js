@@ -920,8 +920,10 @@ FLUXO OBRIGATORIO (duas chamadas):
     humanize: z.boolean().default(true).describe("Se true (padrao), calcula delay_typing automaticamente baseado em tamanho+tipo. Passe false pra desligar simulacao humana."),
     delay_typing: z.number().int().min(0).max(15).optional().describe("Override do delay de digitacao (0-15s). Se passado, ignora humanize."),
     delay_message: z.number().int().min(0).max(15).optional().describe("Atraso geral antes de enviar (0-15s, alem do typing)."),
+    mentions: z.array(z.string()).optional().describe("Phones pra mencionar (ex: [\"5511999998888\"]). So funciona em grupos."),
+    mentions_everyone: z.boolean().optional().describe("Se true, menciona @todos no grupo."),
   },
-  async ({ to, content, type, media_url, file_name, reply_to, confirmed, allow_new, humanize, delay_typing, delay_message }) => {
+  async ({ to, content, type, media_url, file_name, reply_to, confirmed, allow_new, humanize, delay_typing, delay_message, mentions, mentions_everyone }) => {
     if (!confirmed) {
       return {
         content: [{
@@ -1010,6 +1012,8 @@ FLUXO OBRIGATORIO (duas chamadas):
         ...(reply_to && { quoted_msg_id: reply_to }),
         ...(effectiveDelayTyping !== undefined && { delay_typing: effectiveDelayTyping }),
         ...(delay_message !== undefined && { delay_message }),
+        ...(mentions?.length && { mentions }),
+        ...(mentions_everyone && { mentions_everyone: true }),
       };
 
       const res = await fetch(SEND_MESSAGE_URL, {
@@ -1788,6 +1792,136 @@ Para "messageId": usar provider_msg_id da tabela messages (nao o UUID interno).`
 );
 
 // ─── START ───────────────────────────────────────────────────────────────────
+
+
+// ─── 9. edit_message ─────────────────────────────────────────────────────────
+server.tool(
+  "edit_message",
+  `Edita o texto de uma mensagem enviada por voce.
+Use para: "corrige aquela msg que mandei pro Marcos", "edita a ultima mensagem que enviei".
+Precisa do message_id (UUID da tabela messages) — obtenha via read ou search.
+Funciona apenas em mensagens de texto enviadas por voce (from_me=true).`,
+  {
+    message_id: z.string().describe("UUID da mensagem (campo id retornado por read/search)"),
+    new_content: z.string().describe("Novo texto da mensagem"),
+    confirmed: z.boolean().default(false).describe("Obrigatorio true para editar. So passe true apos confirmacao explicita do usuario."),
+  },
+  async ({ message_id, new_content, confirmed }) => {
+    if (!confirmed) {
+      return {
+        content: [{ type: "text", text: [
+          "BLOQUEADO: confirmacao pendente.",
+          "",
+          "Mostre ao usuario:",
+          `  Mensagem ID: ${message_id}`,
+          `  Novo texto : ${new_content}`,
+          "",
+          'Apos confirmacao, chame novamente com confirmed: true.',
+        ].join("\n") }],
+        isError: true,
+      };
+    }
+    try {
+      if (!ZAPI_BASE) return err("Credenciais Z-API nao configuradas.");
+      const { data: msg, error } = await supabase
+        .from("messages")
+        .select("provider_msg_id,chat_id,from_me")
+        .eq("id", message_id)
+        .single();
+      if (error || !msg) return err(error?.message || "Mensagem nao encontrada.");
+      if (!msg.from_me) return err("Nao e possivel editar mensagens de outros contatos.");
+      const phone = msg.chat_id.replace(/@.*$/, "");
+      const res = await fetch(`${ZAPI_BASE}/edit-message`, {
+        method: "POST",
+        headers: zapiHeaders(),
+        body: JSON.stringify({ phone, messageId: msg.provider_msg_id, newMessage: new_content }),
+      });
+      if (!res.ok) return err(`Z-API ${res.status}: ${await res.text()}`);
+      await supabase.from("messages").update({ content: new_content, is_edited: true }).eq("id", message_id);
+      return ok({ edited: true, message_id, new_content });
+    } catch (e) { return err(e.message); }
+  }
+);
+
+// ─── 10. delete_message ──────────────────────────────────────────────────────
+server.tool(
+  "delete_message",
+  `Deleta uma mensagem enviada por voce (apaga para todos).
+Use para: "apaga aquela msg que mandei", "deleta a ultima mensagem para o Marcos".
+Precisa do message_id (UUID da tabela messages) — obtenha via read ou search.`,
+  {
+    message_id: z.string().describe("UUID da mensagem (campo id retornado por read/search)"),
+    confirmed: z.boolean().default(false).describe("Obrigatorio true para deletar. So passe true apos confirmacao explicita do usuario."),
+  },
+  async ({ message_id, confirmed }) => {
+    if (!confirmed) {
+      return {
+        content: [{ type: "text", text: [
+          "BLOQUEADO: confirmacao pendente.",
+          "",
+          `  Mensagem ID: ${message_id}`,
+          "",
+          'Apos confirmacao, chame novamente com confirmed: true.',
+        ].join("\n") }],
+        isError: true,
+      };
+    }
+    try {
+      if (!ZAPI_BASE) return err("Credenciais Z-API nao configuradas.");
+      const { data: msg, error } = await supabase
+        .from("messages")
+        .select("provider_msg_id,chat_id,from_me")
+        .eq("id", message_id)
+        .single();
+      if (error || !msg) return err(error?.message || "Mensagem nao encontrada.");
+      const phone = msg.chat_id.replace(/@.*$/, "");
+      const res = await fetch(`${ZAPI_BASE}/delete-message`, {
+        method: "POST",
+        headers: zapiHeaders(),
+        body: JSON.stringify({ phone, messageId: msg.provider_msg_id, owner: !!msg.from_me }),
+      });
+      if (!res.ok) return err(`Z-API ${res.status}: ${await res.text()}`);
+      await supabase.from("messages").update({ is_deleted: true }).eq("id", message_id);
+      return ok({ deleted: true, message_id });
+    } catch (e) { return err(e.message); }
+  }
+);
+
+// ─── 11. download_attachment ─────────────────────────────────────────────────
+server.tool(
+  "download_attachment",
+  `Retorna a URL publica de uma midia (imagem, audio, video, documento) salva no Storage.
+Use para: "me mostra o PDF que o Marcos mandou", "qual o link da foto da Maria".
+Precisa do message_id (UUID da tabela messages) — obtenha via read ou search.
+Retorna URL do Supabase Storage (permanente) ou original_url (CDN temporaria Z-API como fallback).`,
+  {
+    message_id: z.string().describe("UUID da mensagem (campo id retornado por read/search)"),
+  },
+  async ({ message_id }) => {
+    try {
+      const { data: media, error } = await supabase
+        .from("message_media")
+        .select("storage_bucket,storage_path,original_url,mime_type,file_size_bytes,download_status,download_error")
+        .eq("message_id", message_id)
+        .single();
+      if (error || !media) return err("Nenhuma midia associada a esta mensagem.");
+      let public_url = null;
+      if (media.storage_path && media.download_status === "done") {
+        const { data } = supabase.storage.from(media.storage_bucket).getPublicUrl(media.storage_path);
+        public_url = data?.publicUrl ?? null;
+      }
+      return ok({
+        public_url,
+        original_url: media.original_url,
+        mime_type: media.mime_type,
+        file_size_bytes: media.file_size_bytes,
+        download_status: media.download_status,
+        ...(media.download_status !== "done" && { note: "Arquivo ainda nao baixado pro Storage. Usando original_url (pode expirar)." }),
+        ...(media.download_error && { download_error: media.download_error }),
+      });
+    } catch (e) { return err(e.message); }
+  }
+);
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
