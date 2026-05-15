@@ -8,6 +8,7 @@
 import { z } from "zod";
 import { graphRequest } from "../graph.js";
 import { checkRateLimit, registerAction } from "../guardrails.js";
+import { buildAttachment } from "../attachments.js";
 
 export const replyEmailSchema = z.object({
   email_id: z
@@ -37,6 +38,12 @@ export const replyEmailSchema = z.object({
     .string()
     .optional()
     .describe("E-mails adicionais em cópia (CC) separados por vírgula. Opcional."),
+  anexos: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "Lista de caminhos absolutos de arquivos para anexar à resposta. Cada anexo até 3 MB."
+    ),
   confirmacao: z
     .boolean()
     .optional()
@@ -45,7 +52,7 @@ export const replyEmailSchema = z.object({
 });
 
 export async function replyEmail(params) {
-  const { email_id, busca_assunto, corpo, html, responder_todos, cc, confirmacao } = params;
+  const { email_id, busca_assunto, corpo, html, responder_todos, cc, anexos, confirmacao } = params;
 
   if (!email_id && !busca_assunto) {
     throw new Error("Informe email_id ou busca_assunto para localizar o e-mail a ser respondido.");
@@ -108,15 +115,26 @@ export async function replyEmail(params) {
 
   await graphRequest("PATCH", `/me/messages/${draft.id}`, patchBody);
 
-  // 5. Enviar o rascunho
+  // 5. Adicionar anexos ao rascunho (se houver)
+  let anexosCount = 0;
+  if (Array.isArray(anexos) && anexos.length > 0) {
+    for (const caminho of anexos) {
+      const attachment = await buildAttachment(caminho);
+      await graphRequest("POST", `/me/messages/${draft.id}/attachments`, attachment);
+      anexosCount += 1;
+    }
+  }
+
+  // 6. Enviar o rascunho
   await graphRequest("POST", `/me/messages/${draft.id}/send`, {});
 
-  // 6. Registrar ação
+  // 7. Registrar ação
   await registerAction("email");
 
   // Montar retorno amigável
   const tipoResposta = responder_todos ? "Responder a todos" : "Responder";
   const ccStr = cc ? ` | CC: ${cc}` : "";
+  const anexoStr = anexosCount > 0 ? ` | Anexos: ${anexosCount}` : "";
 
-  return `E-mail respondido com sucesso!\n- Tipo: ${tipoResposta}${ccStr}\n- Tamanho da resposta: ${corpo.length} caracteres`;
+  return `E-mail respondido com sucesso!\n- Tipo: ${tipoResposta}${ccStr}${anexoStr}\n- Tamanho da resposta: ${corpo.length} caracteres`;
 }
