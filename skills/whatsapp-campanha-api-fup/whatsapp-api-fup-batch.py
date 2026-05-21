@@ -56,6 +56,11 @@ PERSON_CHAT_FIELD = 'ac0aa8d970799954747791a22a4645ea9159c7e2'  # campo "Link do
 EXPERT_USER       = 22805147  # user_id Expert Integrado (conta automacao)
 ERRO_LABEL_ID     = 390       # Label "ERRO DE DISPARO" no Pipedrive
 LEAD_MAPEADO_STAGE = 64       # Stage "Lead Mapeado" no pipeline Prospeccao (id 7)
+TENTANDO_CONTATO_STAGE = 65   # Stage "Tentando contato" — destino padrao em caso de sucesso quando target_stage_on_success=True
+
+# MAPA stages pipeline 7 (Prospeccao) — atencao: NAO confundir stage_id 2 (nao existe) com 65
+# 64: Lead Mapeado | 65: Tentando contato | 66: Conexao iniciada/Em qualificacao
+# 68: Pre-Qualificado | 116: Qualificado | 79: Reuniao agendada
 
 # ───────────── HTTP HELPERS ────────────────────────────────────────────────
 def _cg_call(creds, action, params):
@@ -132,7 +137,7 @@ def _normalize_phone(phone):
     import re
     return re.sub(r'[^\d]', '', str(phone or ''))
 
-def disparar(creds, deal_id, person_id, phone, miolo, dialog_id, name=None):
+def disparar(creds, deal_id, person_id, phone, miolo, dialog_id, name=None, target_stage_on_success=None):
     """Executa as 5 fases pra 1 lead. Retorna dict com resultado."""
     phone = _normalize_phone(phone)  # remove (), -, espacos antes de qualquer chamada
     erro = None; chat_id = None; phone_used = phone; chat_added = False
@@ -216,14 +221,26 @@ def disparar(creds, deal_id, person_id, phone, miolo, dialog_id, name=None):
             'deal_id': deal_id, 'user_id': EXPERT_USER, 'done': 1,
             'note': miolo,
         })
+        # F4.2 (opcional): mover stage no sucesso quando o batch parte de uma etapa anterior
+        # (ex: Lead Mapeado). Default None preserva comportamento legado (nao mexe em stage).
+        if target_stage_on_success:
+            try:
+                _pd_req(creds, 'PUT', f'/deals/{deal_id}', {'stage_id': int(target_stage_on_success)})
+            except Exception:
+                pass  # nao quebra o batch se falhar
 
     return {'deal_id': deal_id, 'phone': phone, 'phone_used': phone_used,
             'chat_id': chat_id, 'chat_added': chat_added, 'ok': not erro, 'erro': erro}
 
 # ───────────── RUN BATCH ───────────────────────────────────────────────────
-def run_batch(leads, dialog_id, log_path=None, verbose=True):
+def run_batch(leads, dialog_id, log_path=None, verbose=True, target_stage_on_success=None):
     """Roda o batch inteiro. Cada lead em `leads` precisa ter:
-    deal_id, person_id, phone, name, miolo."""
+    deal_id, person_id, phone, name, miolo.
+
+    target_stage_on_success (opcional): se passado, deals com sucesso sao movidos
+    pra essa stage_id apos a atividade ser criada. Use TENTANDO_CONTATO_STAGE (65)
+    quando o batch partir de Lead Mapeado ou outra etapa anterior. Default None
+    preserva comportamento legado (nao mexe em stage no sucesso)."""
     creds = _load_creds()
     log_f = None
     if log_path:
@@ -235,7 +252,8 @@ def run_batch(leads, dialog_id, log_path=None, verbose=True):
         if verbose:
             print(f'\n[{i}/{len(leads)}] {lead.get("name","?")} (deal {lead["deal_id"]})')
         r = disparar(creds, lead['deal_id'], lead['person_id'],
-                     lead['phone'], lead['miolo'], dialog_id, name=lead.get('name'))
+                     lead['phone'], lead['miolo'], dialog_id, name=lead.get('name'),
+                     target_stage_on_success=target_stage_on_success)
         r['name'] = lead.get('name')
         results.append(r)
         if verbose:

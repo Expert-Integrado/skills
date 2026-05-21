@@ -27,8 +27,22 @@ A diferenca pra `campanha-disparo-massa`: nao usa multipart, nao precisa de dela
 | Atividade erro — type | `task` (done=0) |
 | Em caso de erro — stage destino | `Lead Mapeado` (id 64, pipeline Prospeccao) |
 | Em caso de erro — label adicional | `ERRO DE DISPARO` (id 390, preserva labels existentes) |
+| Em caso de sucesso — stage destino | **NAO MUDA** por padrao. Passar `target_stage_on_success=65` no `run_batch()` quando o batch partir de etapa que nao seja "Tentando contato" (ex: Lead Mapeado) |
 | Sem delay entre leads | API oficial nao tem risco de banimento |
 | Endpoints | `https://expertintegrado.pipedrive.com/api/v1` + `https://s13.expertintegrado.app/api/v1` |
+
+### Mapa de stages — pipeline 7 (Prospeccao)
+
+ATENCAO: stage_id `2` NAO existe nesse pipeline. Se precisar referenciar "Tentando contato" numericamente, e **65**, nao 2.
+
+| stage_id | Nome |
+|---:|------|
+| 64 | Lead Mapeado |
+| 65 | Tentando contato |
+| 66 | Conexao iniciada/Em qualificacao |
+| 68 | Pre-Qualificado |
+| 116 | Qualificado |
+| 79 | Reuniao agendada |
 
 **Dialog ID do template** — NAO e constante. Pedir ao usuario a cada campanha (cada campanha tem seu template aprovado proprio).
 
@@ -333,6 +347,10 @@ Leonardo, lembrei do Funnel Max porque vocês operam 350 leads/dia e a recupera�
 
 9. **PARAMETRO E `key`, NAO `api_key`** — a API REST do ChatGuru aceita `key=<token>`, nao `api_key`. Se rescrever a funcao `cg_call` do zero, conferir esse detalhe — caso contrario TODAS as chamadas voltam HTTP 400 com `"key ou account_id não informado(s)"`. Confirmado em sessao com Sonnet 4.6 que reescreveu sem consultar a skill e travou o batch inteiro.
 
+10. **Engine NAO move stage em caso de sucesso por padrao** — premissa implicita e que os leads ja estao em "Tentando contato" antes do batch. Quando o batch partir de outra etapa (ex: Lead Mapeado em campanhas de retry), passar `target_stage_on_success=65` no `run_batch()` pra que os sucessos sejam movidos pra Tentando contato. Sem isso, deals com sucesso ficam orfaos na etapa de origem (descoberto em 21/05/2026 ao rodar retry de 35 leads Calendly que estavam em Lead Mapeado).
+
+11. **stage_id 2 NAO existe no pipeline Prospeccao** — armadilha real: outras LLMs/skills usam 2 como "Tentando contato" generico, mas no Pipedrive Expert Integrado o stage_id correto e **65**. Tentativa de mover deal pra stage_id=2 retorna HTTP 400 `ERR_STAGE_NOT_FOUND`. Sempre conferir o mapa de stages na secao CONSTANTES.
+
 ---
 
 ## CREDENCIAIS — sempre do JSON local, nunca hardcoded
@@ -383,7 +401,10 @@ LEADS = [
 ]
 
 results = eng.run_batch(LEADS, dialog_id=DIALOG_ID,
-                        log_path=r'C:/tmp/disparo-<nome>/results.jsonl')
+                        log_path=r'C:/tmp/disparo-<nome>/results.jsonl',
+                        # Opcional: passar quando o batch partir de outra etapa que nao seja
+                        # "Tentando contato". Move deals com sucesso pra stage 65.
+                        target_stage_on_success=eng.TENTANDO_CONTATO_STAGE)
 ```
 
 `results` e uma lista de dicts: `{deal_id, name, phone, phone_used, chat_id, ok, erro}`.
