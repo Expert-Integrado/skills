@@ -63,9 +63,10 @@ FORMATS = {
 
 
 def parse_bold(text: str) -> str:
-    """Escapa HTML e converte **word** em <b>word</b>."""
+    """Escapa HTML e converte **word** em <b>word</b> e newlines em <br>."""
     text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     text = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", text)
+    text = text.replace("\n", "<br>")
     return text
 
 
