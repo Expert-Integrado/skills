@@ -1,11 +1,13 @@
 ---
 name: estou-devendo
-description: "Lista as conversas do WhatsApp em que o Eric está devendo resposta (lead respondeu por último), filtradas por categoria opcional e ordenadas por urgência. Use quando o Eric pedir 'do que estou devendo?', 'quem está esperando resposta?', 'me lembra das pendências de WhatsApp', ou similar."
-argument-hint: "[--categoria=cliente,prospect] [--excluir=descartar,comunidade] [--dias=1] [--limit=20]"
+description: "Lista as conversas do WhatsApp em que o Eric está devendo resposta (lead respondeu por último), classificadas por urgência (URGENTE/HOJE/SEM PRAZO) e opcionalmente com drafts de resposta. Use quando o Eric pedir 'do que estou devendo?', 'quem está esperando resposta?', 'me lembra das pendências de WhatsApp', ou similar."
+argument-hint: "[--categoria=cliente,prospect] [--excluir=descartar,comunidade] [--dias=1] [--limit=20] [--draft] [--urgencia=urgente,hoje]"
 allowed-tools: Bash, Read
 ---
 
 Skill que lista as conversas onde o Eric está devendo resposta no WhatsApp pessoal — quem mandou a última mensagem é o lead/contato, não o Eric.
+
+**Atualizado 24/05/2026 (v2):** classificação automática por urgência + flag `--draft` pra sugerir respostas + suporte a agendamento via `loop`/`schedule`.
 
 ## Como funciona
 
@@ -31,6 +33,8 @@ Mesmas vars da skill `transcrever-conversa`. No container claude-code da VPS já
 - `--dias=N` — só pendências com mais de N dias parado (default: 1). Use 0 pra incluir as de hoje.
 - `--limit=N` — número máximo de chats no output (default: 20, max: 100)
 - `--all-groups` — inclui grupos (não recomendado — gera ruído)
+- `--draft` — pra cada chat, gera sugestão de resposta baseada no contexto (Claude lê última msg + voice guide e propõe texto)
+- `--urgencia=urgente,hoje,sem-prazo` — filtra por nível de urgência classificado (ver seção abaixo)
 
 ## Execução
 
@@ -43,7 +47,26 @@ Em Windows local:
 "/c/Users/Eric Luciano/AppData/Local/Python/bin/python.exe" "/c/Users/Eric Luciano/.claude/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
 ```
 
-## Após rodar
+## Após rodar — classificação por urgência
+
+Claude DEVE classificar cada chat antes de apresentar pro Eric:
+
+### URGENTE (responder hoje)
+- Categoria `lead` (qualquer status)
+- Categoria `cliente` + deal Pipedrive ativo com valor R$40K+ (`get_deal_summary` por nome se necessário)
+- Categoria `parceiro` se mencionar dinheiro/prazo
+- Chats com `dias_parado >= 3` independente de categoria (já tá ruim, decidir)
+
+### HOJE (idealmente hoje, pode ser amanhã cedo)
+- Categoria `cliente` padrão (sem qualificação VIP)
+- Categoria `parceiro` sem urgência clara
+- Categoria `prospect`
+
+### SEM PRAZO (responder quando puder)
+- Categoria `pessoal`, `familia`, `amigo`
+- Categoria `vendedor`, `fornecedor`
+
+### Output esperado
 
 O script devolve JSON com:
 - `total_pendencias`: total absoluto encontrado (antes do limit)
@@ -51,11 +74,37 @@ O script devolve JSON com:
 - `por_categoria`: contagem agrupada por categoria
 - `chats`: array `[{ chat_id, chat_name, categories[], dias_parado, ultima_msg_recebida, link }]` ordenado por `dias_parado` desc
 
-Use o output pra escrever um briefing curto pro Eric:
-- Liste no máximo top 10 (resto agrupa em "+N outros")
-- Mostre o que cada lead esperando, idealmente com snippet da última msg deles
-- Agrupar por categoria quando relevante (3+ pendências da mesma categoria → seção separada)
-- Tom direto, sem firula. Tipo "Você está devendo: 3 clientes (Cesar há 5d, ...), 2 prospects (...), 1 família (Camila há 2d)."
+Briefing pro Eric (formato canônico):
+
+```markdown
+## URGENTE (X)
+- [Lead] Carlos Shimizu — 1d — "Pode ser as 9h" → link
+- [Cliente VIP] Mauricio — 2h — "Cloud tá pesando" → link
+
+## HOJE (Y)
+- [Cliente] Joana — 1d — link
+- [Parceiro] Silvia — 4h — link
+
+## SEM PRAZO (Z)
+- [Pessoal] Mirtes — 4h — "Estamos perdidos"
+- [Família] Camila — 2d
+```
+
+### Modo --draft
+
+Quando `--draft` flag presente, pra cada chat URGENTE ou HOJE, Claude:
+1. Lê últimas 3-5 mensagens via `mcp__whatsapp-agent__read(chat_id)`
+2. Consulta `mcp__whatsapp-agent__get_voice_guide()` se for chat WhatsApp pessoal
+3. Gera sugestão de resposta natural com voz Eric
+4. Apresenta junto da listagem: `Carlos Shimizu — DRAFT: "Bom dia Carlos, sim 9h tá ótimo, te mando o Zoom. Abraço"`
+
+Eric aprova ou edita antes de enviar. NUNCA envia automático.
+
+### Modo --urgencia (filtro)
+
+`--urgencia=urgente` → só lista os URGENTE
+`--urgencia=urgente,hoje` → URGENTE + HOJE (default visualização recomendada)
+`--urgencia=sem-prazo` → só pessoal/família (modo "responder quando tiver tempo")
 
 Se quiser detalhe de uma conversa específica, chama a skill `transcrever-conversa` ou usa o MCP `whatsapp-agent` (tool `read`).
 
@@ -66,7 +115,21 @@ estou-devendo
 estou-devendo --categoria=cliente,prospect --dias=2
 estou-devendo --excluir=descartar,comunidade,pessoal --limit=10
 estou-devendo --categoria=familia --dias=0 --limit=5
+estou-devendo --urgencia=urgente,hoje --draft
+estou-devendo --urgencia=urgente --draft --limit=5
 ```
+
+## Agendamento (loop / schedule)
+
+Skill pode rodar automatica 2x/dia (manhã + meio-tarde):
+
+```
+/loop 6h /estou-devendo --urgencia=urgente
+```
+
+Ou agendamento fixo via `schedule`:
+- 08:00 BRT — `estou-devendo --urgencia=urgente,hoje` (manhã, foco em hoje)
+- 14:00 BRT — `estou-devendo --urgencia=urgente --draft` (meio-tarde, com drafts pras urgências do dia)
 
 ## Observações
 
