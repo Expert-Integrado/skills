@@ -41,11 +41,13 @@ set -a; source /home/node/.claude/.env; set +a
 
 ## Como invocar
 
+Skill instalada via plugin marketplace — usar `${CLAUDE_PLUGIN_ROOT}` que aponta pra raiz do plugin:
+
 ```bash
-node /workspace/expert-mcps/plugins/marketing/skills/pesquisa-instagram/scripts/run.mjs <username>
+node "${CLAUDE_PLUGIN_ROOT}/plugins/marketing/skills/pesquisa-instagram/scripts/run.mjs" <username>
 ```
 
-Exemplos:
+Alternativa portável (path relativo, se cwd já estiver na pasta da skill):
 ```bash
 node ./scripts/run.mjs ericluciano
 node ./scripts/run.mjs @G4educacao

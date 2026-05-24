@@ -40,24 +40,24 @@ A skill cria automaticamente se faltar:
 A skill é self-contained — tem `package.json` próprio com `@azure/msal-node`. Em máquina nova:
 
 ```bash
-cd "C:/Users/Eric Luciano/.claude/skills/email-cleaner" && npm install
+cd "${CLAUDE_PLUGIN_ROOT}/plugins/operacoes/skills/email-cleaner" && npm install
 ```
 
 Depois disso, basta chamar o script direto (não precisa cd nem nada):
 
 ```bash
-node "C:/Users/Eric Luciano/.claude/skills/email-cleaner/scripts/cleaner.mjs" <subcomando>
+node "${CLAUDE_PLUGIN_ROOT}/plugins/operacoes/skills/email-cleaner/scripts/cleaner.mjs" <subcomando>
 ```
 
 ### 1. Pré-flight
 
 ```bash
-node "C:/Users/Eric Luciano/.claude/skills/email-cleaner/scripts/cleaner.mjs" --auth-check
+node "${CLAUDE_PLUGIN_ROOT}/plugins/operacoes/skills/email-cleaner/scripts/cleaner.mjs" --auth-check
 ```
 
 Se retornar "SEM_AUTH", pedir pro Eric rodar (ele precisa fazer no terminal dele):
 ```bash
-node "C:/Users/Eric Luciano/.claude/skills/email-cleaner/scripts/cleaner.mjs" --auth
+node "${CLAUDE_PLUGIN_ROOT}/plugins/operacoes/skills/email-cleaner/scripts/cleaner.mjs" --auth
 ```
 E aguardar confirmação.
 

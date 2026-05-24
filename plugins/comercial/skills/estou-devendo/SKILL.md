@@ -38,13 +38,20 @@ Mesmas vars da skill `transcrever-conversa`. No container claude-code da VPS já
 
 ## Execução
 
+Skill instalada via plugin marketplace. Usar `${CLAUDE_PLUGIN_ROOT}` que aponta pra raiz do plugin instalado (pode estar em `~/.claude/plugins/cache/expertintegrado/skills/<versao>/plugins/comercial/`):
+
 ```bash
-python3 /home/node/.claude/skills/estou-devendo/scripts/estou_devendo.py $ARGUMENTS
+python3 "${CLAUDE_PLUGIN_ROOT}/plugins/comercial/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
 ```
 
-Em Windows local:
+Em Windows local com Python global:
+```bash
+python "${CLAUDE_PLUGIN_ROOT}/plugins/comercial/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
 ```
-"/c/Users/Eric Luciano/AppData/Local/Python/bin/python.exe" "/c/Users/Eric Luciano/.claude/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
+
+Alternativa portável (path relativo a partir da pasta da skill — quando Claude executa skill, cwd pode estar nela):
+```bash
+python scripts/estou_devendo.py $ARGUMENTS
 ```
 
 ## Após rodar — classificação por urgência
