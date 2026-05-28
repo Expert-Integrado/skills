@@ -31,14 +31,20 @@ LLM também avalia qualidade de campos texto (briefing, dores, objetivos) e apon
 
 ## PROTOCOLO DE EXECUÇÃO
 
-### Passo 1: Rodar o script com notificações suprimidas
+### Passo 1: Rodar o script localmente
+
+O script vive em `C:\repos\radar-comercial\`. Rodar diretamente do PC:
 
 ```bash
-cd /workspace/temp/radar-comercial
-TELEGRAM_CHAT_ID="" ZOOM_CHANNEL_ID="" node radar.js
+cd C:/repos/radar-comercial && node radar.js 2>&1
 ```
 
-**Por que suprimir:** o `radar.js` tem envio de Telegram/Zoom hardcoded. Quando rodado pelo Claude, NÃO queremos que ele mande direto — o Claude orquestra a resposta. Em modo cron autônomo, deixar as env vars preenchidas pra ele notificar sozinho.
+Credenciais em `C:\repos\radar-comercial\.env` (TELEGRAM_CHAT_ID e ZOOM_CHANNEL_ID propositalmente vazios — Claude orquestra o envio).
+
+**Por que suprimir Telegram/Zoom:** o `radar.js` tem envio hardcoded. Quando rodado pelo Claude, NÃO queremos que ele mande direto — o Claude orquestra a resposta. Em modo cron autônomo (VPS), deixar as env vars preenchidas pra ele notificar sozinho.
+
+**Path VPS (fallback):** `/opt/claude-code/workspace/temp/radar-comercial/radar.js`  
+**SSH fallback:** `ssh -i ~/.ssh/hostinger_vps root@187.77.236.59 "cd /opt/claude-code/workspace/temp/radar-comercial && TELEGRAM_CHAT_ID='' ZOOM_CHANNEL_ID='' node radar.js 2>&1"`
 
 ### Passo 2: Capturar do output
 
@@ -70,7 +76,7 @@ Anotar em `tasks.md` ou `log.md` apenas se houve erro ou desvio (ex: deploy Verc
 
 ## ENV VARS NECESSÁRIAS (radar.js)
 
-Em `/workspace/temp/radar-comercial/.env`:
+Em `/opt/claude-code/workspace/temp/radar-comercial/.env` (na VPS):
 - `PIPEDRIVE_API_TOKEN`
 - `VERCEL_TOKEN`
 - `VERCEL_PROJECT_ID` (default: `prj_9dZcqlstcvofIzUz5yXz2AvQvzzC`)
@@ -85,7 +91,7 @@ Em modo skill (Claude orquestrando), forçar `TELEGRAM_CHAT_ID=""` e `ZOOM_CHANN
 Pra rodar todo dia útil às 7h30 BRT (10:30 UTC):
 
 ```
-30 10 * * 1-5 cd /workspace/temp/radar-comercial && /usr/local/bin/node radar.js >> /var/log/radar.log 2>&1
+30 10 * * 1-5 cd /opt/claude-code/workspace/temp/radar-comercial && /usr/local/bin/node radar.js >> /var/log/radar.log 2>&1
 ```
 
 Nesse modo, o script notifica direto o Telegram + Zoom (env vars preenchidas).

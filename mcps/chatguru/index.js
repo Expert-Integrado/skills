@@ -948,20 +948,32 @@ server.tool(
           const timeEl = card.querySelector(".attendance__hour span");
           const timestamp = timeEl?.textContent?.trim() || "";
 
-          // chat_id: tentar extrair do Vue component data ou data attributes
+          // chat_id: extrair via Vue 3 __vueParentComponent.props.card.id
           let chatId = "";
-          chatId = card.getAttribute("data-id")
-            || card.getAttribute("data-chat-id")
-            || card.getAttribute("data-chat")
-            || "";
+          let waChatId = "";
+          let chatKind = "";
+          try {
+            const vue3 = card.__vueParentComponent;
+            const cardData = vue3?.props?.card;
+            if (cardData) {
+              chatId = cardData.id || cardData._id || "";
+              waChatId = cardData.wa_chat_id || "";
+              chatKind = cardData.kind || "";
+            }
+          } catch (e) { /* ignore */ }
 
+          // Fallback Vue 2 / data attrs (compat antigos)
           if (!chatId) {
-            try {
-              const vue = card.__vue__;
-              if (vue) {
-                chatId = vue.chat?._id || vue.chat?.id || vue.$props?.chatId || vue.$props?.chat?._id || "";
-              }
-            } catch (e) { /* ignore */ }
+            chatId = card.getAttribute("data-id")
+              || card.getAttribute("data-chat-id")
+              || card.getAttribute("data-chat")
+              || "";
+            if (!chatId) {
+              try {
+                const vue = card.__vue__;
+                if (vue) chatId = vue.chat?._id || vue.chat?.id || "";
+              } catch (e) { /* ignore */ }
+            }
           }
 
           result.push({
@@ -971,6 +983,8 @@ server.tool(
             timestamp,
             unread_count: unreadCount,
             chat_id: chatId,
+            wa_chat_id: waChatId,
+            kind: chatKind,
           });
         }
 

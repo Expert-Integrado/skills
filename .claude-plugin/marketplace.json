@@ -13,10 +13,16 @@
     {
       "name": "comercial",
       "source": "./plugins/comercial",
-      "description": "Skills comerciais: prospecta-lead, reabordagem, pipe-review, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo.",
-      "version": "2.0.0",
+      "description": "Skills comerciais: prospecta-lead, reabordagem, pipe-review, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo, transferir-lead.",
+      "version": "2.1.0",
       "category": "productivity",
-      "tags": ["comercial", "crm", "pipedrive", "whatsapp", "prospeccao"]
+      "tags": [
+        "comercial",
+        "crm",
+        "pipedrive",
+        "whatsapp",
+        "prospeccao"
+      ]
     },
     {
       "name": "eventos",
@@ -24,7 +30,11 @@
       "description": "Skills de gestao de eventos: convidar-evento, verificar-convites.",
       "version": "2.0.0",
       "category": "productivity",
-      "tags": ["eventos", "convites", "whatsapp"]
+      "tags": [
+        "eventos",
+        "convites",
+        "whatsapp"
+      ]
     },
     {
       "name": "marketing",
@@ -32,7 +42,11 @@
       "description": "Skills de marketing e conteudo: tweet-print, pesquisa-instagram.",
       "version": "2.0.0",
       "category": "productivity",
-      "tags": ["marketing", "conteudo", "instagram"]
+      "tags": [
+        "marketing",
+        "conteudo",
+        "instagram"
+      ]
     },
     {
       "name": "operacoes",
@@ -40,7 +54,11 @@
       "description": "Skills de operacoes internas: email-cleaner, onboard.",
       "version": "2.0.0",
       "category": "productivity",
-      "tags": ["operacoes", "email", "onboarding"]
+      "tags": [
+        "operacoes",
+        "email",
+        "onboarding"
+      ]
     },
     {
       "name": "setup",
@@ -48,7 +66,10 @@
       "description": "Skills de setup tecnico: telegram-setup.",
       "version": "2.0.0",
       "category": "productivity",
-      "tags": ["setup", "telegram"]
+      "tags": [
+        "setup",
+        "telegram"
+      ]
     }
   ]
 }
