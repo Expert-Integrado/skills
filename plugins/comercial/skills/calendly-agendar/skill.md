@@ -132,6 +132,13 @@ Tirar screenshot e snapshot da página de confirmação.
 
 ---
 
+## OBSERVAÇÕES TÉCNICAS (aprendidos em teste 28/05/2026)
+
+- **Playwright funciona sem reCAPTCHA** — o Calendly não bloqueou o Playwright MCP. Agendamento via browser automatizado é viável.
+- **Phone no URL param** — deve passar com `+55` prefixo (ex: `+5511987650000`). Sem o prefixo, o Calendly assume código US (+1) e a validação falha. O MCP já normaliza automaticamente via `normalizeBrPhone()`.
+- **Email do lead** — deve ser domínio real (gmail, outlook, etc.). Domínios descartáveis (sharklasers.com, mailinator.com, guerrillamail.com) são bloqueados pelo Calendly na submissão do formulário.
+- **Playwright para o campo phone** — se usar Playwright, após preencher o telefone usar `intlTelInputGlobals.getInstance(tel).setCountry('br')` + `nativeSetter` hack para atualizar o React state.
+
 ## REGRAS
 
 - Nunca inventar horários — sempre usar slots retornados por `calendly_list_available_slots`
