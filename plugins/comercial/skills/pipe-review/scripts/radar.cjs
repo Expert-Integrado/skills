@@ -27,6 +27,15 @@ const TARGET = {};
   TARGET[id.trim()] = n.join(':').trim();
 });
 
+// etapas-alvo: SO pos-reuniao (apresentacao/demo realizada em diante) — espelha o radar.js original.
+// SaaS: 61 Apres / 20 Proposta / 21 Negociacao / 83 Formalizacao
+// Super SDR: 10 Demo / 12 Proposta / 14 Negociacao / 81 Formalizacao
+// Educacional: 60 Apres / 55 Proposta / 56 Negociacao / 82 Formalizacao
+const ALLOWED_STAGES = new Set(
+  (process.env.RADAR_STAGES || '61,20,21,83,10,12,14,81,60,55,56,82')
+    .split(',').map((s) => Number(s.trim()))
+);
+
 if (!PD) { console.error('ERRO: token Pipedrive ausente (PD_TOKEN/PIPEDRIVE_API_TOKEN/PIPEDRIVE_API_KEY)'); process.exit(1); }
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -73,7 +82,7 @@ const brl = (v) => (v ? 'R$ ' + Number(v).toLocaleString('pt-BR') : '—');
 // ---------- COMPUTE ----------
 async function compute() {
   const [deals, stageMap] = await Promise.all([getAllDeals(), getStageMap()]);
-  const tgt = deals.filter((d) => TARGET[d.pipeline_id]);
+  const tgt = deals.filter((d) => TARGET[d.pipeline_id] && ALLOWED_STAGES.has(d.stage_id));
   const rows = tgt.map((d) => {
     const person = d.person_id || null;
     const emails = (person && person.email) || [];
@@ -202,8 +211,8 @@ td{padding:12px 14px;border-bottom:1px solid #161d28;vertical-align:top}tr:last-
 .b-blue{background:#1e3a5f;color:#93c5fd}.b-purple{background:#3b2f5f;color:#c4b5fd}.b-cyan{background:#1e4f5f;color:#67e8f9}.b-red{background:#5f1e26;color:#fca5a5}.b-amber{background:#5f461e;color:#fcd34d}.b-gray{background:#2a313c;color:#9aa4b2}
 footer{margin-top:30px;text-align:center;font-size:12px;color:#5a6472}@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.charts{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
-<header><div><h1>Radar Comercial <span class="dot">·</span> Expert Integrado</h1><div class="ts">Pré pipe review — pipelines ${esc(Object.values(TARGET).join(' · '))}</div></div><div class="ts">Atualizado em ${fmt} (BRT)</div></header>
-<div class="kpis"><div class="kpi tot"><div class="v">${c.total}</div><div class="l">Deals nos funis-alvo</div></div>
+<header><div><h1>Radar Comercial <span class="dot">·</span> Expert Integrado</h1><div class="ts">Pré pipe review — pós-reunião (apresentação/demo em diante) · ${esc(Object.values(TARGET).join(' · '))}</div></div><div class="ts">Atualizado em ${fmt} (BRT)</div></header>
+<div class="kpis"><div class="kpi tot"><div class="v">${c.total}</div><div class="l">Deals pós-reunião</div></div>
 <div class="kpi warn"><div class="v">${c.comPendencia}</div><div class="l">Com pendência</div></div>
 <div class="kpi ok"><div class="v">${c.ok}</div><div class="l">Higiene OK</div></div>
 <div class="kpi"><div class="v">${c.totalAbertos}</div><div class="l">Total abertos (CRM)</div></div></div>
