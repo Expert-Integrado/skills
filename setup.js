@@ -19,11 +19,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const MCPS_DIR = path.join(__dirname, "mcps");
 
-// ─── Credenciais do app (compartilhadas, não pessoais) ─────────────────────
+// ─── Credenciais do app (via variáveis de ambiente — NUNCA hardcoded) ───────
+// Defina ZOOM_CLIENT_ID e ZOOM_CLIENT_SECRET no ambiente antes de rodar o setup.
+// O secret do app OAuth não deve ser versionado nem distribuído em repo público.
 
 const ZOOM_APP_CREDENTIALS = {
-  ZOOM_CLIENT_ID: "U2WuOarhRmOD96Njg4B38g",
-  ZOOM_CLIENT_SECRET: "JbhR3QhIXPfi7k3JShq1brRkwn5ebtlQ",
+  ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID || "",
+  ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET || "",
   ZOOM_REDIRECT_URI: "http://localhost:4488/callback",
 };
 
