@@ -1,36 +1,49 @@
 /**
- * Zoom OAuth 2.0 Authentication Script
+ * Zoom OAuth 2.0 Authentication Script — PKCE (public client, sem secret)
  *
  * Rode uma vez para autorizar o MCP a acessar sua conta Zoom:
  *   node auth.js
  *
  * Isso abre o browser, pede login no Zoom, e salva os tokens em tokens.json.
  * O MCP renova automaticamente usando o refresh_token.
+ *
+ * O app no Zoom Marketplace precisa estar com "Use Public Client OAuth" LIGADO.
+ * Não usa client secret — a segurança vem do PKCE (code_verifier/code_challenge).
  */
 
 import { createServer } from "http";
 import { writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import crypto from "crypto";
 import open from "open";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const TOKENS_PATH = join(__dirname, "tokens.json");
 
-const CLIENT_ID = process.env.ZOOM_CLIENT_ID;
-const CLIENT_SECRET = process.env.ZOOM_CLIENT_SECRET;
+// Client ID PÚBLICO do app Expert Integrado (OAuth PKCE). É público por design —
+// pode ficar no código sem risco. Assim o login é só `node auth.js`, sem precisar
+// setar variável de ambiente. Sobrescreva via env ZOOM_CLIENT_ID p/ usar outro app.
+const PUBLIC_CLIENT_ID = "gBJbWx7zSpKTr_PIgmBuoA";
+const CLIENT_ID = process.env.ZOOM_CLIENT_ID || PUBLIC_CLIENT_ID;
 const REDIRECT_URI = process.env.ZOOM_REDIRECT_URI || "http://localhost:4488/callback";
 
-if (!CLIENT_ID || !CLIENT_SECRET) {
-  console.error(
-    "ERRO: Variáveis de ambiente obrigatórias não definidas.\n" +
-    "Defina: ZOOM_CLIENT_ID e ZOOM_CLIENT_SECRET\n\n" +
-    "Exemplo:\n" +
-    '  ZOOM_CLIENT_ID=xxx ZOOM_CLIENT_SECRET=yyy node auth.js'
-  );
-  process.exit(1);
+// ─── PKCE: code_verifier + code_challenge ────────────────────────────────────
+// O verifier é gerado uma vez por execução e fica em memória entre o redirect
+// e o callback (o servidor HTTP local segue vivo no mesmo processo).
+function base64url(buf) {
+  return buf
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
 }
+
+const codeVerifier = base64url(crypto.randomBytes(48)); // 64 chars base64url (43-128 OK)
+const codeChallenge = base64url(
+  crypto.createHash("sha256").update(codeVerifier).digest()
+);
 
 // Scopes necessários para o Zoom Team Chat MCP (nomes granulares)
 const SCOPES = [
@@ -64,7 +77,8 @@ const SCOPES = [
 
 const AUTH_URL =
   `https://zoom.us/oauth/authorize?response_type=code&client_id=${CLIENT_ID}` +
-  `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}`;
+  `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPES)}` +
+  `&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
 console.log("Abrindo browser para autorização do Zoom...\n");
 console.log(`Se o browser não abrir, acesse manualmente:\n${AUTH_URL}\n`);
@@ -100,18 +114,19 @@ const server = createServer(async (req, res) => {
   console.log("Código de autorização recebido. Trocando por tokens...");
 
   try {
-    // Trocar authorization code por access_token + refresh_token
+    // Trocar authorization code por access_token + refresh_token (PKCE).
+    // SEM header Authorization e SEM secret — o code_verifier prova a posse.
     const tokenResponse = await fetch("https://zoom.us/oauth/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Authorization:
-          "Basic " + Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64"),
       },
       body: new URLSearchParams({
         grant_type: "authorization_code",
         code,
         redirect_uri: REDIRECT_URI,
+        code_verifier: codeVerifier,
+        client_id: CLIENT_ID,
       }),
     });
 

@@ -19,13 +19,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const MCPS_DIR = path.join(__dirname, "mcps");
 
-// ─── Credenciais do app (via variáveis de ambiente — NUNCA hardcoded) ───────
-// Defina ZOOM_CLIENT_ID e ZOOM_CLIENT_SECRET no ambiente antes de rodar o setup.
-// O secret do app OAuth não deve ser versionado nem distribuído em repo público.
+// ─── Credenciais do app Zoom (OAuth PKCE — public client, SEM secret) ────────
+// O Client ID público PODE ficar no código: é público por design no fluxo PKCE.
+// NÃO existe client secret aqui — a segurança vem do code_verifier/code_challenge
+// gerados pelo auth.js a cada autorização.
+// Pré-requisito: o app no Zoom Marketplace precisa estar com
+// "Use Public Client OAuth" LIGADO.
 
 const ZOOM_APP_CREDENTIALS = {
-  ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID || "",
-  ZOOM_CLIENT_SECRET: process.env.ZOOM_CLIENT_SECRET || "",
+  ZOOM_CLIENT_ID: process.env.ZOOM_CLIENT_ID || "gBJbWx7zSpKTr_PIgmBuoA",
   ZOOM_REDIRECT_URI: "http://localhost:4488/callback",
 };
 
@@ -143,7 +145,6 @@ const CONNECTIONS = [
     credentialType: "oauth_browser",
     envVars: [
       { key: "ZOOM_CLIENT_ID", value: ZOOM_APP_CREDENTIALS.ZOOM_CLIENT_ID },
-      { key: "ZOOM_CLIENT_SECRET", value: ZOOM_APP_CREDENTIALS.ZOOM_CLIENT_SECRET },
       { key: "ZOOM_REDIRECT_URI", value: ZOOM_APP_CREDENTIALS.ZOOM_REDIRECT_URI },
     ],
     postInstall: async (mcpDir) => {

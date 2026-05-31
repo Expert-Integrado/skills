@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { readFileSync, writeFileSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, renameSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
@@ -11,17 +11,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const TOKENS_PATH = join(__dirname, "tokens.json");
 
-const CLIENT_ID = process.env.ZOOM_CLIENT_ID;
-const CLIENT_SECRET = process.env.ZOOM_CLIENT_SECRET;
+// Client ID PÚBLICO do app Expert Integrado (OAuth PKCE). Público por design —
+// pode ficar no código. Sobrescreva via env ZOOM_CLIENT_ID p/ usar outro app.
+const PUBLIC_CLIENT_ID = "gBJbWx7zSpKTr_PIgmBuoA";
+const CLIENT_ID = process.env.ZOOM_CLIENT_ID || PUBLIC_CLIENT_ID;
 const BASE_URL = "https://api.zoom.us/v2";
-
-if (!CLIENT_ID || !CLIENT_SECRET) {
-  console.error(
-    "ERRO: Variáveis de ambiente obrigatórias não definidas.\n" +
-    "Defina: ZOOM_CLIENT_ID e ZOOM_CLIENT_SECRET"
-  );
-  process.exit(1);
-}
 
 // ─── TOKEN MANAGEMENT ────────────────────────────────────────────────────────
 
@@ -36,7 +30,7 @@ const ONBOARDING_MSG =
   "cd \"" + __dirname.replace(/\\/g, "/") + "\"\n" +
   "npm run auth\n" +
   "```\n" +
-  "(As credenciais ZOOM_CLIENT_ID e ZOOM_CLIENT_SECRET devem estar definidas como variáveis de ambiente)\n\n" +
+  "(A credencial ZOOM_CLIENT_ID deve estar definida como variável de ambiente — fluxo PKCE, sem secret)\n\n" +
   "3. O browser vai abrir — faça login na sua conta Zoom e autorize\n" +
   "4. Após autorizar, os tokens são salvos automaticamente\n" +
   "5. Volte aqui e tente novamente\n\n" +
@@ -55,9 +49,24 @@ function loadTokens() {
   return data;
 }
 
+// Lê SEMPRE do disco (ignora o cache em memória). Usado antes de renovar:
+// outro processo (Claude Desktop + Claude Code rodando juntos) pode ter
+// rotacionado o refresh_token. Renovar com refresh_token velho do cache é a
+// causa #1 da conexão cair depois de alguns dias (invalid_grant).
+function loadTokensFromDisk() {
+  if (!existsSync(TOKENS_PATH)) {
+    throw new Error(ONBOARDING_MSG);
+  }
+  return JSON.parse(readFileSync(TOKENS_PATH, "utf-8"));
+}
+
 function saveTokens(tokens) {
   cachedTokens = tokens;
-  writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
+  // Escrita atômica: grava em .tmp e renomeia, pra não corromper o tokens.json
+  // se o processo morrer no meio (importante no Windows).
+  const tmp = TOKENS_PATH + ".tmp";
+  writeFileSync(tmp, JSON.stringify(tokens, null, 2));
+  renameSync(tmp, TOKENS_PATH);
 }
 
 function isTokenExpired(tokens) {
@@ -67,45 +76,84 @@ function isTokenExpired(tokens) {
   return Date.now() > expiresAt - 60_000;
 }
 
-async function refreshAccessToken(tokens) {
-  const response = await fetch("https://zoom.us/oauth/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization:
-        "Basic " + Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64"),
-    },
-    body: new URLSearchParams({
-      grant_type: "refresh_token",
-      refresh_token: tokens.refresh_token,
-    }),
-  });
+// Dedupe de refresh concorrente DENTRO do mesmo processo: se duas tools baterem
+// ao mesmo tempo com token expirado, só uma renova (senão uma rotação invalida
+// o refresh_token da outra).
+let refreshPromise = null;
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(
-      `Falha ao renovar token (HTTP ${response.status}): ${errText}\n` +
-      "Execute `node auth.js` novamente para reautorizar."
-    );
+async function refreshAccessToken() {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = (async () => {
+    // Sempre partir do refresh_token mais novo do disco.
+    let tokens = loadTokensFromDisk();
+
+    const doRefresh = (refreshToken) =>
+      fetch("https://zoom.us/oauth/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          grant_type: "refresh_token",
+          refresh_token: refreshToken,
+          client_id: CLIENT_ID,
+        }),
+      });
+
+    let response = await doRefresh(tokens.refresh_token);
+
+    // Se falhou, talvez outro processo já tenha rotacionado e gravado um
+    // refresh_token novo no disco. Relê e tenta mais uma vez antes de desistir.
+    if (!response.ok) {
+      try {
+        const disk = loadTokensFromDisk();
+        if (disk.refresh_token && disk.refresh_token !== tokens.refresh_token) {
+          tokens = disk;
+          response = await doRefresh(tokens.refresh_token);
+        }
+      } catch {}
+    }
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(
+        `Falha ao renovar token (HTTP ${response.status}): ${errText}\n` +
+        "Execute `node auth.js` novamente para reautorizar."
+      );
+    }
+
+    const data = await response.json();
+    const newTokens = {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      token_type: data.token_type,
+      expires_in: data.expires_in,
+      scope: data.scope,
+      created_at: Date.now(),
+    };
+    saveTokens(newTokens);
+    return newTokens;
+  })();
+
+  try {
+    return await refreshPromise;
+  } finally {
+    refreshPromise = null;
   }
-
-  const data = await response.json();
-  const newTokens = {
-    access_token: data.access_token,
-    refresh_token: data.refresh_token,
-    token_type: data.token_type,
-    expires_in: data.expires_in,
-    scope: data.scope,
-    created_at: Date.now(),
-  };
-  saveTokens(newTokens);
-  return newTokens;
 }
 
 async function getAccessToken() {
   let tokens = cachedTokens || loadTokens();
   if (isTokenExpired(tokens)) {
-    tokens = await refreshAccessToken(tokens);
+    // Antes de renovar, conferir se outro processo já renovou recentemente
+    // (evita rotação desnecessária que derrubaria o outro processo).
+    try {
+      const disk = loadTokensFromDisk();
+      if (!isTokenExpired(disk)) {
+        cachedTokens = disk;
+        return disk.access_token;
+      }
+    } catch {}
+    tokens = await refreshAccessToken();
   }
   return tokens.access_token;
 }
@@ -175,8 +223,7 @@ async function zoomRequest(method, path, { query = {}, body = null, retries = 3 
     // Se 401, tentar refresh uma vez
     if (response.status === 401 && attempt === 1) {
       try {
-        const tokens = cachedTokens || loadTokens();
-        await refreshAccessToken(tokens);
+        await refreshAccessToken();
         continue;
       } catch {
         throw new Error(friendlyError(401));
@@ -243,7 +290,7 @@ async function zoomRequestAllPages(path, { query = {}, resultKey = null, maxPage
 
 const server = new McpServer({
   name: "zoom-mcp",
-  version: "1.0.0",
+  version: "2.0.0",
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1026,3 +1073,8 @@ server.tool(
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
+
+// Cleanup: encerra o processo quando o stdin do pai (Claude Code/Desktop) fechar.
+// Sem isso, em Windows o processo node fica zumbi após restart do host.
+process.stdin.on("end", () => process.exit(0));
+process.stdin.on("close", () => process.exit(0));
