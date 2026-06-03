@@ -52,7 +52,7 @@ const dealFieldMeta = {
     description: "Nicho/setor da empresa. Selecionar a opção mais próxima. Ex: Clínica Médica, SaaS, Varejo.",
     section: "pre_qualificacao"
   },
-  "Nicho (detalhes adicionais": {
+  "Nicho (detalhes adicionais)": {
     description: "Complemento do Segmento. Descrição específica do nicho. Ex: 'Advocacia trabalhista, foco em grandes empresas'.",
     section: "pre_qualificacao"
   },

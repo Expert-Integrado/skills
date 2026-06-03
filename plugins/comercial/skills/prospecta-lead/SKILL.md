@@ -157,7 +157,7 @@ Passar pra `update_deal_fields` usando o NOME do campo (MCP resolve key automati
 | `Informacoes gerais` | text long | Resumo da empresa do WebSearch/WebFetch: modelo de negocio, localizacao, particularidades |
 | `Midias e redes da empresa` | text long | Links coletados: `IG: @x \| Site: y.com.br \| LinkedIn: linkedin.com/company/z` |
 | `Segmento` | enum | Mapear pra opcao mais proxima (Academia, Agencia, Clinica Estetica, Clinica Medica, Contabilidade, Consultoria, Educacao, Ecommerce, Energia, Imoveis, Juridico, Saude, SaaS, Varejo, Industria, etc) |
-| `Nicho (detalhes adicionais` | text autocomplete | Detalhamento livre do nicho. Ex: `Clinica de Ortodontia, franquia 4 unidades` |
+| `Nicho (detalhes adicionais)` | text autocomplete | Detalhamento livre do nicho. Ex: `Clinica de Ortodontia, franquia 4 unidades` |
 | `Produtos que oferece` | text | O que a empresa vende. Ex: `Implantes, ortodontia, lentes` |
 | `Total de colaboradores` | enum | Mapear faixa do CSV (1 a 5, 6 a 10, 11 a 20, 21 a 50, 51 a 100, 101 a 200, 201 a 500, 501 a 1000, Acima de 1.000) ou **`❌ INFORMAÇÃO PENDENTE`** (com emoji ❌ e acentos — valor literal exato do enum) |
 | `Tamanho da equipe comercial` | double (numero) | So preencher se a pesquisa publica revelou. Caso contrario, deixar vazio |
@@ -278,7 +278,7 @@ Apos criacao da pessoa nova, preencher campos da Pessoa:
    - Informacoes gerais
    - Midias e redes da empresa
    - Segmento (opcao do enum)
-   - Nicho (detalhes adicionais
+   - Nicho (detalhes adicionais)
    - Produtos que oferece
    - Total de colaboradores (faixa enum)
    - Tamanho da equipe comercial (numero, so se souber)
