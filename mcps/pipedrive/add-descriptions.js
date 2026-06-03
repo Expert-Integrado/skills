@@ -175,7 +175,7 @@ const dealFieldMeta = {
     section: "negociacoes_comerciais"
   },
   "Negociações adicionais": {
-    description: "Descontos extras, concessões, add-ons. Info que o CS precisa saber. Ex: '+1 número WA grátis, 15% off setup'.",
+    description: "SÓ as concessões/ofertas extras dadas ALÉM do padrão: descontos especiais, isenções, brindes, bônus, prazos/condições especiais. NÃO repetir o produto nem a proposta base (isso vai em Produtos/Forma de Pagamento). Ex: 'implementação isenta no semestral, +2 meses grátis, bônus consultoria individual, 15% off setup'.",
     section: "negociacoes_comerciais"
   },
   "Prazo acordado": {
