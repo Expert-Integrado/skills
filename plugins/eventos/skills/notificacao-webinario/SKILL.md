@@ -94,17 +94,37 @@ Agendar via MCP `scheduled-tasks` (`create_scheduled_task` com `fireAt` ISO 8601
 
 ---
 
-## EXECUCAO DE UM TOQUE
+## EXECUCAO DE UM TOQUE — MODO SEMI (padrao)
 
-```python
-import sys
-from importlib.util import spec_from_file_location, module_from_spec
-spec = spec_from_file_location('eng', r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync/scripts/whatsapp-api-fup-batch.py')
-eng = module_from_spec(spec); spec.loader.exec_module(eng)
-# scripts/disparar_toque.py encapsula: filtra evento -> (toque 5-7: filtra Prospeccao) -> classifica A/B -> monta miolo linha unica -> run_batch(dialog template)
+O modo de operacao definido com o Eric (04/06/2026) e **SEMI**: a skill monta o toque, mostra a copy + a lista de quem vai receber, e SO dispara apos aprovacao explicita (`--confirmar`). Sem `--confirmar`, roda em PREVIEW (nao dispara nada).
+
+O script `scripts/disparar_toque.py` implementa a logica de 2 camadas:
+
+```bash
+# 1) PREVIEW (nao dispara) — mostra copy + contagem + exemplos:
+python -X utf8 disparar_toque.py \
+    --inscritos "C:/caminho/invitees-export.csv" \
+    --evento "O Imposto Invisivel do Empresario" \
+    --toque 6 \
+    --zoom "https://us02web.zoom.us/j/..." \
+    --diag "https://expertintegrado.com.br/diagnostico"
+
+# 2) Eric revisa a copy/lista. Se aprovar, MESMO comando + --confirmar:
+python -X utf8 disparar_toque.py ... --confirmar
 ```
 
-O script `scripts/disparar_toque.py` recebe: `--evento "<detalhe>"`, `--toque <1..7>`, `--zoom <url>`, `--diag <url>`. Faz dedup por log proprio do toque.
+Parametros:
+- `--inscritos` (OBRIGATORIO): CSV export de inscritos do Calendly. E a **fonte de verdade do publico** (camada 1).
+- `--evento`: texto do Detalhe da origem no Pipedrive (pra achar os deals).
+- `--toque` 1..7. `--zoom` / `--diag`: links. `--delay` (default 8s, anti-throttle). `--confirmar`: dispara de verdade.
+
+**Camada 1 (pertencimento):** cruza os telefones do CSV de inscritos com os deals de origem do evento. So inscritos reais entram; leads antigos com origem parecida sao descartados.
+
+**Camada 2 (etapa):** toques 6/7 (FUP) excluem quem ja agendou (stage 54 Apresentacao Agendada / 60 Realizada / 79 Reuniao agendada). Toques 1-5 vao pra todos os inscritos.
+
+Personalizacao: cargo/empresa vem do CSV de inscricao; segmenta decisor (pitch A) vs funcionario (pitch B). Dedup por log proprio do toque.
+
+> Agendamento dos horarios (T-12h etc.) via MCP scheduled-tasks chamando este script em PREVIEW; o Eric aprova e roda com --confirmar. Para toques ao vivo (T0/pitch), disparo sob comando.
 
 ---
 
