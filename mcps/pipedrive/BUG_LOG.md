@@ -329,3 +329,21 @@ Diferenciar de `tool not found`: erro vem como `is_error: true` no tool_result c
 ## Proximos passos
 - [ ] Documentar regra: verificar `deal_id` antes de reutilizar atividade
 - [ ] Monitorar se Claude Desktop expoe API para programaticamente alterar `enabledMcpTools` sem editar JSON
+
+## Bug #6 — `create_activity` (nativa e proxy) descartava `done` e `org_id` silenciosamente
+**Status:** ✅ Corrigido — 12/06/2026
+
+Nem a tool nativa `create_activity` nem o proxy `pipedrive_write/create_activity` tinham `done` no schema/destructuring. Agente passava `done: 1` para registrar atividade retroativa concluída, o campo era descartado sem warning (`params: z.record(z.any())` aceita tudo) e a atividade nascia PENDENTE. Como registros retroativos têm `due_date` no passado, viravam imediatamente atividades VENCIDAS no Pipedrive — poluindo a lista de atrasadas do Eric. Detectado na sessão de follow-up de 12/06 (skill fup-pipedrive): atividades 48556, 48557, 48570, 48571, 48574, 48575, 48628 nasceram vencidas. `org_id` era descartado da mesma forma.
+
+**Correção:** `done` (boolean) e `org_id` adicionados ao schema da nativa e ao destructuring do proxy. `done=true` → `body.done = 1` e pula o guardrail de pendências (registro retroativo não conflita com atividade aberta). Retorno agora indica "(CONCLUÍDA)" quando aplicável. Exige restart do MCP para valer. Skill fup-pipedrive atualizada (v1.2) com protocolo create→update done + invariante "1 pendente futura por deal".
+
+---
+
+## Bug #7 — `update_activity` não expõe `person_id`
+**Status:** ✅ Corrigido — 12/06/2026
+
+Schema do `update_activity` não tinha `person_id` — impossível corrigir o contato vinculado de uma atividade criada com person errado. Na sessão de 12/06, atividades do Eduardo Laureano (48547/48548) e do Sérgio Maschietto (48556/48557) foram criadas com person_id da Dani Flomin (18948); a tentativa de correção via `update_activity` passou person_id, que foi rejeitado/ignorado pelo schema Zod, e o agente registrou como "corrigido" sem estar. Mesmo padrão do Bug #2 (deal_id ausente).
+
+**Correção:** `person_id` (number, optional) adicionado ao schema e ao body do PUT. Exige restart do MCP.
+
+---

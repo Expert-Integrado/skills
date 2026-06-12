@@ -1028,6 +1028,7 @@ server.tool(
     deal_id: z.number().describe("ID do negócio"),
     title: z.string().optional().describe("Novo título"),
     value: z.number().optional().describe("Novo valor"),
+    currency: z.string().optional().default("BRL").describe("Moeda (padrão BRL). Usada ao atualizar o valor."),
     stage_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID da nova etapa. Ex: 'Proposta enviada', 20"),
     pipeline_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID do novo pipeline. Ex: 'SaaS', 1"),
     status: z.enum(["open", "won", "lost"]).optional().describe("Novo status"),
@@ -1036,7 +1037,7 @@ server.tool(
     user_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID do novo responsável. Ex: 'Eric Luciano', 17987703"),
     expected_close_date: z.string().optional().describe("Data prevista de fechamento no formato YYYY-MM-DD"),
   },
-  async ({ deal_id, title, value, stage_id, pipeline_id, status, lost_reason, lost_time, user_id, expected_close_date }) => {
+  async ({ deal_id, title, value, currency, stage_id, pipeline_id, status, lost_reason, lost_time, user_id, expected_close_date }) => {
     // ── Resolver nomes para IDs ──
     try {
       pipeline_id = resolvePipeline(pipeline_id);
@@ -1047,7 +1048,10 @@ server.tool(
     }
     const body = {};
     if (title) body.title = title;
-    if (value !== undefined) body.value = value;
+    if (value !== undefined) {
+      body.value = value;
+      body.currency = currency || "BRL"; // Pipedrive retorna 400 se enviar valor sem moeda no payload
+    }
     if (stage_id) body.stage_id = stage_id;
     if (pipeline_id) body.pipeline_id = pipeline_id;
     if (status) body.status = status;
@@ -1941,16 +1945,19 @@ server.tool(
     person_id: z.number().optional().describe("ID do contato relacionado"),
     user_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID do responsável. Ex: 'Eric Luciano', 17987703"),
     note: z.string().optional().describe("Nota/observação"),
+    org_id: z.number().optional().describe("ID da organização relacionada"),
+    done: z.boolean().optional().describe("Se true, cria a atividade já CONCLUÍDA (registro retroativo de algo que já aconteceu). Pula o guardrail de pendências."),
     force: z.boolean().optional().default(false).describe("Se true, cria mesmo se encontrar atividade pendente."),
   },
-  async ({ subject, type, due_date, due_time, duration, deal_id, person_id, user_id, note, force }) => {
+  async ({ subject, type, due_date, due_time, duration, deal_id, person_id, user_id, note, org_id, done, force }) => {
     // ── Resolver nome do responsável ──
     try { user_id = resolveUser(user_id); } catch (e) { return { content: [{ type: "text", text: e.message }] }; }
     await ensureActivityTypesLoaded();
     const resolvedType = resolveActivityType(type);
 
     // ── Guardrail: buscar QUALQUER atividade pendente vinculada ao deal/pessoa ──
-    if (!force && (deal_id || person_id)) {
+    // Registro retroativo (done=true) não conflita com pendências — pula o guardrail.
+    if (!force && !done && (deal_id || person_id)) {
       try {
         let pendingActivities = [];
 
@@ -1988,14 +1995,17 @@ server.tool(
     if (due_time) body.due_time = localToUtc(due_time, due_date); // converte Brasília → UTC
     if (deal_id) body.deal_id = deal_id;
     if (person_id) body.person_id = person_id;
+    if (org_id) body.org_id = org_id;
     if (user_id) body.user_id = user_id;
+    if (done) body.done = 1; // registro retroativo: atividade nasce concluída
     if (note) body.note = note.replace(/\n/g, "<br>"); // API ignora \n, aceita HTML <br>
     const data = await pipedriveRequest("/activities", {
       method: "POST",
       body: JSON.stringify(body),
     });
     const dealLink = data.data.deal_id ? `\nhttps://${COMPANY_DOMAIN}.pipedrive.com/deal/${data.data.deal_id}` : "";
-    return { content: [{ type: "text", text: `Atividade criada! ID: ${data.data.id} — "${data.data.subject}"${dealLink}` }] };
+    const doneFlag = data.data.done ? " (CONCLUÍDA)" : "";
+    return { content: [{ type: "text", text: `Atividade criada${doneFlag}! ID: ${data.data.id} — "${data.data.subject}"${dealLink}` }] };
   }
 );
 
@@ -2012,9 +2022,10 @@ server.tool(
     duration: z.number().optional().describe("Nova duração em minutos."),
     user_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID do novo responsável. Ex: 'Eric Luciano'"),
     deal_id: z.number().optional().describe("Vincular a um negócio (deal_id)"),
+    person_id: z.number().optional().describe("Vincular/corrigir o contato relacionado (person_id)"),
     note: z.string().optional().describe("Nova nota/observação"),
   },
-  async ({ activity_id, done, subject, type, due_date, due_time, duration, user_id, deal_id, note }) => {
+  async ({ activity_id, done, subject, type, due_date, due_time, duration, user_id, deal_id, person_id, note }) => {
     // ── Resolver nome do responsável ──
     try { user_id = resolveUser(user_id); } catch (e) { return { content: [{ type: "text", text: e.message }] }; }
     await ensureActivityTypesLoaded();
@@ -2028,6 +2039,7 @@ server.tool(
     if (duration) body.duration = minutesToHHMM(duration);
     if (user_id) body.user_id = user_id;
     if (deal_id) body.deal_id = deal_id;
+    if (person_id) body.person_id = person_id;
     if (note) body.note = note.replace(/\n/g, "<br>"); // API ignora \n, aceita HTML <br>
     await pipedriveRequest(`/activities/${activity_id}`, {
       method: "PUT",
@@ -2465,7 +2477,7 @@ server.tool(
     try {
       switch (action) {
         case "create_activity": {
-          const { subject, type, due_date, due_time, duration, deal_id, person_id, user_id: rawUser, note } = params;
+          const { subject, type, due_date, due_time, duration, deal_id, person_id, org_id, user_id: rawUser, note, done } = params;
           if (!subject || !type) return { content: [{ type: "text", text: "Erro: subject e type sao obrigatorios para create_activity" }] };
           let user_id;
           try { user_id = resolveUser(rawUser); } catch (e) { return { content: [{ type: "text", text: e.message }] }; }
@@ -2478,11 +2490,14 @@ server.tool(
           if (due_time) body.due_time = localToUtc(due_time, due_date);
           if (deal_id) body.deal_id = deal_id;
           if (person_id) body.person_id = person_id;
+          if (org_id) body.org_id = org_id;
           if (user_id) body.user_id = user_id;
+          if (done === true || done === 1) body.done = 1; // registro retroativo: nasce concluída
           if (note) body.note = String(note).replace(/\n/g, "<br>");
           const data = await pipedriveRequest("/activities", { method: "POST", body: JSON.stringify(body) });
           const dealLink = data.data.deal_id ? `\nhttps://${COMPANY_DOMAIN}.pipedrive.com/deal/${data.data.deal_id}` : "";
-          return { content: [{ type: "text", text: `Atividade criada! ID: ${data.data.id} - "${data.data.subject}"${dealLink}` }] };
+          const doneFlag = data.data.done ? " (CONCLUÍDA)" : "";
+          return { content: [{ type: "text", text: `Atividade criada${doneFlag}! ID: ${data.data.id} - "${data.data.subject}"${dealLink}` }] };
         }
         case "create_deal": {
           const { title, value, currency, person_id, org_id, pipeline_id, stage_id, user_id: rawUser, status } = params;
