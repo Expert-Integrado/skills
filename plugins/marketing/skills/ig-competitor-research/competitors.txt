@@ -1,0 +1,11 @@
+# Concorrentes / perfis de referencia pro IG Competitor Research.
+# 1 handle por linha. Pode ser @handle ou URL. Linhas com # sao ignoradas.
+# Edite com os perfis do SEU nicho. Os abaixo sao exemplos do nicho IA — troque a vontade.
+
+rowancheung
+# theaiadvantage
+# mreflow
+# matthewberman
+
+# Pra rodar num nicho diferente sem mexer aqui, passe os handles direto:
+#   python scripts/research.py @perfil1 @perfil2 --dias 7

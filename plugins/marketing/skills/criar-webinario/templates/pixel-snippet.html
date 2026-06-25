@@ -1,0 +1,58 @@
+<!--
+  ============================================================================
+  PIXEL — GUIA DE INSTALAÇÃO (Webinário Expert Integrado)
+  ============================================================================
+  A regra de ouro (aprendida na marra — ver references/pixel-e-tracking.md):
+  CADA FUNIL TEM O SEU EVENTO. Nunca dois sites disparando o mesmo evento
+  genérico (`Lead`) no mesmo pixel — senão um funil contamina o outro (foi o
+  que aconteceu com a biblioteca vazando pra dentro dos números do webinário).
+  ============================================================================
+-->
+
+<!-- ========================================================================
+  1) BASE DO PIXEL  →  vai no <head> de TODAS as páginas (LP e confirmação).
+     Dispara só PageView. Trocar {{PIXEL_ID}}.
+======================================================================== -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','{{PIXEL_ID}}');
+fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+ src="https://www.facebook.com/tr?id={{PIXEL_ID}}&ev=PageView&noscript=1"/></noscript>
+
+
+<!-- ========================================================================
+  2) EVENTO DE REGISTRO  →  vai SÓ na página de confirmação/obrigado.
+     É o que conta como "inscrição". Evento EXCLUSIVO do funil — NÃO use 'Lead'.
+======================================================================== -->
+<script>
+  var q = new URLSearchParams(location.search);
+  fbq('trackCustom','InscricaoWebinar', {
+    lp_variante: q.get('lp') || '',          // pra medir o A/B
+    utm_campaign: q.get('utm_campaign') || ''
+  });
+</script>
+
+
+<!-- ========================================================================
+  3) CONFIGURAÇÃO NO GERENCIADOR DE EVENTOS (Meta) — passo a passo
+  ------------------------------------------------------------------------
+  a) Criar uma CONVERSÃO PERSONALIZADA:
+       - Base: evento `InscricaoWebinar`  (ou: URL contém a página de confirmação)
+       - Nome: "Inscrição Webinar"
+  b) Na campanha (conjunto NOVO — Meta não deixa trocar evento de conjunto que
+     já roda): otimizar E reportar nessa Conversão Personalizada, não no `Lead`.
+  c) NÃO compartilhar o evento de registro com nenhum outro site/funil.
+  d) Se um dia subir CAPI (server-side): casar o `event_id` entre o pixel
+     (browser) e o servidor pra DEDUPLICAR — senão dobra a contagem.
+  ------------------------------------------------------------------------
+  AUDITORIA rápida (achar vazamento):
+    ads_get_dataset_stats com aggregation:url no evento de registro →
+    se aparecer URL que não é a do webinário, tem funil vazando. Pico súbito
+    de volume = quase sempre disparo errado (página de tráfego ganhou o evento).
+======================================================================== -->
