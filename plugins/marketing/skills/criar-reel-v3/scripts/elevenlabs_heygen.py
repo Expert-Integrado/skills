@@ -172,6 +172,8 @@ def main():
                     help="gera e valida so os audios (nao gasta credito HeyGen)")
     ap.add_argument("--blocks", type=int, nargs="*", default=None,
                     help="processa so estes blocos (1-based); util pra re-rodar falha")
+    ap.add_argument("--no-voice-check", action="store_true",
+                    help="[DIAGNOSTICO] pula checkpoint de voz (usar quando speaker-embed.onnx ausente)")
     args = ap.parse_args()
 
     if args.scenes_file:
@@ -194,27 +196,37 @@ def main():
     sel = args.blocks or list(range(1, len(blocks) + 1))
 
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from verificar_voz import VoiceChecker
-    checker = VoiceChecker()
+    checker = None
+    if not args.no_voice_check:
+        from verificar_voz import VoiceChecker
+        checker = VoiceChecker()
+    else:
+        print("[DIAGNOSTICO] --no-voice-check ativo: checkpoint de voz pulado", flush=True)
 
     # FASE 1 — audios ElevenLabs + checkpoint de voz (barato; nada de HeyGen ainda)
     audios = {}
     for n in sel:
         text = blocks[n - 1]
         mp3 = os.path.join(args.out_dir, f"audio-{n:02d}.mp3")
-        for attempt in range(1, 4):
-            # seed varia por tentativa — regenerar igual devolveria o mesmo defeito
-            eleven_tts(text, mp3, el_key, args.eleven_voice, seed=1000 * n + attempt)
-            ok, wins = check_voice_windows(checker, mp3, threshold=args.threshold)
-            sims = " ".join(f"{t:.0f}s={s:.2f}" for t, s in wins)
-            dur = audio_duration(mp3)
-            if ok:
-                print(f"[bloco {n}] audio OK ({dur:.1f}s) janelas: {sims}", flush=True)
-                audios[n] = mp3
-                break
-            print(f"[bloco {n}] VOZ SUSPEITA (tentativa {attempt}/3) janelas: {sims}", flush=True)
+        if checker:
+            for attempt in range(1, 4):
+                # seed varia por tentativa — regenerar igual devolveria o mesmo defeito
+                eleven_tts(text, mp3, el_key, args.eleven_voice, seed=1000 * n + attempt)
+                ok, wins = check_voice_windows(checker, mp3, threshold=args.threshold)
+                sims = " ".join(f"{t:.0f}s={s:.2f}" for t, s in wins)
+                dur = audio_duration(mp3)
+                if ok:
+                    print(f"[bloco {n}] audio OK ({dur:.1f}s) janelas: {sims}", flush=True)
+                    audios[n] = mp3
+                    break
+                print(f"[bloco {n}] VOZ SUSPEITA (tentativa {attempt}/3) janelas: {sims}", flush=True)
+            else:
+                sys.exit(f"[bloco {n}] voz errada no ElevenLabs apos 3 tentativas — abortando")
         else:
-            sys.exit(f"[bloco {n}] voz errada no ElevenLabs apos 3 tentativas — abortando")
+            eleven_tts(text, mp3, el_key, args.eleven_voice, seed=1000 * n + 1)
+            dur = audio_duration(mp3)
+            print(f"[bloco {n}] audio gerado ({dur:.1f}s) — sem checkpoint de voz", flush=True)
+            audios[n] = mp3
 
     if args.so_audio:
         print("--so-audio: parando antes do HeyGen. Audios validados:", flush=True)
@@ -268,9 +280,12 @@ def main():
     for j in sorted(jobs, key=lambda x: x["n"]):
         mp4 = os.path.join(args.out_dir, f"block-{j['n']:02d}.mp4")
         urllib.request.urlretrieve(j["url"], mp4)
-        ok, wins = check_voice_windows(checker, mp4, threshold=args.threshold)
-        sims = " ".join(f"{t:.0f}s={s:.2f}" for t, s in wins)
-        print(f"[bloco {j['n']}] video {'OK' if ok else 'VOZ SUSPEITA'} janelas: {sims}", flush=True)
+        if checker:
+            ok, wins = check_voice_windows(checker, mp4, threshold=args.threshold)
+            sims = " ".join(f"{t:.0f}s={s:.2f}" for t, s in wins)
+            print(f"[bloco {j['n']}] video {'OK' if ok else 'VOZ SUSPEITA'} janelas: {sims}", flush=True)
+        else:
+            print(f"[bloco {j['n']}] video baixado (sem checkpoint de voz)", flush=True)
         mp4s.append(mp4)
 
     if args.blocks:
