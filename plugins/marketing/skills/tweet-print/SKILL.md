@@ -1,6 +1,6 @@
 ---
 name: tweet-print
-description: Gera imagem PNG estilo "tweet print" (mockup de post do X/Twitter) para postar no Instagram, LinkedIn ou outras redes. Aceita texto com palavras em negrito (markdown **word**), avatar real, selo verificado, tema claro/escuro/branco, formato feed/retrato/story e modo carrossel nativo. TRIGGER quando o usuario pedir "tweet print", "fake tweet", "post tipo tweet", "post estilo X", "post estilo Twitter", "mockup de tweet", "imagem de tweet pro feed", "carrossel de tweets", "transforma esse texto em tweet print", "post de Instagram tipo tweet", "post estilo print viral", "viraliza essa frase", "transforma em meme estilo tweet", ou similar.
+description: Gera imagem PNG estilo "tweet print" (mockup de post do X/Twitter) para postar no Instagram, LinkedIn ou outras redes. Aceita texto com palavras em negrito (markdown **word**), avatar real, selo verificado, tema claro/escuro/branco, formato feed/retrato/story e modo carrossel nativo. TRIGGER quando o usuario pedir "tweet print", "fake tweet", "post tipo tweet", "post estilo X", "post estilo Twitter", "mockup de tweet", "imagem de tweet pro feed", "carrossel de tweets", "transforma esse texto em tweet print", "post de Instagram tipo tweet", "post estilo print viral", "viraliza essa frase", "transforma em meme estilo tweet", "daquele tipo de Twitter", "aquele post que parece tweet", "post que parece um tweet", "quero fazer um post que fala assim", ou similar. IMPORTANTE: invocar imediatamente ao detectar a intencao — nao esperar o texto estar finalizado.
 ---
 
 # Tweet Print — Mockup de Post do X/Twitter
@@ -29,6 +29,9 @@ Visual de referencia: foto circular do autor + nome com selo verificado + handle
 
 ## QUANDO USAR
 
+**INVOCAR IMEDIATAMENTE** ao detectar intencao de criar post visual estilo tweet — mesmo que o texto final ainda nao esteja pronto. Nao esperar o usuario terminar de redigir o texto.
+
+- Usuario quer criar um "post daquele tipo de Twitter" ou menciona querer fazer um post que "parece tweet"
 - Usuario pediu para criar um post de Instagram em estilo tweet print
 - Usuario tem uma frase de impacto, piada, ou insight curto que merece formato visual
 - Usuario quer fazer um carrossel de varios "tweets" relacionados
