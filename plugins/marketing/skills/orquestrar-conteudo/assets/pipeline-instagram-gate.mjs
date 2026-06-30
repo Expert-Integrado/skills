@@ -42,7 +42,10 @@ Escreva o arquivo ${ws}/copywriter-output.json (escrita atomica: .tmp -> rename)
 }
 
 function designerPrompt(extra){
-  return `Voce e o Designer. Leia ${brief}. Construa ${ws}/carrossel.html: ${N} <section id="slide-1"..."slide-${N}"> de 1080x1080 empilhadas, fundos SOMENTE em CSS (navy #0B1220 -> #10243F + glow ciano #2BB7E0, texto branco, SEM emoji, SEM dourado), headline sans bold caixa alta, layouts variados entre os slides.
+  return `Voce e o Designer. Leia ${brief}. Construa ${ws}/carrossel.html: ${N} <section id="slide-1"..."slide-${N}"> de 1080x1080 empilhadas, headline sans bold caixa alta, texto branco, SEM emoji, SEM dourado, layouts variados entre os slides.
+FUNDO — depende do briefing:
+- Se 'eric_photos' do briefing estiver PREENCHIDO: gere imagens com gpt-image-2 (OpenAI Images API /v1/images/edits, OPENAI_API_KEY do 1Password 'op://Agentes Eric/OPENAI_API_KEY/credential' ou env) usando as fotos do Eric como input (rosto do Eric SEMPRE via edit com foto real, NUNCA gerado do zero), salve os PNGs em ${ws}/img/ e componha nos slides variando o layout (capa fullscreen com gradient dramatico; foto direita com blended gradient; foto esquerda invertida; fullscreen como bg com overlay; CTA fullscreen). Serialize as chamadas (1 imagem por vez), trate 429 com backoff. Mantenha contraste pro texto branco ler.
+- Se 'eric_photos' estiver VAZIO: fundos SOMENTE em CSS (navy #0B1220 -> #10243F + glow ciano #2BB7E0).
 CONTRATO DE TOKENS (ESTRITO): use EXCLUSIVAMENTE dois tokens por slide — {{SLIDEn_TITLE}} e {{SLIDEn_BODY}} (cada um em elemento separado). E PROIBIDO qualquer outro token: nada de {{SLIDEn_EYEBROW}}, {{SLIDEn_LABEL}}, {{SLIDEn_STEP}}, {{SLIDEn_CARD...}}, etc. Kicker/rotulo/numero/qualquer texto de apoio deve ser ESCRITO FIXO no HTML (ou derivado do titulo), NUNCA token. A montagem so substitui TITLE e BODY; qualquer outro token vai sobrar e REPROVAR o carrossel. Total de tokens no arquivo = exatamente ${2*N}.
 NAO escreva a copy final (so os tokens). CSS obrigatorio: html{scrollbar-width:none} html::-webkit-scrollbar{display:none} body{margin:0;padding:0}; slides sem gap. Numeracao n/${N} e @ericluciano discretos em cada slide. Escrita atomica.${extra ? '\nCORRIGIR: ' + extra : ''}
 Retorne SOMENTE {status, html_path, tokens_used}.`
