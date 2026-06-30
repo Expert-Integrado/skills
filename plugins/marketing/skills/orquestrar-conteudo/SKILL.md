@@ -193,7 +193,8 @@ Sem coordenação entre agentes = mais barato e rápido.
 2. **Montagem (sessão principal):** injeta a copy do Copywriter nos tokens → `carrossel-final.html`; confere que sobraram **0** `{{`.
 3. **Revisor (`exp-ger-marketing`) OBRIGATÓRIO** — risco reputacional. Roda o checklist + score (abaixo), aprova/reprova e aplica o ajuste antes de exportar.
 4. **Export** (protocolo abaixo) → **N PNGs de 1080×1080, 1 por slide**.
-5. Devolve os PNGs + legenda ao Eric. Carrossel NÃO vai pra Vercel.
+5. **Preview SEMPRE (desktop):** depois do export, gerar um `gallery.html` na pasta do slug que mostra os N PNGs em sequência (uma `<img>` por slide, fundo escuro, largura responsiva) e abrir no preview — garantir um server via `preview_start` (cria entrada em `.claude/launch.json` servindo a pasta `temp/<slug>` numa porta livre, ex. 4530, via `python -m http.server`). Assim o Eric vê o carrossel montado sem abrir arquivo na mão. Em ambiente headless/VPS (sem preview): pular e só apontar o caminho dos PNGs.
+6. Devolve os PNGs + legenda ao Eric. Carrossel NÃO vai pra Vercel.
 
 ### Estrutura de copy do Instagram (Copywriter segue)
 **Legenda:**
@@ -224,7 +225,7 @@ python - << 'PYEOF'
 import asyncio, os
 from playwright.async_api import async_playwright
 
-OUTPUT = "C:/Users/Eric Luciano/OneDrive/Workspace/temp/<slug>"
+OUTPUT = os.path.expanduser("~/OneDrive/Workspace/temp/<slug>")   # NUNCA cravar o nome do usuario (ex: "Eric Luciano"); ~ resolve pro user atual (ericl, etc)
 os.makedirs(OUTPUT, exist_ok=True)
 
 async def export():
@@ -266,7 +267,7 @@ Conferir tamanhos com `ls -la` — cada PNG deve ter dimensão variada (300KB–
 - Editar (colocar o Eric em outro contexto): `POST /v1/images/edits` (model `gpt-image-2`) com a foto real como input
 **Regras de identidade:** rosto do Eric → SEMPRE `edit` com foto real de referência; nunca gerar o rosto dele do zero. Sem rosto → `generate`.
 
-**Banco de fotos do Eric (mesma fonte da skill `tweet-print`):** `C:\Users\Eric Luciano\OneDrive\Imagens\Perfil profissional\`
+**Banco de fotos do Eric (mesma fonte da skill `tweet-print`):** `~/OneDrive/Imagens/Perfil profissional/` (expande pro usuario atual, ex. `C:\Users\ericl\...` — NUNCA cravar `Eric Luciano` no path, quebra em maquina cujo user e `ericl`)
 - `Avatar.jpg` — headshot/avatar (idêntico ao que a `tweet-print` usa; compatível com a env `TWEET_PRINT_DEFAULT_AVATAR`).
 - Ensaios pra `edit` (corpo/contexto): `Legacy -*.jpg`, `PPGX_SouMemoravel*.jpg`, `Eric (imersão High Ticket) 4.jpg`.
 - A pasta sincroniza via OneDrive → mesmo caminho vale no PC e no notebook. Em outra máquina, sobrepor com a env `ERIC_FOTOS_DIR`.

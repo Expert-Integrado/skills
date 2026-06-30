@@ -20,7 +20,7 @@ Visual de referencia: foto circular do autor + nome com selo verificado + handle
 | Handle | "@ericluciano" | `--handle "@outro"` |
 | Selo verificado | sim (azul) | `--no-verified` para esconder |
 | Texto | obrigatorio | `--text "..."` (use `**word**` pra negrito) |
-| Tema | `light` (creme #f5f3ee) | `--theme dark` (preto X) ou `--theme white` (branco puro) |
+| Tema | `white` (branco puro #ffffff) | `--theme light` (creme #f5f3ee) ou `--theme dark` (preto X) |
 | Formato | `1080x1080` (feed) | `--format 1080x1350` (retrato) ou `--format 1080x1920` (story) |
 | Tamanho da fonte | auto (varia 40-64px conforme texto) | `--font-size 56` |
 | Output | `./tweet-print.png` | `--output /caminho/saida.png` |
@@ -57,7 +57,7 @@ Antes de gerar, alinhar com o usuario:
 - **Avatar:** caminho da foto OU usar inicial estilizada
 - **Carrossel:** se for varios slides, listar texto de cada um
 
-Se o usuario nao especificar, usar defaults: nome/handle do Eric, tema `light`, formato `1080x1080`, avatar inicial (ou `TWEET_PRINT_DEFAULT_AVATAR` se setado), selo verificado ativo.
+Se o usuario nao especificar, usar defaults: nome/handle do Eric, tema `white` (branco puro), formato `1080x1080`, avatar inicial (ou `TWEET_PRINT_DEFAULT_AVATAR` se setado), selo verificado ativo.
 
 ### 2. Garantir dependencias instaladas
 

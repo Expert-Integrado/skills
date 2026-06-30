@@ -240,7 +240,7 @@ def main():
     parser.add_argument("--name", default="Eric Luciano", help="Nome de exibicao")
     parser.add_argument("--handle", default="@ericluciano", help="Handle (com @)")
     parser.add_argument("--avatar", help="Caminho do arquivo de avatar (jpg/png/webp). Se omitido, usa TWEET_PRINT_DEFAULT_AVATAR ou inicial estilizada.")
-    parser.add_argument("--theme", default="light", choices=list(THEMES), help="Tema visual")
+    parser.add_argument("--theme", default="white", choices=list(THEMES), help="Tema visual")
     parser.add_argument("--format", default="1080x1080", choices=list(FORMATS), help="Formato/dimensoes")
     parser.add_argument("--no-verified", action="store_true", help="Nao mostrar selo verificado azul")
     parser.add_argument("--font-size", type=int, help="Override do tamanho da fonte do tweet (px)")
