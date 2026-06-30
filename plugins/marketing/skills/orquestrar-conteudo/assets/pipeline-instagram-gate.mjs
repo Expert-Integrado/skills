@@ -9,12 +9,15 @@ export const meta = {
 }
 
 // args esperado: { slug, briefingPath, nSlides?, maxTries? }
-const slug = args.slug
-const brief = args.briefingPath
-const N = args.nSlides || 5
+// IMPORTANTE: o runtime entrega `args` como STRING JSON (nao objeto) — sempre parsear.
+const A = typeof args === 'string' ? JSON.parse(args) : (args || {})
+const slug = A.slug
+const brief = A.briefingPath
+const N = A.nSlides || 5
 const MIN_SCORE = 7
-const MAX_TRIES = args.maxTries || 3
+const MAX_TRIES = A.maxTries || 3
 const ws = `C:/tmp/conteudo/${slug}`
+if (!slug || !brief) return { status:'erro', message:'args invalido: faltou slug/briefingPath', args_recebido: args }
 
 const COPY_SCHEMA = { type:'object', required:['status','caption','hashtags','slides'], properties:{
   status:{type:'string'}, caption:{type:'string'}, hashtags:{type:'string'},
@@ -38,8 +41,11 @@ ${feedback ? 'ATENCAO — ajustes do Revisor a corrigir NESTA versao: ' + feedba
 Escreva o arquivo ${ws}/copywriter-output.json (escrita atomica: .tmp -> rename) no schema {status, caption, hashtags, slides:[{n,title,body}]}. Retorne SOMENTE esse JSON.`
 }
 
-function designerPrompt(){
-  return `Voce e o Designer. Leia ${brief}. Construa ${ws}/carrossel.html: ${N} <section id="slide-1"..."slide-${N}"> de 1080x1080 empilhadas, fundos SOMENTE em CSS (navy #0B1220 -> #10243F + glow ciano #2BB7E0, texto branco, SEM emoji, SEM dourado), headline sans bold caixa alta, layouts variados entre os slides. Use TOKENS literais {{SLIDEn_TITLE}} e {{SLIDEn_BODY}} (cada um em elemento separado) no lugar do texto — NAO escreva a copy final. CSS obrigatorio: html{scrollbar-width:none} html::-webkit-scrollbar{display:none} body{margin:0;padding:0}; slides sem gap. Numeracao n/${N} e @ericluciano discretos em cada slide. Escrita atomica. Retorne SOMENTE {status, html_path, tokens_used}.`
+function designerPrompt(extra){
+  return `Voce e o Designer. Leia ${brief}. Construa ${ws}/carrossel.html: ${N} <section id="slide-1"..."slide-${N}"> de 1080x1080 empilhadas, fundos SOMENTE em CSS (navy #0B1220 -> #10243F + glow ciano #2BB7E0, texto branco, SEM emoji, SEM dourado), headline sans bold caixa alta, layouts variados entre os slides.
+CONTRATO DE TOKENS (ESTRITO): use EXCLUSIVAMENTE dois tokens por slide — {{SLIDEn_TITLE}} e {{SLIDEn_BODY}} (cada um em elemento separado). E PROIBIDO qualquer outro token: nada de {{SLIDEn_EYEBROW}}, {{SLIDEn_LABEL}}, {{SLIDEn_STEP}}, {{SLIDEn_CARD...}}, etc. Kicker/rotulo/numero/qualquer texto de apoio deve ser ESCRITO FIXO no HTML (ou derivado do titulo), NUNCA token. A montagem so substitui TITLE e BODY; qualquer outro token vai sobrar e REPROVAR o carrossel. Total de tokens no arquivo = exatamente ${2*N}.
+NAO escreva a copy final (so os tokens). CSS obrigatorio: html{scrollbar-width:none} html::-webkit-scrollbar{display:none} body{margin:0;padding:0}; slides sem gap. Numeracao n/${N} e @ericluciano discretos em cada slide. Escrita atomica.${extra ? '\nCORRIGIR: ' + extra : ''}
+Retorne SOMENTE {status, html_path, tokens_used}.`
 }
 
 function revisorPrompt(){
@@ -61,10 +67,8 @@ if (!copy || !design) return { status:'erro', message:'Copywriter ou Designer fa
 // ---------- Fase 2: revisao + GATE DURO com retry ----------
 phase('Revisao+Gate')
 let verdict = null, tries = 0
-while (tries < MAX_TRIES) {
-  tries++
-  // montagem deterministica: injeta a copy nos tokens
-  await agent(
+async function montar(tag){
+  const r = await agent(
     `Rode SOMENTE este Python (montagem do carrossel — injeta a copy nos tokens):
 \`\`\`bash
 cd "${ws}" && python - << 'PY'
@@ -81,8 +85,21 @@ print("LEFT", html.count("{{"))
 PY
 \`\`\`
 Retorne SOMENTE {"left": <numero de {{ restantes>}.`,
-    { label:`montagem#${tries}`, phase:'Revisao+Gate', schema:{ type:'object', required:['left'], properties:{ left:{type:'integer'} } } }
+    { label:`montagem-${tag}`, phase:'Revisao+Gate', schema:{ type:'object', required:['left'], properties:{ left:{type:'integer'} } } }
   )
+  return r?.left ?? 99
+}
+
+while (tries < MAX_TRIES) {
+  tries++
+  // montagem; se sobrar token, o template do Designer esta fora do contrato -> re-gera Designer e re-monta
+  let left = await montar(`t${tries}`)
+  if (left > 0) {
+    log(`Montagem deixou ${left} token(s) {{ -> Designer fora do contrato; re-gerando template`)
+    design = await agent(designerPrompt(`o template anterior deixou ${left} tokens nao-substituiveis. Use SO {{SLIDEn_TITLE}} e {{SLIDEn_BODY}}, total ${2*N} tokens, nada mais.`), { label:`designer-fix#${tries}`, phase:'Revisao+Gate', schema:DESIGN_SCHEMA })
+    left = await montar(`t${tries}b`)
+  }
+  if (left > 0) { log(`Ainda ${left} tokens apos re-design`); if (tries >= MAX_TRIES) break; continue }
   verdict = await agent(revisorPrompt(), { label:`revisor#${tries}`, phase:'Revisao+Gate', schema:VERDICT_SCHEMA, model:'haiku' })
   log(`Tentativa ${tries}/${MAX_TRIES}: Revisor deu score ${verdict?.score} (${verdict?.status})`)
   if (verdict && verdict.score >= MIN_SCORE) break
