@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrossel — preview</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0b0f17;color:#e6edf3;font-family:-apple-system,Segoe UI,Roboto,sans-serif;
+       min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px}
+  h1{font-size:18px;font-weight:700;text-align:center}
+  .sub{color:#8b949e;font-size:12.5px;margin:4px 0 16px;text-align:center}
+  .stage{position:relative;display:flex;align-items:center;justify-content:center;gap:14px;width:100%;max-width:760px}
+  .frame img{width:min(72vh,520px);height:min(72vh,520px);object-fit:cover;border-radius:16px;
+             border:1px solid #242c38;cursor:zoom-in;background:#161b22;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+  .nav{flex:0 0 auto;width:46px;height:46px;border-radius:50%;border:1px solid #2a3340;background:#161b22cc;
+       color:#e6edf3;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;user-select:none;transition:.15s}
+  .nav:hover{background:#222c38;border-color:#3a4757}
+  .nav:disabled{opacity:.25;cursor:default}
+  .counter{margin-top:14px;color:#8b949e;font-size:13px;font-variant-numeric:tabular-nums}
+  .cap{margin-top:6px;color:#c9d4df;font-size:13px}
+  .dots{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+  .dot{width:9px;height:9px;border-radius:50%;background:#33404f;cursor:pointer;transition:.15s}
+  .dot.on{background:#2BB7E0;transform:scale(1.25)}
+  .hint{color:#5b6673;font-size:11.5px;margin-top:14px;text-align:center}
+  #lb{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;z-index:9;cursor:zoom-out}
+  #lb.on{display:flex}
+  #lb img{max-width:96vw;max-height:96vh;border-radius:8px}
+</style></head>
+<body>
+  <h1 id="ttl">Carrossel — preview</h1>
+  <div class="sub" id="sub">detectando slides…</div>
+  <div class="stage">
+    <button class="nav" id="prev">‹</button>
+    <div class="frame"><img id="cur" alt="slide"></div>
+    <button class="nav" id="next">›</button>
+  </div>
+  <div class="counter"><span id="n">0</span> / <span id="tot">0</span></div>
+  <div class="cap" id="cap"></div>
+  <div class="dots" id="dots"></div>
+  <div class="hint">setas ‹ › ou teclado ← → pra trocar · clique na foto pra ampliar (Esc fecha)</div>
+  <div id="lb"><img id="lbimg" src=""></div>
+<script>
+  // auto-detecta quantos slide-N.png existem (1..24)
+  function exists(src){return new Promise(r=>{const im=new Image();im.onload=()=>r(true);im.onerror=()=>r(false);im.src=src;});}
+  (async()=>{
+    const files=[]; for(let k=1;k<=24;k++){ if(await exists(`slide-${k}.png`)) files.push(`slide-${k}.png`); else break; }
+    const N=files.length;
+    const caps=files.map((_,k)=> k===0?'capa' : k===N-1?'CTA' : `slide ${k+1}`);
+    let i=0;
+    const img=document.getElementById('cur'),n=document.getElementById('n'),tot=document.getElementById('tot'),
+          cap=document.getElementById('cap'),dotsEl=document.getElementById('dots'),
+          prev=document.getElementById('prev'),next=document.getElementById('next'),
+          lb=document.getElementById('lb'),lbimg=document.getElementById('lbimg'),sub=document.getElementById('sub');
+    sub.textContent = `${N} slides · 1080×1080 · prontos pra postar`;
+    tot.textContent = N;
+    for(let k=0;k<N;k++){const d=document.createElement('div');d.className='dot';d.onclick=()=>go(k);dotsEl.appendChild(d);}
+    const dots=[...dotsEl.children];
+    function render(){img.src=files[i];n.textContent=i+1;cap.textContent=caps[i];
+      dots.forEach((d,k)=>d.classList.toggle('on',k===i));prev.disabled=i===0;next.disabled=i===N-1;
+      if(lb.classList.contains('on'))lbimg.src=files[i];}
+    function go(k){i=Math.max(0,Math.min(N-1,k));render();}
+    prev.onclick=()=>go(i-1);next.onclick=()=>go(i+1);
+    img.onclick=()=>{lbimg.src=files[i];lb.classList.add('on');};
+    lb.onclick=()=>lb.classList.remove('on');
+    document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(i+1);if(e.key==='ArrowLeft')go(i-1);if(e.key==='Escape')lb.classList.remove('on');});
+    if(N>0) render(); else sub.textContent='nenhum slide-N.png encontrado nesta pasta';
+  })();
+</script>
+</body></html>

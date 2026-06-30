@@ -186,15 +186,19 @@ Sem coordenação entre agentes = mais barato e rápido.
 ---
 
 ## Pipeline `instagram`
-1. **Spawn paralelo (mesma mensagem, 2 Agents):**
-   - **Copywriter** → legenda + slides do carrossel, retornando JSON `{caption, hashtags, slides:[{n,title,body}]}`, seguindo a **estrutura de copy** abaixo. **Copy SEMPRE com acentuação correta do português** — NÃO devolver sem acento (erro recorrente; se vier sem acento, a sessão principal corrige na montagem).
-   - **Designer** → constrói `carrossel.html` com N `<section id="slide-N">` de **1080×1080** empilhadas, estilo do brand-kit, usando **tokens** `{{SLIDEn_TITLE}}` / `{{SLIDEn_BODY}}` no lugar do texto (NÃO escreve a copy final — só o template visual). **Sempre incluir no CSS** `html{scrollbar-width:none} html::-webkit-scrollbar{display:none}` pra a barra de rolagem não vazar no screenshot.
-     **Quando o carrossel usa fotos editadas do Eric (eric_photos preenchido):** variar o layout por slide — não usar o mesmo template para todos. Padrões validados: capa fullscreen com gradient dramático; foto direita (blended gradient); foto esquerda (invertida, texto à direita); fullscreen como bg com stat cards; CTA fullscreen com overlay. Isso cria ritmo visual e cada slide se sustenta sozinho no feed. Com fotos editadas, preferir **5 slides** (capa + 3 conteúdo + CTA) em vez de 8 — menos copy por slide, mais impacto visual.
-2. **Montagem (sessão principal):** injeta a copy do Copywriter nos tokens → `carrossel-final.html`; confere que sobraram **0** `{{`.
-3. **Revisor (`exp-ger-marketing`) OBRIGATÓRIO** — risco reputacional. Roda o checklist + score (abaixo), aprova/reprova e aplica o ajuste antes de exportar.
-4. **Export** (protocolo abaixo) → **N PNGs de 1080×1080, 1 por slide**.
-5. **Preview SEMPRE (desktop):** depois do export, gerar um `gallery.html` na pasta do slug que mostra os N PNGs em sequência (uma `<img>` por slide, fundo escuro, largura responsiva) e abrir no preview — garantir um server via `preview_start` (cria entrada em `.claude/launch.json` servindo a pasta `temp/<slug>` numa porta livre, ex. 4530, via `python -m http.server`). Assim o Eric vê o carrossel montado sem abrir arquivo na mão. Em ambiente headless/VPS (sem preview): pular e só apontar o caminho dos PNGs.
-6. Devolve os PNGs + legenda ao Eric. Carrossel NÃO vai pra Vercel.
+
+**Orquestração com GATE DURO de qualidade (via Workflow):** a partir da v2.10.0 o ciclo produção→revisão→export do carrossel roda pelo Workflow `assets/pipeline-instagram-gate.mjs`, que torna o corte de score uma **trava de código** (não confiança no agente): o export só é alcançado quando `score >= 7`; se reprovar, re-gera a copy com o feedback do Revisor e tenta de novo (máx `maxTries`, default 3). Se estourar as tentativas sem atingir 7, retorna `reprovado` **sem exportar**.
+
+1. **Fase 0 (sessão principal):** monta o `briefing.json` em `C:/tmp/conteudo/<slug>/` (ver contrato acima) e cria a pasta do workspace.
+2. **Rodar o gate:** invocar a tool **Workflow** com `{scriptPath: ".../skills/orquestrar-conteudo/assets/pipeline-instagram-gate.mjs"}` e `args: {slug, briefingPath, nSlides, maxTries}`. O Workflow executa internamente:
+   - **Produção (paralelo):** Copywriter (`exp-copywriter`-style; copy no schema `{status,caption,hashtags,slides:[{n,title,body}]}`, acentuação correta, zero buzzword) **∥** Designer (`carrossel.html` com `<section id="slide-N">` 1080×1080, tokens `{{SLIDEn_TITLE}}`/`{{SLIDEn_BODY}}`, fundos do brand-kit; CSS com `scrollbar-width:none` + `::-webkit-scrollbar{display:none}`).
+   - **Revisão + gate (loop):** montagem determinística (injeta copy nos tokens → `carrossel-final.html`, 0 `{{`) → Revisor pontua (checklist + escala abaixo). `score < 7` → re-gera a copy com os `problemas` do Revisor e repete. `score >= 7` → segue.
+   - **Export (só com score>=7):** N PNGs de 1080×1080 via Python Playwright (`device_scale_factor=1`, servidor http + python no MESMO bash call). Saída em `~/OneDrive/Workspace/temp/<slug>/`.
+   > Carrossel com **fotos editadas do Eric** (eric_photos preenchido): variar o layout por slide (capa fullscreen com gradient; foto direita/esquerda; fullscreen bg com stat cards; CTA com overlay) e preferir **5 slides** — ajuste o `briefing.json`/prompt do Designer no script.
+3. **Preview SEMPRE (desktop):** quando o Workflow retorna `aprovado`, a sessão principal copia `assets/gallery-template.html` para `temp/<slug>/gallery.html` (galeria-**carrossel**: 1 slide por vez, setas ‹ ›, teclado ← →, bolinhas, clique-pra-ampliar; **auto-detecta** o nº de slides), sobe um server via `preview_start` (entrada no `.claude/launch.json` servindo `temp/<slug>` numa porta livre, ex. 4530) e abre `/gallery.html`. Assim o Eric revê o carrossel sem abrir arquivo na mão. Headless/VPS (sem preview): pular e apontar o caminho dos PNGs.
+4. **Entrega:** PNGs + legenda (`copywriter-output.json`) ao Eric. Se o Workflow retornar `reprovado`, reportar o score e os ajustes pendentes — **não** exportar. Carrossel NÃO vai pra Vercel.
+
+> **Fallback manual (sem Workflow):** se precisar rodar na mão, seguir Produção→Montagem→Revisor→Export como antes, mas então o corte `score>=7` vira responsabilidade da sessão (gate mole). Preferir sempre o Workflow.
 
 ### Estrutura de copy do Instagram (Copywriter segue)
 **Legenda:**
