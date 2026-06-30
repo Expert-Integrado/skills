@@ -1,6 +1,6 @@
 ---
 name: criar-post-blog
-description: "Escreve um post COMPLETO e pronto pra publicar no blog da Expert Integrado (expertintegrado.com.br/blog) — na voz do Eric (Voice Guide v1.4) e na estrutura GEO 2026 (resposta-primeiro, H2 como pergunta, 1+ fato por seção, FAQ obrigatória). Cria o arquivo .mdx no repo Astro com o frontmatter correto (pillar, tipo, tags, related, takeaways), gera ou exige 1 visual por post, valida com build local e faz deploy na Vercel. Usar quando o Eric pedir 'escreve um post pro blog', 'cria um artigo sobre X', 'novo post de blog', 'publica um post sobre Y', 'post pilar/versus/case sobre Z', ou mandar um tema pro blog da Expert. NÃO usar pro hub pessoal ericluciano.com.br nem pra roteiro de vídeo (use criar-script)."
+description: "[DEPRECATED 29/06/2026 — substituída pelo pipeline modular de blog: agente-draft-blog -> agente-revisor-blog -> agente-publisher-blog (+ gerar-hero-blog pra capa). NÃO ATIVAR esta skill; ela não dispara mais por gatilho. Mantida apenas como referência/rollback até o pipeline validar em produção.] (legado) Escrevia um post completo no blog da Expert Integrado (expertintegrado.com.br/blog) na voz do Eric e estrutura GEO 2026, criava o .mdx no repo Astro e fazia deploy na Vercel."
 command: "criar-post-blog"
 argument-hint: "[tema do post] (opcional — a skill pergunta o resto)"
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, WebSearch, WebFetch, mcp__expert-brain__recall
