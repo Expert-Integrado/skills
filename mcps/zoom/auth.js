@@ -12,9 +12,10 @@
  */
 
 import { createServer } from "http";
-import { writeFileSync } from "fs";
+import { writeFileSync, readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { homedir } from "os";
 import crypto from "crypto";
 import open from "open";
 
@@ -26,7 +27,23 @@ const TOKENS_PATH = join(__dirname, "tokens.json");
 // pode ficar no código sem risco. Assim o login é só `node auth.js`, sem precisar
 // setar variável de ambiente. Sobrescreva via env ZOOM_CLIENT_ID p/ usar outro app.
 const PUBLIC_CLIENT_ID = "gBJbWx7zSpKTr_PIgmBuoA";
-const CLIENT_ID = process.env.ZOOM_CLIENT_ID || PUBLIC_CLIENT_ID;
+
+// IMPORTANTE (fix 02/07/2026): cada MAQUINA tem seu proprio app Zoom (PKCE public),
+// porque o Zoom so mantem 1 refresh token por usuario+app — dois devices no mesmo app
+// se revogam (Brain toe9oixb2k40). O index.js (MCP) le o client_id do env ZOOM_CLIENT_ID
+// que vem do claude.json. Se o auth.js mintar com um client_id DIFERENTE do que o MCP
+// usa, o refresh quebra com "invalid_client" ~1h depois. Pra NUNCA divergir, o auth.js
+// resolve o client_id da MESMA fonte que o MCP: env -> claude.json(zoom-mcp) -> default.
+function clientIdFromClaudeJson() {
+  try {
+    const cj = JSON.parse(readFileSync(join(homedir(), ".claude.json"), "utf-8"));
+    return cj?.mcpServers?.["zoom-mcp"]?.env?.ZOOM_CLIENT_ID || null;
+  } catch {
+    return null;
+  }
+}
+const CLIENT_ID = process.env.ZOOM_CLIENT_ID || clientIdFromClaudeJson() || PUBLIC_CLIENT_ID;
+console.log(`Usando ZOOM_CLIENT_ID: ${CLIENT_ID}`);
 const REDIRECT_URI = process.env.ZOOM_REDIRECT_URI || "http://localhost:4488/callback";
 
 // ─── PKCE: code_verifier + code_challenge ────────────────────────────────────
