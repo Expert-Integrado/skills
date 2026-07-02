@@ -57,6 +57,8 @@ Classificar cada participante pelo HISTÓRICO nas edições anteriores (buscar p
 - **Recusou 2 edições diferentes → NÃO convidar mais.** Só reconvida quem recusou 1 vez.
 - **Bases de convidadores desligados/vetados (ex: Vanderson Souza, Ricardo Junior) → NÃO convidar.**
 - **Clientes Super SDR → NÃO convidar** (origem `cliente_supersdr` / "Cliente Super SDR" em qualquer edição).
+- **NÃO convidar quem está em NEGOCIAÇÃO ATIVA de produto** (proposta enviada, pagamento em curso, reunião/call marcada nas últimas semanas) — MESMO que a última mensagem tenha sido do Eric. Convite de cortesia por cima de uma venda em andamento a atrapalha/barateia. Na dúvida, pular. **Aprendizado 02/07/2026: os leads "mais quentes por recência" costumam ser exatamente negociações ativas — a recência sozinha NÃO é sinal de que pode disparar.**
+- **NÃO convidar parceiro/colega técnico** com copy formatada — soa robótico; o Eric convida esses pessoalmente.
 - Em edição nova, confirmar com o Eric se a lista de vetos mudou.
 
 ## FLUXO DE 4 MENSAGENS (3s de intervalo entre cada)
@@ -190,7 +192,8 @@ Um por participante (ou `gerar_convites_pdf_lote` pro lote). Guardar a `url` de 
 **IMPORTANTE:** usar limit=15 (não 3). Com limit baixo, whatsapp-agent pode pular mensagens recentes e só retornar as mais antigas — já deu falso positivo (Cleber, 2026-04-23).
 
 - **Última mensagem foi DO CLIENTE e está não lida/não respondida** → PARAR, reportar ao Eric e PERGUNTAR o que fazer (pode ser que precise responder a pergunta dele antes de mandar o convite)
-- **Última mensagem foi do Eric/equipe, OU conversa já foi respondida** → pode disparar o convite normalmente
+- **Última mensagem foi do Eric/equipe, OU conversa já foi respondida** → pode disparar o convite normalmente, MAS antes confira o parágrafo abaixo
+- **NEGOCIAÇÃO ATIVA EM ABERTO** (a conversa recente mostra proposta, valores, pagamento, ou reunião marcada) → PARAR, NÃO disparar cortesia, mesmo que a última msg seja do Eric. Ler ~8 msgs e classificar: negócio em andamento = pular. Só reconvidar quando a negociação esfriou (proposta parada, lead sumiu, última interação foi um fechamento cordial ou "fica pra próxima").
 
 **Why:** Não faz sentido mandar convite automatizado pra alguém que acabou de te escrever — fica robótico e ignora o contexto. O Eric trata caso a caso essas conversas ativas.
 
