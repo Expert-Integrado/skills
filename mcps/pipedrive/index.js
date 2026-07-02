@@ -500,6 +500,10 @@ function translateDealFields(deal) {
     atualizado_em: deal.update_time,
     previsao_fechamento: deal.expected_close_date,
   };
+  if (deal.status === "lost") {
+    result.motivo_perda = deal.lost_reason || null;
+    result.perdido_em = deal.lost_time || null;
+  }
   for (const [apiKey, fieldName] of Object.entries(KEY_TO_NAME)) {
     const rawValue = deal[apiKey];
     if (rawValue === null || rawValue === undefined || rawValue === "") continue;
@@ -573,6 +577,7 @@ server.tool(
       responsavel: d.owner_name,
       criado_em: d.add_time,
       atualizado_em: d.update_time,
+      ...(d.status === "lost" ? { motivo_perda: d.lost_reason || null, perdido_em: d.lost_time || null } : {}),
     });
 
     const buildPath = (pageLimit, pageStart) => {
