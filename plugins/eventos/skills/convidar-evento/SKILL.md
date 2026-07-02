@@ -12,12 +12,37 @@ Skill para disparar convites via WhatsApp para eventos do Eric, puxando dados do
 ## CONTEXTO
 
 - Eventos ficam no MCP `expert-integrado` (tabela participantes)
-- Convidados do Eric têm `convidado_por = "Eric Luciano"`
+- Quem envia cada convite está GRAVADO no participante: `convidado_por_user_id` = `5f1aa31e-e159-4638-9699-38a77c0f51cf` (Eric) ou `a11ad1a5-b40e-4541-8ca5-4df70cab1b07` (Niverton). Filtrar SEMPRE por esse UUID (o campo texto `convidado_por` é só exibição).
 - Status inicial: `pendente_envio` → após disparo: `convite_enviado`
-- **Edições com mais de uma data (ex: jul/2026, turmas 28 e 29):** cada dia é um EVENTO separado no MCP. O convidado escolhe o dia; o PDF personalizado só é gerado e enviado DEPOIS da escolha, a partir do evento do dia escolhido.
-- PDFs personalizados são gerados pelo próprio MCP (`gerar_convite_pdf` / `gerar_convites_pdf_lote`) e retornam URL pública — não é mais necessário Eric mandar pasta de PDFs nem subir em host externo. (Fallback legado: pasta de PDFs + upload em tmpfiles.org, ver seção no fim.)
+- **Ritmo: máx ~30 disparos/dia por número** (anti-spam + capacidade do Eric de responder). Confirmar o tamanho do lote com o Eric.
+
+## FONTES PRONTAS — edição jul/2026 (usar, não recalcular)
+
+Pasta `C:\Users\Eric Luciano\OneDrive\Workspace\temp\convites-imersao-julho\`:
+- **`INDICE-ENVIO.md`** — os 138 com telefone, quente/frio no WhatsApp e ordem sugerida de disparo (quentes por recência primeiro)
+- **`segmentacao.json`** — segmento (RECUSOU/FALTOU/NOVO) + mês do convite anterior + gancho de origem, POR participante_id. Usar direto na escolha da copy; NÃO reclassificar do zero.
+- **`envio.json`** — espelho de quem envia (mesma info já gravada no MCP)
+- **`pdfs/Eric/` e `pdfs/Niverton/`** — PDFs prontos no disco (pra envio manual). No disparo automatizado, gerar na hora via `gerar_convite_pdf` (precisa da URL pública).
+- **Edições com mais de uma data (ex: jul/2026, turmas 29 e 30):** cada dia é um EVENTO separado no MCP. **O PDF do convite já traz os botões "CONFIRMAR DIA 29/07" e "CONFIRMAR DIA 30/07"** — o convidado escolhe o dia clicando, e o sistema move ele pra turma certa e confirma sozinho (RPC `accept_invite_with_day`). NÃO é preciso perguntar o dia por mensagem nem mover ninguém manualmente.
+- O PDF é gerado pelo próprio MCP (`gerar_convite_pdf` / `gerar_convites_pdf_lote`) com URL pública: convite v5 com foto, "terceira edição", selo CORTESIA e os botões de dia. O participante pode estar cadastrado em qualquer uma das turmas — os botões cobrem as duas.
+
+## OPERADOR — Eric ou Niverton (definir ANTES de tudo)
+
+A skill serve aos DOIS convidadores. Primeiro passo: identificar quem está operando (perguntar se não for óbvio pelo ambiente).
+
+| | ERIC | NIVERTON |
+|---|---|---|
+| Filtro | `convidado_por_user_id = 5f1aa31e-e159-4638-9699-38a77c0f51cf` | `convidado_por_user_id = a11ad1a5-b40e-4541-8ca5-4df70cab1b07` |
+| Disparo | Automatizado via MCP `whatsapp-agent` (número pessoal do Eric, `instance="pessoal"`) | **MANUAL**: a skill monta o KIT (mensagens prontas + PDF de cada um) e o Niverton copia/cola e envia do WhatsApp DELE. NÃO existe whatsapp-agent pro número do Niverton. |
+| Copies | Copy A/B/C (voz do Eric, abaixo) | Copy A-N/B-N/C-N (voz do Niverton citando o Eric, abaixo) |
+| Pipedrive (Passo 5.5) | Sim, atividade concluída | Não criar via skill (Niverton registra no CRM dele) |
+| Pós-envio | `update_status_convite` automático | Marcar `convite_enviado` SÓ depois que o Niverton confirmar que mandou |
+
+Um operador NUNCA dispara os convites do outro. Os arquivos locais (INDICE-ENVIO, segmentacao.json, pdfs/) vivem no PC do Eric; no ambiente do Niverton, usar direto o MCP (list_participantes + gerar_convite_pdf, que retorna URL pública, sem depender de disco).
 
 ## SEGMENTAÇÃO (substitui a antiga classificação VELHO vs NOVO)
+
+**Edição jul/2026: a classificação dos 138 JÁ está pronta em `segmentacao.json` (ver Fontes Prontas) — usar direto, não recalcular.** A tabela abaixo é a regra geral pra edições futuras ou participantes fora do arquivo.
 
 Classificar cada participante pelo HISTÓRICO nas edições anteriores (buscar por telefone e nome nos eventos passados do MCP):
 
@@ -34,7 +59,7 @@ Classificar cada participante pelo HISTÓRICO nas edições anteriores (buscar p
 - **Clientes Super SDR → NÃO convidar** (origem `cliente_supersdr` / "Cliente Super SDR" em qualquer edição).
 - Em edição nova, confirmar com o Eric se a lista de vetos mudou.
 
-## FLUXO DE 3 MENSAGENS (3s de intervalo entre cada)
+## FLUXO DE 4 MENSAGENS (3s de intervalo entre cada)
 
 > Datas, mês da recusa, cidade e link abaixo são da edição de JULHO/2026. Em edição futura, substituir pelos dados reais (confirmar com o Eric antes de disparar).
 > REGRA: NUNCA usar travessão longo (—) nas copies. Tem cara de IA. Usar ponto final, vírgula ou quebra de linha.
@@ -71,56 +96,92 @@ O gancho de origem é invariante no corpus real do Eric: TODO convite pra contat
 
 **Msg 2 — Datas + link (igual pros 3 segmentos):**
 ```
-Agora vão ser duas turmas: 28 ou 29 de julho, aqui em São Paulo, das 8h às 19h. Você escolhe o dia que encaixa melhor na agenda.
+Agora vão ser duas turmas: 29 ou 30 de julho, aqui em São Paulo, das 8h às 20h. Você escolhe o dia que encaixa melhor na agenda.
 
 Detalhes e confirmação: https://imersao.ericluciano.com.br
 ```
 
-**Msg 3 — Pergunta de escolha (alternative close, igual pros 3):**
+**Msg 3 — PDF (arquivo sozinho, SEM legenda):**
+Gerado na hora via `mcp__expert-integrado__gerar_convite_pdf(participante_id=...)` → usar a `url` retornada.
+
+**Msg 4 — Explicação + fechamento (igual pros 3):**
 ```
-Qual dos dois dias fica melhor pra você? Te mando o convite personalizado do dia escolhido.
-```
-Uma pergunta só, fácil de responder num toque. Não adicionar outras perguntas na mesma mensagem.
+O convite em PDF é personalizado com seu nome. Dentro dele tem os botões pra escolher o dia (29 ou 30) e confirmar presença direto por lá.
 
-## PÓS-ESCOLHA (quando a pessoa responde "28" ou "29")
-
-1. Se escolheu o dia que NÃO é o evento onde está cadastrada: mover = `add_participante` no evento do dia escolhido (copiando dados + `convidado_por`) e `delete_participante` no evento antigo.
-2. Gerar o PDF do dia certo: `mcp__expert-integrado__gerar_convite_pdf(participante_id=...)` → retorna URL pública.
-3. Disparar (3s entre mensagens):
-```
-Msg A: Te coloquei na turma do dia [28/29].
-
-Msg B: [PDF: send com type="document", media_url=<url do gerar_convite_pdf>, file_name="Convite - [Nome].pdf", SEM legenda]
-
-Msg C: O convite em PDF é personalizado com seu nome e tem um botão pra confirmar presença direto por lá.
+Só te peço uma coisa, por favor: se não puder ir, me avisa. Tenho ingressos limitados pra distribuir e aí passo pra outra pessoa..
 
 Bora?
 ```
-Ordem fixa: confirmação da turma → documento → texto do botão. Nunca inverter, nunca concatenar.
-4. `update_status_convite(participante_id, novo_status="aceitou_convite")`.
-5. Pipedrive: atividade "Reunião Geral - Imersão" pro dia do evento (ver skill verificar-convites, Passo 5.5).
 
-## FOLLOW-UP 48h (sem resposta à pergunta do dia)
+## COPIES DO NIVERTON (quando o operador é o Niverton)
+
+Mesma estrutura de 4 mensagens. Voz do Niverton: profissional, próxima, SEM fingir intimidade que não tem, sempre citando o Eric como anfitrião. Msg 2, Msg 3 (PDF) e Msg 4 são as MESMAS do fluxo do Eric (a Msg 4 troca "me avisa" por "me avisa aqui").
+
+**Copy A-N — RECUSOU (recusou 1x a edição anterior):**
+```
+Msg 1:
+Oi [PrimeiroNome], tudo bem? Aqui é o Niverton, da equipe do Eric Luciano.
+
+Em [maio] você recebeu o convite pra imersão do Eric e a data não bateu. Ele vai rodar mais duas edições agora em julho e me pediu pra te convidar de novo. As duas primeiras lotaram e o feedback foi muito bom.
+```
+
+**Copy B-N — FALTOU (confirmou e não foi):**
+```
+Msg 1:
+Oi [PrimeiroNome], tudo bem? Aqui é o Niverton, da equipe do Eric Luciano.
+
+Em maio você tinha confirmado presença na imersão do Eric. Ele vai rodar mais duas edições agora em julho e me pediu pra garantir seu convite nessa.
+```
+
+**Copy C-N — NOVO (primeira vez, geralmente lead que negociou com o Niverton):**
+```
+Msg 1:
+Oi [PrimeiroNome], tudo bem? Niverton aqui, da Expert Integrado. A gente conversou há um tempo sobre [contexto da negociação].
+
+O Eric, nosso fundador, vai rodar uma imersão presencial de IA em julho e separou alguns convites de cortesia. Lembrei de você na hora. Um dia inteiro de IA aplicada ao negócio, saindo com agente rodando.
+```
+Substituir `[contexto da negociação]` pelo assunto real do deal (mentoria, automação etc. — está no Pipedrive/observações). Se o Niverton nunca falou com a pessoa, adaptar: "Você se cadastrou na [aula/palestra] do Eric Luciano" e apresentar-se do mesmo jeito.
+
+## O QUE ACONTECE DEPOIS DO CLIQUE (automático)
+
+Quando o convidado toca em "CONFIRMAR DIA X" no PDF:
+1. Abre a página de confirmação já mostrando "Confirmando para o dia X" com os dados dele pré-preenchidos.
+2. Nome, e-mail, empresa e cidade são obrigatórios — ele completa o que faltar e confirma.
+3. O sistema **move ele pra turma do dia escolhido e marca `aceitou_convite` sozinho** (mesmo que estivesse cadastrado na outra turma). Depois sugere foto opcional pro networking.
+
+Nada a fazer no disparo. A skill `verificar-convites` detecta essas confirmações automáticas na varredura.
+
+**Fallback manual — convidado responde o dia POR TEXTO em vez de clicar** (ex: "pode ser dia 30"):
+1. Se o dia escolhido NÃO é o evento onde ele está: mover = `add_participante` no evento do dia certo (copiando dados + `convidado_por`) e `delete_participante` no antigo. Gerar PDF novo (`gerar_convite_pdf`) e reenviar com: "Te coloquei na turma do dia [X]. É só confirmar no botão do convite."
+2. Se ele confirmar verbalmente ("tô dentro dia 29"): `update_status_convite(participante_id, novo_status="aceitou_convite")` + registrar no Pipedrive (ver verificar-convites, Passo 5.5).
+
+## FOLLOW-UP 48h (sem resposta e sem clique)
 
 Template no padrão real do Eric de fechar lista (baixa pressão, sempre com saída):
 ```
-Fala [PrimeiroNome], beleza? Tô fechando a lista das turmas de julho. 28 ou 29, qual fica melhor pra você? Se não rolar dessa vez, tranquilo, só me avisa que passo a vaga pra frente. Bora?
+Fala [PrimeiroNome], beleza? Tô fechando a lista das turmas de julho. 29 ou 30, qual fica melhor pra você? É só tocar no botão do convite que te mandei. Se não rolar dessa vez, tranquilo, só me avisa que passo a vaga pra frente. Bora?
 ```
 
 ## PROTOCOLO DE EXECUÇÃO
 
 ### Passo 0: Coletar parâmetros
-- **evento_id de cada dia** no MCP expert-integrado (jul/2026: dia 28 = `2621e765-994c-480f-962a-0715dae6fbe3`, dia 29 = `f2157b51-f82c-4c84-b62e-bf21c6afdf8f`)
+- **evento_id de cada dia** no MCP expert-integrado (jul/2026: dia 29 = `2621e765-994c-480f-962a-0715dae6fbe3`, dia 30 = `f2157b51-f82c-4c84-b62e-bf21c6afdf8f`)
 - Confirmar com o Eric o lote do dia (quantos e quais segmentos)
 
 ### Passo 1: Listar participantes
 ```
 mcp__expert-integrado__list_participantes(evento_id=..., status="pendente_envio")
 ```
-Filtrar por `convidado_por = "Eric Luciano"` quando o disparo for do Eric.
+Filtrar por `convidado_por_user_id` do OPERADOR (UUIDs na tabela de Operador acima). NUNCA disparar convite atribuído ao outro convidador.
 
 ### Passo 2: Segmentar
-Classificar cada um em RECUSOU / FALTOU / NOVO / COMPROU cruzando com os eventos anteriores (telefone e nome). Aplicar as regras de elegibilidade. Em dúvida, perguntar ao Eric.
+Jul/2026: ler o segmento e o gancho direto de `segmentacao.json` (Fontes Prontas). Pra quem não estiver no arquivo (ou edição futura): classificar em RECUSOU / FALTOU / NOVO / COMPROU cruzando com os eventos anteriores (telefone e nome). Aplicar as regras de elegibilidade. Em dúvida, perguntar ao Eric.
+
+### Passo 3: Gerar os PDFs
+```
+mcp__expert-integrado__gerar_convite_pdf(participante_id=...)
+```
+Um por participante (ou `gerar_convites_pdf_lote` pro lote). Guardar a `url` de cada um. O PDF já sai com os botões dos 2 dias — tanto faz em qual turma o participante está cadastrado.
 
 ### Passo 3.5: CHECAGEM OBRIGATÓRIA de última mensagem
 
@@ -137,23 +198,32 @@ Classificar cada um em RECUSOU / FALTOU / NOVO / COMPROU cruzando com os eventos
 
 **ATENÇÃO LIDs:** Eric às vezes responde leads num chat LID separado (formato `XXXXXXXX@lid`) que não aparece no read por número. Sintoma: leitura por número mostra apenas msgs antigas + Eric afirma ter respondido. Ação: rodar `mcp__whatsapp-agent__inbox(since=<últimas 2h>)` ou `search(query=<palavra-chave>)` pra achar o LID, então `read(chat=<LID@lid>, limit=15)`. Casos conhecidos: Henrique Scaramussa (22458769879126@lid), Cesar Barboza (83627341791456@lid), Luiz Closer (78533510574149@lid), Nicolas Tonetto (12434047811609@lid), Matheus Medeiros (180719439593480@lid).
 
-### Passo 4: Disparo (3 mensagens com sleep 3s)
+### Passo 4: Disparo (4 mensagens com sleep 3s) — SÓ operador ERIC
 
-Tudo pelo MCP `whatsapp-agent` (instância PESSOAL do Eric).
+Tudo pelo MCP `whatsapp-agent`, SEMPRE com `instance="pessoal"` (há 2 números conectados no MCP; sem o parâmetro pode sair pelo número errado).
 
 **Parâmetros do `send` (conferir nomes exatos):**
 - texto vai em `content` (NÃO `text`)
+- PDF: `type="document"` + `media_url=<url do gerar_convite_pdf>` + `file_name="Convite - [Nome].pdf"`, SEM legenda
 - `confirmed=true` é OBRIGATÓRIO pra realmente enviar. Só passar `true` depois que o Eric confirmou o disparo na Regra 1.
 
 ```
-mcp__whatsapp-agent__send(to=telefone, content=msg1, confirmed=true)
+mcp__whatsapp-agent__send(to=telefone, content=msg1, instance="pessoal", confirmed=true)
 sleep(3)
-mcp__whatsapp-agent__send(to=telefone, content=msg2, confirmed=true)
+mcp__whatsapp-agent__send(to=telefone, content=msg2, instance="pessoal", confirmed=true)
 sleep(3)
-mcp__whatsapp-agent__send(to=telefone, content=msg3, confirmed=true)
+mcp__whatsapp-agent__send(to=telefone, type="document", media_url=pdf_url, file_name="Convite - [Nome].pdf", instance="pessoal", confirmed=true)
+sleep(3)
+mcp__whatsapp-agent__send(to=telefone, content=msg4, instance="pessoal", confirmed=true)
 ```
 
-O PDF NÃO vai neste disparo — vai no PÓS-ESCOLHA, quando a pessoa responder o dia.
+### Passo 4-N: Kit manual — operador NIVERTON
+
+Nada de `send`. Pra cada participante do lote, montar um bloco pronto pra copiar:
+1. `gerar_convite_pdf(participante_id)` → guardar a `url`
+2. Entregar ao Niverton, por pessoa: telefone + Msg 1 (copy -N do segmento) + Msg 2 + link do PDF (ele baixa e anexa) + Msg 4
+3. Ele envia do WhatsApp dele, na ordem, com o PDF como mensagem separada sem legenda
+4. Depois que ele CONFIRMAR o envio: rodar o Passo 5 (`update_status_convite`) — nunca antes
 
 ### Passo 5: Atualizar status no MCP
 ```
@@ -211,21 +281,16 @@ mcp__whatsapp-agent__send(to=telefone, content=msg1, allow_new=true, confirmed=t
 
 **REGRA CRÍTICA:** A primeira mensagem JAMAIS pode ser "teste" ou conteúdo genérico. A primeira mensagem TEM que ser a Msg 1 real do segmento. Nunca fazer "ping" de teste em lead/cliente.
 
-## FALLBACK LEGADO — pasta de PDFs + tmpfiles.org
-
-Só usar se `gerar_convite_pdf` do MCP falhar. Eric manda pasta com PDFs (`Alan_Marques.pdf` → "Alan Marques", match case-insensitive) e o upload vai pra host público:
-- **tmpfiles.org** → FUNCIONA (`curl -F "file=@arquivo.pdf" https://tmpfiles.org/api/v1/upload`, converter URL pra `/dl/`). Atenção: link expira em ~60 min, gerar na hora do envio.
-- 0x0.st e catbox.moe → bloqueados.
-
 ## REGRAS IMPORTANTES
 
 1. **SEMPRE confirmar com Eric antes de disparar** — mostrar lista de quem vai receber e perguntar "confirmo o disparo?"
-2. **Nunca mandar PDF com legenda** — PDF é mensagem separada (no PÓS-ESCOLHA)
+2. **Nunca mandar PDF com legenda** — PDF é mensagem separada (Msg 3)
 3. **3s entre mensagens** — evitar bloqueio anti-spam
 4. **Acentuação correta** em todas as mensagens (à, ã, é, ç)
 5. **Primeiro nome apenas** na saudação
 6. **Se falhar em alguém** — logar e continuar, reportar no resumo final
-7. **Atualizar status SÓ se as 3 mensagens foram enviadas com sucesso**
-8. **update_participante não aceita convidado_por** — preferir `convidado_por_user_id` (resolver com `list_vendedores`); pra trocar convidador de registro antigo, delete + add
+7. **Atualizar status SÓ se as 4 mensagens foram enviadas com sucesso**
+8. **Trocar convidador = `update_participante(participante_id, convidado_por_user_id=..., convidado_por=...)`** — funciona direto (validado 02/07/2026). NUNCA usar delete + add pra isso (conflita com a Regra 11: deletar mata o token do PDF). ATENÇÃO: `update_participante(observacoes=...)` SOBRESCREVE o campo e não há tool pra ler as observações atuais — não mexer em observações via update.
 9. **Normalizar telefone** antes de enviar (só dígitos, começando com 55)
 10. **`status_presenca = "confirmado"` é DEFAULT de cadastro**, não significa que a pessoa confirmou — confirmação real é `status` do convite (aceitou_convite/confirmado)
+11. **NUNCA deletar participante que já recebeu convite** — o link do PDF aponta pro token dele; deletar mata o botão de confirmação (a página mostra "link inválido")
