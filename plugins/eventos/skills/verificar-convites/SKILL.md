@@ -62,6 +62,76 @@ Se o lead aparecer em `waiting_on="eric"`, ele respondeu e o ciclo está ABERTO 
 
 Observação: o whatsapp-agent NÃO expõe confirmação de leitura (read receipt). `mcp__whatsapp-agent__status` só checa se o WhatsApp está conectado, não diz se uma mensagem foi lida. Não inventar status de leitura — reportar `sem_resposta` como candidato a follow-up e deixar o Eric decidir.
 
+### Passo 4.5: RESPONDER — copies prontas (voice do Eric)
+
+Respostas do meio do funil. Regras de voz (chat ativo): SEM vocativo de abertura se a conversa está quente (<5 min), registro informal, "massa/show/top", reticências ".." como respiração, NUNCA travessão (—), "você" pode virar "vc" em resposta curta de chat.
+
+**Autonomia:** FAQ factual (data, local, horário, preço, formato) e agradecimento de confirmação → PODE responder direto (`confirmed=true`). ESCALAR pro Eric antes de responder: pedido de levar acompanhante, transferência de vaga, objeção de negócio, qualquer negociação, tom irritado/negativo.
+
+**FATOS da edição jul/2026 (fonte pra qualquer resposta):**
+- Datas: 29 OU 30 de julho (a pessoa escolhe pelo botão de dentro do PDF)
+- Local: V4 Flagship, Edifício Ronaldo Sampaio Ferreira, Praça João Duran Alonso 34, 6º andar, Cidade Monções, São Paulo
+- Horário: 8h às 20h, com happy hour no final
+- Formato: 100% presencial, dia inteiro, mão na massa (levar notebook)
+- Ingresso: vendido a R$ 1.500 no site (imersao.ericluciano.com.br); o convite dele é CORTESIA pessoal do Eric
+- Confirmação: botão CONFIRMAR DIA 29/07 ou 30/07 dentro do PDF
+
+**CONFIRMOU ("tô dentro", clicou no botão):**
+```
+Aeee! Massa demais. Te espero lá então.
+
+Qualquer coisa que precisar antes do evento é só me chamar aqui. Vai ser top!
+```
+
+**RECUSOU (educado, sem disponibilidade):** — template validado: foi a resposta real do Eric em maio, e o lead reconvidado aceitou na edição seguinte.
+```
+Tranquilo, [PrimeiroNome]! Obrigado por avisar. Te deixo na lista da próxima edição e te aviso primeiro quando tiver. Abraço!
+```
+
+**"QUAL DATA?" / "TEM DATA?":**
+```
+São duas turmas: 29 ou 30 de julho, aqui em São Paulo, das 8h às 20h. Você escolhe o dia que encaixa melhor.
+
+É só abrir o convite em PDF que te mandei e tocar no botão do dia. Confirma sozinho por lá.
+```
+
+**"ONDE VAI SER?":**
+```
+Na V4 Flagship: Edifício Ronaldo Sampaio Ferreira, Praça João Duran Alonso 34, 6º andar, Cidade Monções, aqui em SP.
+
+Tem o endereço completo e o mapa dentro do convite também.
+```
+
+**"QUANTO CUSTA?" / "É PAGO?":**
+```
+Pra você é cortesia, convite meu. O ingresso tá à venda no site por R$ 1.500, mas separei alguns convites pra pessoas que eu queria muito lá. Só confirmar no botão do PDF.
+```
+
+**"É ONLINE?" / "TEM GRAVAÇÃO?":**
+```
+É 100% presencial, aqui em SP. A proposta é sair com IA implementada de verdade, mão na massa o dia inteiro, com suporte ao vivo. Não tem versão online dessa experiência.
+```
+
+**"POSSO LEVAR ALGUÉM?" / "PASSA A VAGA PRO MEU SÓCIO?":** NÃO prometer. Responder segurando e ESCALAR pro Eric:
+```
+Deixa eu ver aqui como estão as vagas e te falo, beleza?
+```
+(Transferência de vaga pra outra pessoa da mesma empresa tem precedente aprovado; acompanhante extra = decisão do Eric caso a caso. Se o Eric aprovar: cadastrar a pessoa nova no MCP, gerar o PDF dela e enviar.)
+
+**"NÃO CONSIGO NESSES DIAS" (mas demonstrou interesse):**
+```
+Poxa, que pena! Mas tranquilo. Te coloco na frente da fila da próxima edição então.
+
+Só me confirma que não vai dessa vez pra eu liberar tua vaga pra outra pessoa, beleza?
+```
+
+**"VOU VER E TE FALO" (em avaliação):**
+```
+Fechou! Só não demora muito não que as vagas são limitadas.. me dá um retorno até [dia] que eu seguro a tua até lá.
+```
+
+Após CADA resposta enviada: seguir o Passo 5 (status) e o Passo 5.5 (registro no Pipedrive) normalmente.
+
 ### Passo 5: Atualizar status no MCP
 
 **Confirmou:**
