@@ -287,6 +287,8 @@ mcp__pipedrive__create_activity(
 
 **Quando NÃO criar atividade aqui:** se o convite foi disparado por outro convidador. Manter atividade só para `convidado_por = "Eric Luciano"`.
 
+**OBRIGATÓRIO mesmo em lote via script:** se o disparo for automatizado (script processando N pessoas), o registro no Pipedrive faz parte do loop de CADA pessoa: enviou as 4 msgs, registra na hora. NÃO deixar "pra depois". (Incidente 02/07/2026: os scripts de lote pularam este passo e 35 atividades tiveram que ser criadas retroativamente em backfill.)
+
 ### Passo 6: Resumo final
 Tabela com: Nome | Segmento | Status envio | Status MCP | Pipedrive (act_id)
 
