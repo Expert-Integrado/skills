@@ -93,9 +93,9 @@ Reportar pro Eric pra ele decidir o follow-up.
 
 **Sem resposta:** não alterar, apenas reportar.
 
-### Passo 5.5: Registrar desfecho no Pipedrive
+### Passo 5.5: Registrar desfecho no Pipedrive (regra do Eric, 02/07/2026)
 
-A atividade "Convite enviado, imersão, ..." já foi criada concluída na hora do envio (skill `convidar-evento`). Aqui registramos o **desfecho** baseado na resposta do lead.
+A atividade "Convite enviado, imersão, ..." já foi criada concluída na hora do envio (skill `convidar-evento`). Aqui vale a regra: **TODO contato do funil de convite vira uma atividade de Mensagem de WhatsApp (type="whatsapp") CONCLUÍDA (done=true)** — aceite, recusa, follow-up e encerramento por silêncio. Histórico auditável completo na pessoa.
 
 **Pré-requisito:** achar o `person_id` do lead no Pipedrive.
 ```
@@ -113,44 +113,76 @@ mcp__pipedrive__update_person(
 )
 ```
 
-**Confirmou:** criar atividade pendente "Reunião Geral - Imersão" pra dia do evento + nota.
+**ACEITOU/CONFIRMOU — 2 atividades:**
+```
+# 1) o contato (concluída):
+mcp__pipedrive__create_activity(
+  subject="Aceitou o convite da imersão",
+  type="whatsapp",            # nome visível: Mensagem de WhatsApp
+  due_date="<YYYY-MM-DD de hoje>",   # sem due_time
+  person_id=<id>, user_id="Eric Luciano",
+  note="Confirmou presença via botão do PDF/mensagem. Última msg dele: \"<texto literal, se houver>\".",
+  done=true
+)
+# 2) a reunião do evento (PENDENTE, na data do dia que a pessoa ESCOLHEU — 29 ou 30):
+mcp__pipedrive__create_activity(
+  subject="Imersão Empresa Inteligente, Empresário Livre",
+  type="apresentacao",        # key da API; nome visível: Reunião Geral. NÃO usar "reuniao_geral"
+  due_date="<YYYY-MM-DD do dia escolhido>",
+  person_id=<id>, user_id="Eric Luciano",
+  note="Confirmado na imersão (3ª edição). <contexto adicional se houver>"
+)
+```
+
+**RECUSOU — 1 atividade (concluída), motivo no note:**
 ```
 mcp__pipedrive__create_activity(
-  subject="Reunião Geral - Imersão '<nome do evento>' <Xª edição>",
-  type="apresentacao",  # key da API; nome visível "Reunião Geral". NÃO usar "reuniao_geral" (não é tipo válido)
-  due_date="<YYYY-MM-DD do evento>",
-  person_id=<id>,
-  user_id="Eric Luciano",
-  note="<contexto da confirmação, ex: 'Confirmou via msg em LID, demonstrou interesse em parceria comercial'>"
-)
-mcp__pipedrive__create_note(
-  person_id=<id>,
-  content="Confirmou presença na imersão <data>. Última msg dele: \"<texto literal>\"."
+  subject="Recusou o convite da imersão",
+  type="whatsapp",
+  due_date="<YYYY-MM-DD de hoje>",
+  person_id=<id>, user_id="Eric Luciano",
+  note="Motivo: <citação literal>. Tom: <positivo/neutro/negativo>. Próxima ação sugerida: <reabordar próxima edição / follow-up 30d / arquivar>.",
+  done=true
 )
 ```
 
-**Recusou:** criar nota com motivo (sem nova atividade).
+**FOLLOW-UP ENVIADO — 1 atividade (concluída) A CADA follow-up:**
 ```
-mcp__pipedrive__create_note(
-  person_id=<id>,
-  content="Recusou imersão <data>. Motivo: <citação literal>. Tom: <positivo/neutro/negativo>. Próxima ação sugerida: <ex: 'reabordar próxima edição', 'follow-up em 30d', 'arquivar'>."
+mcp__pipedrive__create_activity(
+  subject="Follow-up do convite da imersão",
+  type="whatsapp",
+  due_date="<YYYY-MM-DD do follow-up>",
+  person_id=<id>, user_id="Eric Luciano",
+  note="<qual follow-up: 48h / fechamento de lista / etc. Resumo da mensagem enviada>",
+  done=true
 )
 ```
 
-**Em avaliação:** criar nota registrando dúvida/objeção, sem nova atividade.
+**EM AVALIAÇÃO (respondeu com dúvida/objeção) — 1 atividade (concluída):**
 ```
-mcp__pipedrive__create_note(
-  person_id=<id>,
-  content="Em avaliação imersão <data>. Pergunta/objeção: <texto>. Aguardando resposta do Eric."
+mcp__pipedrive__create_activity(
+  subject="Em avaliação: convite da imersão",
+  type="whatsapp",
+  due_date="<YYYY-MM-DD de hoje>",
+  person_id=<id>, user_id="Eric Luciano",
+  note="Pergunta/objeção: <texto literal>. Aguardando resposta do Eric.",
+  done=true
 )
 ```
 
-**Sem resposta (silencioso):** nada extra. A atividade do envio já registra o touchpoint. Reportar pro Eric decidir se faz follow-up.
+**SEM RESPOSTA (silencioso):** enquanto o funil está vivo, nada extra (a atividade do envio + follow-ups já registram os touchpoints). **Quando o ERIC mandar desistir** (ele decide o momento), registrar o encerramento:
+```
+mcp__pipedrive__create_activity(
+  subject="Convite da imersão sem resposta, encerrado",
+  type="whatsapp",
+  due_date="<YYYY-MM-DD do encerramento>",
+  person_id=<id>, user_id="Eric Luciano",
+  note="Sem resposta após <N> follow-ups. Encerrado por decisão do Eric em <data>. Sugerida reabordagem na próxima edição.",
+  done=true
+)
+```
 
-**Por que separar atividade vs nota:**
-- Atividade: representa um EVENTO acionável e auditável (envio, reunião agendada).
-- Nota: representa CONTEXTO/decisão sem ação subsequente (recusa, dúvida).
-- Não inflar histórico de atividades com "recusa" — vira nota.
+**Regra geral:** atividade whatsapp concluída = touchpoint auditável (um por contato real). A "Reunião Geral" (type apresentacao) só existe no aceite e fica PENDENTE até o dia do evento. Não criar notas avulsas pra desfecho — o contexto vai no `note` da atividade.
 
 **Quando NÃO registrar:** se `convidado_por != "Eric Luciano"` (outro convidador é dono do touchpoint).
 
