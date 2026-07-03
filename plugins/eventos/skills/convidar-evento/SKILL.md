@@ -211,10 +211,11 @@ Um por participante (ou `gerar_convites_pdf_lote` pro lote). Guardar a `url` de 
 4. NÃO existe em nenhum (contato 100% frio) → default = `instance="pessoal"` + `allow_new=true`. Comercial SÓ com ordem explícita do Eric.
 5. PROIBIDO fixar `instance` num lote inteiro sem checar chat por chat. Incidente: 10 convites forçados no comercial; 3 contatos 100% frios receberam SÓ a 1ª msg.
 
-**CHAT NOVO — proteção anti-LID (obrigatória):** em chat novo, o WhatsApp pode remapear o contato pra um id interno (`XXXX@lid`) logo após a 1ª mensagem; as msgs seguintes enviadas pro telefone caem num chat órfão e SOMEM, com a API retornando ok. Então:
-- Depois da msg1 (com `allow_new=true`), rode `read(chat=telefone, instance=<a mesma>)` e capture o `chat_id` retornado.
-- Envie msg2/PDF/msg4 com `to=<chat_id>` (não o telefone). Use sleep 10s (não 3s) em chat novo.
-- `ok=true` do send NÃO garante entrega em chat novo — validar visualmente (Eric confere 1-2 amostras por lote). O `read` não mostra as msgs que o próprio agent envia.
+**CHAT NOVO — resolver o número CANÔNICO antes de enviar (obrigatória):**
+Causa raiz confirmada (02-03/07/2026, 4 casos): números BR cujo WhatsApp está registrado SEM o 9º dígito (comum fora de SP: DDD 44, 51, 31, 54...). Enviar pro número COM 9 cria um chat fantasma: a 1ª mensagem chega (o WhatsApp roteia), mas as seguintes morrem no chat órfão — com a API retornando ok. Então, pra chat novo:
+1. ANTES do 1º send: `zapi_action(action="get-contact-info", params={phone: <telefone>}, instance=<a que vai usar>)` → o campo `phone` retornado é o número CANÔNICO. Se divergir do seu (ex: veio sem o 9), USE O RETORNADO em todos os sends. Se retornar "Phone not exists", tente a variante sem o 9º dígito; se as duas falharem, o número não tem WhatsApp — reportar.
+2. Depois da msg1 (`allow_new=true`): `read(chat=<numero canônico>, instance=...)` e usar o `chat_id` retornado nas msgs seguintes. **Se o read vier AMBÍGUO (2 chats pro mesmo contato: um com nome, outro só número), o chat REAL é o que tem nome/mensagens recebidas — o outro é fantasma; NUNCA enviar pro fantasma.**
+3. Sleep 10s entre msgs em chat novo. `ok=true` do send NÃO garante entrega — validar visualmente 1-2 amostras por lote (o `read` não mostra as msgs que o próprio agent envia).
 
 **Parâmetros do `send` (conferir nomes exatos):**
 - texto vai em `content` (NÃO `text`)
