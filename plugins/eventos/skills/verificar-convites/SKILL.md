@@ -78,11 +78,18 @@ mcp__expert-integrado__get_evento(evento_id=...)
 
 Templates abaixo: preencher [DATAS], [CIDADE], [LOCAL+ENDEREÇO], [PREÇO], [HORÁRIO] com os fatos do MCP.
 
-**CONFIRMOU ("tô dentro", clicou no botão):**
+**CONFIRMOU / TOPOU:** ANTES de responder, RECHEQUE no MCP o status REAL dela (ver REGRA DE FECHAMENTO no Passo 5). Aceite verbal NÃO é confirmação.
+- Se já está `confirmado` (clicou o botão, dia definido):
 ```
 Aeee! Massa demais. Te espero lá então.
 
 Qualquer coisa que precisar antes do evento é só me chamar aqui. Vai ser top!
+```
+- Se só topou VERBALMENTE (status ainda `aceitou_convite`/`convite_enviado`, não clicou o botão): comemora E cobra o botão pra fechar de fato:
+```
+Boa demais! Vai ser top te ter lá.
+
+Só falta um passo: toca no botão do dia que encaixa (29 ou 30) ali dentro do convite em PDF, que aí sua vaga fica garantida de verdade. Me avisa qual dia vc escolheu!
 ```
 
 **RECUSOU (educado, sem disponibilidade):** — template validado: resposta real do Eric em maio/2026; o lead reconvidado aceitou na edição seguinte.
@@ -153,6 +160,12 @@ mcp__expert-integrado__update_status_convite(
 ```
 
 Valores válidos de novo_status: pendente_envio, convite_enviado, em_avaliacao, aceitou_convite, confirmado, recusou.
+
+> **REGRA DE FECHAMENTO — aceite verbal NÃO é confirmação (regra do Eric, 03/07/2026):** `confirmado` no MCP = a pessoa CLICOU o botão do dia no PDF (escolheu 29 ou 30, entrou na turma) = fechamento REAL. `aceitou_convite` = ela só DISSE que vai. **O fechamento é o clique, não a palavra.** Então SEMPRE que alguém confirmar/topar:
+> 1. RECHECA no MCP (`list_participantes` do evento, filtra pela pessoa) qual o status REAL dela.
+> 2. Se já está `confirmado` (botão apertado, dia definido) → beleza, só comemora.
+> 3. Se está só `aceitou_convite`/`convite_enviado` (não apertou o botão) → deixa EXPLÍCITO na resposta que ela precisa TOCAR NO BOTÃO do dia (29 ou 30) dentro do PDF pra garantir a vaga de verdade (usar o 2º template de CONFIRMOU). Não deixar morrer no "vou sim" verbal.
+> Vale desde a 1ª resposta, pra garantir o fechamento no sistema (a presença real), não só a intenção. Quando rodar em modo rechecagem/cron: varrer os `aceitou_convite` que ainda NÃO viraram `confirmado` e cobrar o botão de cada um.
 
 **Em avaliação (em conversa, sem decisão final):**
 ```
