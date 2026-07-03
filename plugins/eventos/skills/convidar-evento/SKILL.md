@@ -16,13 +16,15 @@ Skill para disparar convites via WhatsApp para eventos do Eric, puxando dados do
 - Status inicial: `pendente_envio` → após disparo: `convite_enviado`
 - **Ritmo: máx ~30 disparos/dia por número** (anti-spam + capacidade do Eric de responder). Confirmar o tamanho do lote com o Eric.
 
-## FONTES PRONTAS — edição jul/2026 (usar, não recalcular)
+## FONTE DA VERDADE = NUVEM (a skill NÃO depende de arquivo local)
 
-Pasta `C:\Users\Eric Luciano\OneDrive\Workspace\temp\convites-imersao-julho\`:
-- **`INDICE-ENVIO.md`** — os 138 com telefone, quente/frio no WhatsApp e ordem sugerida de disparo (quentes por recência primeiro)
-- **`segmentacao.json`** — segmento (RECUSOU/FALTOU/NOVO) + mês do convite anterior + gancho de origem, POR participante_id. Usar direto na escolha da copy; NÃO reclassificar do zero.
-- **`envio.json`** — espelho de quem envia (mesma info já gravada no MCP)
-- **`pdfs/Eric/` e `pdfs/Niverton/`** — PDFs prontos no disco (pra envio manual). No disparo automatizado, gerar na hora via `gerar_convite_pdf` (precisa da URL pública).
+Roda de QUALQUER máquina/instância. Tudo vem do MCP na hora:
+- **Quem convidar + ordem + não-repetir:** `list_participantes(evento_id, status="pendente_envio")`, filtrado por `convidado_por_user_id` do operador. Essa é a lista FINAL e já curada. Convidar TODOS, na ORDEM que o MCP retorna, sem pular ninguém. O status (`pendente_envio` -> `convite_enviado`) garante que ninguém recebe 2x. NÃO re-filtrar por "negociação", "quente/frio" ou qualquer coisa: quem está na lista é pra convidar.
+- **Segmento (RECUSOU/FALTOU/NOVO) + gancho:** cruzar telefone/nome com as edições anteriores no MCP, na hora.
+- **PDF:** gerar na hora com `gerar_convite_pdf(participante_id)` -> retorna URL pública. NÃO depende de arquivo no disco.
+- **Contexto da conversa:** ler na hora com `whatsapp-agent read` (só pro Passo 3.5: não mandar por cima de uma pergunta do cliente ainda não respondida).
+
+**Atalho opcional (só se a máquina tiver os arquivos, ex: PC do Eric com OneDrive):** a pasta `Workspace\temp\convites-imersao-julho\` pode ter `segmentacao.json`, `INDICE-ENVIO.md` e PDFs em `pdfs/`. Se existirem, dá pra reusar (pula recomputar segmento e reaproveita o PDF). Se NÃO existirem, ignore e faça tudo pela nuvem acima. NUNCA travar por falta de arquivo local.
 - **Edições com mais de uma data (ex: jul/2026, turmas 29 e 30):** cada dia é um EVENTO separado no MCP. **O PDF do convite já traz os botões "CONFIRMAR DIA 29/07" e "CONFIRMAR DIA 30/07"** — o convidado escolhe o dia clicando, e o sistema move ele pra turma certa e confirma sozinho (RPC `accept_invite_with_day`). NÃO é preciso perguntar o dia por mensagem nem mover ninguém manualmente.
 - O PDF é gerado pelo próprio MCP (`gerar_convite_pdf` / `gerar_convites_pdf_lote`) com URL pública: convite v5 com foto, "terceira edição", selo CORTESIA e os botões de dia. O participante pode estar cadastrado em qualquer uma das turmas — os botões cobrem as duas.
 
@@ -57,8 +59,6 @@ Classificar cada participante pelo HISTÓRICO nas edições anteriores (buscar p
 - **Recusou 2 edições diferentes → NÃO convidar mais.** Só reconvida quem recusou 1 vez.
 - **Bases de convidadores desligados/vetados (ex: Vanderson Souza, Ricardo Junior) → NÃO convidar.**
 - **Clientes Super SDR → NÃO convidar** (origem `cliente_supersdr` / "Cliente Super SDR" em qualquer edição).
-- **NÃO convidar quem está em NEGOCIAÇÃO ATIVA de produto** (proposta enviada, pagamento em curso, reunião/call marcada nas últimas semanas) — MESMO que a última mensagem tenha sido do Eric. Convite de cortesia por cima de uma venda em andamento a atrapalha/barateia. Na dúvida, pular. **Aprendizado 02/07/2026: os leads "mais quentes por recência" costumam ser exatamente negociações ativas — a recência sozinha NÃO é sinal de que pode disparar.**
-- **NÃO convidar parceiro/colega técnico** com copy formatada — soa robótico; o Eric convida esses pessoalmente.
 - Em edição nova, confirmar com o Eric se a lista de vetos mudou.
 
 ## FLUXO DE 4 MENSAGENS (3s de intervalo entre cada)
@@ -177,7 +177,7 @@ mcp__expert-integrado__list_participantes(evento_id=..., status="pendente_envio"
 Filtrar por `convidado_por_user_id` do OPERADOR (UUIDs na tabela de Operador acima). NUNCA disparar convite atribuído ao outro convidador.
 
 ### Passo 2: Segmentar
-Jul/2026: ler o segmento e o gancho direto de `segmentacao.json` (Fontes Prontas). Pra quem não estiver no arquivo (ou edição futura): classificar em RECUSOU / FALTOU / NOVO / COMPROU cruzando com os eventos anteriores (telefone e nome). Aplicar as regras de elegibilidade. Em dúvida, perguntar ao Eric.
+Classificar cada um em RECUSOU / FALTOU / NOVO / COMPROU cruzando telefone e nome com os eventos anteriores no MCP, na hora. (Atalho: se existir `segmentacao.json` no disco, ler de lá em vez de recomputar.) Aplicar as regras de elegibilidade. Em dúvida, perguntar ao Eric.
 
 ### Passo 3: Gerar os PDFs
 ```
@@ -192,8 +192,7 @@ Um por participante (ou `gerar_convites_pdf_lote` pro lote). Guardar a `url` de 
 **IMPORTANTE:** usar limit=15 (não 3). Com limit baixo, whatsapp-agent pode pular mensagens recentes e só retornar as mais antigas — já deu falso positivo (Cleber, 2026-04-23).
 
 - **Última mensagem foi DO CLIENTE e está não lida/não respondida** → PARAR, reportar ao Eric e PERGUNTAR o que fazer (pode ser que precise responder a pergunta dele antes de mandar o convite)
-- **Última mensagem foi do Eric/equipe, OU conversa já foi respondida** → pode disparar o convite normalmente, MAS antes confira o parágrafo abaixo
-- **NEGOCIAÇÃO ATIVA EM ABERTO** (a conversa recente mostra proposta, valores, pagamento, ou reunião marcada) → PARAR, NÃO disparar cortesia, mesmo que a última msg seja do Eric. Ler ~8 msgs e classificar: negócio em andamento = pular. Só reconvidar quando a negociação esfriou (proposta parada, lead sumiu, última interação foi um fechamento cordial ou "fica pra próxima").
+- **Última mensagem foi do Eric/equipe, OU conversa já foi respondida** → pode disparar o convite normalmente
 
 **Why:** Não faz sentido mandar convite automatizado pra alguém que acabou de te escrever — fica robótico e ignora o contexto. O Eric trata caso a caso essas conversas ativas.
 
