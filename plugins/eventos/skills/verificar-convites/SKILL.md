@@ -306,3 +306,14 @@ Ao varrer respostas, pra cada conversa decidir se o ciclo está aberto ou fechad
 6. **Não alterar status_presenca se já estava como `confirmado` via botão** sem reação do usuário — apenas reportar
 7. **Acentuação correta** em qualquer texto que for mostrado ao Eric
 8. **Consistência de fechamento dentro do lote** — se 9 de 10 leads do mesmo grupo (ex: recusados) receberam mensagem de fechamento, o 10º também recebe. Não criar exceção sem motivo claro
+
+
+## MODO CRON — follow-up recorrente (a skill é a capacidade; o cron é só o gatilho)
+
+Um agendador externo (cron na VPS, scheduled task, etc.) INVOCA esta skill — a skill nunca se agenda sozinha. Prompt típico do cron: *"Rode a skill verificar-convites no evento <id>, modo cron."*
+
+No modo cron, o fluxo é o mesmo (Passos 1-6) com estas regras extras:
+1. **Varre todos** os `convite_enviado`/`em_avaliacao` do operador e registra desfechos novos (Passos 5 e 5.5) normalmente.
+2. **Monta o lote de follow-up**: sem_resposta com 48h+ desde o envio recebem o template de follow-up (skill convidar-evento). Limite: máx 2 follow-ups por pessoa (o 1º após 48h; o 2º uns 3-4 dias depois). Depois do 2º, a pessoa só sai da fila quando o Eric mandar encerrar (aí registra "Convite sem resposta, encerrado" — Passo 5.5).
+3. **NÃO dispara follow-up sozinho.** Envia pro Eric (no canal da instância: Telegram na VPS, chat na sessão local) o RESUMO: novos aceites/recusas registrados + lote de follow-up pronto (nomes + msg). Eric responde "manda" → dispara e registra cada follow-up como atividade no Pipedrive (Passo 5.5). Sem GO, nada sai.
+4. Se não houver nada novo nem lote a propor, reportar em 1 linha ("varredura ok, sem novidades") e encerrar.

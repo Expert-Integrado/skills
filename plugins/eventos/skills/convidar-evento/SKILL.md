@@ -96,12 +96,14 @@ Quero te convidar pra minha imersão de IA. Um dia inteiro sobre IA aplicada ao 
 ```
 O gancho de origem é invariante no corpus real do Eric: TODO convite pra contato novo abre citando de onde a pessoa veio (quem indicou ou em qual aula se cadastrou). Sem gancho, não dispara — perguntar ao Eric a origem.
 
-**Msg 2 — Datas + link (igual pros 3 segmentos):**
+**Msg 2 — Datas + link (igual pros 3 segmentos). MONTAR DO MCP, nunca de memória:**
+Buscar via `get_evento`: dias das turmas irmãs (mesmo nome, status planejamento, data futura), cidade (do `endereco_completo`), horário (`hora_inicio`-`hora_fim`) e `url_site_vendas`. Template:
 ```
-Agora vão ser duas turmas: 29 ou 30 de julho, aqui em São Paulo, das 8h às 20h. Você escolhe o dia que encaixa melhor na agenda.
+Agora vão ser duas turmas: [DIA1] ou [DIA2] de [MÊS], aqui em [CIDADE], das [INÍCIO] às [FIM]. Você escolhe o dia que encaixa melhor na agenda.
 
-Detalhes e confirmação: https://imersao.ericluciano.com.br
+Detalhes e confirmação: [URL_SITE_VENDAS]
 ```
+Exemplo preenchido (edição jul/2026): "Agora vão ser duas turmas: 29 ou 30 de julho, aqui em São Paulo, das 8h às 20h. (...) https://imersao.ericluciano.com.br". Se a edição tiver UMA turma só, adaptar: "Vai ser dia [DIA] de [MÊS], ...".
 
 **Msg 3 — PDF (arquivo sozinho, SEM legenda):**
 Gerado na hora via `mcp__expert-integrado__gerar_convite_pdf(participante_id=...)` → usar a `url` retornada.
