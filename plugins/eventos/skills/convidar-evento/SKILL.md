@@ -202,7 +202,17 @@ Um por participante (ou `gerar_convites_pdf_lote` pro lote). Guardar a `url` de 
 
 ### Passo 4: Disparo (4 mensagens com sleep 3s) — SÓ operador ERIC
 
-Tudo pelo MCP `whatsapp-agent`, SEMPRE com `instance="pessoal"` (há 2 números conectados no MCP; sem o parâmetro pode sair pelo número errado).
+**DE QUAL NÚMERO SAI CADA CONVITE (regra dura — incidente 02/07/2026):**
+1. Antes de enviar, rode `read(chat=telefone)` SEM instance: o retorno diz em qual número existe conversa (campo `instance`).
+2. Existe chat em UM número → envie por ELE: basta OMITIR `instance` no send (o MCP herda o chat automaticamente). NUNCA forçar o outro número.
+3. Existe nos DOIS → pessoal (relação direta do Eric), salvo ordem contrária do Eric.
+4. NÃO existe em nenhum (contato 100% frio) → default = `instance="pessoal"` + `allow_new=true`. Comercial SÓ com ordem explícita do Eric.
+5. PROIBIDO fixar `instance` num lote inteiro sem checar chat por chat. Incidente: 10 convites forçados no comercial; 3 contatos 100% frios receberam SÓ a 1ª msg.
+
+**CHAT NOVO — proteção anti-LID (obrigatória):** em chat novo, o WhatsApp pode remapear o contato pra um id interno (`XXXX@lid`) logo após a 1ª mensagem; as msgs seguintes enviadas pro telefone caem num chat órfão e SOMEM, com a API retornando ok. Então:
+- Depois da msg1 (com `allow_new=true`), rode `read(chat=telefone, instance=<a mesma>)` e capture o `chat_id` retornado.
+- Envie msg2/PDF/msg4 com `to=<chat_id>` (não o telefone). Use sleep 10s (não 3s) em chat novo.
+- `ok=true` do send NÃO garante entrega em chat novo — validar visualmente (Eric confere 1-2 amostras por lote). O `read` não mostra as msgs que o próprio agent envia.
 
 **Parâmetros do `send` (conferir nomes exatos):**
 - texto vai em `content` (NÃO `text`)
@@ -210,13 +220,24 @@ Tudo pelo MCP `whatsapp-agent`, SEMPRE com `instance="pessoal"` (há 2 números 
 - `confirmed=true` é OBRIGATÓRIO pra realmente enviar. Só passar `true` depois que o Eric confirmou o disparo na Regra 1.
 
 ```
-mcp__whatsapp-agent__send(to=telefone, content=msg1, instance="pessoal", confirmed=true)
+# chat JÁ existente (omitir instance -> herda o número certo):
+mcp__whatsapp-agent__send(to=telefone, content=msg1, confirmed=true)
 sleep(3)
-mcp__whatsapp-agent__send(to=telefone, content=msg2, instance="pessoal", confirmed=true)
+mcp__whatsapp-agent__send(to=telefone, content=msg2, confirmed=true)
 sleep(3)
-mcp__whatsapp-agent__send(to=telefone, type="document", media_url=pdf_url, file_name="Convite - [Nome].pdf", instance="pessoal", confirmed=true)
+mcp__whatsapp-agent__send(to=telefone, type="document", media_url=pdf_url, file_name="Convite - [Nome].pdf", confirmed=true)
 sleep(3)
-mcp__whatsapp-agent__send(to=telefone, content=msg4, instance="pessoal", confirmed=true)
+mcp__whatsapp-agent__send(to=telefone, content=msg4, confirmed=true)
+
+# chat NOVO (frio): allow_new na 1ª, depois to=chat_id (anti-LID) e sleep 10
+mcp__whatsapp-agent__send(to=telefone, content=msg1, instance="pessoal", allow_new=true, confirmed=true)
+sleep(10)
+chat_id = mcp__whatsapp-agent__read(chat=telefone, instance="pessoal").chat_id
+mcp__whatsapp-agent__send(to=chat_id, content=msg2, confirmed=true)
+sleep(10)
+mcp__whatsapp-agent__send(to=chat_id, type="document", media_url=pdf_url, file_name="Convite - [Nome].pdf", confirmed=true)
+sleep(10)
+mcp__whatsapp-agent__send(to=chat_id, content=msg4, confirmed=true)
 ```
 
 ### Passo 4-N: Kit manual — operador NIVERTON
