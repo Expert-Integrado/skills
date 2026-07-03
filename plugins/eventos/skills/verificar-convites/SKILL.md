@@ -72,7 +72,7 @@ mcp__expert-integrado__get_evento(evento_id=...)
 - Local/endereço: `local` + `endereco_completo` | Horário: `hora_inicio`-`hora_fim` | Site: `url_site_vendas`
 - **FAQ da edição: campo `observacoes` do evento, bloco `[FAQ-CONVITES]`** — preço do ingresso, formato, política de acompanhante, happy hour etc. É a fonte de verdade do CONTEÚDO das respostas. Se o bloco não existir na edição nova, perguntar os fatos ao Eric e gravá-los lá (`update_evento`).
 
-**VOICE GUIDE É OBRIGATÓRIO:** antes de redigir qualquer resposta fora dos templates abaixo, rodar `mcp__whatsapp-agent__get_voice_guide()` e validar o draft com `mcp__whatsapp-agent__check_message(content=...)`. Regras hard que nunca caem: sem travessão (—), sem hype, chat ativo (<5 min) suprime vocativo, registro informal ("massa/show/top", ".." como respiração), nunca tu/teu/tua.
+**VOICE GUIDE É OBRIGATÓRIO (regra do Eric, 03/07/2026):** o convite inicial do disparo é template aprovado, mas TODA conversa de tira-dúvidas/resposta aqui é diálogo real e PRECISA rodar pelo voice guide. Antes de redigir qualquer resposta fora dos templates abaixo, rodar `mcp__whatsapp-agent__get_voice_guide()` e validar o draft com `mcp__whatsapp-agent__check_message(content=...)`. Regras hard que nunca caem: sem travessão (—), sem hype, chat ativo (<5 min) suprime vocativo, registro informal ("massa/show/top", ".." como respiração), nunca tu/teu/tua.
 
 **Autonomia:** FAQ factual (data, local, horário, preço, formato) e agradecimento de confirmação → PODE responder direto (`confirmed=true`). ESCALAR pro Eric antes de responder: acompanhante/transferência de vaga, objeção de negócio, negociação, tom irritado/negativo.
 

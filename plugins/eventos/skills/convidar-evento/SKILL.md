@@ -66,6 +66,7 @@ Classificar cada participante pelo HISTÓRICO nas edições anteriores (buscar p
 > Datas, mês da recusa, cidade e link abaixo são da edição de JULHO/2026. Em edição futura, substituir pelos dados reais (confirmar com o Eric antes de disparar).
 > REGRA: NUNCA usar travessão longo (—) nas copies. Tem cara de IA. Usar ponto final, vírgula ou quebra de linha.
 > Em mensagem de convite formatada, usar "você" por extenso (padrão do corpus real do Eric nesse contexto).
+> **VOICE GUIDE — quando aplica (regra do Eric, 03/07/2026):** as 4 mensagens do disparo (Msg 1-4) são TEMPLATE FIXO já aprovado pelo Eric — dispare como estão, NÃO precisa rodar voice guide nelas. MAS no instante em que o lead RESPONDER e virar conversa/tira-dúvidas, PARE de improvisar: aí é diálogo real e é OBRIGATÓRIO rodar `mcp__whatsapp-agent__get_voice_guide()` + validar o draft com `mcp__whatsapp-agent__check_message()` antes de CADA resposta (ou passar o bastão pra skill `verificar-convites`, Passo 4.5, que já faz isso). Em uma linha: **convite inicial = template aprovado; qualquer resposta depois = voice guide sempre.**
 
 **Copy A — RECUSOU (recusou 1x a edição anterior):**
 ```
