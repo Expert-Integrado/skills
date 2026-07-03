@@ -62,19 +62,21 @@ Se o lead aparecer em `waiting_on="eric"`, ele respondeu e o ciclo está ABERTO 
 
 Observação: o whatsapp-agent NÃO expõe confirmação de leitura (read receipt). `mcp__whatsapp-agent__status` só checa se o WhatsApp está conectado, não diz se uma mensagem foi lida. Não inventar status de leitura — reportar `sem_resposta` como candidato a follow-up e deixar o Eric decidir.
 
-### Passo 4.5: RESPONDER — copies prontas (voice do Eric)
+### Passo 4.5: RESPONDER — como montar as respostas (voice do Eric + fatos do evento)
 
-Respostas do meio do funil. Regras de voz (chat ativo): SEM vocativo de abertura se a conversa está quente (<5 min), registro informal, "massa/show/top", reticências ".." como respiração, NUNCA travessão (—), "você" pode virar "vc" em resposta curta de chat.
+**FATOS = SEMPRE do MCP, NUNCA fixos na skill** (a skill serve a qualquer evento/edição):
+```
+mcp__expert-integrado__get_evento(evento_id=...)
+```
+- Datas: `data` das turmas irmãs (mesmo `nome`, status planejamento) — edição pode ter 2 dias
+- Local/endereço: `local` + `endereco_completo` | Horário: `hora_inicio`-`hora_fim` | Site: `url_site_vendas`
+- **FAQ da edição: campo `observacoes` do evento, bloco `[FAQ-CONVITES]`** — preço do ingresso, formato, política de acompanhante, happy hour etc. É a fonte de verdade do CONTEÚDO das respostas. Se o bloco não existir na edição nova, perguntar os fatos ao Eric e gravá-los lá (`update_evento`).
 
-**Autonomia:** FAQ factual (data, local, horário, preço, formato) e agradecimento de confirmação → PODE responder direto (`confirmed=true`). ESCALAR pro Eric antes de responder: pedido de levar acompanhante, transferência de vaga, objeção de negócio, qualquer negociação, tom irritado/negativo.
+**VOICE GUIDE É OBRIGATÓRIO:** antes de redigir qualquer resposta fora dos templates abaixo, rodar `mcp__whatsapp-agent__get_voice_guide()` e validar o draft com `mcp__whatsapp-agent__check_message(content=...)`. Regras hard que nunca caem: sem travessão (—), sem hype, chat ativo (<5 min) suprime vocativo, registro informal ("massa/show/top", ".." como respiração), nunca tu/teu/tua.
 
-**FATOS da edição jul/2026 (fonte pra qualquer resposta):**
-- Datas: 29 OU 30 de julho (a pessoa escolhe pelo botão de dentro do PDF)
-- Local: V4 Flagship, Edifício Ronaldo Sampaio Ferreira, Praça João Duran Alonso 34, 6º andar, Cidade Monções, São Paulo
-- Horário: 8h às 20h, com happy hour no final
-- Formato: 100% presencial, dia inteiro, mão na massa (levar notebook)
-- Ingresso: vendido a R$ 1.500 no site (imersao.ericluciano.com.br); o convite dele é CORTESIA pessoal do Eric
-- Confirmação: botão CONFIRMAR DIA 29/07 ou 30/07 dentro do PDF
+**Autonomia:** FAQ factual (data, local, horário, preço, formato) e agradecimento de confirmação → PODE responder direto (`confirmed=true`). ESCALAR pro Eric antes de responder: acompanhante/transferência de vaga, objeção de negócio, negociação, tom irritado/negativo.
+
+Templates abaixo: preencher [DATAS], [CIDADE], [LOCAL+ENDEREÇO], [PREÇO], [HORÁRIO] com os fatos do MCP.
 
 **CONFIRMOU ("tô dentro", clicou no botão):**
 ```
@@ -83,40 +85,40 @@ Aeee! Massa demais. Te espero lá então.
 Qualquer coisa que precisar antes do evento é só me chamar aqui. Vai ser top!
 ```
 
-**RECUSOU (educado, sem disponibilidade):** — template validado: foi a resposta real do Eric em maio, e o lead reconvidado aceitou na edição seguinte.
+**RECUSOU (educado, sem disponibilidade):** — template validado: resposta real do Eric em maio/2026; o lead reconvidado aceitou na edição seguinte.
 ```
 Tranquilo, [PrimeiroNome]! Obrigado por avisar. Te deixo na lista da próxima edição e te aviso primeiro quando tiver. Abraço!
 ```
 
 **"QUAL DATA?" / "TEM DATA?":**
 ```
-São duas turmas: 29 ou 30 de julho, aqui em São Paulo, das 8h às 20h. Você escolhe o dia que encaixa melhor.
+São duas turmas: [DATAS], aqui em [CIDADE], das [HORÁRIO]. Você escolhe o dia que encaixa melhor.
 
 É só abrir o convite em PDF que te mandei e tocar no botão do dia. Confirma sozinho por lá.
 ```
 
 **"ONDE VAI SER?":**
 ```
-Na V4 Flagship: Edifício Ronaldo Sampaio Ferreira, Praça João Duran Alonso 34, 6º andar, Cidade Monções, aqui em SP.
+[LOCAL + ENDEREÇO resumido].
 
 Tem o endereço completo e o mapa dentro do convite também.
 ```
 
-**"QUANTO CUSTA?" / "É PAGO?":**
+**"QUANTO CUSTA?" / "É PAGO?":** (preço vem do [FAQ-CONVITES] — falar o valor cheio SEMPRE, ancora o valor da cortesia)
 ```
-Pra você é cortesia, convite meu. O ingresso tá à venda no site por R$ 1.500, mas separei alguns convites pra pessoas que eu queria muito lá. Só confirmar no botão do PDF.
+Pra você é cortesia, convite meu. O ingresso tá à venda no site por [PREÇO], mas separei alguns convites pra pessoas que eu queria muito lá. Só confirmar no botão do PDF.
 ```
 
 **"É ONLINE?" / "TEM GRAVAÇÃO?":**
 ```
-É 100% presencial, aqui em SP. A proposta é sair com IA implementada de verdade, mão na massa o dia inteiro, com suporte ao vivo. Não tem versão online dessa experiência.
+É 100% presencial, aqui em [CIDADE]. A proposta é sair com IA implementada de verdade, mão na massa o dia inteiro, com suporte ao vivo. Não tem versão online dessa experiência.
 ```
 
-**"POSSO LEVAR ALGUÉM?" / "PASSA A VAGA PRO MEU SÓCIO?":** NÃO prometer. Responder segurando e ESCALAR pro Eric:
+**"POSSO LEVAR ALGUÉM?" / "PASSA A VAGA PRO MEU SÓCIO?":** política padrão (ver [FAQ-CONVITES]): cortesia é 1 por empresa; NÃO dá pra levar acompanhante de cortesia; o que EXISTE é conseguir um convite PAGO pra segunda pessoa da mesma empresa. Responder já dando o caminho e ESCALAR pro Eric pra confirmar:
 ```
-Deixa eu ver aqui como estão as vagas e te falo, beleza?
+A cortesia é uma por empresa, essa eu não consigo desdobrar. O que eu consigo ver é um convite pago pra segunda pessoa, aí vocês vêm juntos. Quer que eu veja?
 ```
-(Transferência de vaga pra outra pessoa da mesma empresa tem precedente aprovado; acompanhante extra = decisão do Eric caso a caso. Se o Eric aprovar: cadastrar a pessoa nova no MCP, gerar o PDF dela e enviar.)
+(Escalar pro Eric ANTES de confirmar valor/condição do pago. Transferência da vaga pra OUTRA pessoa da empresa: possível com aprovação do Eric — cadastrar a pessoa nova e gerar o PDF dela.)
 
 **"NÃO CONSIGO NESSES DIAS" (mas demonstrou interesse):**
 ```
