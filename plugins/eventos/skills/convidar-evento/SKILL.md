@@ -53,6 +53,7 @@ Classificar cada participante pelo HISTÓRICO nas edições anteriores (buscar p
 | **RECUSOU** | Foi convidado pra edição anterior e recusou UMA vez | Copy A |
 | **FALTOU** | Confirmou presença numa edição anterior e não compareceu (`status_presenca = ausente`) | Copy B |
 | **NOVO** | Primeira vez que recebe convite (aula, indicação, network) | Copy C |
+| **LISTA DE ESPERA** | `origem = lista_espera` — cadastrou-se na lista de espera pública (`eventos.expertintegrado.com.br/lista-espera`) | Copy LE |
 | **COMPROU** | `origem = compra_online` (pagou ingresso) | NÃO convidar — já está dentro. Convite de cortesia pra quem pagou quebra a percepção de valor. |
 
 ### Regras de elegibilidade (decisão do Eric, 01/07/2026)
@@ -97,7 +98,17 @@ Quero te convidar pra minha imersão de IA. Um dia inteiro sobre IA aplicada ao 
 ```
 O gancho de origem é invariante no corpus real do Eric: TODO convite pra contato novo abre citando de onde a pessoa veio (quem indicou ou em qual aula se cadastrou). Sem gancho, não dispara — perguntar ao Eric a origem.
 
-**Msg 2 — Datas + link (igual pros 3 segmentos). MONTAR DO MCP, nunca de memória:**
+**Copy LE — LISTA DE ESPERA (a pessoa se cadastrou na lista de espera pública):**
+Antes de montar a Msg 1, cruzar o telefone na tool `list_lista_espera` pra puxar `created_at` (usar só o MÊS) e `qtd_ingressos`.
+```
+Msg 1:
+Fala [PrimeiroNome], beleza?
+
+Você entrou na lista de espera da minha imersão de IA lá em [MÊS_CADASTRO]. Abriram vagas agora pras turmas de julho e separei a sua. Um dia inteiro de IA aplicada ao operacional do negócio, cada um sai com agente rodando.
+```
+Se `qtd_ingressos > 1`: NÃO prometer as cadeiras extras na mensagem (a 2ª é paga, não cortesia — regra do evento). Sinalizar ao operador/Eric pra decidir o acompanhante à parte.
+
+**Msg 2 — Datas + link (igual pra todos os segmentos). MONTAR DO MCP, nunca de memória:**
 Buscar via `get_evento`: dias das turmas irmãs (mesmo nome, status planejamento, data futura), cidade (do `endereco_completo`), horário (`hora_inicio`-`hora_fim`) e `url_site_vendas`. Template:
 ```
 Agora vão ser duas turmas: [DIA1] ou [DIA2] de [MÊS], aqui em [CIDADE], das [INÍCIO] às [FIM]. Você escolhe o dia que encaixa melhor na agenda.
@@ -147,6 +158,16 @@ O Eric, nosso fundador, vai rodar uma imersão presencial de IA em julho e separ
 ```
 Substituir `[contexto da negociação]` pelo assunto real do deal (mentoria, automação etc. — está no Pipedrive/observações). Se o Niverton nunca falou com a pessoa, adaptar: "Você se cadastrou na [aula/palestra] do Eric Luciano" e apresentar-se do mesmo jeito.
 
+**Copy LE-N — LISTA DE ESPERA (Niverton):**
+Cruzar o telefone na `list_lista_espera` pra puxar o MÊS do cadastro (`created_at`) e `qtd_ingressos`.
+```
+Msg 1:
+Oi [PrimeiroNome], tudo bem? Aqui é o Niverton, da equipe do Eric Luciano.
+
+Você entrou na lista de espera da imersão de IA do Eric lá em [MÊS_CADASTRO]. Abriram vagas agora pras turmas de julho e separei a sua. Um dia inteiro de IA aplicada ao negócio, saindo com agente rodando.
+```
+Se `qtd_ingressos > 1`, não prometer as cadeiras extras (a 2ª é paga) — sinalizar ao Eric.
+
 ## O QUE ACONTECE DEPOIS DO CLIQUE (automático)
 
 Quando o convidado toca em "CONFIRMAR DIA X" no PDF:
@@ -180,7 +201,9 @@ mcp__expert-integrado__list_participantes(evento_id=..., status="pendente_envio"
 Filtrar por `convidado_por_user_id` do OPERADOR (UUIDs na tabela de Operador acima). NUNCA disparar convite atribuído ao outro convidador.
 
 ### Passo 2: Segmentar
-Classificar cada um em RECUSOU / FALTOU / NOVO / COMPROU cruzando telefone e nome com os eventos anteriores no MCP, na hora. (Atalho: se existir `segmentacao.json` no disco, ler de lá em vez de recomputar.) Aplicar as regras de elegibilidade. Em dúvida, perguntar ao Eric.
+Classificar cada um em RECUSOU / FALTOU / NOVO / LISTA DE ESPERA / COMPROU cruzando telefone e nome com os eventos anteriores no MCP, na hora. (Atalho: se existir `segmentacao.json` no disco, ler de lá em vez de recomputar.) Aplicar as regras de elegibilidade. Em dúvida, perguntar ao Eric.
+
+**LISTA DE ESPERA — checar ANTES do histórico:** se o participante vem com `origem = "lista_espera"` no `list_participantes`, é da lista de espera → usar Copy LE (ou LE-N pro Niverton), NÃO tratar como NOVO. Pra personalizar a Msg 1, chamar `list_lista_espera`, cruzar pelo telefone (últimos 8 dígitos) e pegar `created_at` (usar só o MÊS) + `qtd_ingressos`. Se `qtd_ingressos > 1`, sinalizar ao operador (a 2ª cadeira é paga, não entra na cortesia).
 
 ### Passo 3: Gerar os PDFs
 ```
