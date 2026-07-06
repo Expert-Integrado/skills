@@ -1,6 +1,6 @@
 {
- "gerado_em": "2026-07-05",
- "fonte": "auditoria 10 agentes (98 posts) + merge dos posts novos de jul/2026 (forca pendente de auditoria)",
+ "gerado_em": "2026-07-06",
+ "fonte": "auditoria 10 agentes sobre 98 posts + lotes jul/2026 (62 posts novos sem auditoria de força)",
  "base_url": "https://blog.expertintegrado.com.br/blog/",
  "utm_padrao": "?utm_source=whatsapp&utm_medium=comercial&utm_campaign=objecao&utm_content=deal-{DEAL_ID}",
  "posts": [
@@ -2538,6 +2538,424 @@
    "quando_mandar": "Lovable, Bolt e Replit resolvem problemas diferentes: banco de dados e login, protótipo rápido, ou aprender programando. Comparativo direto pra quem não é dev decidir em poucos minutos.",
    "ressalvas": [
     "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-publico-50-mais-whatsapp",
+   "title": "Meu cliente é mais velho: IA no WhatsApp funciona com público 50+?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "publico-idoso"
+   ],
+   "forca": null,
+   "quando_mandar": "Funciona, sim: o público 50+ já usa WhatsApp como canal principal no Brasil. O que muda é o desenho da conversa, não a decisão de usar IA.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "poucos-leads-automatizar-compensa",
+   "title": "Poucos leads por mês: automatizar a qualificação compensa?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "volume-baixo"
+   ],
+   "forca": null,
+   "quando_mandar": "Nem sempre. Abaixo de 15 a 20 leads bem atendidos por mês, o retorno vem da velocidade e da constância, não da escala, e às vezes um processo manual disciplinado já resolve.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ja-tenho-chatbot-trocar-ou-integrar",
+   "title": "Já uso chatbot: trocar ou integrar? O guia de migração sem trauma",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ja-tenho-ferramenta"
+   ],
+   "forca": null,
+   "quando_mandar": "Chatbot de fluxo (árvore de botões) e agente de IA (conversa aberta) resolvem problemas diferentes. Veja quando integrar, quando trocar e como migrar sem derrubar o atendimento.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "precos-agente-ia-variam-10x",
+   "title": "Por que os preços de agente de IA variam 10x (e o que o barato esconde)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "concorrente-mais-barato"
+   ],
+   "forca": null,
+   "quando_mandar": "Um agente de IA custa de R$800 a R$15.000 de setup porque o número esconde quanto trabalho humano existe atrás. Veja a anatomia do preço e um checklist de 6 perguntas pra comparar propostas.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-cabe-orcamento-pme",
+   "title": "IA cabe no orçamento de uma PME? A conta por faixa de faturamento",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "fora-do-orcamento"
+   ],
+   "forca": null,
+   "quando_mandar": "Sim, cabe. A conta muda por faixa: de 1% a 4% do faturamento mensal, começando pelo processo que mais vaza dinheiro antes do mais moderno.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "contrato-fidelidade-ia-o-que-assinar",
+   "title": "Contrato de fidelidade em IA faz sentido? O que assinar e o que recusar",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "contrato-longo"
+   ],
+   "forca": null,
+   "quando_mandar": "Fidelidade contratual em IA é justa quando dilui um setup pesado numa mensalidade menor, e vira armadilha quando existe sem cláusula de saída por não-entrega. Veja o que assinar e o que recusar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "implantar-ia-5-fases-semana-a-semana",
+   "title": "Implantar IA é complexo? As 5 fases reais, semana a semana",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "parece-complexo"
+   ],
+   "forca": null,
+   "quando_mandar": "Uma implantação de IA segue 5 fases (diagnóstico, desenho do processo, construção, piloto assistido, operação) e leva de 4 a 8 semanas num projeto médio-grande, não os 6 meses que a maioria imagina.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "processo-comercial-ja-funciona-custo-oportunidade",
+   "title": "Seu processo comercial funciona. E daí? O custo de oportunidade do \\\"já está bom\\",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "satisfeito-processo"
+   ],
+   "forca": null,
+   "quando_mandar": "Processo comercial que funciona pode estar vazando lead sem ninguém perceber: resposta lenta, follow-up esquecido e hora de vendedor em tarefa repetitiva têm custo, mesmo quando o funil fecha deal todo mês.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "time-comercial-abracar-agente",
+   "title": "Como fazer o time comercial abraçar o agente (em vez de sabotar)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "time-nao-vai-usar"
+   ],
+   "forca": null,
+   "quando_mandar": "Vendedor sabota agente de IA por medo de substituição, meta que não muda e ferramenta imposta sem escuta. O roteiro que funciona: melhor vendedor no desenho, meta redefinida e piloto com voluntário antes de expandir pro time todo.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "discovery-previne-objecao-preco",
+   "title": "Discovery que previne objeção: as perguntas que matam o \"tá caro\" antes de nascer",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Objeção de preço quase sempre nasce no discovery mal feito, antes da proposta existir. Veja as perguntas que dimensionam o problema em R$ pra o preço chegar ancorado.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "playbook-vendas-time-improvisa",
+   "title": "Playbook de vendas: por que seu time improvisa (e quanto isso custa)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Time de vendas sem playbook faz cada vendedor vender do próprio jeito, e o resultado vira loteria de talento individual. Um playbook de PME precisa de ICP, roteiro de discovery, resposta às 10 objeções mais comuns, cadência de follow-up e critério de passagem de fase, nada além disso.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "cadencia-prospeccao-outbound-brasil",
+   "title": "Cadência de prospecção outbound que funciona no Brasil (limites, canais, ritmo)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "A cadência de prospecção outbound que funciona no Brasil tem de 3 a 4 toques em até 14 dias, mistura WhatsApp, e-mail e ligação com conteúdo de valor em cada toque, e respeita os limites da LGPD e da própria plataforma pra não queimar a base.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "quantas-tentativas-contato-desistir",
+   "title": "Quantas tentativas de contato antes de desistir? Nossa regra: 3-4 (e o porquê)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "A regra da casa é 3 a 4 tentativas de contato, cada uma com motivo novo, antes de mover o lead pra quarentena de 90 dias. Menos que isso perde negócio, mais que isso queima a marca.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "no-show-confirmacao-inteligente",
+   "title": "No-show: como derrubar a taxa de reunião furada com confirmação inteligente",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Reunião comercial furada custa horário de closer e esforço de prospecção. Confirmação inteligente corta no-show com sequência de 2 toques, micro-compromisso e reagendamento em 1 clique.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "pipeline-mentiroso-crm-inflado",
+   "title": "Pipeline mentiroso: os 5 sinais de que seu CRM está inflado",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "CRM inflado é o funil que mostra mais receita provável do que vai fechar de verdade. Os 5 sinais: deal parado, fase sem critério, follow-up sem data, conversão sem auditoria e perda sem motivo.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "mensagem-reaquecimento-generica-2-por-cento",
+   "title": "\\\"Oi, sumido\\\": por que a mensagem de reaquecimento genérica tem 2% de resposta",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Mensagem genérica de reaquecimento converte a 2% porque não dá motivo novo pra responder. A versão com o problema específico citado na primeira linha chega a 34%.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "mensagem-encerramento-de-ciclo",
+   "title": "A mensagem de encerramento de ciclo: como o \\\"último contato\\\" vira resposta",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "A mensagem de encerramento de ciclo é a que mais responde numa cadência, desde que não vire chantagem emocional nem urgência falsa. Veja os 3 modelos e quando usar cada um.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "quarentena-90-dias-retomada-lead",
+   "title": "Quarentena de 90 dias: o sistema de retomada pra lead que não respondeu",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Quarentena de 90 dias é marcar data de retomada, registrar o contexto da última conversa e voltar com motivo novo. Veja como automatizar isso no CRM.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "vacuo-pos-proposta-72h",
+   "title": "O vácuo pós-proposta: o que fazer nas 72h em que a venda esfria",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "As 72h depois do envio da proposta decidem boa parte da venda. O que combinar antes de enviar, o toque de 24h e o de 72h, e os 3 erros que matam o negócio nessa janela.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "follow-up-automatico-sem-spam",
+   "title": "Follow-up automático sem virar spam: cadência, conteúdo e limite",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Follow-up automático sem virar spam depende de 3 variáveis: cadência com espaçamento crescente, conteúdo com motivo novo a cada toque e um limite claro de tentativas antes da quarentena.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-corretoras-seguros-renovacao",
+   "title": "IA para corretoras de seguros: renovação e cross-sell automáticos",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "seguros"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "A receita de uma corretora mora na renovação e no cross-sell. Um agente de IA monitora vencimento de apólice, abre a conversa 30-45 dias antes e qualifica sinistro no primeiro contato.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-energia-solar-qualificacao-leads",
+   "title": "IA para energia solar: qualificar o lead de simulação antes do consultor",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "energia-solar"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Lead de simulação solar chega em volume alto e frio. A IA qualifica em 4 perguntas (conta de luz, tipo de imóvel, propriedade, urgência) e só agenda o pronto pro consultor.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-academias-retencao-cobranca",
+   "title": "IA para academias: retenção, cobrança e ex-aluno que volta",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "academias"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "O lucro da academia mora na retenção, não na matrícula nova. Um agente de IA detecta queda de frequência, cobra sem constranger o aluno e traz o ex-aluno de volta com motivo real, sem desconto desesperado.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "7-ladroes-de-tempo-pme",
+   "title": "Os 7 ladrões de tempo da PME (ranqueados por custo real)",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Os 7 ladrões de tempo mais caros da PME, ranqueados por custo real em horas por mês, não por incômodo: como medir cada um e qual antídoto aplicar, automação, processo ou corte.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "paradoxo-nao-tenho-tempo-pra-ganhar-tempo",
+   "title": "Não tenho tempo nem pra ganhar tempo\": o paradoxo que trava o dono",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Quem mais precisa de automação é quem menos tem tempo pra implantar ela. Entenda por que adiar sai mais caro a cada mês e como quebrar o ciclo com 1 processo, 1 semana e resultado medido.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
    ]
   }
  ]
