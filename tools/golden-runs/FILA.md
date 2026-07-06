@@ -99,7 +99,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
-| voz | A1 | local | fila | — |
+| voz | B (era A1) | send_voice real: WhatsApp + quota ElevenLabs | PARCIAL 06/07 | Parte 1 (local) APROVADA com 4 achados corrigidos (voz 2.1.1); Parte 2 (send pro Eric) na onda 2 |
 | conselho | A1 | conversacional (longo) | fila | root SKILL.md duplicada — decisão na task 116k46s84rpc |
 | transcrever-conversa (wa) | A2 | WhatsApp read + Whisper | fila | — |
 | estou-devendo (wa) | A2 | variante standalone da comercial | fila | validar separado |
