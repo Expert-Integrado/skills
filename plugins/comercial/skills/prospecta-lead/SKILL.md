@@ -228,8 +228,8 @@ Padroes positivos (do corpus): `a gente` (bigrama #1, 2.297x), `acho que` (871x 
 ### Passo 0 — Capturar relogio (Bash, 1x no inicio)
 
 ```bash
-TZ=America/Sao_Paulo date "+DATA_HOJE=%Y-%m-%d HORA_AGORA=%H:%M EPOCH_INICIO=%s"
-TZ=America/Sao_Paulo date -d "+30 minutes" "+HORA_MAIS_30=%H:%M"
+TZ='BRT3' date "+DATA_HOJE=%Y-%m-%d HORA_AGORA=%H:%M EPOCH_INICIO=%s"
+TZ='BRT3' date -d "+30 minutes" "+HORA_MAIS_30=%H:%M"
 ```
 
 Guardar os 4 valores — sao a UNICA fonte de data/hora da execucao (`due_date`, `due_time`, `tempo_execucao_s`). SE `date -d` falhar (date BSD) → seguir sem `HORA_MAIS_30` e OMITIR `due_time` no Passo 8. SE Bash indisponivel → ver capability detection (Pre-requisitos).
@@ -396,7 +396,7 @@ DOR INFERIDA (confiança {nível})
 }
 ```
 
-- `tempo_execucao_s`: inteiro = `EPOCH_FIM - EPOCH_INICIO`, onde `EPOCH_FIM` vem de rodar AGORA `TZ=America/Sao_Paulo date +%s` (Bash) e `EPOCH_INICIO` vem do Passo 0. SE Bash indisponivel → `null` (nunca estimar).
+- `tempo_execucao_s`: inteiro = `EPOCH_FIM - EPOCH_INICIO`, onde `EPOCH_FIM` vem de rodar AGORA `TZ='BRT3' date +%s` (Bash) e `EPOCH_INICIO` vem do Passo 0. SE Bash indisponivel → `null` (nunca estimar).
 
 ## EXECUCAO PARALELA (orquestrador chama esta skill)
 

@@ -191,15 +191,15 @@ Para cada toque, calcular o horario-alvo com o comando `date` a partir do inicio
 ```bash
 # Toques relativos ao inicio (T-12h, T-1h, T0, T+1h, e T+90min se Toque 5 AGENDADO):
 # substituir o offset conforme o toque: '-12 hours', '-1 hour', '0 hours', '+1 hour', '+90 minutes'
-TZ=America/Sao_Paulo date -d '<INICIO> -12 hours' '+%M %H %d %m'   # -> "M H DoM Mon" do Toque 1
-TZ=America/Sao_Paulo date -d '<INICIO> -1 hour'   '+%M %H %d %m'   # Toque 2
-TZ=America/Sao_Paulo date -d '<INICIO> 0 hours'   '+%M %H %d %m'   # Toque 3
-TZ=America/Sao_Paulo date -d '<INICIO> +1 hour'   '+%M %H %d %m'   # Toque 4
-TZ=America/Sao_Paulo date -d '<INICIO> +90 minutes' '+%M %H %d %m' # Toque 5 (so se AGENDADO)
+TZ='BRT3' date -d '<INICIO> -12 hours' '+%M %H %d %m'   # -> "M H DoM Mon" do Toque 1
+TZ='BRT3' date -d '<INICIO> -1 hour'   '+%M %H %d %m'   # Toque 2
+TZ='BRT3' date -d '<INICIO> 0 hours'   '+%M %H %d %m'   # Toque 3
+TZ='BRT3' date -d '<INICIO> +1 hour'   '+%M %H %d %m'   # Toque 4
+TZ='BRT3' date -d '<INICIO> +90 minutes' '+%M %H %d %m' # Toque 5 (so se AGENDADO)
 
 # FUPs sao horario FIXO 12:00, offset em DIAS a partir da DATA do inicio (nao do horario):
-TZ=America/Sao_Paulo date -d '<INICIO> +1 day' '+00 12 %d %m'      # Toque 6 (D+1 12h)
-TZ=America/Sao_Paulo date -d '<INICIO> +2 days' '+00 12 %d %m'     # Toque 7 (D+2 12h)
+TZ='BRT3' date -d '<INICIO> +1 day' '+00 12 %d %m'      # Toque 6 (D+1 12h)
+TZ='BRT3' date -d '<INICIO> +2 days' '+00 12 %d %m'     # Toque 7 (D+2 12h)
 ```
 
 - O `date` ja resolve virada de mes/ano/DST (ex: inicio `2026-12-31 23:30` + 1h → `2026-12-31 00:30 01 01` no cron). NAO ajustar na mao.
