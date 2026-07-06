@@ -108,14 +108,13 @@ Chamar `mcp__calendly__calendly_create_scheduling_link` com estes dois parâmetr
 ```json
 {
   "booking_url": "https://calendly.com/d/xxx-yyy-zzz",
-  "max_event_count": 1,
   "owner_uri": "https://api.calendly.com/event_types/AAAAAAAAAAAAAAAA",
   "expires_at": null,
   "instructions": "Envie este link ao convidado via WhatsApp ou e-mail. ..."
 }
 ```
 
-O link a entregar ao Eric é o campo `booking_url`. (Nota: na resposta desta tool o número de usos aparece como `max_event_count`, não como `max_uses` — `max_uses` é só o nome do parâmetro de entrada.)
+O link a entregar ao Eric é o campo `booking_url`. (CORREÇÃO-DE-FATO golden run 06/07/2026: a resposta real NÃO traz campo de contagem de usos — validar só o `booking_url`; o single-use é confirmado pela frase do campo `instructions`.)
 
 **Validação:** resposta contém `booking_url` como string começando com `https://calendly.com/` (formato típico: `https://calendly.com/d/xxx-yyy-zzz`). Campo `expires_at` vir `null` é normal e esperado (o link não expira por tempo, só por uso). SE `booking_url` vier ausente ou vazio → tratar como falha (ver abaixo).
 

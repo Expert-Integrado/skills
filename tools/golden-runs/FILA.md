@@ -52,7 +52,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 |---|---|---|---|---|
 | pipe-review | A2 | Pipedrive read-only | fila | — |
 | estou-devendo | A2 | WhatsApp read-only | FEITO 06/07 | APROVADO (caminho primário real), 4 achados corrigidos (comercial 2.5.6); 20 pendências fósseis viraram observação de produto |
-| calendly-link | A2 | cria link reutilizável (inofensivo) | fila | — |
+| calendly-link | A2 | link single-use real (inofensivo) | FEITO 06/07 | APROVADO 8/8; match por slug validado; 1 achado de doc (max_event_count não existe na resposta) corrigido |
 | calendly-agendar | B | agendamento real | aguarda OK | agendar + cancelar |
 | blog-comercial | A1 | draft local | fila | — |
 | prospecta-lead | B | cria person+deal+activity no Pipedrive | aguarda OK | lead TESTE + delete |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 10 (7 FEITO + 3 PARCIAL) · Defeitos reais corrigidos: 31 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 11 (8 FEITO + 3 PARCIAL) · Defeitos reais corrigidos: 32 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
