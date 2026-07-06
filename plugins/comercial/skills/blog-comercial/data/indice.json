@@ -1,6 +1,6 @@
 {
  "gerado_em": "2026-07-06",
- "fonte": "auditoria 10 agentes sobre 98 posts + lotes jul/2026 (62 posts novos sem auditoria de força)",
+ "fonte": "auditoria 10 agentes sobre 98 posts + lotes jul/2026 (79 posts novos sem auditoria de força)",
  "base_url": "https://blog.expertintegrado.com.br/blog/",
  "utm_padrao": "?utm_source=whatsapp&utm_medium=comercial&utm_campaign=objecao&utm_content=deal-{DEAL_ID}",
  "posts": [
@@ -2954,6 +2954,278 @@
    "objecoes": [],
    "forca": null,
    "quando_mandar": "Quem mais precisa de automação é quem menos tem tempo pra implantar ela. Entenda por que adiar sai mais caro a cada mês e como quebrar o ciclo com 1 processo, 1 semana e resultado medido.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "app-ao-vivo-palestra-roteiro-demo",
+   "title": "Como fazemos um app ao vivo em palestra (o roteiro da demo de 15 minutos)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "A demo de app ao vivo em palestra segue um roteiro fixo de 15 minutos, dividido em quatro blocos, com a plateia escolhendo o tema na hora. Veja o passo a passo e os riscos reais.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "app-vibe-coded-quebrou-guia-manutencao",
+   "title": "Meu app vibe-coded quebrou: o guia de manutenção pra não-dev",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Quando um app vibe-coded para de funcionar, um protocolo de 4 perguntas (o que mudou, qual o erro, dá pra reverter, é integração ou é o app) resolve a maioria dos casos sem dev. Veja quando resolver sozinho e quando chamar ajuda.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "avaliacao-desempenho-metade-trabalho-ia",
+   "title": "Avaliação de desempenho quando metade do trabalho é IA",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Quando IA faz metade do trabalho, medir volume bruto não diz mais nada sobre desempenho. O critério certo passa a ser qualidade do julgamento, domínio da ferramenta e o que a pessoa fez com o tempo que sobrou.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "calculadora-orcamento-comercial-app",
+   "title": "Calculadora de orçamento pro comercial: o app que se paga na primeira semana",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Uma calculadora de orçamento com margem mínima travada e alçada de desconto corta o erro de precificação do vendedor apressado. Dá pra construir com IA em 1 a 2 dias.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "campeao-interno-ia-como-formar",
+   "title": "Campeão interno de IA: como formar a pessoa que mantém tudo rodando",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Todo projeto de IA que sobrevive tem alguém que ajusta prompt, tira dúvida do time e decide quando chamar o fornecedor. Veja como escolher, treinar e proteger o tempo desse campeão interno.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "delegar-ia-vs-contratar-assistente",
+   "title": "Delegar pra IA vs contratar assistente: a conta e os limites de cada um",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Assistente executivo custa de R$4,2 a R$7,5 mil por mês no Brasil (estimativa de mercado); uma stack de IA fica entre R$150 e R$500. Veja o que cada um resolve bem e onde só humano segura.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "due-diligence-consultoria-ia-10-perguntas",
+   "title": "Due diligence de consultoria de IA: 10 perguntas antes de contratar (inclusive a nós)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "As 10 perguntas que separam consultoria séria de vendedor de hype: quem implanta, o que acontece quando quebra, quem é dono dos dados e o que fica fora do escopo. Com as respostas da própria Expert Integrado, sem esconder onde incomoda.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "governanca-agente-quem-aprova-o-que-ia-fala",
+   "title": "Governança de agente: quem aprova o que a IA fala com seu cliente",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Agente que fala com cliente em nome da marca precisa de dono definido, limite de escopo por escrito, revisão semanal de amostra e protocolo pra quando erra. Esse é o modelo mínimo de governança pra PME, sem burocracia de corporação.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-estetica-beleza-agendamento",
+   "title": "IA para estética e beleza: agendamento, lembrete e no-show perto de zero",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "estetica"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "No-show em salão e clínica de estética costuma ficar entre 15% e 30% das consultas (estimativa). IA agenda pelo WhatsApp, confirma em 2 toques, preenche vaga com lista de espera e reativa cliente sumida sem depender de desconto.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-industria-b2b-orcamento-tecnico",
+   "title": "IA para indústria B2B: orçamento técnico e representante comercial",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "industria"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Na indústria B2B, o orçamento técnico trava porque chega incompleto no engenheiro. Um agente de triagem filtra especificação, volume e prazo antes de rotear, e mantém o follow-up com representante e cliente final.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-transportadoras-cotacao-frete",
+   "title": "IA para transportadoras e logística: cotação de frete em minutos",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "transportadoras"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Cotação de frete é corrida de velocidade: quem responde primeiro fecha a carga. Um agente de IA no WhatsApp coleta origem, destino, carga e prazo, calcula a faixa pela tabela da casa e devolve cotação em minutos, com humano validando exceção.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "imersao-ia-30-dias-o-que-e",
+   "title": "O que é uma imersão de IA de 30 dias (e pra que tamanho de empresa faz sentido)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Imersão de IA de 30 dias é um projeto fechado que junta diagnóstico, implantação assistida de 1 a 3 automações e treinamento do time num ciclo curto. Veja como funciona semana a semana e pra quem não vale a pena.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "organograma-com-agentes-onde-ia-senta",
+   "title": "O organograma com agentes: onde a IA \\\"senta\\\" na sua estrutura",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Trate cada agente de IA como uma cadeira no organograma: função, chefe e escopo definidos. Isso resolve accountability, orçamento e a próxima decisão de contratação.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "palestra-workshop-mentoria-qual-formato",
+   "title": "Palestra, workshop ou mentoria: qual formato pro momento da sua empresa",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Palestra desperta e alinha linguagem em 1-2h com o time todo, workshop resolve um problema real em 1 dia com grupo menor, mentoria constrói capacidade em 6 a 12 meses. O formato certo depende do estágio da empresa com IA, não do orçamento disponível.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "portal-cliente-fim-de-semana-vibe-coding",
+   "title": "Portal do cliente num fim de semana: o projeto perfeito pra começar",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Portal do cliente é o projeto ideal pra estrear em vibe coding: escopo pequeno, dado só de leitura (baixo risco) e resolve a dor real do cliente perguntando status por WhatsApp. Roteiro de sexta a domingo, com prompt pronto.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "requalificar-ou-demitir-funcoes-ia-absorve",
+   "title": "Requalificar ou demitir: a conversa honesta sobre funções que a IA absorve",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "A decisão entre requalificar e demitir quando a IA absorve uma função depende de 3 critérios objetivos: competência adjacente aproveitável, vaga de maior valor disponível e vontade real de aprender. Sem os três, o caminho honesto é o desligamento com prazo.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "seguranca-app-ia-checklist-dados-cliente",
+   "title": "Segurança de app feito com IA: o checklist antes de colocar dados de cliente",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Antes de um app construído com IA guardar dado de cliente, o checklist mínimo cobre autenticação real, permissão por usuário, criptografia, backup e LGPD básica. Veja os 6 pontos e quando chamar um dev.",
    "ressalvas": [
     "post novo (jul/2026), ainda sem auditoria de força comercial"
    ]
