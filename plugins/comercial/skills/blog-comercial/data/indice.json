@@ -3733,6 +3733,59 @@
     "Cita faixas de preco (R$8-15k setup, R$550-650/mes) — so mandar se preco/orcamento ja entrou na conversa",
     "Exemplos de clinica/agencia/SaaS sao hipoteticos, nao cases reais — nao usar como prova social"
    ]
+  },
+  {
+   "slug": "benchmarks-funil-comercial-pme-2026",
+   "title": "Benchmarks reais de funil comercial em PME: no-show, silêncio e o que os números cobram",
+   "pilar": "vendas",
+   "tipo": "pilar",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "quero-prova",
+    "nao-e-o-momento"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead cético pedindo prova/dados ou minimizando o custo do funil parado: mostra com dados próprios que o funil morre de silêncio (89% frio, 53% qualificado) e que 27% das demos viram no-show.",
+   "ressalvas": [
+    "Números são da operação da Expert (percentuais, sem volume) — apresentar como referência de comparação, não como promessa de resultado"
+   ]
+  },
+  {
+   "slug": "estatisticas-ia-whatsapp-vendas-brasil",
+   "title": "Estatísticas de IA, WhatsApp e vendas no Brasil: os números verificados (2026)",
+   "pilar": "lideranca",
+   "tipo": "pilar",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "nao-e-o-momento",
+    "equipe-vai-resistir"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que duvida da maturidade do mercado ou precisa convencer sócio/diretoria com dados: página de referência com 20 estatísticas verificadas na fonte (adoção de IA, WhatsApp, atendimento).",
+   "ressalvas": [
+    "Apoio educativo com fontes externas: não desarma objeção sozinho, funciona melhor junto de um post de objeção específica"
+   ]
+  },
+  {
+   "slug": "calculadora-roi-comercial",
+   "title": "Calculadora: quanto custa não automatizar seu comercial",
+   "pilar": "vendas",
+   "tipo": "ferramenta",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "esta-caro",
+    "roi",
+    "preciso-pensar"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead travado em preço/ROI ou \"preciso pensar\": manda a calculadora pra ele fazer a conta com os próprios números (3 cenários, premissas abertas, payback contra a faixa publicada).",
+   "ressalvas": [
+    "É página interativa, não artigo: avisar o lead que leva 1 minuto preencher",
+    "Cita a faixa de investimento do Super SDR nas premissas — coerente com o corpus, mas ancora preço: usar quando preço já está em pauta"
+   ]
   }
  ]
 }
