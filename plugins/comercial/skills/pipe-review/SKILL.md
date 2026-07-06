@@ -165,10 +165,7 @@ mcp__whatsapp-agent__send({
 ### Passo 5 — Logar SÓ se houve desvio
 
 - **Condição de desvio** (verificável): ocorreu QUALQUER um destes → deploy Vercel HTTP ≥300; Pipedrive HTTP 429; token ausente (Pipedrive ou Vercel); `totalAbertos: 0`; JSON incoerente (checagem de sanidade do Passo 2 falhou); `radar.cjs` não encontrado. SE nenhum ocorreu (execução limpa) → NÃO logar nada e pular este passo.
-- **Onde logar (regra determinística, sem escolher a dedo)**: existe um `log.md` em `$HOME/OneDrive/Workspace/claude-sync/memory/log.md`? Testar com `[ -f ... ]`.
-  - SE existe → anexar a linha nele (`log.md` é o arquivo de testes/ações/decisões operacionais, per `workflows.md`).
-  - SE NÃO existe → anexar em `$HOME/OneDrive/Workspace/claude-sync/memory/tasks.md` (arquivo canônico que sempre existe), no bloco `Tarefas`. Não criar `log.md` novo — o desvio operacional cabe em `tasks.md` como pendência do dia.
-- **O que escrever** (1 linha, formato fixo, data/hora BRT): `- [pipe-review] {DD/MM HH:MM} — desvio: {qual condição} — ação: {o que foi feito/reportado}`.
+- **Onde logar (CORREÇÃO-DE-FATO golden run 06/07/2026 — o path antigo apontava pro OneDrive morto e pro `tasks.md`, APOSENTADO em 03/07/2026)**: desvio vira TASK no Brain, a rota única de pendências. SE `mcp__expert-brain__save_task` existe na sessão → `save_task({ title: "pipe-review: desvio — {qual condição}", details: "{o que foi feito/reportado}", priority: 3, tags: ["pipe-review"] })`. SE o Brain não está na sessão → incluir o desvio em destaque no report ao Eric (a mensagem é o registro) e seguir.
 
 ## Validação final (checklist)
 

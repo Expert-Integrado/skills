@@ -50,7 +50,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
-| pipe-review | A2 | Pipedrive read-only | fila | — |
+| pipe-review | A2 (com RADAR_NO_DEPLOY) / C (deploy prod) | deploy Vercel no modo normal | FEITO 06/07 (sem deploy) | APROVADO: radar real (35 deals, sanidade OK), 1 fix (log ia pro OneDrive morto + tasks.md aposentado — agora Brain); deploy segue travado por SAML (task 0lunqicxd45i) |
 | estou-devendo | A2 | WhatsApp read-only | FEITO 06/07 | APROVADO (caminho primário real), 4 achados corrigidos (comercial 2.5.6); 20 pendências fósseis viraram observação de produto |
 | calendly-link | A2 | link single-use real (inofensivo) | FEITO 06/07 | APROVADO 8/8; match por slug validado; 1 achado de doc (max_event_count não existe na resposta) corrigido |
 | calendly-agendar | B | agendamento real | aguarda OK | agendar + cancelar |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 12 (8 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 33 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 13 (9 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 35 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
