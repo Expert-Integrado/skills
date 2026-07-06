@@ -1,6 +1,6 @@
 {
  "gerado_em": "2026-07-05",
- "fonte": "auditoria 10 agentes sobre 98 posts publicados",
+ "fonte": "auditoria 10 agentes (98 posts) + merge dos posts novos de jul/2026 (forca pendente de auditoria)",
  "base_url": "https://blog.expertintegrado.com.br/blog/",
  "utm_padrao": "?utm_source=whatsapp&utm_medium=comercial&utm_campaign=objecao&utm_content=deal-{DEAL_ID}",
  "posts": [
@@ -1886,6 +1886,658 @@
    "quando_mandar": "Lead de setor regulado (saude, financeiro, juridico) preocupado com compliance ao rodar Super SDR/WhatsApp em canal nao-oficial.",
    "ressalvas": [
     "Afirmacoes regulatorias especificas (exigencias da SUSEP, ANS, CFM, Banco Central sobre retencao de comunicacao via WhatsApp) citadas sem fonte — vale checagem juridica antes de usar como argumento decisivo com lead de setor regulado."
+   ]
+  },
+  {
+   "slug": "10-ferramentas-internas-fim-de-semana",
+   "title": "10 ferramentas internas que um empresário constrói num fim de semana (com os prompts)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": null,
+   "quando_mandar": "Dez ferramentas internas (calculadora de orçamento, dashboard de metas, gerador de proposta e mais) que dá pra construir num fim de semana com Lovable ou Claude Code, cada uma com o prompt inicial pronto pra copiar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "5-skills-ia-toda-pme",
+   "title": "5 skills de IA que toda PME deveria ter rodando (e como criar a primeira hoje)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": null,
+   "quando_mandar": "Skill de IA é uma instrução escrita uma vez que transforma um assistente genérico em funcionário treinado no processo da sua empresa. Veja as 5 com retorno mais rápido e como criar a primeira em 30 minutos.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "auditoria-agenda-30-minutos",
+   "title": "Auditoria de agenda em 30 minutos: onde o dia do dono vaza",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo"
+   ],
+   "forca": null,
+   "quando_mandar": "Pega a agenda da última semana e o histórico do WhatsApp, classifica cada bloco em 4 categorias e descobre, em meia hora, quanto do seu tempo só você mesmo precisa ocupar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "bloqueio-whatsapp-numero-banido",
+   "title": "Seu número pode ser banido? A verdade sobre bloqueio no WhatsApp Business",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "bloqueio-whatsapp"
+   ],
+   "forca": null,
+   "quando_mandar": "Sim, o risco de banimento existe, mas ele se concentra em quem usa automação não-oficial de forma agressiva. Entenda o que a Meta pune de fato e como reduzir o risco a quase zero.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "claude-code-primeiros-passos-empresario",
+   "title": "Claude Code pra empresário: primeiros passos sem saber programar",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": null,
+   "quando_mandar": "Claude Code é um agente de IA que executa tarefas de verdade no seu computador, não um chat que só responde. Veja como instalar em 10 minutos e os 3 primeiros usos de maior retorno.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "como-produzimos-110-posts-com-ia",
+   "title": "Como produzimos 110 posts deste blog com IA (os bastidores reais, com custos)",
+   "pilar": "vibe-coding",
+   "tipo": "case",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": null,
+   "quando_mandar": "A Expert Integrado já publicou 110 posts neste blog com um pipeline de agentes de IA, revisão em 4 dimensões e um gate de segurança em 3 cores antes de qualquer publicação. Veja o processo real, os custos e os erros que corrigimos no caminho.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "consultoria-ia-vs-montar-interno",
+   "title": "Consultoria de IA ou montar um time interno: o que faz sentido pra sua PME",
+   "pilar": "lideranca",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": null,
+   "quando_mandar": "Consultoria de IA ganha em velocidade e experiência de várias implantações; time interno ganha em controle no longo prazo, mas custa caro e demora a formar. Pra maioria das PMEs, o modelo híbrido é o que funciona.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "conta-da-1h-dia-garantia-tempo",
+   "title": "A conta da 1h/dia: por que garantimos tempo e não faturamento",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto"
+   ],
+   "forca": null,
+   "quando_mandar": "A Expert Integrado garante horas liberadas por mês, não faturamento. Entenda a conta por trás dessa promessa, os critérios de medição e o que fazer com o tempo devolvido.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "crm-integra-agente-ia",
+   "title": "Quais CRMs integram com agente de IA (e o que fazer quando o seu não integra)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "crm-nao-integra"
+   ],
+   "forca": null,
+   "quando_mandar": "Pipedrive, HubSpot e RD Station têm API aberta e integram direto com agente de IA. Ploomes exige mais esforço, planilha não tem API nenhuma. Veja o nível de cada um.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "do-excel-ao-app-planilha",
+   "title": "Do Excel ao app: aposentando a planilha caótica sem contratar dev",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": null,
+   "quando_mandar": "Quando a planilha tem múltiplos editores, erro de digitação custando dinheiro e nenhum histórico de mudança, dá pra migrar pra um app interno com IA sem contratar dev, mantendo o Excel como backup até o app provar valor.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "follow-up-pos-proposta-3-mensagens",
+   "title": "Lead sumiu depois da proposta: a sequência de 3 follow-ups que reabre a conversa",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Depois da proposta enviada, o silêncio quase nunca é um não. A sequência certa tem 3 mensagens em 12 dias (dia 2, dia 6 e dia 12), cada uma com uma função diferente.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "follow-up-valor-vs-cobranca",
+   "title": "O follow-up que entrega valor vs o que cobra resposta (e por que o segundo queima o lead)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Follow-up de cobrança pede resposta e cansa o lead. Follow-up de valor entrega algo novo a cada contato. A diferença é 1 regra: nunca peça sem antes dar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "framework-laarc-objecoes-gong",
+   "title": "O framework de 5 passos pra tratar objeção de venda (validado em 67 mil calls da Gong)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "LAARC é o framework de 5 passos (Listen, Acknowledge, Assess, Respond, Confirm) que a Gong validou analisando 67 mil reuniões de vendas gravadas. O passo que quase ninguém faz é o quinto.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "garantia-fornecedor-ia",
+   "title": "Que garantia exigir de um fornecedor de IA (e por que nós garantimos tempo, não faturamento)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "garantia"
+   ],
+   "forca": null,
+   "quando_mandar": "Nenhum fornecedor honesto garante faturamento com IA, porque venda depende de variáveis fora do controle dele. O que dá pra garantir é prazo, SLA, critério de aceite e economia de tempo condicional.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-clinicas-odontologicas-agenda",
+   "title": "IA para clínicas odontológicas: agenda cheia sem secretária sobrecarregada",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "odontologia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": null,
+   "quando_mandar": "No-show em clínica odontológica costuma ficar entre 15% e 30% das consultas. IA já confirma, remarca, cobra orçamento parado e reativa paciente sumido, tudo por WhatsApp.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-demite-time-comercial",
+   "title": "IA demite? O que acontece com o time comercial quando o agente chega",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir"
+   ],
+   "forca": null,
+   "quando_mandar": "IA não demite o time comercial de cara: ela absorve triagem e follow-up de baixo sinal. O humano sobe pra negociação e fechamento, e o gargalo vira qualidade, não volume.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-ecommerce-carrinho-atendimento",
+   "title": "IA para e-commerce: carrinho abandonado e atendimento que vende",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "e-commerce"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": null,
+   "quando_mandar": "Carrinho abandonado no e-commerce chega a taxa media de 70%, segundo o Baymard Institute. Como IA no WhatsApp recupera essa venda, resolve duvida de frete na hora e ainda faz cross-sell pos-entrega.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-escola-curso-matriculas",
+   "title": "IA para escolas e cursos: matrícula é venda, e venda dá pra automatizar",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": null,
+   "quando_mandar": "Escola e curso livre perdem matrícula não por falta de interesse, mas porque a secretaria não responde a tempo no pico da campanha. IA no WhatsApp qualifica, agenda visita e reativa quem sumiu.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-farmacia-pme-guia-pratico",
+   "title": "IA para farmácias: o que dá pra automatizar sem brigar com a regulação",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "farmacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": null,
+   "quando_mandar": "IA em farmácia funciona bem em atendimento no WhatsApp, controle de validade e marketing local. O limite é claro: indicação de medicamento e venda de controlado continuam sendo ato exclusivo do farmacêutico.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-imobiliaria-leads-whatsapp",
+   "title": "IA para imobiliárias: como parar de perder lead de portal no WhatsApp",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": null,
+   "quando_mandar": "Lead de portal (ZAP, VivaReal) esfria porque chega em várias imobiliárias ao mesmo tempo. IA que qualifica no WhatsApp, agenda visita e faz o follow-up resolve isso sem tirar o corretor do fechamento.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "ia-restaurantes-delivery-whatsapp",
+   "title": "IA para restaurantes e delivery: pedido, reserva e recompra no WhatsApp",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "restaurantes"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": null,
+   "quando_mandar": "IA no WhatsApp ajuda restaurante e delivery a fechar pedido no horário de pico, confirmar reserva sem no-show e reativar cliente que sumiu há semanas.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "implementar-ia-sem-parar-empresa",
+   "title": "Quanto tempo toma implementar IA de verdade (spoiler: menos que uma contratação)",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo"
+   ],
+   "forca": null,
+   "quando_mandar": "Implementar IA de verdade toma de 3 a 40 horas de trabalho, não meses. Veja o cronograma real por tipo de projeto e por que ele é mais curto que o ramp-up de 60 a 90 dias de uma contratação.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "lead-some-sem-dizer-nao",
+   "title": "A maioria dos leads perdidos não diz \\\"não\\\", diz nada: o que o silêncio significa",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Cerca de 7 em cada 10 leads perdidos somem sem dizer não. O silêncio não é rejeição, é timing, distração ou medo do confronto. E cobrar resposta piora.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "lgpd-ia-whatsapp-pme-guia",
+   "title": "LGPD e IA no WhatsApp: o que sua empresa pode (e não pode) fazer com os dados do cliente",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd"
+   ],
+   "forca": null,
+   "quando_mandar": "Legítimo interesse cobre a maior parte do atendimento comercial via IA no WhatsApp, mas exige documentação, retenção definida e transparência sobre o uso do bot.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "manda-proposta-interesse-ou-fuga",
+   "title": "'\"Me manda uma proposta\": interesse real ou fuga educada? Como saber em 1 pergunta'",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Nem toda proposta pedida é interesse. Uma pergunta separa quem quer comprar de quem quer te tirar do telefone: o que precisa estar aqui pra virar um sim?",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "mentoria-ia-vale-a-pena",
+   "title": "Mentoria de IA vale a pena? Como avaliar antes de assinar (checklist honesto)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto"
+   ],
+   "forca": null,
+   "quando_mandar": "Mentoria de IA vale a pena pra dono de PME que quer construir capacidade interna e tem tempo real pra aplicar entre os encontros. Veja o checklist honesto antes de assinar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "politica-uso-ia-equipe-template",
+   "title": "Política de uso de IA pra equipe: o documento de 1 página (com template pronto)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "perder-controle"
+   ],
+   "forca": null,
+   "quando_mandar": "Uma política de uso de IA pra equipe cabe em 1 página: o que o time pode fazer sem pedir permissão, o que nunca pode fazer, e quem aprova exceção. Template completo pra copiar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "preciso-pensar-objecao-vendas",
+   "title": "'\"Preciso pensar\" quase nunca é sobre pensar: o que fazer com a objeção mais comum do Brasil'",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "'Preciso pensar' raramente é sobre pensar: é falta de valor, medo de decidir ou objeção escondida. Veja os 2 movimentos pra virar a conversa e quando o pensar é de verdade.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "projeto-ia-convencer-socio",
+   "title": "Como apresentar o projeto de IA pro seu sócio (o material que destrava a decisão)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "socio"
+   ],
+   "forca": null,
+   "quando_mandar": "O resumo de 1 página que resolve o 'preciso falar com meu sócio': problema em número, investimento, retorno esperado e risco, sem falar de tecnologia.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "quando-adiar-ia-momento-certo",
+   "title": "Quando adiar IA é a decisão certa (e quando 'agora não' custa caro)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "momento-errado"
+   ],
+   "forca": null,
+   "quando_mandar": "Existem 3 situações em que adiar IA é a decisão certa: processo caótico, crise de caixa aguda e troca de sistema em andamento. Fora delas, adiar tem custo composto.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "quanto-custa-ferramenta-interna-vs-dev",
+   "title": "Quanto custa construir uma ferramenta interna com IA vs contratar um dev",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco"
+   ],
+   "forca": null,
+   "quando_mandar": "Contratar dev pra ferramenta interna custa de R$15 mil a R$40 mil. Construir com IA custa R$100 a R$300 por mês em assinaturas, mais o seu tempo. Veja a conta completa.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "quanto-custa-palestra-ia-brasil",
+   "title": "Quanto custa uma palestra de IA no Brasil (faixas de mercado e o que muda o preço)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco"
+   ],
+   "forca": null,
+   "quando_mandar": "Palestra de IA no Brasil vai de R$3 mil a R$150 mil. A faixa depende de fama do palestrante, mas o que realmente muda o resultado é customização, formato e o que a plateia aplica depois.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "quanto-custa-super-sdr-2026",
+   "title": "Quanto custa montar um Super SDR em 2026 (a conta aberta, item por item)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco"
+   ],
+   "forca": null,
+   "quando_mandar": "Setup de R$8 a 15 mil mais infra de R$550 a 650 por mês até 500 leads. Aqui está cada item da conta, o que encarece e o TCO de 12 meses.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "shadow-ai-time-usa-escondido",
+   "title": "Shadow AI: seu time já usa IA escondido. O que fazer com isso",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "perder-controle"
+   ],
+   "forca": null,
+   "quando_mandar": "Seu time provavelmente já usa ChatGPT por conta própria, sem política e sem controle. Isso não se resolve proibindo, se resolve com uma regra de 1 página.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "tecnicas-gong-pausar-espelhar-isolar",
+   "title": "As 3 técnicas dos top performers de vendas: pausar, espelhar, isolar",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Pausar 2 segundos, espelhar as últimas palavras do cliente e isolar a objeção real são as 3 técnicas que separam quem fecha de quem só conversa, segundo dados da Gong.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "tutorial-dashboard-comercial-fim-semana",
+   "title": "Tutorial: um dashboard comercial funcionando num fim de semana (sem dev)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": null,
+   "quando_mandar": "Dá pra montar um dashboard comercial funcional em um fim de semana com Lovable ou Claude Code, sem contratar dev. O passo a passo: sexta define 5 métricas, sábado constrói, domingo testa e quebra, segunda o time usa.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+   ]
+  },
+  {
+   "slug": "versus-lovable-bolt-replit-2026",
+   "title": "Lovable vs Bolt vs Replit em 2026: qual usar pra construir sua ferramenta sem dev",
+   "pilar": "vibe-coding",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": null,
+   "quando_mandar": "Lovable, Bolt e Replit resolvem problemas diferentes: banco de dados e login, protótipo rápido, ou aprender programando. Comparativo direto pra quem não é dev decidir em poucos minutos.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de forca comercial"
    ]
   }
  ]
