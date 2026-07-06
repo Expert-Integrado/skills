@@ -16,6 +16,12 @@ Skill para ler respostas no WhatsApp dos convidados de um evento e atualizar sta
 - O sistema pode ter auto-confirmado via botão/link, mas Eric quer **confirmação manual** validando a intenção real pela conversa
 - Categorias finais: `confirmado`, `recusado`, `sem_resposta`
 
+## PRÉ-REQUISITOS (checar ANTES do Passo 0)
+
+- MCP `expert-integrado` conectado (tools `mcp__expert-integrado__*`: list_participantes, get_evento, update_status_convite). SE ausente na sessão → PARAR e reportar: "o MCP expert-integrado não está nesta sessão — rodar na máquina/sessão com ele ativo". Sem fallback: os status dos convites vivem só nele.
+- MCP `whatsapp-agent` conectado (read/inbox/search — leitura das conversas).
+- MCP `pipedrive` conectado (registro de desfecho do Passo 5.5).
+
 ## PROTOCOLO DE EXECUÇÃO
 
 ### Passo 0: Coletar parâmetros

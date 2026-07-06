@@ -1,6 +1,6 @@
 {
   "name": "eventos",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "Skills de gestao de eventos Expert Integrado: convidar-evento, verificar-convites, notificacao-webinario (cadeia de 7 toques WhatsApp de lancamento).",
   "author": {
     "name": "Eric Luciano Ferreira",

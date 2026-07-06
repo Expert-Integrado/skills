@@ -66,7 +66,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
-| verificar-convites | A2 | read-only | fila | — |
+| verificar-convites | A2/B (writes em funil real) | MCP expert-integrado obrigatório | PARCIAL 06/07 | MCP ausente na sessão (parada legítima); pré-requisitos adicionados à skill; run completo no próximo ciclo real de convites da imersão |
 | convidar-evento | C | disparo em massa | fila (até preview) | — |
 | notificacao-webinario | C | disparo | fila (até preview) | — |
 
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 11 (8 FEITO + 3 PARCIAL) · Defeitos reais corrigidos: 32 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 12 (8 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 33 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
