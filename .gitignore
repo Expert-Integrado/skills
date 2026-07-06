@@ -12,3 +12,5 @@ mcps/zoom/tokens.json
 mcps/zoom/tokens.json.bak-*
 mcps/clickup/src/
 mcps/clickup/tools/tools
+__pycache__/
+*.pyc
