@@ -84,7 +84,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | apresentacao-html | A1 | HTML local | fila | — |
 | aula-mentoria | B/C (era A1) | gravações reais + Smart Player alunos + ClickUp | PARCIAL 06/07 | 1 achado corrigido (encoding output PS); IDs ClickUp validados; completo no próximo uso real |
 | briefing-pre-call | A2 | Pipedrive/Zoom read | fila | — |
-| claude-task | A2 | task no Brain (reversível) | fila | — |
+| claude-task | A2 | task no Brain (reversível) | FEITO 06/07 | APROVADO ponta a ponta; achado TRANSVERSAL do fuso (TZ IANA sem tzdata no Git Bash) corrigido em 7 skills |
 | criar-aula | A1 (ramo teste) / C (deploy) | deploy só no ramo real | FEITO 06/07 (ramo teste) | APROVADO, 7 achados corrigidos (lab 3.10.1); iconv ausente era o provável erro da telemetria; ramo deploy fica pra curso real |
 | criar-voice-guide | A2 | WhatsApp read | fila | — |
 | curar-brain-semanal | A2 | Brain read-mostly | fila | CUIDADO: não duplicar relatório da cron de domingo |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- FEITAS: 3 · EM EXECUÇÃO: 1 · Onda 1 restante: ~34 · Aguardando OK (ondas 2-3): 9-10 · Parciais (onda 4): 8
+- Processadas: 9 (6 FEITO + 3 PARCIAL) · Defeitos reais corrigidos: 27 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
