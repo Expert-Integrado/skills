@@ -85,7 +85,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | aula-mentoria | A1 | local | fila | telemetria acusou 1 erro — investigar |
 | briefing-pre-call | A2 | Pipedrive/Zoom read | fila | — |
 | claude-task | A2 | task no Brain (reversível) | fila | — |
-| criar-aula | A1 | local | fila | telemetria acusou 1 erro — investigar |
+| criar-aula | A1 (ramo teste) / C (deploy) | deploy só no ramo real | FEITO 06/07 (ramo teste) | APROVADO, 7 achados corrigidos (lab 3.10.1); iconv ausente era o provável erro da telemetria; ramo deploy fica pra curso real |
 | criar-voice-guide | A2 | WhatsApp read | fila | — |
 | curar-brain-semanal | A2 | Brain read-mostly | fila | CUIDADO: não duplicar relatório da cron de domingo |
 | innovation-lab | A1 | local | fila | — |
