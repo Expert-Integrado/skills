@@ -1,6 +1,6 @@
 {
  "gerado_em": "2026-07-06",
- "fonte": "auditoria 10 agentes sobre 98 posts + lotes jul/2026 (79 posts novos sem auditoria de força)",
+ "fonte": "auditoria 10 agentes sobre 98 posts (jun/2026) + auditoria 104 agentes Sonnet (06/07/2026) — 202/202 com forca",
  "base_url": "https://blog.expertintegrado.com.br/blog/",
  "utm_padrao": "?utm_source=whatsapp&utm_medium=comercial&utm_campaign=objecao&utm_content=deal-{DEAL_ID}",
  "posts": [
@@ -1900,10 +1900,12 @@
    "objecoes": [
     "sem-equipe-tecnica"
    ],
-   "forca": null,
-   "quando_mandar": "Dez ferramentas internas (calculadora de orçamento, dashboard de metas, gerador de proposta e mais) que dá pra construir num fim de semana com Lovable ou Claude Code, cada uma com o prompt inicial pronto pra copiar.",
+   "forca": 3,
+   "quando_mandar": "Lead travado dizendo que vai resolver por conta propria ou com a equipe interna antes de contratar; o post da ferramentas prontas de baixo risco e ainda assim fecha comparando com o Super SDR pra marcar a diferenca de categoria.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco do Super SDR (R$8-15k setup, R$550-650/mes infra) — so mandar se preco ja foi discutido com o lead",
+    "Risco de reforcar a objecao 'faco eu mesmo', pois o post e um incentivo explicito a DIY; usar so quando o objetivo e mostrar o limite do DIY, nao alimentar adiamento",
+    "Nao desarma objecao especifica de um lead com dado do caso dele, e generico pra qualquer PME"
    ]
   },
   {
@@ -1911,17 +1913,18 @@
    "title": "5 skills de IA que toda PME deveria ter rodando (e como criar a primeira hoje)",
    "pilar": "vibe-coding",
    "tipo": "satelite",
-   "funil": "meio",
+   "funil": "topo",
    "setores": [
     "geral"
    ],
    "objecoes": [
     "sem-equipe-tecnica"
    ],
-   "forca": null,
-   "quando_mandar": "Skill de IA é uma instrução escrita uma vez que transforma um assistente genérico em funcionário treinado no processo da sua empresa. Veja as 5 com retorno mais rápido e como criar a primeira em 30 minutos.",
+   "forca": 2,
+   "quando_mandar": "Serve so como conteudo educacional de topo pra lead que ainda nao entende o que e uma skill de IA, nao pra desarmar objecao especifica de negociacao travada.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Todos os exemplos sao hipoteticos (revenda, clinica, agencia etc), sem case real ou numero de retorno concreto",
+    "Nao ha prova/protocolo com dado real, entao nao convence lead cetico ja em negociacao"
    ]
   },
   {
@@ -1936,10 +1939,11 @@
    "objecoes": [
     "sem-tempo"
    ],
-   "forca": null,
-   "quando_mandar": "Pega a agenda da última semana e o histórico do WhatsApp, classifica cada bloco em 4 categorias e descobre, em meia hora, quanto do seu tempo só você mesmo precisa ocupar.",
+   "forca": 3,
+   "quando_mandar": "Lead trava com objecao de \"nao tenho tempo\" ou \"nao sei por onde comecar\" antes de aceitar diagnostico - manda o exercicio de 30min como prova de que da pra comecar sozinho e sem custo.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao cita numero real do proprio Eric nem case nomeado, so padrao generico observado em diagnosticos, entao nao convence lead cetico que pede prova concreta",
+    "E ferramenta de auto-diagnostico, nao desarma objecao especifica de preco ou comparacao com concorrente"
    ]
   },
   {
@@ -1954,10 +1958,12 @@
    "objecoes": [
     "bloqueio-whatsapp"
    ],
-   "forca": null,
-   "quando_mandar": "Sim, o risco de banimento existe, mas ele se concentra em quem usa automação não-oficial de forma agressiva. Entenda o que a Meta pune de fato e como reduzir o risco a quase zero.",
+   "forca": 4,
+   "quando_mandar": "Lead travado com medo de perder o número do WhatsApp ao automatizar (objeção clássica de quem já ouviu história de banimento ou tem número pessoal envolvido).",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Números (15% resposta, 40% reversão, 10 mil conversas/mês) são estimativas de mercado, nao dado oficial da Meta nem caso proprio - o post e honesto sobre isso, mas nao mandar como se fosse prova dura",
+    "Nao cita case real da Expert Integrado, entao nao serve como prova social, so como argumento tecnico",
+    "Se o lead ja usa API oficial (BSP), a secao de mitos/boas praticas fica mais generica pra ele - focar no trecho de volume >10 mil conversas"
    ]
   },
   {
@@ -1965,17 +1971,18 @@
    "title": "Claude Code pra empresário: primeiros passos sem saber programar",
    "pilar": "vibe-coding",
    "tipo": "satelite",
-   "funil": "meio",
+   "funil": "topo",
    "setores": [
     "geral"
    ],
    "objecoes": [
     "sem-equipe-tecnica"
    ],
-   "forca": null,
-   "quando_mandar": "Claude Code é um agente de IA que executa tarefas de verdade no seu computador, não um chat que só responde. Veja como instalar em 10 minutos e os 3 primeiros usos de maior retorno.",
+   "forca": 2,
+   "quando_mandar": "Lead sem equipe tecnica que quer entender o que e Claude Code e como comecar; serve pra abrir curiosidade, nao pra desarmar objecao de preco ou fechar negociacao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "E tutorial de instalacao e conceito basico, nao ataca objecao de preco/ROI/concorrente direto",
+    "Cita precos de assinatura Claude Pro/Max, nao do servico da Expert Integrado; nao confundir com proposta comercial"
    ]
   },
   {
@@ -1983,17 +1990,19 @@
    "title": "Como produzimos 110 posts deste blog com IA (os bastidores reais, com custos)",
    "pilar": "vibe-coding",
    "tipo": "case",
-   "funil": "meio",
+   "funil": "topo",
    "setores": [
     "geral"
    ],
    "objecoes": [
     "da-pra-fazer-sozinho"
    ],
-   "forca": null,
-   "quando_mandar": "A Expert Integrado já publicou 110 posts neste blog com um pipeline de agentes de IA, revisão em 4 dimensões e um gate de segurança em 3 cores antes de qualquer publicação. Veja o processo real, os custos e os erros que corrigimos no caminho.",
+   "forca": 2,
+   "quando_mandar": "Serve como prova de \"a gente pratica o que vende\" pra lead cetico que pergunta se a Expert Integrado usa IA de verdade internamente, mas nao desarma objecao de preco, seguranca de dados ou ROI do produto que o lead esta avaliando.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "E institucional/vitrine (fala do proprio blog da empresa), nao do produto ou servico vendido ao lead",
+    "Nao ataca objecao especifica de venda (preco, prazo, integracao) - risco de soar irrelevante em follow-up de negociacao",
+    "Bom so se o lead perguntou especificamente sobre uso interno de IA/conteudo, senao parece deslocado do assunto do deal"
    ]
   },
   {
@@ -2008,10 +2017,11 @@
    "objecoes": [
     "da-pra-fazer-sozinho"
    ],
-   "forca": null,
-   "quando_mandar": "Consultoria de IA ganha em velocidade e experiência de várias implantações; time interno ganha em controle no longo prazo, mas custa caro e demora a formar. Pra maioria das PMEs, o modelo híbrido é o que funciona.",
+   "forca": 4,
+   "quando_mandar": "Lead travado comparando custo de contratar consultoria vs montar time interno, ou hesitando com objecao \"da pra fazer sozinho/contratar alguem\".",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco do Super SDR (setup R$8-15mil, R$550-650/mes) - so mandar se preco ja entrou na conversa com o lead",
+    "Defende modelo hibrido em vez de consultoria full-service, o que pode enfraquecer venda de manutencao recorrente"
    ]
   },
   {
@@ -2026,10 +2036,11 @@
    "objecoes": [
     "roi-incerto"
    ],
-   "forca": null,
-   "quando_mandar": "A Expert Integrado garante horas liberadas por mês, não faturamento. Entenda a conta por trás dessa promessa, os critérios de medição e o que fazer com o tempo devolvido.",
+   "forca": 5,
+   "quando_mandar": "Lead travado que questiona ROI/garantia de resultado (\"e se não funcionar?\", \"vocês garantem retorno?\") ou compara com concorrente que promete aumento de faturamento.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Post recusa explicitamente garantir faturamento; não mandar pra lead que quer ouvir exatamente essa promessa sem antes reposicionar a expectativa na conversa",
+    "Cita prazo de calibracao 4-8 semanas e reavaliacao por escrito, so mandar se o lead ja estiver perto de discutir formato de contrato/proposta"
    ]
   },
   {
@@ -2044,10 +2055,12 @@
    "objecoes": [
     "crm-nao-integra"
    ],
-   "forca": null,
-   "quando_mandar": "Pipedrive, HubSpot e RD Station têm API aberta e integram direto com agente de IA. Ploomes exige mais esforço, planilha não tem API nenhuma. Veja o nível de cada um.",
+   "forca": 3,
+   "quando_mandar": "Lead trava dizendo \"meu CRM nao integra\" ou \"uso planilha\" — post mostra o nivel de cada CRM e os 3 caminhos quando nao ha API pronta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco de Pipedrive/HubSpot: so mandar se o lead ja usa ou cogita um desses, senao vira ruido",
+    "E mais mapa/educativo que prova concreta (sem case, sem numero de resultado do Eric) — nao desarma objecao de preco ou ROI sozinho",
+    "Se o lead ja definiu o CRM, a secao final sobre 'problema e processo, nao ferramenta' pode soar como estar fugindo da pergunta tecnica"
    ]
   },
   {
@@ -2062,10 +2075,10 @@
    "objecoes": [
     "da-pra-fazer-sozinho"
    ],
-   "forca": null,
-   "quando_mandar": "Quando a planilha tem múltiplos editores, erro de digitação custando dinheiro e nenhum histórico de mudança, dá pra migrar pra um app interno com IA sem contratar dev, mantendo o Excel como backup até o app provar valor.",
+   "forca": 4,
+   "quando_mandar": "Lead com objecao \"resolvo com planilha/consigo fazer sozinho\" ou que descreve dor concreta de planilha compartilhada (erro de digitacao, ninguem sabe quem mudou o que).",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Exemplos de erro/custo (distribuidora, agencia de eventos) sao hipoteticos, sem numero real comprovado - se o lead pedir prova concreta, complementar com o link do caso real de 1 mes citado no texto."
    ]
   },
   {
@@ -2078,10 +2091,12 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Depois da proposta enviada, o silêncio quase nunca é um não. A sequência certa tem 3 mensagens em 12 dias (dia 2, dia 6 e dia 12), cada uma com uma função diferente.",
+   "forca": 4,
+   "quando_mandar": "Lead que sumiu depois de receber proposta e o vendedor precisa de um roteiro pronto (com templates) pra retomar contato sem soar como cobrança.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao desarma uma objecao especifica (preco, concorrente, timing) - e um protocolo de cadencia, entao serve melhor pra silencio generico do que pra lead que ja deu um nao explicito",
+    "Cita Super SDR no FAQ final; se o lead nao usa ou nao conhece a ferramenta, cortar essa parte ao reaproveitar o texto",
+    "Templates sao genericos (precisam adaptar nome, dor da call, modulo especifico) - nao mandar como copy-paste direto sem revisar contexto real do deal"
    ]
   },
   {
@@ -2094,10 +2109,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Follow-up de cobrança pede resposta e cansa o lead. Follow-up de valor entrega algo novo a cada contato. A diferença é 1 regra: nunca peça sem antes dar.",
+   "forca": 3,
+   "quando_mandar": "Lead travado que só recebe cobrança de resposta do vendedor: post reformula a abordagem de follow-up e dá script pronto, mas não desarma objeção de preço/decisão do lead diretamente.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Conteudo e sobre COMO o vendedor deve abordar, nao sobre a dor do lead em si; funciona mais como reforco de processo interno do que argumento de venda direto",
+    "Generico de metodologia comercial, nao especifico do produto/servico da Expert Integrado"
    ]
   },
   {
@@ -2110,10 +2126,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "LAARC é o framework de 5 passos (Listen, Acknowledge, Assess, Respond, Confirm) que a Gong validou analisando 67 mil reuniões de vendas gravadas. O passo que quase ninguém faz é o quinto.",
+   "forca": 3,
+   "quando_mandar": "Lead travado devolveu objecao (preco, prazo, confianca) e o vendedor quer mostrar metodo pra explorar a objecao antes de responder, em vez de parecer que so quer empurrar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao tem numero/case da Expert Integrado nem municao concreta pro produto: e metodo generico de vendas, entao nao desarma sozinho uma objecao especifica sobre o produto ou preco",
+    "Se o vendedor ja respondeu mal a objecao do lead, mandar isso pode soar 'aula' em vez de resposta direta; melhor como apoio depois, nao como substituto da resposta pontual"
    ]
   },
   {
@@ -2128,10 +2145,12 @@
    "objecoes": [
     "garantia"
    ],
-   "forca": null,
-   "quando_mandar": "Nenhum fornecedor honesto garante faturamento com IA, porque venda depende de variáveis fora do controle dele. O que dá pra garantir é prazo, SLA, critério de aceite e economia de tempo condicional.",
+   "forca": 5,
+   "quando_mandar": "Lead travado pedindo \"garantia de resultado/faturamento\" antes de assinar, ou comparando fornecedores pelo que cada um garante em contrato.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "So mandar depois que a objecao de garantia/resultado ja apareceu na conversa, senao soa preventivo demais",
+    "Reforca publicamente a garantia condicional de 1h/dia: nao mandar se a proposta em curso ja promete algo diferente disso",
+    "Tom e ligeiramente confrontador com concorrentes que prometem faturamento; evitar se o lead esta comparando com fornecedor que ja fez essa promessa a ele, pra nao parecer ataque direto"
    ]
   },
   {
@@ -2146,10 +2165,11 @@
    "objecoes": [
     "meu-setor-e-diferente"
    ],
-   "forca": null,
-   "quando_mandar": "No-show em clínica odontológica costuma ficar entre 15% e 30% das consultas. IA já confirma, remarca, cobra orçamento parado e reativa paciente sumido, tudo por WhatsApp.",
+   "forca": 4,
+   "quando_mandar": "Lead dentista/gestor de clinica travado por objecao de custo, no-show ou receio de perder controle clinico, que precisa ver caso concreto do proprio setor antes de avancar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco de implante/aparelho e do proprio servico (R$300-700/mes) - so mandar se preco ja entrou na conversa",
+    "Numeros de reducao de no-show (40-60%) sao estimativa por analogia com outras especialidades de saude, sem estudo proprio pra odontologia - nao apresentar como dado fechado se o lead pedir fonte"
    ]
   },
   {
@@ -2164,10 +2184,11 @@
    "objecoes": [
     "equipe-vai-resistir"
    ],
-   "forca": null,
-   "quando_mandar": "IA não demite o time comercial de cara: ela absorve triagem e follow-up de baixo sinal. O humano sobe pra negociação e fechamento, e o gargalo vira qualidade, não volume.",
+   "forca": 4,
+   "quando_mandar": "Lead trava porque o time comercial dele teme ou levanta que \"IA vai substituir vendedor\" como objecao pra nao avancar com o Super SDR.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco (setup R$8-15K + R$550-650/mes vs SDR humano R$6.500-9.400/mes) - so mandar se o lead ja engajou em conversa de investimento, senao antecipa preco cedo demais",
+    "Argumento e generico de mercado (HubSpot, estimativas), sem caso real da Expert Integrado - reforcar com prova social propria se o lead pedir evidencia concreta"
    ]
   },
   {
@@ -2182,10 +2203,11 @@
    "objecoes": [
     "meu-setor-e-diferente"
    ],
-   "forca": null,
-   "quando_mandar": "Carrinho abandonado no e-commerce chega a taxa media de 70%, segundo o Baymard Institute. Como IA no WhatsApp recupera essa venda, resolve duvida de frete na hora e ainda faz cross-sell pos-entrega.",
+   "forca": 4,
+   "quando_mandar": "Lead de e-commerce travado com objecao de \"meu setor e diferente\" ou duvida de custo/prazo de implementacao, principalmente se ja mencionou carrinho abandonado ou atendimento lento.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixa de preco (setup R$8-15k, mensalidade R$550-650) — so mandar se preco ja entrou na conversa, senao antecipa objecao antes da hora",
+    "Municao e majoritariamente estimativa de mercado generica (Baymard, faixas de 60-80%), nao case real do proprio cliente, entao nao e forca 5"
    ]
   },
   {
@@ -2200,10 +2222,12 @@
    "objecoes": [
     "meu-setor-e-diferente"
    ],
-   "forca": null,
-   "quando_mandar": "Escola e curso livre perdem matrícula não por falta de interesse, mas porque a secretaria não responde a tempo no pico da campanha. IA no WhatsApp qualifica, agenda visita e reativa quem sumiu.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor educacional (escola, curso livre ou idioma) travado alegando que atendimento manual da secretaria da conta, ou questionando se o setor dele e diferente demais pra automatizar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixa de preco (setup R$8-15K, mensal R$550-650) — so mandar se preco ja foi tocado na conversa",
+    "Municao e mais benchmark generico de mercado ('costuma', 'padrao que a gente observa') do que caso real com numero fechado de cliente — nao serve como prova concreta contra objecao de ceticismo forte",
+    "Se o lead ja usa sistema de gestao com boleto/lembrete automatico, o post reconhece que essa parte ja esta resolvida — nao usar como prova de ROI total"
    ]
   },
   {
@@ -2218,10 +2242,11 @@
    "objecoes": [
     "meu-setor-e-diferente"
    ],
-   "forca": null,
-   "quando_mandar": "IA em farmácia funciona bem em atendimento no WhatsApp, controle de validade e marketing local. O limite é claro: indicação de medicamento e venda de controlado continuam sendo ato exclusivo do farmacêutico.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor farmaceutico que usa a objecao \"meu ramo e diferente, tem regulacao\" pra travar a negociacao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco (R$300-700/mes), so mandar se preco/orcamento ja entrou na conversa",
+    "Foco forte em enquadramento regulatorio: desarma objecao de compliance, mas nao empurra decisao sozinho"
    ]
   },
   {
@@ -2236,10 +2261,12 @@
    "objecoes": [
     "meu-setor-e-diferente"
    ],
-   "forca": null,
-   "quando_mandar": "Lead de portal (ZAP, VivaReal) esfria porque chega em várias imobiliárias ao mesmo tempo. IA que qualifica no WhatsApp, agenda visita e faz o follow-up resolve isso sem tirar o corretor do fechamento.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor imobiliario que alegou \"meu setor e diferente\" ou que reclama de perder lead de portal pra concorrencia por demora de resposta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixa de preco (setup R$8-15K + R$550-650/mes): so mandar se preco ainda nao foi tema sensivel na negociacao",
+    "Argumento e generico de setor (qualificacao, agendamento, follow-up), nao desarma objecao especifica de um lead com dor propria — funciona mais como aquecimento de nicho do que fechamento",
+    "So serve pra lead do setor imobiliario; fora desse nicho nao tem uso"
    ]
   },
   {
@@ -2254,10 +2281,12 @@
    "objecoes": [
     "meu-setor-e-diferente"
    ],
-   "forca": null,
-   "quando_mandar": "IA no WhatsApp ajuda restaurante e delivery a fechar pedido no horário de pico, confirmar reserva sem no-show e reativar cliente que sumiu há semanas.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor de restaurante/delivery que trava alegando \"meu negocio e diferente\" ou preocupado com pico de horario, no-show de reserva ou cliente que sumiu.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Numeros sao estimativas genericas de mercado (iFood ~80%, no-show 15-20%, custo de aquisicao 5-7x), nao dado proprio da Expert Integrado: nao apresentar como case",
+    "Cita faixa de preco ('algumas centenas de reais por mes'): so mandar se lead ainda nao entrou em discussao de valor, senao pode ancorar baixo",
+    "Nao tem prova social nem protocolo passo a passo proprio: serve pra desarmar objecao de setor, nao pra fechar negociacao sozinho"
    ]
   },
   {
@@ -2272,10 +2301,10 @@
    "objecoes": [
     "sem-tempo"
    ],
-   "forca": null,
-   "quando_mandar": "Implementar IA de verdade toma de 3 a 40 horas de trabalho, não meses. Veja o cronograma real por tipo de projeto e por que ele é mais curto que o ramp-up de 60 a 90 dias de uma contratação.",
+   "forca": 4,
+   "quando_mandar": "Lead trava dizendo que nao tem tempo agora pra implementar IA, ou compara implementacao com projeto de sistema de gestao gigante.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita valores de infra (R$550-650/mes) e faixa de projeto grande (R$8-15k) — so mandar se preco ainda nao virou o ponto de atrito, senao reforca objecao de custo"
    ]
   },
   {
@@ -2288,10 +2317,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Cerca de 7 em cada 10 leads perdidos somem sem dizer não. O silêncio não é rejeição, é timing, distração ou medo do confronto. E cobrar resposta piora.",
+   "forca": 4,
+   "quando_mandar": "Mandar quando o lead sumiu apos a call e o vendedor esta na duvida entre cobrar de novo ou desistir do deal.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Numeros (2% vs 34%) sao de reativacao de base fria interna, generica; nao apresentar como resultado do proprio lead",
+    "Se o vendedor ja cobrou resposta 2-3x, mandar isso pode soar autocritica do time; enquadrar como conteudo, nao pedido de desculpa"
    ]
   },
   {
@@ -2306,10 +2336,12 @@
    "objecoes": [
     "medo-dados-lgpd"
    ],
-   "forca": null,
-   "quando_mandar": "Legítimo interesse cobre a maior parte do atendimento comercial via IA no WhatsApp, mas exige documentação, retenção definida e transparência sobre o uso do bot.",
+   "forca": 4,
+   "quando_mandar": "Lead trava com objecao de medo juridico/LGPD sobre usar IA no WhatsApp (objecao:medo-dados-lgpd) e precisa de checklist pratico pra levar ao juridico dele.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao usar como arma final: e mapa educativo, nao laudo juridico, e o proprio texto diz isso explicitamente no fechamento",
+    "Se o lead ja usa API nao-oficial (Z-API/ChatGuru), o trecho sobre DPA da Meta pode soar como alerta contra a propria stack dele, contextualizar antes de mandar",
+    "Nao cita numeros/caso especifico da Expert Integrado, so faixas genericas da LGPD, entao nao substitui prova social"
    ]
   },
   {
@@ -2322,10 +2354,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Nem toda proposta pedida é interesse. Uma pergunta separa quem quer comprar de quem quer te tirar do telefone: o que precisa estar aqui pra virar um sim?",
+   "forca": 4,
+   "quando_mandar": "Lead pediu proposta cedo, sem diagnostico claro, e o vendedor esta em duvida se e interesse real ou fuga educada antes de investir tempo montando o documento.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao traz numero ou caso real de cliente, so protocolo e exemplo ilustrativo (clinica de estetica e hipotetica)",
+    "CTA final empurra Super SDR pra automatizar follow-up, melhor mandar quando o vendedor ja sente a dor de proposta parada no pipeline"
    ]
   },
   {
@@ -2340,10 +2373,12 @@
    "objecoes": [
     "roi-incerto"
    ],
-   "forca": null,
-   "quando_mandar": "Mentoria de IA vale a pena pra dono de PME que quer construir capacidade interna e tem tempo real pra aplicar entre os encontros. Veja o checklist honesto antes de assinar.",
+   "forca": 3,
+   "quando_mandar": "Lead que ja demonstrou interesse na mentoria mas esta em duvida se e o formato certo (vs consultoria) ou hesitando com objecao de tempo/ROI.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao cita numeros/preco da Expert Integrado (so faixa generica de mercado R$20-40k), entao nao desarma objecao de preco especifica do lead",
+    "Serve melhor pra lead confuso entre mentoria x consultoria do que pra lead ja convencido travado em detalhe de contrato",
+    "Se o lead ja tem processo bagunçado, o post pode reforcar objecao de que ele nao esta pronto - usar com cuidado nesse caso"
    ]
   },
   {
@@ -2358,10 +2393,11 @@
    "objecoes": [
     "perder-controle"
    ],
-   "forca": null,
-   "quando_mandar": "Uma política de uso de IA pra equipe cabe em 1 página: o que o time pode fazer sem pedir permissão, o que nunca pode fazer, e quem aprova exceção. Template completo pra copiar.",
+   "forca": 3,
+   "quando_mandar": "Lead travado com objecao de \"perder controle\" ou medo de vazamento de dado se liberar IA pro time: o post da o framework + template pronto pra ele sair do impasse sem contratar juridico.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao tem numero/case/prova concreta da Expert Integrado, e template generico com colchetes pra preencher, entao nao desarma objecao dura sozinho",
+    "Se o lead pediu especificamente ajuda comercial/vendas ou LGPD tecnica, este post e generico demais (governanca de uso interno, nao vendas nem compliance formal)"
    ]
   },
   {
@@ -2374,10 +2410,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "'Preciso pensar' raramente é sobre pensar: é falta de valor, medo de decidir ou objeção escondida. Veja os 2 movimentos pra virar a conversa e quando o pensar é de verdade.",
+   "forca": 4,
+   "quando_mandar": "Mandar pra lead que travou com \"preciso pensar\" apos proposta/apresentacao, quando o vendedor quer roteiro pronto pra reabrir a conversa em vez de aceitar silencio.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Sem numero/caso da Expert Integrado, so framework generico (LAARC/Gong) — funciona mais como script de apoio ao vendedor do que prova social pro lead",
+    "Script usa 'preco' como exemplo de objecao a isolar; evitar mandar se preco ainda nao foi discutido, pra nao antecipar o assunto"
    ]
   },
   {
@@ -2392,10 +2429,10 @@
    "objecoes": [
     "socio"
    ],
-   "forca": null,
-   "quando_mandar": "O resumo de 1 página que resolve o 'preciso falar com meu sócio': problema em número, investimento, retorno esperado e risco, sem falar de tecnologia.",
+   "forca": 5,
+   "quando_mandar": "Lead trava com \"preciso falar com meu socio/financeiro\" e some do follow-up sem material pra levar pra reuniao interna.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Exemplo de R$18.000 de investimento e conta de ROI e hipotetico, marcado como exemplo no texto: nao deixar o lead achar que e preco fechado da Expert Integrado sem contexto"
    ]
   },
   {
@@ -2410,10 +2447,11 @@
    "objecoes": [
     "momento-errado"
    ],
-   "forca": null,
-   "quando_mandar": "Existem 3 situações em que adiar IA é a decisão certa: processo caótico, crise de caixa aguda e troca de sistema em andamento. Fora delas, adiar tem custo composto.",
+   "forca": 4,
+   "quando_mandar": "Lead travado dizendo \"agora não é a hora\" sem justificar de forma estruturada, especialmente quando ele cita processo bagunçado, aperto de caixa ou troca de sistema como motivo.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preço do Super SDR (R$8-15k setup + R$550-650/mes) — só mandar se preço já foi discutido no funil",
+    "Framework valida a objeção em 3 cenários antes de contra-atacar, então lead que se encaixa genuinamente num deles pode usar o post pra justificar adiar de verdade"
    ]
   },
   {
@@ -2428,10 +2466,11 @@
    "objecoes": [
     "preco"
    ],
-   "forca": null,
-   "quando_mandar": "Contratar dev pra ferramenta interna custa de R$15 mil a R$40 mil. Construir com IA custa R$100 a R$300 por mês em assinaturas, mais o seu tempo. Veja a conta completa.",
+   "forca": 4,
+   "quando_mandar": "Lead travado comparando \"contrato dev ou faço com IA\" ou questionando o preço da implementação: post desarma isso com faixas de mercado, conta de custo de oportunidade e uma matriz clara de quando cada caminho vale.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco de dev/freelancer e de assinatura de IA: so mandar se o lead ja tocou no tema preco/orcamento, senao antecipa objecao que nao existia",
+    "Reforca a tese de vibe coding faca-voce-mesmo, nao vende diretamente servico da Expert Integrado: usar como aquecimento, nao como fechamento"
    ]
   },
   {
@@ -2446,10 +2485,12 @@
    "objecoes": [
     "preco"
    ],
-   "forca": null,
-   "quando_mandar": "Palestra de IA no Brasil vai de R$3 mil a R$150 mil. A faixa depende de fama do palestrante, mas o que realmente muda o resultado é customização, formato e o que a plateia aplica depois.",
+   "forca": 3,
+   "quando_mandar": "Lead trava alegando que palestra/evento de IA custa caro ou pede referencia de faixa de preco para justificar orcamento internamente.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Post e sobre palestras avulsas, nao sobre consultoria/implantacao de IA continua: nao usar pra objecao de preco do produto principal da Expert Integrado",
+    "Fala bem de concorrentes (palestrantes estabelecidos/referencia) sem promover a Expert Integrado como opcao, so gera reflexao geral",
+    "Municao e faixa de mercado generica, nao caso/numero da propria Expert Integrado, entao nao desarma objecao especifica sozinho"
    ]
   },
   {
@@ -2464,10 +2505,11 @@
    "objecoes": [
     "preco"
    ],
-   "forca": null,
-   "quando_mandar": "Setup de R$8 a 15 mil mais infra de R$550 a 650 por mês até 500 leads. Aqui está cada item da conta, o que encarece e o TCO de 12 meses.",
+   "forca": 4,
+   "quando_mandar": "Lead travado na objecao de preco/orcamento pedindo pra ver a conta aberta antes de assinar proposta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixas de preco especificas (setup e mensalidade); so mandar se preco ja entrou na conversa",
+    "Compara com custo de SDR humano, evitar se o lead ainda nao considerou substituir pessoa"
    ]
   },
   {
@@ -2482,10 +2524,12 @@
    "objecoes": [
     "perder-controle"
    ],
-   "forca": null,
-   "quando_mandar": "Seu time provavelmente já usa ChatGPT por conta própria, sem política e sem controle. Isso não se resolve proibindo, se resolve com uma regra de 1 página.",
+   "forca": 3,
+   "quando_mandar": "Lead travado com objecao de \"perder controle\" ou risco de dado vazando se time usar IA sem regra clara.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Nao tem numero/protocolo proprio da Expert Integrado, so estatistica generica de pesquisa (Microsoft/LinkedIn) e estimativa nao-verificada (2-3 em 15), entao nao desarma objecao sozinho",
+    "Solucao central (politica de 1 pagina) fica so anunciada, o conteudo de fato esta noutro post (politica-uso-ia-equipe-template) - pode gerar sensacao de post incompleto se mandado isolado",
+    "Bom pra abrir conversa sobre governanca, fraco pra fechar negociacao ja avancada"
    ]
   },
   {
@@ -2498,10 +2542,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Pausar 2 segundos, espelhar as últimas palavras do cliente e isolar a objeção real são as 3 técnicas que separam quem fecha de quem só conversa, segundo dados da Gong.",
+   "forca": 4,
+   "quando_mandar": "Lead travado dizendo \"vou pensar\" ou \"tá caro\" sem detalhar o motivo real da objeção.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita o Super SDR de forma explicita na ultima secao, pode soar auto-promocional se o lead ainda nao conhece o produto",
+    "Nao traz preco/numero do produto, so dado da Gong (5x mais pausa) - sem risco de ancoragem de preco"
    ]
   },
   {
@@ -2509,17 +2554,19 @@
    "title": "Tutorial: um dashboard comercial funcionando num fim de semana (sem dev)",
    "pilar": "vibe-coding",
    "tipo": "satelite",
-   "funil": "meio",
+   "funil": "topo",
    "setores": [
     "geral"
    ],
    "objecoes": [
     "da-pra-fazer-sozinho"
    ],
-   "forca": null,
-   "quando_mandar": "Dá pra montar um dashboard comercial funcional em um fim de semana com Lovable ou Claude Code, sem contratar dev. O passo a passo: sexta define 5 métricas, sábado constrói, domingo testa e quebra, segunda o time usa.",
+   "forca": 2,
+   "quando_mandar": "So como conteudo educacional de apoio pra lead ainda entendendo vibe coding, nao pra desarmar objecao especifica de negociacao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita preco do Super SDR (R$8-15k setup); so mandar se preco ainda nao foi discutido, senao gera comparacao indevida",
+    "E tutorial faca-voce-mesmo: risco de reforcar a objecao 'da pra fazer sozinho' em vez de desarma-la",
+    "Sem prova social/case real, so cenario hipotetico; nao serve como municao de fechamento"
    ]
   },
   {
@@ -2534,10 +2581,11 @@
    "objecoes": [
     "sem-equipe-tecnica"
    ],
-   "forca": null,
-   "quando_mandar": "Lovable, Bolt e Replit resolvem problemas diferentes: banco de dados e login, protótipo rápido, ou aprender programando. Comparativo direto pra quem não é dev decidir em poucos minutos.",
+   "forca": 3,
+   "quando_mandar": "Lead avaliando fazer por conta propria em Lovable/Bolt/Replit e hesitando em contratar, pra mostrar onde essas ferramentas param e comparar com o investimento de um sistema de producao real.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de forca comercial"
+    "Cita faixa R$8-15 mil de setup + R$550-650/mes do Super SDR: so mandar se o lead ja tem nocao do porte do projeto, senao ancora expectativa de preco baixo",
+    "E comparativo de ferramentas de terceiros, nao prova social direta da Expert"
    ]
   },
   {
@@ -2552,10 +2600,12 @@
    "objecoes": [
     "publico-idoso"
    ],
-   "forca": null,
-   "quando_mandar": "Funciona, sim: o público 50+ já usa WhatsApp como canal principal no Brasil. O que muda é o desenho da conversa, não a decisão de usar IA.",
+   "forca": 3,
+   "quando_mandar": "Lead trava dizendo 'meu publico e mais velho, nao vai falar com robo' e o vendedor precisa desarmar essa objecao especifica.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Municao concreta e fraca: quase tudo vem marcado como 'estimativa' ou 'exemplo hipotetico', sem numero fechado ou case real",
+    "So mandar se o lead ja levantou objecao de publico idoso; fora desse contexto e conteudo generico de topo de funil",
+    "Cita preco do Super SDR (R$8-15k setup) — so mandar se preco ainda nao foi discutido ou se isso ajuda a ancorar"
    ]
   },
   {
@@ -2570,10 +2620,12 @@
    "objecoes": [
     "volume-baixo"
    ],
-   "forca": null,
-   "quando_mandar": "Nem sempre. Abaixo de 15 a 20 leads bem atendidos por mês, o retorno vem da velocidade e da constância, não da escala, e às vezes um processo manual disciplinado já resolve.",
+   "forca": 4,
+   "quando_mandar": "Lead travado com objecao de volume baixo (meu volume nao justifica automatizar) ou pedindo pra confirmar se compensa no caso dele.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "So mandar se o lead ja levantou objecao de volume/ROI, senao soa como o vendedor plantando duvida sobre o proprio produto",
+    "Cita faixas de preco (R$1.200-1.900/mes, setup R$8-15K): so mandar se preco ja apareceu na conversa",
+    "Post admite abertamente que as vezes NAO compensa comprar; usar com lead maduro que valoriza honestidade, nao com quem so precisa de empurrao final"
    ]
   },
   {
@@ -2588,10 +2640,11 @@
    "objecoes": [
     "ja-tenho-ferramenta"
    ],
-   "forca": null,
-   "quando_mandar": "Chatbot de fluxo (árvore de botões) e agente de IA (conversa aberta) resolvem problemas diferentes. Veja quando integrar, quando trocar e como migrar sem derrubar o atendimento.",
+   "forca": 4,
+   "quando_mandar": "Lead trava com objecao \"ja tenho chatbot/automacao\" e usa isso pra nao avancar na conversa comercial",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco de setup (R$8-15k) e mensalidade (R$550-650) — so mandar se orcamento ja foi discutido, senao antecipa numero antes da hora",
+    "Assume chatbot atual e de arvore fixa; se o lead ja tem algo com IA embutida (ex: no de IA no Make/n8n), o proprio FAQ do post cobre isso mas o enquadramento geral fica menos preciso"
    ]
   },
   {
@@ -2606,10 +2659,11 @@
    "objecoes": [
     "concorrente-mais-barato"
    ],
-   "forca": null,
-   "quando_mandar": "Um agente de IA custa de R$800 a R$15.000 de setup porque o número esconde quanto trabalho humano existe atrás. Veja a anatomia do preço e um checklist de 6 perguntas pra comparar propostas.",
+   "forca": 5,
+   "quando_mandar": "Lead travado dizendo que achou concorrente mais barato ou comparando propostas de agente de IA por preco.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco propria (R$8-15k) e do Super SDR: so mandar se contexto de preco ja foi aberto na negociacao",
+    "Checklist de 6 perguntas pode expor o proprio fornecedor se a proposta do Eric tambem nao detalhar tudo, revisar antes de usar contra concorrente especifico"
    ]
   },
   {
@@ -2624,10 +2678,11 @@
    "objecoes": [
     "fora-do-orcamento"
    ],
-   "forca": null,
-   "quando_mandar": "Sim, cabe. A conta muda por faixa: de 1% a 4% do faturamento mensal, começando pelo processo que mais vaza dinheiro antes do mais moderno.",
+   "forca": 4,
+   "quando_mandar": "Lead travado dizendo que IA nao cabe no orcamento agora, sem ainda ter discutido numeros concretos com o vendedor.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco e setup (R$8-15K) e TCO detalhado, so mandar se preco ainda nao foi discutido diretamente pra nao antecipar ancora de valor sem contexto do vendedor",
+    "Reconhece a objecao como legitima em alguns casos (caixa negativo), entao nao usar com lead que so esta enrolando sem motivo real de caixa"
    ]
   },
   {
@@ -2642,10 +2697,11 @@
    "objecoes": [
     "contrato-longo"
    ],
-   "forca": null,
-   "quando_mandar": "Fidelidade contratual em IA é justa quando dilui um setup pesado numa mensalidade menor, e vira armadilha quando existe sem cláusula de saída por não-entrega. Veja o que assinar e o que recusar.",
+   "forca": 5,
+   "quando_mandar": "Lead travado alegando medo de ficar preso num contrato de fidelidade ou desconfiado de multa/permanencia minima antes de assinar proposta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita numeros de setup do Super SDR (R$8-15 mil) e mensalidade de exemplo (R$600) — so mandar se o lead ja esta na fase de discutir escopo/preco, senao antecipa numero fora de hora",
+    "Post assume postura da Expert Integrado de preferir garantia de resultado a fidelidade longa — nao mandar se a proposta feita ao lead tem fidelidade sem essa contrapartida, pra nao contradizer a propria oferta"
    ]
   },
   {
@@ -2660,10 +2716,11 @@
    "objecoes": [
     "parece-complexo"
    ],
-   "forca": null,
-   "quando_mandar": "Uma implantação de IA segue 5 fases (diagnóstico, desenho do processo, construção, piloto assistido, operação) e leva de 4 a 8 semanas num projeto médio-grande, não os 6 meses que a maioria imagina.",
+   "forca": 4,
+   "quando_mandar": "Lead travado com a objecao \"isso vai levar meses e vai bagunçar minha operação\" ou pedindo pra entender o passo a passo antes de assinar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco (R$8-15k setup + R$550-650/mes) e comparacao de custo com funcionario, so mandar se preco/orcamento ja entrou na conversa",
+    "Nao traz case real (usa exemplo hipotetico de clinica odontologica), entao nao serve como prova social, so como explicacao de processo"
    ]
   },
   {
@@ -2678,10 +2735,11 @@
    "objecoes": [
     "satisfeito-processo"
    ],
-   "forca": null,
-   "quando_mandar": "Processo comercial que funciona pode estar vazando lead sem ninguém perceber: resposta lenta, follow-up esquecido e hora de vendedor em tarefa repetitiva têm custo, mesmo quando o funil fecha deal todo mês.",
+   "forca": 5,
+   "quando_mandar": "Lead travado dizendo \"meu processo comercial já funciona\"/\"tô satisfeito, fecho deal todo mês\" — post desarma essa objeção específica com dado (10x menos conversão após 2h, estudo InsideSales com 3,5mi leads), conta feita de distribuidora e roteiro de 30min pra ele medir o próprio vazamento.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Tem seção final admitindo quando NÃO vale mexer no processo (funil pequeno, conversão já alta) — bom pra credibilidade, mas não mandar se o lead pode usar isso como desculpa pra não avançar",
+    "Cita CRM Pipedrive nominalmente no roteiro; ajustar se o lead usa outro CRM"
    ]
   },
   {
@@ -2696,10 +2754,11 @@
    "objecoes": [
     "time-nao-vai-usar"
    ],
-   "forca": null,
-   "quando_mandar": "Vendedor sabota agente de IA por medo de substituição, meta que não muda e ferramenta imposta sem escuta. O roteiro que funciona: melhor vendedor no desenho, meta redefinida e piloto com voluntário antes de expandir pro time todo.",
+   "forca": 4,
+   "quando_mandar": "Mandar quando o lead trava dizendo \"meu time nao vai usar isso\" ou \"vendedor vai sabotar\", geralmente apos ver demo do agente e antes de fechar o piloto.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita numero/caso real da Expert Integrado, so exemplo hipotetico (loja de material de construcao) — nao usar como prova social, so como argumento",
+    "Fala em mexer em comissao/meta do vendedor: cuidado se o lead ainda nao validou isso internamente, pode assustar antes da hora"
    ]
   },
   {
@@ -2712,10 +2771,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Objeção de preço quase sempre nasce no discovery mal feito, antes da proposta existir. Veja as perguntas que dimensionam o problema em R$ pra o preço chegar ancorado.",
+   "forca": 5,
+   "quando_mandar": "Lead que travou em \"tá caro\" ou \"preciso pensar\" logo após a proposta, especialmente se o discovery foi raso e nunca colocou o problema em R$.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Só funciona se o vendedor ainda não passou a proposta ou pode reabrir o discovery; se a proposta já foi ancorada errado, o post explica o erro mas não desfaz sozinho",
+    "Exemplo de diálogo é de revenda de autopeças, adaptar contexto se o lead for de outro setor pra não soar genérico"
    ]
   },
   {
@@ -2728,10 +2788,12 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Time de vendas sem playbook faz cada vendedor vender do próprio jeito, e o resultado vira loteria de talento individual. Um playbook de PME precisa de ICP, roteiro de discovery, resposta às 10 objeções mais comuns, cadência de follow-up e critério de passagem de fase, nada além disso.",
+   "forca": 3,
+   "quando_mandar": "Lead que enrola porque acha que \"processo de vendas\" é coisa de empresa grande, ou que já tentou formalizar e o documento morreu na gaveta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Não tem numero/caso real da Expert Integrado, e exemplo hipotetico (distribuidora de pecas agricolas) - nao usar como prova social",
+    "Generico o suficiente pra servir de conteudo educacional; nao desarma objecao especifica de precificacao ou ROI do lead",
+    "Se o lead ja tem playbook, o angulo (formato curto vs 100 paginas) so serve se a objecao dele for exatamente essa"
    ]
   },
   {
@@ -2744,10 +2806,12 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "A cadência de prospecção outbound que funciona no Brasil tem de 3 a 4 toques em até 14 dias, mistura WhatsApp, e-mail e ligação com conteúdo de valor em cada toque, e respeita os limites da LGPD e da própria plataforma pra não queimar a base.",
+   "forca": 3,
+   "quando_mandar": "Lead travado que hesita em investir em prospecção outbound (Super SDR) por medo de banir número ou por duvida juridica LGPD/Não Perturbe.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preço (R$8-15k implementação + R$550-650/mês) - só mandar se preço já foi discutido ou lead pediu ordem de grandeza",
+    "É conteúdo geral de cadência outbound, não desarma objeção específica de um deal parado - funciona mais como apoio educativo do que argumento decisivo",
+    "Não tem prova/case real do Super SDR, só menção da ferramenta e números hipotéticos de exemplo"
    ]
   },
   {
@@ -2760,10 +2824,10 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "A regra da casa é 3 a 4 tentativas de contato, cada uma com motivo novo, antes de mover o lead pra quarentena de 90 dias. Menos que isso perde negócio, mais que isso queima a marca.",
+   "forca": 4,
+   "quando_mandar": "Lead sumido no meio do follow-up, quando o vendedor esta em duvida se manda mais uma mensagem ou desiste do deal.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Numeros (23 conversas, 8 reunioes, 3 fechamentos, 2% vs 34%) sao estimativa de teste interno com amostra pequena (47 deals), o proprio texto avisa isso - nao apresentar como benchmark de mercado pro lead."
    ]
   },
   {
@@ -2776,10 +2840,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Reunião comercial furada custa horário de closer e esforço de prospecção. Confirmação inteligente corta no-show com sequência de 2 toques, micro-compromisso e reagendamento em 1 clique.",
+   "forca": 3,
+   "quando_mandar": "Lead travado que ja marcou reuniao/demo, mas historico ou receio dele e sobre reuniao furada, ausencia de processo de confirmacao, ou objecao tipo agenda bagunçada / no-show alto.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco de setup (R$8-15k) e mensalidade (R$550-650) do Super SDR: so mandar se preco ja foi discutido com o lead",
+    "Numeros de reducao de no-show (40-60%) e taxa de abertura WhatsApp (98%) sao estimativas de mercado, nao estudo proprio: nao usar como prova formal em negociacao"
    ]
   },
   {
@@ -2792,10 +2857,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "CRM inflado é o funil que mostra mais receita provável do que vai fechar de verdade. Os 5 sinais: deal parado, fase sem critério, follow-up sem data, conversão sem auditoria e perda sem motivo.",
+   "forca": 4,
+   "quando_mandar": "Lead travado que desconfia da própria previsão de receita ou questiona se vale investir em CRM/consultoria quando \"os números do Pipedrive já parecem bons\".",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Não cita preço nem ROI em R$, então não desarma objeção de custo diretamente",
+    "Assume que o lead já usa Pipedrive/CRM com fases - se o lead ainda não tem CRM, o post perde parte do gancho"
    ]
   },
   {
@@ -2808,10 +2874,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Mensagem genérica de reaquecimento converte a 2% porque não dá motivo novo pra responder. A versão com o problema específico citado na primeira linha chega a 34%.",
+   "forca": 4,
+   "quando_mandar": "Lead de base fria travado que sumiu apos boa conversa inicial, quando o vendedor precisa saber como estruturar a mensagem certa de reaquecimento.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao ataca uma objecao especifica de preco/concorrente, entao nao substitui material de negociacao direta",
+    "Cita numeros internos (2% vs 34%, 49% vs 18%) como 'nossos testes' sem fonte publica detalhada, evitar se o lead pedir metodologia"
    ]
   },
   {
@@ -2824,10 +2891,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "A mensagem de encerramento de ciclo é a que mais responde numa cadência, desde que não vire chantagem emocional nem urgência falsa. Veja os 3 modelos e quando usar cada um.",
+   "forca": 5,
+   "quando_mandar": "Lead travado ha 2-3+ tentativas sem resposta, quando o vendedor quer mandar a mensagem certa de encerramento em vez de insistir de novo ou desistir sem gancho.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita numeros de outro teste (8 respostas em 47 leads, 25% conversao) como estimativa propria, nao prometer o mesmo resultado ao lead",
+    "So mandar o modelo certo (educado-direto vs recapitulacao vs gatilho) apos checar quanto contexto real existe com aquele lead no CRM"
    ]
   },
   {
@@ -2840,10 +2908,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Quarentena de 90 dias é marcar data de retomada, registrar o contexto da última conversa e voltar com motivo novo. Veja como automatizar isso no CRM.",
+   "forca": 3,
+   "quando_mandar": "Lead sumiu apos negociacao avancada e o vendedor quer justificar internamente (ou pro proprio lead) por que vai pausar contato em vez de insistir ou desistir de vez.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita percentuais (34% vs 2%, 78%, 7 em 10) como 'estimativa nossa' sem fonte dura, evitar mandar pra lead cetico a numero ou analista que vai pedir a fonte",
+    "E mais material de processo interno/CRM do que argumento pra objecao especifica do lead; nao desarma preco/prazo sozinho"
    ]
   },
   {
@@ -2856,10 +2925,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "As 72h depois do envio da proposta decidem boa parte da venda. O que combinar antes de enviar, o toque de 24h e o de 72h, e os 3 erros que matam o negócio nessa janela.",
+   "forca": 5,
+   "quando_mandar": "Lead recebeu proposta ha pouco (ate 3 dias) e sumiu sem responder, ou vendedor esta na duvida de como cobrar sem soar chato.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "So faz sentido dentro das primeiras 72h apos o envio; passado esse prazo, mandar o post da sequencia de 12 dias",
+    "Cita o Super SDR automatizando os toques no Pipedrive, entao tambem funciona como gancho de venda do produto"
    ]
   },
   {
@@ -2872,10 +2942,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Follow-up automático sem virar spam depende de 3 variáveis: cadência com espaçamento crescente, conteúdo com motivo novo a cada toque e um limite claro de tentativas antes da quarentena.",
+   "forca": 3,
+   "quando_mandar": "Lead travado que sumiu apos follow-ups repetidos ou reclamou de mensagem insistente e quer entender o metodo por tras da cadencia.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao desarma objecao de preco/prazo do lead: e conteudo de metodo, nao de negociacao direta",
+    "So mandar se o proprio lead levantou o tema de follow-up/spam, senao soa como aula nao pedida"
    ]
   },
   {
@@ -2888,10 +2959,12 @@
     "seguros"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "A receita de uma corretora mora na renovação e no cross-sell. Um agente de IA monitora vencimento de apólice, abre a conversa 30-45 dias antes e qualifica sinistro no primeiro contato.",
+   "forca": 4,
+   "quando_mandar": "Lead e corretora de seguros travada em objecao de \"nao vejo ROI\" ou \"ja tenho planilha de vencimento\": post da a conta feita (setup R$8-15K vs comissao de renovacao perdida) e o cadenciamento D-45 a D-1 como prova de metodo.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nicho fechado (so serve lead do setor de seguros/corretora, nao generaliza pra outros segmentos)",
+    "Cita faixas de preco (setup R$8-15K, infra R$550-650/mes) — so mandar se preco ainda nao foi tema sensivel na negociacao",
+    "Nao desarma objecao de preco isolada, funciona melhor combinado com objecao de 'meu processo manual ja resolve'"
    ]
   },
   {
@@ -2904,10 +2977,12 @@
     "energia-solar"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Lead de simulação solar chega em volume alto e frio. A IA qualifica em 4 perguntas (conta de luz, tipo de imóvel, propriedade, urgência) e só agenda o pronto pro consultor.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor de energia solar que está enrolando dizendo \"vou avaliar\" ou comparando fornecedores, pra mostrar que a Expert entende a dinâmica especifica do nicho (volume, comparação simultânea, ticket alto).",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "So mandar pra lead do setor de energia solar (ou correlato, ex: outro setor com formulario de simulacao e comparacao simultanea) - fora desse nicho o argumento nao cola",
+    "Cita faixa de preco de setup (R$8-15K) e mensalidade (R$550-650): so mandar se orcamento ja esta em pauta na conversa, senao antecipa objecao de preco antes da hora",
+    "Nao ha case real, so cenarios hipoteticos e estimativas de mercado (marcado como tal no texto) - nao serve como prova social forte, so como argumento logico"
    ]
   },
   {
@@ -2920,10 +2995,12 @@
     "academias"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "O lucro da academia mora na retenção, não na matrícula nova. Um agente de IA detecta queda de frequência, cobra sem constranger o aluno e traz o ex-aluno de volta com motivo real, sem desconto desesperado.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor de academias/fitness travado alegando risco de perder aluno ou dificuldade com retencao/cobranca, ainda sem objecao especifica de preco ou concorrente sendo discutida.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nicho especifico (academias) - so mandar se o lead for do setor fitness/wellness",
+    "Usa exemplos e numeros hipoteticos, sem case real de cliente Expert Integrado - nao serve como prova concreta",
+    "Aquece e mostra dominio do tema, mas nao desarma objecao de preco/ROI sozinho"
    ]
   },
   {
@@ -2936,10 +3013,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Os 7 ladrões de tempo mais caros da PME, ranqueados por custo real em horas por mês, não por incômodo: como medir cada um e qual antídoto aplicar, automação, processo ou corte.",
+   "forca": 3,
+   "quando_mandar": "Lead travado dizendo que nao tem tempo pra mudar nada ou minimizando processo manual: o post reordena a dor por custo real em horas e aponta o antidoto certo pra cada ladrao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco do Super SDR (R$8-15k setup + R$550-650/mes) — so mandar se preco ja foi discutido com o lead",
+    "Mais framework educacional do que prova concreta de cliente: aquece a conversa, mas nao desarma objecao de preco/confianca sozinho"
    ]
   },
   {
@@ -2952,10 +3030,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Quem mais precisa de automação é quem menos tem tempo pra implantar ela. Entenda por que adiar sai mais caro a cada mês e como quebrar o ciclo com 1 processo, 1 semana e resultado medido.",
+   "forca": 4,
+   "quando_mandar": "Lead travado que diz \"sem tempo agora pra ver isso\" ou empurra decisao pra \"mes que vem\"",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco do Super SDR (R$8-15k setup + R$550-650/mes) e escopo de 2-4h do dono, so mandar se preco/esforco de implantacao ja entraram na conversa",
+    "Municao e mais conta feita e analogia (juro composto invertido) do que dado hard/case real, por isso nao chega a forca 5"
    ]
   },
   {
@@ -2968,10 +3047,12 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "A demo de app ao vivo em palestra segue um roteiro fixo de 15 minutos, dividido em quatro blocos, com a plateia escolhendo o tema na hora. Veja o passo a passo e os riscos reais.",
+   "forca": 3,
+   "quando_mandar": "Lead que ainda desconfia se a \"demo ao vivo\" e forjada/vendida ou se vale contratar palestra/evento IA e precisa ver o metodo por tras pra confiar no formato.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita preco nem ROI, entao nao desarma objecao de custo sozinho",
+    "E sobre palestra/evento, so serve pra lead de Educacional (palestra/AI Innovation Lab), nao pra lead de Super SDR ou implantacao interna direto",
+    "Conteudo institucional-metodologico, funciona melhor como reforco de credibilidade do que como resposta a objecao especifica"
    ]
   },
   {
@@ -2984,10 +3065,12 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Quando um app vibe-coded para de funcionar, um protocolo de 4 perguntas (o que mudou, qual o erro, dá pra reverter, é integração ou é o app) resolve a maioria dos casos sem dev. Veja quando resolver sozinho e quando chamar ajuda.",
+   "forca": 3,
+   "quando_mandar": "Lead que ja tem (ou esta cogitando) app vibe-coded e levanta a objecao \"e se quebrar e eu nao souber consertar\" ou \"nao quero depender de suporte caro\"",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao desarma objecao de decisao (preco/contrato) sozinho, e mais reasseguramento tecnico do que argumento comercial",
+    "Se o lead ja sofreu um incidente real, personalizar a mensagem em vez de mandar o link seco",
+    "Tabela e FAQ sao uteis mas genericos, nao citam Expert Integrado como diferencial alem do CTA de diagnostico"
    ]
   },
   {
@@ -3000,10 +3083,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Quando IA faz metade do trabalho, medir volume bruto não diz mais nada sobre desempenho. O critério certo passa a ser qualidade do julgamento, domínio da ferramenta e o que a pessoa fez com o tempo que sobrou.",
+   "forca": 3,
+   "quando_mandar": "Mandar para lead (ou stakeholder de RH/gestão) que levantou objeção sobre como avaliar/cobrar a equipe depois de implantar IA, ou que teme resistência interna do time à ferramenta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita a Expert Integrado nem prova social/case: sozinho nao fecha objecao de compra, so aquece o tema de gestao de pessoas com IA",
+    "Focado em avaliacao de desempenho interna, nao em ROI ou preco do servico - nao usar como resposta a objecao de custo"
    ]
   },
   {
@@ -3016,10 +3100,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Uma calculadora de orçamento com margem mínima travada e alçada de desconto corta o erro de precificação do vendedor apressado. Dá pra construir com IA em 1 a 2 dias.",
+   "forca": 4,
+   "quando_mandar": "Lead comercial/PME travado comparando custo-benefico (freelancer/agencia vs IA) ou que reclama de desconto/margem sem controle - o post desarma a objecao de preco e prazo com numeros concretos e prompt pronto.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco do Super SDR (R$8-15k setup, R$550-650/mes) - so mandar se ja fizer sentido no estagio da conversa, senao ancora expectativa errada",
+    "Foco e ferramenta DIY com IA (Claude Code/Lovable), nao e pitch direto de servico da Expert Integrado - reforcar contexto de mapeamento gratuito ao enviar"
    ]
   },
   {
@@ -3032,10 +3117,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Todo projeto de IA que sobrevive tem alguém que ajusta prompt, tira dúvida do time e decide quando chamar o fornecedor. Veja como escolher, treinar e proteger o tempo desse campeão interno.",
+   "forca": 3,
+   "quando_mandar": "Lead travado por medo de que a IA vire dependencia do fornecedor ou de que ninguem interno sustente o projeto depois da implantacao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao tem numero/caso proprio da Expert Integrado, so estatistica IBM e estimativa de campo generica",
+    "E conteudo de retencao pos-venda (formar equipe), nao ataca diretamente objecao de preco ou de fechar contrato"
    ]
   },
   {
@@ -3048,10 +3134,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Assistente executivo custa de R$4,2 a R$7,5 mil por mês no Brasil (estimativa de mercado); uma stack de IA fica entre R$150 e R$500. Veja o que cada um resolve bem e onde só humano segura.",
+   "forca": 4,
+   "quando_mandar": "Lead travado com a objecao \"vou so contratar um assistente\" ou \"preciso de gente, nao de IA\" - manda pra desarmar com a conta de custo lado a lado.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco de contratacao e de stack de IA - so mandar se o lead ja levantou objecao de custo/contratacao, senao soa fora de contexto",
+    "Numeros do Super SDR sao faixa estimada, nao usar como orcamento fechado numa proposta"
    ]
   },
   {
@@ -3064,10 +3151,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "As 10 perguntas que separam consultoria séria de vendedor de hype: quem implanta, o que acontece quando quebra, quem é dono dos dados e o que fica fora do escopo. Com as respostas da própria Expert Integrado, sem esconder onde incomoda.",
+   "forca": 4,
+   "quando_mandar": "Lead travado que enrola em preco/garantia/escopo ou esta comparando varios fornecedores antes de decidir.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita numeros de setup (R$8-15k) e custo de profissional interno (R$8-18k/mes) - so mandar se preco/orcamento ja entrou na conversa",
+    "Tom de auditoria pode soar defensivo se o lead ainda nao levantou objecao nenhuma; melhor quando ele ja demonstrou desconfianca ou esta comparando concorrentes"
    ]
   },
   {
@@ -3080,10 +3168,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Agente que fala com cliente em nome da marca precisa de dono definido, limite de escopo por escrito, revisão semanal de amostra e protocolo pra quando erra. Esse é o modelo mínimo de governança pra PME, sem burocracia de corporação.",
+   "forca": 3,
+   "quando_mandar": "Lead travado por medo ou objecao de que o agente de IA pode falar besteira ou fugir do controle na frente do cliente dele.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao traz numero/case da propria Expert Integrado, so protocolo generico, entao nao desarma sozinho objecao de preco ou ROI",
+    "Se o lead ja tem algum tipo de governanca no agente dele, o post educa mas nao move a negociacao"
    ]
   },
   {
@@ -3096,10 +3185,12 @@
     "estetica"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "No-show em salão e clínica de estética costuma ficar entre 15% e 30% das consultas (estimativa). IA agenda pelo WhatsApp, confirma em 2 toques, preenche vaga com lista de espera e reativa cliente sumida sem depender de desconto.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor de estetica/salao travado com objecao de no-show, agenda ociosa ou medo de perder o toque humano na recepcao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco (R$300-700 e R$8-15k setup) — so mandar se preco ja entrou na conversa",
+    "Numeros de reducao de no-show (15-30%, 40-60%) sao estimativas sem fonte, nao citar como dado fechado pro lead",
+    "Generico pro setor: nao desarma objecao especifica de um lead individual, funciona mais como aquecimento pre-diagnostico"
    ]
   },
   {
@@ -3112,10 +3203,11 @@
     "industria"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Na indústria B2B, o orçamento técnico trava porque chega incompleto no engenheiro. Um agente de triagem filtra especificação, volume e prazo antes de rotear, e mantém o follow-up com representante e cliente final.",
+   "forca": 5,
+   "quando_mandar": "Lead da industria B2B travado dizendo que orcamento demora ou que a rede de representantes bagunca a informacao antes de chegar na engenharia.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco (setup R$8-15K, mensal R$550-650) — so mandar se preco ja entrou na conversa ou lead pedir referencia de investimento",
+    "Especifico pra industria com rede de representantes/engenharia de aplicacao — nao mandar pra lead fora desse perfil (ex: servicos, varejo)"
    ]
   },
   {
@@ -3128,10 +3220,12 @@
     "transportadoras"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Cotação de frete é corrida de velocidade: quem responde primeiro fecha a carga. Um agente de IA no WhatsApp coleta origem, destino, carga e prazo, calcula a faixa pela tabela da casa e devolve cotação em minutos, com humano validando exceção.",
+   "forca": 4,
+   "quando_mandar": "Lead do setor de transportadoras/logistica travado alegando que cotacao manual \"ja funciona\" ou duvidando do ROI de automatizar cotacao de frete.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao tem numero de preco/investimento do produto, so tempo de cotacao (20-30min para menos de 5min) — nao serve pra objecao especifica de preco do servico",
+    "Se o lead ja usa TMS integrado e cotacao ja e rapida, o argumento perde forca (a dor central e demora manual)",
+    "Nicho especifico (transportadora/logistica) — so mandar pra lead desse setor, nao serve generico"
    ]
   },
   {
@@ -3144,10 +3238,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Imersão de IA de 30 dias é um projeto fechado que junta diagnóstico, implantação assistida de 1 a 3 automações e treinamento do time num ciclo curto. Veja como funciona semana a semana e pra quem não vale a pena.",
+   "forca": 4,
+   "quando_mandar": "Lead travado sem saber se quer imersao, consultoria continua ou mentoria, ou perguntando prazo/preco/pre-requisitos antes de fechar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco R$15-35 mil: so mandar se preco ja entrou na conversa",
+    "Reforca objecoes de quem nao tem campeao interno pronto, cuidado se a intencao e fechar e nao filtrar o lead"
    ]
   },
   {
@@ -3160,10 +3255,10 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Trate cada agente de IA como uma cadeira no organograma: função, chefe e escopo definidos. Isso resolve accountability, orçamento e a próxima decisão de contratação.",
+   "forca": 4,
+   "quando_mandar": "Lead travado que hesita em contratar agente por nao saber quem seria o dono dele na empresa ou como orcar isso (objecao de governanca/accountability, mais que de preco).",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco do Super SDR (R$8-15K setup + R$550-650/mes de infra) - so mandar se preco/ROI ja foi tema na negociacao, senao antecipa objecao de valor antes da hora"
    ]
   },
   {
@@ -3176,10 +3271,12 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Palestra desperta e alinha linguagem em 1-2h com o time todo, workshop resolve um problema real em 1 dia com grupo menor, mentoria constrói capacidade em 6 a 12 meses. O formato certo depende do estágio da empresa com IA, não do orçamento disponível.",
+   "forca": 3,
+   "quando_mandar": "Lead travado decidindo qual produto contratar (ou comparando palestra x workshop x mentoria) e sem clareza de qual formato cabe no estágio atual da empresa dele.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preço abertas (palestra R$3-70K, workshop R$15-35K, mentoria R$20-40K) - só mandar se preço ainda não assustou o lead ou já foi tocado na conversa",
+    "É mais educacional/diagnóstico de estágio do que desarme de objeção específica: não cita case, número de resultado ou prova social da Expert Integrado",
+    "Útil pra lead indeciso entre formatos, mas não serve pra objeção de preço, ROI ou concorrente específico"
    ]
   },
   {
@@ -3192,10 +3289,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Portal do cliente é o projeto ideal pra estrear em vibe coding: escopo pequeno, dado só de leitura (baixo risco) e resolve a dor real do cliente perguntando status por WhatsApp. Roteiro de sexta a domingo, com prompt pronto.",
+   "forca": 3,
+   "quando_mandar": "Lead travado dizendo que vai testar/fazer por conta com vibe coding antes de contratar, ou usando \"cadê meu pedido\" repetido no WhatsApp como dor.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco do Super SDR (setup R$8-15 mil, infra R$550-650/mes) so como contraste; evitar mandar se preco ainda nao foi discutido com o lead",
+    "E tutorial de faca-voce-mesmo, nao vende servico direto: reforca objecao de fazer interno em vez de contratar se mandado sem contexto"
    ]
   },
   {
@@ -3208,10 +3306,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "A decisão entre requalificar e demitir quando a IA absorve uma função depende de 3 critérios objetivos: competência adjacente aproveitável, vaga de maior valor disponível e vontade real de aprender. Sem os três, o caminho honesto é o desligamento com prazo.",
+   "forca": 4,
+   "quando_mandar": "Lead trava com medo de \"IA vai demitir minha equipe\" ou pergunta o que fazer com o time depois de automatizar; manda pra dar um protocolo concreto de decisao em vez de discurso vago de que vai dar tudo certo.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Tema e gestao/RH interna, nao fala do produto ou da consultoria - so vale se a objecao do lead for sobre pessoas/equipe, nao sobre preco ou funcionalidade",
+    "Tom direto sobre demissao pode soar pesado se o lead ainda nao levantou essa preocupacao sozinho"
    ]
   },
   {
@@ -3224,10 +3323,11 @@
     "geral"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Antes de um app construído com IA guardar dado de cliente, o checklist mínimo cobre autenticação real, permissão por usuário, criptografia, backup e LGPD básica. Veja os 6 pontos e quando chamar um dev.",
+   "forca": 3,
+   "quando_mandar": "Lead travado que construiu (ou pediu pra alguem construir) app/ferramenta interna com IA e hesita em colocar dado real de cliente, ou usa seguranca/LGPD como objecao pra nao avancar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "E checklist generico de autoavaliacao, nao desarma objecao especifica sozinho: funciona melhor como aquecimento antes de oferecer a revisao de seguranca paga",
+    "So mandar se o lead ainda nao contratou dev nem fez revisao de seguranca, senao soa condescendente"
    ]
   },
   {
@@ -3238,10 +3338,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "3 a 4 reuniões de venda por dia é o teto sustentável pra um closer que também prepara, faz follow-up e atualiza CRM. Passar disso costuma trocar volume por qualidade.",
+   "forca": 3,
+   "quando_mandar": "Lead questionando por que nao aumentam volume de reunioes/vendedores ou pressionando meta agressiva: usa a conta reversa do post pra justificar teto de agenda sustentavel.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco do Super SDR (setup R$8-15k, mensalidade R$550-650): so mandar se orcamento ja foi discutido com o lead",
+    "E apoio educativo de gestao de agenda, nao desarma sozinho objecao especifica de preco ou concorrente"
    ]
   },
   {
@@ -3252,10 +3353,10 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Um agente orquestrador que aciona outros agentes especializados, e cria automações novas quando falta uma, já é rotina em operação madura. Veja o que isso significa numa PME e onde o humano continua obrigatório.",
+   "forca": 3,
+   "quando_mandar": "Lead que já entende agentes mas está travado achando \"automação recursiva\" arriscada/sem controle, ou perguntando qual o limite de camadas antes de perder rastreabilidade.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preço do Super SDR (setup R$8-15K, infra R$550-650/mes): só mandar se preço/produto já estiver em pauta na conversa, senão antecipa objeção de custo fora de hora."
    ]
   },
   {
@@ -3268,10 +3369,11 @@
    "objecoes": [
     "momento-errado"
    ],
-   "forca": null,
-   "quando_mandar": "Em crise de caixa aguda (menos de 60 dias de runway), adiar automação é o certo. Fora disso, processo que vaza leads custa mais que os R$ 8.000 a R$ 15.000 de setup de um agente.",
+   "forca": 4,
+   "quando_mandar": "Lead travado alegando \"ano dificil\"/\"sem verba agora\" que ja tem processo comercial vazando lead por falta de gente ou lentidao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco do Super SDR (R$ 8-15k setup + R$ 550-650/mes): so mandar se preco ja foi tocado na conversa",
+    "Se o lead esta de fato em crise aguda de caixa, o post valida adiar e pode reforcar a objecao em vez de desarma-la"
    ]
   },
   {
@@ -3284,10 +3386,11 @@
    "objecoes": [
     "nunca-ouvi-falar"
    ],
-   "forca": null,
-   "quando_mandar": "Não conhecer a marca reduz o esforço de checar referências, não o risco do contrato. Veja o protocolo de 3 pedidos pra avaliar qualquer fornecedor novo antes de assinar.",
+   "forca": 4,
+   "quando_mandar": "Lead travado dizendo \"nunca ouvi falar de voces\" ou comparando com concorrente mais conhecido antes de fechar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita numero/case da propria Expert Integrado, e generico sobre fornecedor de tecnologia em geral, entao nao substitui prova social especifica quando pedida",
+    "Funciona melhor como pre-envio (antes do lead objetar) do que como resposta reativa a uma objecao ja verbalizada com forca"
    ]
   },
   {
@@ -3298,10 +3401,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Você não precisa aprender a programar pra não ser enganado numa venda de IA. Precisa de uns 8 conceitos essenciais (chatbot vs agente, alucinação, API, treinar vs configurar) e 3 perguntas que desmontam qualquer vendedor de hype.",
+   "forca": 4,
+   "quando_mandar": "Lead travado por desconfianca (\"ja fui enganado antes\" ou comparando fornecedores) que precisa de criterio pratico pra avaliar proposta concorrente ou a sua propria.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco do Super SDR (setup R$8-15k, infra R$550-650/mes) e custo de headcount interno (R$8-18k/mes) — so mandar se preco/orcamento ja entrou na conversa, senao antecipa objecao de valor antes da hora",
+    "Tom didatico-generico (8 conceitos, FAQ) nao mira a dor especifica do lead, funciona mais como filtro de credibilidade do que como resposta a objecao pontual"
    ]
   },
   {
@@ -3312,10 +3416,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "As cláusulas que equilibram um contrato de consultoria de IA: escopo com entregável nomeado, critério de aceite, propriedade dos dados, confidencialidade bilateral, SLA de suporte e cláusula de cooperação do cliente. Orientação geral, não é aconselhamento jurídico.",
+   "forca": 3,
+   "quando_mandar": "Lead travado alegando \"vou revisar com juridico\" ou preocupado com propriedade de dados/dependencia do fornecedor apos assinar.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita numero/caso da Expert Integrado como prova, e generico juridico com so um exemplo de preco (Super SDR R$8-15k)",
+    "Util pra dar seguranca no meio do funil, mas nao desarma objecao especifica de preco ou concorrente"
    ]
   },
   {
@@ -3323,13 +3428,14 @@
    "title": "Glossário de IA pro empresário: 100 termos sem tecniquês",
    "pilar": "lideranca",
    "tipo": "pilar",
-   "funil": "meio",
+   "funil": "topo",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Definição direta de 100 termos de IA que todo empresário ouve em reunião mas raramente pergunta o significado, organizados por bloco temático pra consulta rápida.",
+   "forca": 2,
+   "quando_mandar": "Lead confuso com jargão técnico de fornecedor/consultor que precisa de referência rápida pra entender termos antes de avançar na conversa.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Conteudo educacional generico, nao desarma objecao especifica de negociacao",
+    "Cita faixa de preco de SDR digital (R$8-15K), so mandar se preco ainda nao foi discutido pra nao antecipar ancora"
    ]
   },
   {
@@ -3342,10 +3448,11 @@
     "turismo"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Cliente que pede cotação de viagem compara 2 ou 3 agências ao mesmo tempo. Um agente de IA qualifica o perfil da viagem, monta pré-roteiro com opções e faz o follow-up antes que o orçamento perca validade.",
+   "forca": 4,
+   "quando_mandar": "Lead do setor de turismo/agencia de viagem travado alegando \"vou pensar\" ou comparando com concorrente, quando a objecao e velocidade de resposta ou perda de cotacao pra quem respondeu primeiro.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco explicita (R$8-15k setup + R$550-650/mes) - so mandar se preco ainda nao foi discutido ou se lead ja pediu numero",
+    "Nicho fechado (agencia de viagem/turismo) - so serve pra lead literalmente desse setor, nao generaliza pra outros verticais"
    ]
   },
   {
@@ -3358,10 +3465,12 @@
     "arquitetura"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Um agente de IA faz a triagem do briefing antes da reunião: mede m2, orçamento, prazo e terreno, e só agenda quem tem orçamento real para o projeto.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor de arquitetura/engenharia travado em \"quero ver antes de marcar reunião\" ou reclamando de agenda cheia com curioso.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco (R$8-15k setup + R$550-650/mes) — so mandar se preco ja entrou na conversa",
+    "Nicho e vertical (arquitetura/engenharia); nao usar pra lead de outro setor",
+    "Nao desarma objecao especifica do lead sozinho, serve mais como contexto/prova de metodo em follow-up"
    ]
   },
   {
@@ -3374,10 +3483,11 @@
     "distribuidoras"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Na distribuição e no atacado, o vendedor perde o dia digitando pedido repetido de cliente de carteira. Um agente de IA recebe o pedido por WhatsApp, confere contra catálogo e histórico, sugere reposição pelo ciclo de compra e lança no ERP com validação.",
+   "forca": 3,
+   "quando_mandar": "Lead do setor de distribuicao/atacado que trava alegando que vendedor nao tem tempo pra prospectar ou que time comercial vive digitando pedido repetido.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco R$8-15K + R$550-650/mes: so mandar se preco ja entrou na conversa",
+    "Post generico de setor, nao desarma objecao especifica de contrato/concorrente, entao nao fecha deal sozinho"
    ]
   },
   {
@@ -3390,10 +3500,12 @@
     "franquias"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Atendimento desigual entre franquias vem de arquitetura descentralizada, não de treinamento fraco. Um agente de IA central com roteamento por CEP resolve isso: mesmo tom, mesma qualificação e mesmo SLA em toda a rede.",
+   "forca": 4,
+   "quando_mandar": "Lead de rede de franquias travado em \"cada unidade atende diferente\" ou preocupado com autonomia do franqueado e custo de implantar IA na rede toda.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preço explícita (R$8-15k setup + R$550-650/mês) — só mandar se preço já entrou na conversa",
+    "Exemplo de rede de 60 unidades é hipotético, não case real, então não serve como prova social forte",
+    "FAQ menciona ponto de corte de 20-30 unidades pra retorno mais rápido — evitar mandar pra lead com rede bem menor sem contextualizar"
    ]
   },
   {
@@ -3406,10 +3518,11 @@
     "oficinas"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Cliente manda foto da peça quebrada ou descreve o barulho, e a oficina demora pra montar o orçamento e some pro concorrente. Um agente de IA no WhatsApp coleta modelo, ano e sintoma, monta pré-orçamento com validação humana e agenda, além de puxar de volta quem passou da revisão.",
+   "forca": 3,
+   "quando_mandar": "Lead de oficina/autopeças que reclama de demora em orçamento ou perda de cliente pra concorrente que responde mais rápido no WhatsApp.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita numeros/preco de implementacao (evita objecao de custo, mas tambem nao desarma sozinho)",
+    "Escopo generico de setor (oficina), so mandar se o lead for especificamente desse nicho"
    ]
   },
   {
@@ -3422,10 +3535,12 @@
     "pet"
    ],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Pet shop e clínica veterinária vivem de recorrência disfarçada de balcão: banho quinzenal, vacina anual, ração mensal. Um agente de IA agenda pelo WhatsApp, lembra vacina pelo histórico do pet, avisa quando a ração está acabando e fala do bicho pelo nome.",
+   "forca": 3,
+   "quando_mandar": "Lead de pet shop/clinica veterinaria travado por achar que agendamento e vacina/racao nao dao pra automatizar sem perder o toque pessoal com o bicho.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco (R$300-700 e setup R$8-15k) — so mandar se preco ja entrou na conversa",
+    "Exemplos (Thor, Mel, 300g/dia) sao hipoteticos, nao case real, entao nao serve como prova social forte",
+    "Forca 3: bom apoio de follow-up, mas nao desarma objecao sozinho sem prova concreta se o lead pedir evidencia"
    ]
   },
   {
@@ -3436,10 +3551,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Lead de anúncio esfria em minutos porque ele preencheu o formulário comparando várias empresas ao mesmo tempo. Veja a conta de custo real por conversa e como estruturar resposta instantânea sem robotizar mal.",
+   "forca": 4,
+   "quando_mandar": "Lead travado que acha que \"responder ainda hoje\" já basta ou que orçamento pequeno de mídia dispensa automação de resposta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preço de setup (R$8-15k) e mensalidade (R$550-650) — so mandar se preco/orcamento ja entrou na conversa, senao antecipa objecao de valor sem contexto",
+    "Numeros de HBR e taxa de abertura WhatsApp sao citados como estimativa/mercado sem fonte primaria confirmada — nao usar como prova irrefutavel se o lead pedir fonte"
    ]
   },
   {
@@ -3450,10 +3566,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "A faixa de partida é 1% a 4% do faturamento mensal, dividida em três blocos: ferramenta, automação e educação. O erro mais caro de 2026 foi comprar ferramenta antes de definir dono do processo.",
+   "forca": 4,
+   "quando_mandar": "Lead travado alegando que nao tem orcamento definido ou nao sabe quanto reservar pra IA em 2027, especialmente se ja levantou objecao de preco sem contexto de porte.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixa de preco do Super SDR (R$1.200-1.900/mes) e setup R$8-15K, so mandar se preco ainda nao foi discutido ou se serve pra ancorar expectativa antes da proposta",
+    "E generico por porte (faixas amplas), nao substitui conta feita com o numero real do lead"
    ]
   },
   {
@@ -3466,10 +3583,11 @@
    "objecoes": [
     "limite-cartao"
    ],
-   "forca": null,
-   "quando_mandar": "Limite de cartão baixo não devia travar a compra. Parcelar em mais de um cartão, boleto ou PIX parcelado e separar setup de mensalidade resolvem sem esperar o mês que vem.",
+   "forca": 5,
+   "quando_mandar": "Lead ja aceitou proposta e preco mas travou na hora de pagar (limite de cartao curto) — manda pra desarmar a objecao de forma de pagamento e destravar o fechamento.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco de setup (R$8-15k) e mensalidade (R$550-650): so mandar se preco ja foi discutido com o lead",
+    "So faz sentido se a objecao real for mecanica de pagamento (limite/cartao), nao falta de orcamento — nesse caso o post certo e o de 'cabe no orcamento'"
    ]
   },
   {
@@ -3480,10 +3598,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Pra achar a primeira hora a devolver, mapeia 5 dias úteis anotando toda tarefa repetida, ranqueia por minutos por semana e ataca a de maior frequência primeiro, com a ferramenta mais simples possível.",
+   "forca": 3,
+   "quando_mandar": "Lead travado dizendo \"nao sei por onde comecar\" ou \"nao sei qual tarefa automatizar primeiro\" antes de investir em qualquer ferramenta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Exemplo de ROI e hipotetico (clinica odontologica fictícia), nao e case real, entao nao serve como prova concreta pra lead cetico",
+    "Nao desarma objecao de preco/contrato, so ajuda lead que ainda esta decidindo se e o momento de comecar"
    ]
   },
   {
@@ -3494,10 +3613,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Os primeiros 30 dias depois de contratar IA definem o projeto: kickoff com dono nomeado na semana 1, fluxo aprovado por escrito na semana 2, piloto com amostra real na semana 3 e medição contra o critério combinado na semana 4.",
+   "forca": 4,
+   "quando_mandar": "Lead travado com medo de o fornecedor sumir depois do pagamento (objecao de risco pos-venda) ou que ja fechou e quer saber o que cobrar na implantacao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita a Expert Integrado nem prova social propria, funciona como criterio generico de mercado, nao municao especifica do produto",
+    "Lista de red flags de fornecedor pode soar critica indireta se o lead ja tem fornecedor contratado, usar com tato"
    ]
   },
   {
@@ -3508,10 +3628,11 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Cinco sinais dizem que um projeto passou do teto do vibe coding: dado de cliente em escala, integração crítica com terceiro, requisito de performance, compliance formal ou custo de falha maior que o de um dev. Veja como contratar bem sendo não-técnico.",
+   "forca": 4,
+   "quando_mandar": "Lead travado achando que vibe coding resolve tudo, ou com medo de contratar dev e virar refem: manda pra ele diagnosticar se o caso dele bateu no teto e ver o caminho certo de contratacao.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco de dev (R$15-40k, freelancer R$3-15k, hora R$150-350) — so mandar se o lead ja aceitou que vai gastar com dev, senao vira ancora de preco cedo demais",
+    "CTA e de 'avaliacao do projeto', nao da oferta principal — funciona como aquecimento, nao como fechamento"
    ]
   },
   {
@@ -3524,10 +3645,11 @@
    "objecoes": [
     "reviews"
    ],
-   "forca": null,
-   "quando_mandar": "Review de ferramenta de IA vale quando mostra padrão repetido, não reclamação isolada, e quando a resposta da empresa ao problema diz mais do que a nota. O que o review nunca conta é a qualidade da implantação no seu caso.",
+   "forca": 3,
+   "quando_mandar": "Lead travado dizendo \"vi review ruim sobre vocês/sobre ferramenta de IA\" antes de fechar, especialmente se citou G2/Capterra/Reclame Aqui.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao tem numero, caso nem prova concreta da Expert Integrado, e generico sobre 'ferramenta de IA' e nao especifico do Super SDR, entao nao desarma objecao sozinho.",
+    "O CTA cita 'reclamacao sobre a Expert Integrado', so mandar se o lead ja insinuou ter visto algo negativo especifico sobre a empresa."
    ]
   },
   {
@@ -3538,10 +3660,12 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Role play com IA treina vendedor contra um comprador simulado, com objeção, evasiva e mau humor configuráveis, sem gastar lead real no aprendizado. O gestor revisa a transcrição depois.",
+   "forca": 3,
+   "quando_mandar": "Lead objetou que treinar vendedor novo custa caro/arriscado em cima de lead real, ou perguntou como estruturar treinamento comercial com IA.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita numero de casos, ROI ou cliente real da Expert Integrado, entao nao desarma objecao de preco/prova sozinho",
+    "Bom pra lead do segmento comercial/vendas, fraco pra lead fora desse escopo",
+    "Menciona plataformas de simulacao de forma generica, sem produto proprio, entao nao serve como prova de solucao concreta"
    ]
   },
   {
@@ -3549,13 +3673,15 @@
    "title": "A segunda-feira do CEO com IA: a rotina real, hora a hora",
    "pilar": "produtividade",
    "tipo": "satelite",
-   "funil": "meio",
+   "funil": "topo",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Como fica a segunda-feira de um CEO com stack de IA madura, hora a hora: inbox triado, pipeline com alertas e reuniões com pauta pronta antes da primeira call. O contraste com a segunda sem IA, e o que continua manual de propósito.",
+   "forca": 2,
+   "quando_mandar": "Serve pra lead ainda em fase de curiosidade que pergunta \"como seria isso no meu dia a dia\" — util como visao geral, mas nao pra destravar objecao concreta.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cenario explicitamente hipotetico (numeros de deals, tempos) - nao usar como prova/case real com lead cetico em dado",
+    "Nao endereca objecao de preco, integracao ou confianca especifica - e narrativa de dia ilustrativo, nao argumento de venda",
+    "Se lead ja esta em negociacao avancada, preferir post com case real ou ROI concreto em vez deste"
    ]
   },
   {
@@ -3566,10 +3692,12 @@
    "funil": "meio",
    "setores": [],
    "objecoes": [],
-   "forca": null,
-   "quando_mandar": "Pergunta sobre preço, prazo ou integração, e resposta rápida mesmo curta, são sinais de insistir. Resposta monossilábica repetida e sumiço após proposta pedem quarentena, não mais uma tentativa.",
+   "forca": 3,
+   "quando_mandar": "Lead que ainda responde mas nunca avança (respostas mornas, sem confirmar reunião/proposta), pra ajudar o vendedor a decidir se insiste com motivo novo ou arquiva em quarentena.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao tem numero, conta feita ou case real com resultado mensuravel: e framework de leitura de sinal, nao prova concreta pra desarmar objecao de preco/ROI.",
+    "Cita Super SDR de forma generica no meio do texto (nao e case, e mencao de produto) — cuidado pra nao soar autopromocao se o lead ainda nao conhece o produto.",
+    "Serve melhor como conteudo de apoio/educacao do proprio time comercial (como ler o CRM) do que como material pra mandar direto ao lead travado."
    ]
   },
   {
@@ -3582,10 +3710,11 @@
    "objecoes": [
     "quero-prova"
    ],
-   "forca": null,
-   "quando_mandar": "Demo mostra o fornecedor no melhor dia dele. Pra saber se a IA aguenta o dia a dia da sua empresa, teste com conversa real, perguntas difíceis e um piloto com prazo e critério definidos antes de assinar.",
+   "forca": 4,
+   "quando_mandar": "Lead travado dizendo \"quero ver funcionar antes de assinar\" ou desconfiado apos demo bonita de concorrente/fornecedor generico.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Nao cita numeros/precos da Expert Integrado, entao nao desarma objecao de preco, so objecao de confianca/prova",
+    "Tom generico-consultivo, sem case real proprio, funciona melhor combinado com prova social depois"
    ]
   },
   {
@@ -3598,10 +3727,11 @@
    "objecoes": [
     "agente-por-produto"
    ],
-   "forca": null,
-   "quando_mandar": "Nem 1 agente genérico pra tudo, nem 1 agente por produto desde o dia 1. A regra prática: comece pelo produto principal, meça, e só separe quando funil e comprador mudarem.",
+   "forca": 4,
+   "quando_mandar": "Lead com mais de um produto/servico travado na objecao \"por que nao um agente so pra tudo\" ou preocupado com custo de expandir o SDR pro segundo produto.",
    "ressalvas": [
-    "post novo (jul/2026), ainda sem auditoria de força comercial"
+    "Cita faixas de preco (R$8-15k setup, R$550-650/mes) — so mandar se preco/orcamento ja entrou na conversa",
+    "Exemplos de clinica/agencia/SaaS sao hipoteticos, nao cases reais — nao usar como prova social"
    ]
   }
  ]
