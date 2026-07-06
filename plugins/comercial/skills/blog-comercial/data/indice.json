@@ -1,0 +1,1892 @@
+{
+ "gerado_em": "2026-07-05",
+ "fonte": "auditoria 10 agentes sobre 98 posts publicados",
+ "base_url": "https://blog.expertintegrado.com.br/blog/",
+ "utm_padrao": "?utm_source=whatsapp&utm_medium=comercial&utm_campaign=objecao&utm_content=deal-{DEAL_ID}",
+ "posts": [
+  {
+   "slug": "3-erros-ia-saas-abandonado-30-dias",
+   "title": "3 erros que vão fazer sua IA virar mais um SaaS abandonado em 30 dias",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ja-tentei-nao-funcionou",
+    "equipe-vai-resistir"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead que diz já ter tentado usar IA na empresa e não ter emplacado - mostra que a causa provável foi falta de método de adoção, não a ferramenta.",
+   "ressalvas": [
+    "Estatística 'Gartner 2024: 55% das iniciativas de IA são abandonadas' é citada sem link de fonte, difícil de verificar se o lead pedir a referência numa call."
+   ]
+  },
+  {
+   "slug": "4-pilares-vibe-coding-destrinchados",
+   "title": "Os 4 pilares do Vibe Coding destrinchados pra não-dev: vibes, specs, skills, agents",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead da mentoria/AI Innovation Lab preocupado que 'não tem time técnico pra usar IA' - mostra que Vibe Coding com Claude Code funciona sem saber programar.",
+   "ressalvas": [
+    "Afirma como fato absoluto que 'o modelo Claude Sonnet é hoje o melhor pra tarefas de desenvolvimento', promessa que o comercial pode ter dificuldade de sustentar numa comparação direta com concorrentes.",
+    "O conteúdo ensina o próprio leitor a construir automação sozinho com Claude Code, o que pode alimentar a objeção 'dá pra fazer sozinho' em vez de ajudar a vender o Super SDR como serviço."
+   ]
+  },
+  {
+   "slug": "automacao-email-morreu-whatsapp",
+   "title": "Por que automação de e-mail morreu e o que fazer no WhatsApp Business API",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd",
+    "roi-incerto"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que insiste em prospectar por e-mail ou desconfia que automação via WhatsApp seja arriscada pra LGPD - mostra os dados de abertura/resposta e o processo correto de opt-in.",
+   "ressalvas": [
+    "Preços da API do WhatsApp citados são de 2024 ('conversa iniciada pela empresa custa aproximadamente R$0,19 a R$0,35'); a Meta mudou o modelo de cobrança de conversa para mensagem em 2025, então o dado pode estar desatualizado se questionado por um lead em 2026."
+   ]
+  },
+  {
+   "slug": "automacao-rh-onboarding-equipe-ia",
+   "title": "Onboarding de funcionário com IA: como padronizamos a entrada de novos em 2 horas",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto",
+    "sem-equipe-tecnica"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead de RH/liderança que duvida que automação com IA realmente economize tempo de gestor - case interno da própria Expert com número de horas economizadas.",
+   "ressalvas": [
+    "Estatística da SHRM ('custo de contratação mal integrada chega a 50% do salário anual') é citada sem link, genérica e difícil de defender se o lead pedir a fonte."
+   ]
+  },
+  {
+   "slug": "automatizar-relatorio-ia-excel",
+   "title": "Como automatizar relatório semanal com IA sem sair do Excel",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead que acha que precisa de analista de dados ou saber programar pra ter relatórios com IA - mostra o workflow simples de colar planilha no Claude.",
+   "ressalvas": [
+    "Afirma que 'a Anthropic não usa dados de conversas pro treinamento de modelos por padrão' — a Anthropic mudou os termos do plano consumer em 2025 permitindo treinamento por padrão (com opt-out), então essa afirmação pode estar desatualizada/incorreta, o que é sensível justamente no contexto de dados de cliente e LGPD que o post discute."
+   ]
+  },
+  {
+   "slug": "caso-bug-346-grupos-pipedrive",
+   "title": "O bug que criou 346 grupos duplicados no Pipedrive (e o que aprendi sobre idempotência)",
+   "pilar": "vendas",
+   "tipo": "case",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead técnico/CTO que quer entender o nível de rigor de engenharia por trás das integrações antes de fechar - não indicado pra lead leigo já receoso sobre confiabilidade.",
+   "ressalvas": [
+    "Números de tempo de limpeza são inconsistentes entre seções: a introdução diz '4 horas pra limpar manualmente', o corpo descreve um script que levou cerca de 2h40 (2h escrevendo + 40min de execução), e o FAQ arredonda pra 'cerca de 3 horas' — os três números não batem.",
+    "O post expõe uma falha grave de produção (346 registros duplicados no CRM de um cliente); usado no momento errado do funil, pode reforçar a dúvida do lead sobre confiabilidade da integração em vez de tranquilizar."
+   ]
+  },
+  {
+   "slug": "caso-cliente-juridico-automacao",
+   "title": "Escritório jurídico automatizou qualificação de cliente e dobrou a taxa de conversão",
+   "pilar": "vendas",
+   "tipo": "case",
+   "funil": "fundo",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "roi-incerto",
+    "meu-setor-e-diferente",
+    "preco",
+    "cliente-odeia-robo"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead de escritório de advocacia que questiona se a automação vale o investimento ou se o cliente vai rejeitar atendimento automatizado - case com ROI calculado e taxa de abandono baixa.",
+   "ressalvas": [
+    "A resposta do FAQ sobre ROI diz 'com 16 contratos a mais por mês', mas o corpo do texto mostra que o escritório foi de 8 para 16 contratos totais - ou seja, o ganho real foi de 8 contratos a mais, não 16. Um lead atento pode pegar esse erro na conta."
+   ]
+  },
+  {
+   "slug": "caso-escritorio-advocacia-8k-leads",
+   "title": "Como o escritório de advocacia triou 8.000 leads no WhatsApp em 60 dias sem cair no spam",
+   "pilar": "vendas",
+   "tipo": "case",
+   "funil": "fundo",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "ja-tentei-nao-funcionou",
+    "da-pra-fazer-sozinho",
+    "meu-setor-e-diferente",
+    "roi-incerto"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead de escritório de advocacia com alto volume de leads que já tentou chatbot de menu ou contratar pré-atendimento e não resolveu - case com 8 mil leads/mês triados.",
+   "ressalvas": [
+    "Post não informa taxa de conversão final nem número exato de leads que viraram reunião ou cliente ('parcela expressiva', 'saíram as reuniões') - vago para um case com volume tão grande, o que enfraquece a força de prova comparado ao case-irmão de advocacia que tem números precisos (8% para 16%)."
+   ]
+  },
+  {
+   "slug": "caso-montei-super-sdr-fim-semana",
+   "title": "Montei um Super SDR no fim de semana: do zero ao WhatsApp respondendo em 4 min",
+   "pilar": "vendas",
+   "tipo": "case",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": 2,
+   "quando_mandar": "Usar com cautela: mais útil pra vender mentoria/AI Innovation Lab, mostrando que Eric ensina a construir automação sozinho, do que pra vender Super SDR como serviço gerenciado.",
+   "ressalvas": [
+    "O post revela que a automação usou Z-API, que 'usa engenharia reversa do WhatsApp Web, o que viola os termos de serviço do WhatsApp e em teoria pode ter o número banido' - admissão de risco de compliance que pode preocupar um lead sensível a esse tema em vez de tranquilizar.",
+    "Conteúdo é essencialmente um tutorial de como replicar a automação sozinho num fim de semana por ~R$500/mês, o que pode incentivar o lead a tentar fazer por conta própria em vez de contratar o Super SDR como serviço."
+   ]
+  },
+  {
+   "slug": "caso-okr-empresa-servicos",
+   "title": "Como apliquei OKR Expert numa empresa de serviços e saímos do caos pra clareza em 90 dias",
+   "pilar": "lideranca",
+   "tipo": "case",
+   "funil": "fundo",
+   "setores": [
+    "servicos-b2b",
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead interessado em consultoria de gestão/OKR (não em automação de IA) que duvida que metodologia de metas realmente force decisão difícil - case com decisão real de pausar projeto.",
+   "ressalvas": [
+    "Post não menciona automação ou IA como tema central (foco é metodologia de OKR/liderança com a ferramenta TRACK), então serve pouco como resposta a objeções específicas de venda do Super SDR/automação com IA - é mais útil pra vender consultoria de gestão do que o produto principal."
+   ]
+  },
+  {
+   "slug": "caso-reuniao-gravada-clickup-automatico",
+   "title": "De reunião gravada a tarefa no ClickUp em 2 minutos: o workflow que roda sozinho",
+   "pilar": "produtividade",
+   "tipo": "case",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ia-erra",
+    "roi-incerto"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead cético que acha que 'IA erra e vira bagunça' ou que setup de automação é complicado demais — mostra caso real com números concretos de economia de tempo e como um erro (transcrição de nomes) foi corrigido.",
+   "ressalvas": [
+    "Post não menciona o Super SDR nem o core business de automação comercial; funciona mais como prova de autoridade em IA aplicada à rotina do Eric do que como argumento direto de venda do produto principal."
+   ]
+  },
+  {
+   "slug": "caso-triagem-inbox-zero-3-semanas",
+   "title": "Inbox zero em 3 semanas: como implementei triagem com IA e economizei 45min/dia",
+   "pilar": "produtividade",
+   "tipo": "case",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ia-erra",
+    "roi-incerto",
+    "medo-dados-lgpd"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead com medo de que a IA classifique e-mails errado e perca algo importante — mostra taxa de erro real (3%) e o processo de revisão em 3 semanas que mitiga o risco.",
+   "ressalvas": [
+    "Post trata de produtividade pessoal (triagem de e-mail no Outlook), não do Super SDR; uso comercial é indireto, serve mais como prova de que Eric aplica IA na própria rotina do que como resposta a uma objeção sobre o produto."
+   ]
+  },
+  {
+   "slug": "caso-vibe-coding-app-interno-1-mes",
+   "title": "Construí um app interno de diagnóstico em 1 mês sem escrever uma linha de código",
+   "pilar": "vibe-coding",
+   "tipo": "case",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "roi-incerto"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead do funil de mentoria/Vibe Coding que acha que precisa contratar dev ou agência para construir ferramentas internas — mostra ROI e aumento real de conversão comercial (70% para 84%) usando só Claude Code.",
+   "ressalvas": [
+    "O cálculo de payback em '2 semanas de operação' não informa quantas reuniões de diagnóstico acontecem nesse período, o que dificulta o vendedor sustentar essa conta específica numa call."
+   ]
+  },
+  {
+   "slug": "ceo-executor-vs-estrategista-publico",
+   "title": "Bifurcação de CEOs em 2025: por que os líderes estão se dividindo em executor e estrategista público",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 1,
+   "quando_mandar": "Lead do funil de mentoria/educação em dúvida se vale investir em posicionamento pessoal como CEO em vez de só operação — não serve como resposta a objeção de compra do Super SDR.",
+   "ressalvas": [
+    "Post de posicionamento pessoal e liderança; não fala do produto nem neutraliza objeção comercial concreta, então tem baixíssimo valor como link de follow-up de venda."
+   ]
+  },
+  {
+   "slug": "classificacao-leads-urgencia-ia",
+   "title": "Como classificar leads por urgência automaticamente no WhatsApp (sem ler tudo)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ia-erra",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead travado em 'a IA vai errar e falar besteira com meu cliente' — mostra o método de classificação por urgência com taxa de erro honesta (8-12%) e como o sistema é conservador de propósito.",
+   "ressalvas": [
+    "O custo de 'R$0,002 por classificação' e os dados de conversão 4x citados como 'operações com Super SDR rodando na Expert' não têm fonte externa auditável; se o lead pedir comprovação, o vendedor precisa validar o número atualizado antes de repetir em call."
+   ]
+  },
+  {
+   "slug": "como-configurar-super-sdr-passo-passo",
+   "title": "Como configurar um Super SDR no WhatsApp em 7 passos (sem precisar de dev)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "sem-tempo"
+   ],
+   "forca": 2,
+   "quando_mandar": "Usar com cautela para lead que diz 'vou fazer isso sozinho' — o post mostra a complexidade real do setup (Z-API vs API oficial, 20 testes, monitoramento diário) que pode desestimular a tentativa solo, mas também pode simplesmente ensinar o caminho DIY.",
+   "ressalvas": [
+    "Guia ensina passo a passo completo a montar o Super SDR sozinho (Z-API, ChatGuru, Make, Pipedrive); enviado a um lead que já hesita em contratar, corre o risco de reforçar a objeção 'dá pra fazer sozinho' em vez de neutralizá-la."
+   ]
+  },
+  {
+   "slug": "como-defender-orcamento-ia-equipe",
+   "title": "Como defender orçamento de IA pra sua equipe (sem parecer vendedor da ferramenta)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir",
+    "roi-incerto",
+    "momento-errado"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead decisor que já quer comprar mas precisa convencer o próprio time (medo de demissão) ou o CFO (prioridade/ROI) antes de aprovar — post entrega script pronto e fórmula de ROI (124% no ano 1) para levar internamente.",
+   "ressalvas": [
+    "A citação da McKinsey (2024, '75% das empresas... requalificação de funções') não traz link nem título exato do relatório; se o CFO pedir a fonte, o time comercial fica sem lastro imediato pra confirmar."
+   ]
+  },
+  {
+   "slug": "como-escrever-mensagem-converte-whatsapp",
+   "title": "Como escrever mensagem de WhatsApp que o cliente responde (sem soar como spam)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead que teme que mensagem automatizada de WhatsApp soe robótica e artificial — mostra a estrutura de 5 elementos com dados reais de taxa de resposta (35% vs 10%) e templates prontos.",
+   "ressalvas": [
+    "A estatística da Gong ('300 mil interações', 'primeiros 8 segundos') é citada sem link de fonte; carece de verificação antes de repassar a um lead que questione a origem do dado."
+   ]
+  },
+  {
+   "slug": "como-montar-central-operacoes-ia",
+   "title": "Central de operações com IA: como centralizo tudo em 1 lugar (e o que isso mudou)",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "medo-dados-lgpd",
+    "perder-controle"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead preocupado em perder controle da operação ou com segurança de dados ao conectar IA aos sistemas (Pipedrive, ClickUp, WhatsApp) — mostra confirmação obrigatória antes de ações destrutivas e processamento local dos dados.",
+   "ressalvas": [
+    "Post é sobre produtividade pessoal com MCPs (Pipedrive, ClickUp, Outlook, WhatsApp), não sobre o Super SDR como produto vendável; uso comercial é indireto, mais como prova de maturidade técnica do que como argumento de venda."
+   ]
+  },
+  {
+   "slug": "como-pedi-ia-construir-ferramenta-diagnostico",
+   "title": "Como pedi pra IA construir minha ferramenta de diagnóstico (e o que aprendi)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "roi-incerto",
+    "ja-tentei-nao-funcionou"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead do funil de mentoria/educação em IA que acha caro demais contratar agência para construir ferramenta própria — mostra comparação direta de custo (R$18 mil/8 semanas vs ~30h de trabalho) com prova de uso real (80+ diagnósticos processados).",
+   "ressalvas": [
+    "O texto promete que 'não precisa saber programar', mas detalha stack técnico (Cloudflare Workers, D1, bindings em JSON) que pode intimidar um CEO leigo lendo o mesmo post e contradizer a promessa inicial."
+   ]
+  },
+  {
+   "slug": "como-usar-ia-reunioes-zoom",
+   "title": "Como usar IA nas reuniões do Zoom pra sair com ação clara, não com resumo genérico",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead que reclama que as reuniões do time não geram ação nenhuma — manda esse post com o prompt pronto pra transformar reunião em ação registrada em 10 minutos.",
+   "ressalvas": [
+    "Números centrais ('taxa de execução de 40% pra 78% em 3 meses' e '73% da Atlassian') não trazem link ou nota metodológica verificável — risco se o lead pedir a fonte.",
+    "Recomenda o plano gratuito do Fathom como 'ilimitado' — oferta de terceiro que muda sem aviso e pode já estar desatualizada."
+   ]
+  },
+  {
+   "slug": "conta-hora-empresario-ceo",
+   "title": "A conta que todo dono deveria fazer antes de gastar a própria hora no operacional",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "empresa-pequena-demais"
+   ],
+   "forca": 3,
+   "quando_mandar": "Dono que acha que a empresa é pequena demais pra 'valer a pena' delegar pra IA — o post refaz a conta até com MRR baixo (R$30 mil) e mostra que o raciocínio continua valendo.",
+   "ressalvas": []
+  },
+  {
+   "slug": "credibilidade-antes-da-venda-ia",
+   "title": "Credibilidade antes da venda: como usar IA pra chegar na reunião como referência",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "marketing-agencias",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "roi-incerto"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead em dúvida se vale investir tempo em conteúdo/IA antes da reunião comercial — mostra dado real do próprio pipeline da Expert (2,4x mais fechamento, reunião 20 min mais curta).",
+   "ressalvas": [
+    "Números '2,4x mais fecham' e 'reunião 35min vs 55min' vêm do pipeline interno da Expert sem link ou nota metodológica — vendedor fica sem lastro se o lead questionar na call."
+   ]
+  },
+  {
+   "slug": "crescer-30-enxugar-15-tensao-estrutural",
+   "title": "Crescer pra 30 ou enxugar pra 15? A tensão estrutural que ninguém resolve formalmente",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "roi-incerto"
+   ],
+   "forca": 4,
+   "quando_mandar": "CEO de empresa de 15-25 pessoas travado entre contratar mais gente ou automatizar — usa o case pessoal do Eric na Expert (faturamento cresceu, headcount flat por 8 meses).",
+   "ressalvas": [
+    "Estatísticas do IBGE/Sebrae e do McKinsey Global Institute são citadas sem link ou fonte específica — checar antes de repetir pra um lead que vai querer a fonte."
+   ]
+  },
+  {
+   "slug": "criar-skill-ia-roda-empresa",
+   "title": "Como criar uma skill de IA que roda automaticamente na sua empresa",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral",
+    "tecnologia-saas"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que acha que precisa de time técnico/dev pra automatizar um processo recorrente — mostra que skill é só um arquivo Markdown, sem programação.",
+   "ressalvas": [
+    "Cita o repositório `expertintegrado/skills` (sem hífen) como o oficial da empresa para distribuição de skills — essa org está ARQUIVADA; o canônico atual é `Expert-Integrado` (com hífen). A instrução do post (comando `/plugin marketplace add expertintegrado/skills`) está desatualizada.",
+    "'Tempo médio cai 60-70%' atribuído a 'benchmarks internos de times' sem fonte ou link concreto."
+   ]
+  },
+  {
+   "slug": "cultura-empresa-o-que-nao-automatizar",
+   "title": "Cultura de empresa na era da IA: o que nunca deve ser automatizado",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead com medo de que automatizar vai deixar o atendimento frio e robótico — manda o critério explícito da Expert sobre o que nunca automatiza e os exemplos de prática real.",
+   "ressalvas": [
+    "Estatística da MIT Sloan Management Review ('67% confiam menos') citada sem link ou referência direta ao estudo."
+   ]
+  },
+  {
+   "slug": "dados-decisao-dashboard-pme",
+   "title": "Dashboard de dados pra PME: como tomar decisão com número na mão, não no feeling",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead achando que precisa de ferramenta cara de BI pra ter visibilidade do negócio — mostra dashboard simples em Sheets/Notion antes de introduzir a automação via MCP do Pipedrive.",
+   "ressalvas": [
+    "O post ensina a montar o dashboard sozinho de graça (Sheets/Notion, nível 1 'manual funcional') — pode reforçar a objeção 'dá pra fazer sozinho' em vez de neutralizá-la, já que a automação via Expert só aparece marginalmente no final."
+   ]
+  },
+  {
+   "slug": "delegar-ia-teste-2-perguntas",
+   "title": "\"Delegar pra IA antes de delegar pra pessoa\": o teste de 2 perguntas",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "roi-incerto",
+    "ia-erra"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead em dúvida entre contratar alguém ou automatizar uma tarefa — manda o framework de 2 perguntas com o case real do Super SDR (R$200/mês em API vs R$3-6k de CLT) e a matriz de quando IA falha.",
+   "ressalvas": []
+  },
+  {
+   "slug": "diagnostico-gratuito-nos-bastidores",
+   "title": "O mapeamento gratuito da Expert: o que acontece depois que você pede",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 4,
+   "quando_mandar": "Lead hesitante em agendar o diagnóstico gratuito achando que é call de vendas disfarçada — mostra o processo real de 5 etapas e reforça que o relatório não vem com proposta comercial atrelada.",
+   "ressalvas": []
+  },
+  {
+   "slug": "do-prompt-ao-agente-evolucao-nao-dev",
+   "title": "Do prompt ao agente: a evolução natural pra quem não é dev",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead achando que precisa saber programar ou contratar dev pra evoluir de prompt solto pra automação de verdade — mostra a trilha prompt-skill-agente sem código.",
+   "ressalvas": [
+    "Ensina a fazer sozinho (prompt, skill e até agente) sem contratar a Expert — junto com o post de criar-skill, pode reforçar a objeção 'dá pra fazer sozinho' em vez de neutralizá-la."
+   ]
+  },
+  {
+   "slug": "educacao-corporativa-ia-equipe",
+   "title": "Como treinar sua equipe pra trabalhar com IA (sem virar gestor de ferramentas)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir",
+    "sem-tempo"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que já comprou/testou ferramenta de IA mas o time não adota - manda o programa de 30 dias pra vencer a resistência de adoção sem consultoria cara.",
+   "ressalvas": [
+    "Estatística 'IBM 2024: 40% das empresas relatam capacitação como principal gargalo' é citada sem link ou fonte verificável - não repetir como dado duro numa call sem checar antes."
+   ]
+  },
+  {
+   "slug": "eric-rodou-expert-macbook-sexta",
+   "title": "Como rodei a Expert Integrado de um MacBook numa sexta: o experimento de 1 dia",
+   "pilar": "lideranca",
+   "tipo": "case",
+   "funil": "fundo",
+   "setores": [
+    "geral",
+    "contabilidade",
+    "servicos-b2b",
+    "marketing-agencias"
+   ],
+   "objecoes": [
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead cético sobre ROI real de agentes de IA no dia a dia - mostra prova concreta e pessoal do CEO da Expert (35min por lead vira automático) e argumenta que a lógica vale pra qualquer negócio de conhecimento, não só tech.",
+   "ressalvas": [
+    "Cita Frederic Laloux ('Reinventando as Organizações', 15-25% de situações que exigem presença sênior) pra validar a proporção 80/20 do post, mas a obra trata de organizações auto-geridas, não de agentes de IA - é uma conexão de suporte forçada que pode não resistir a uma pergunta técnica do lead."
+   ]
+  },
+  {
+   "slug": "escalar-sem-contratar-ia",
+   "title": "Como escalar a empresa sem contratar mais gente (com IA fazendo o trabalho novo)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto",
+    "equipe-vai-resistir",
+    "sem-equipe-tecnica",
+    "empresa-pequena-demais"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead que acha que crescer exige contratar mais gente e teme resistência da equipe ou falta de time técnico - mostra o case real da Expert crescendo receita sem aumentar headcount, com framework de 4 passos.",
+   "ressalvas": [
+    "Estatística 'McKinsey Global Institute 2024: 60-70% das tarefas de back-office automatizáveis' é citada sem link/fonte - conferir antes de repetir como dado duro em call."
+   ]
+  },
+  {
+   "slug": "expansao-sem-financiamento-ia",
+   "title": "Expansão sem financiamento: como PME cresce com IA antes de precisar de capital",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "empresa-pequena-demais"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead que acha caro implementar automação, compara com contratar SDR humano, ou acha a empresa pequena demais pro investimento - post compara custo linha a linha (R$800-2K vs R$12-18K/mês).",
+   "ressalvas": [
+    "Faixas de preço citadas (Super SDR R$800-R$2K/mês vs 2 SDRs humanos R$12K-R$18K/mês) precisam ser confirmadas contra a tabela de preço vigente do produto antes do vendedor citar em call - risco de prometer valor desatualizado.",
+    "Claim 'payback... costuma ser menor que 60 dias' é uma promessa genérica sem case público que sustente o número - comercial não deve repetir como garantia."
+   ]
+  },
+  {
+   "slug": "ferramentas-ia-sem-tecnico-pme",
+   "title": "8 ferramentas de IA que sua PME pode usar hoje sem precisar de técnico",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "sem-tempo"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead iniciante que só quer uma lista de ferramentas simples de IA pra testar sozinho - conteúdo de topo de funil, baixo valor pra fechar venda de Super SDR.",
+   "ressalvas": [
+    "O post recomenda ferramentas genéricas (Make, ChatGuru, Notion AI etc.) que o próprio lead pode assinar sozinho - reforça a objeção 'da-pra-fazer-sozinho' em vez de neutralizá-la, e não menciona o Super SDR; risco de auto-sabotar a venda se enviado a lead em decisão sobre contratar a Expert.",
+    "Preços em reais/dólar citados (Claude R$120, ChatGPT R$100, Perplexity R$80 etc.) tendem a ficar desatualizados rápido - conferir antes de citar em call."
+   ]
+  },
+  {
+   "slug": "financeiro-pme-fluxo-caixa-ia",
+   "title": "Fluxo de caixa com IA: como PME de 15 pessoas acompanha o financeiro sem CFO",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "financeiro",
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead de PME sem CFO interessado em organizar o financeiro com IA - conteúdo educativo de produtividade pessoal, não empurra diretamente a venda de automação/Super SDR.",
+   "ressalvas": [
+    "Estatística 'Sebrae: 60% das PMEs fecham nos 5 primeiros anos' é citada sem link e é um número genérico repetido há anos sem estudo específico associado - verificar fonte antes de usar em argumentação.",
+    "O post ensina o próprio CEO a fazer a análise financeira sozinho com prompt no Claude/ChatGPT e não gera demanda direta por produto da Expert Integrado - o CTA de 'mapeamento gratuito de automação' fica um pouco desconectado do valor entregue no post."
+   ]
+  },
+  {
+   "slug": "follow-up-hibrido-robo-humano",
+   "title": "Follow-up híbrido: quando o robô para e o humano entra (o script que funcionou)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "ia-erra",
+    "ja-tentei-nao-funcionou"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead que teme que o cliente perceba/odeie estar falando com robô, ou já teve experiência ruim com automação respondendo errado - mostra o protocolo e os scripts reais de transição humano-robô do Super SDR.",
+   "ressalvas": [
+    "CTA usa um link fixo (https://mapeamento.expertintegrado.com.br) diferente do padrão InlineCta sem href dos demais posts - vale confirmar se esse domínio está ativo antes de indicar o post pro comercial."
+   ]
+  },
+  {
+   "slug": "funil-whatsapp-sem-spam",
+   "title": "Como montar funil de WhatsApp que não cai em spam e ainda converte",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "ja-tentei-nao-funcionou"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead que já teve número de WhatsApp banido ou tentou automação antes e não funcionou - explica a causa técnica real e o protocolo de warm-up pra não repetir o erro.",
+   "ressalvas": [
+    "Percentuais específicos (taxas de resposta mínima por semana, '~40% dos bans revertidos no primeiro recurso') são apresentados como dado de produção sem fonte externa citável - se o lead pedir a origem do número, o comercial não tem onde apontar."
+   ]
+  },
+  {
+   "slug": "futuro-pme-brasil-2027-2030",
+   "title": "PME brasileira em 2027-2030: o que vai separar quem cresce de quem fecha",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "momento-errado",
+    "roi-incerto",
+    "empresa-pequena-demais",
+    "sem-equipe-tecnica"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead que diz 'vou pensar melhor, agora não é a hora' - usa o argumento da janela de vantagem competitiva fechando entre 2025 e 2027.",
+   "ressalvas": [
+    "Estatísticas de McKinsey (redução de custo de 30-60%) e Salesforce (73%/62% sobre personalização) citadas sem link - conferir fonte antes de repetir em call.",
+    "Frase 'em 2027 esse gap vai ser visível no EBITDA' é uma previsão apresentada com tom de certeza que o comercial não deveria reproduzir como garantia.",
+    "Claim 'a Expert está 18 meses à frente de quem ainda não começou' é uma afirmação competitiva não verificável - evitar repetir como fato pro lead."
+   ]
+  },
+  {
+   "slug": "g4-educacao-vale-para-quem",
+   "title": "G4 Educação vale a pena? Minha resposta honesta após 2 anos como mentor",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato que pergunta sobre a experiência do Eric como mentor no G4 - constrói autoridade pessoal, não vende Super SDR nem automação diretamente.",
+   "ressalvas": [
+    "O post fala do G4 Educação (produto de terceiros onde Eric é mentor), não da Expert Integrado ou do Super SDR - comercial pode usar por engano achando que é conteúdo sobre o próprio produto da empresa; não gera demanda direta para automação.",
+    "Valores citados (G4 entre R$20K e R$40K anuais) são de um produto de terceiro sem relação com o pricing da Expert - risco de confusão numa conversa comercial se citado fora de contexto."
+   ]
+  },
+  {
+   "slug": "gestao-tempo-empresario-alta-performance",
+   "title": "Gestão do tempo do empresário de alta performance: os 4 blocos que mudam tudo",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 1,
+   "quando_mandar": "Lead engajado com o conteúdo de produtividade/liderança do Eric, útil pra construir autoridade pessoal, não pra destravar objeção de venda do Super SDR.",
+   "ressalvas": [
+    "Estudo citado (pesquisa da UC Irvine com Gloria Mark, interrupção de 3s dobrando a taxa de erro) sem link ou fonte verificável — checar antes de repetir em call.",
+    "Conteúdo não amarra com o produto Expert Integrado (nenhuma menção a Super SDR/automação comercial), então serve mais como branding pessoal do que como arma de fechamento."
+   ]
+  },
+  {
+   "slug": "ia-atendimento-cliente-whatsapp",
+   "title": "IA no atendimento ao cliente via WhatsApp: como escalar sem perder a humanidade",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "ia-erra"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead que acha que atendimento automatizado vai soar robótico e afastar o cliente, ou que teme a IA responder besteira no WhatsApp.",
+   "ressalvas": [
+    "Estatística da Salesforce 2024 (61% desistem da compra após atendimento ruim) citada sem link — confirmar a fonte antes de repetir como dado duro numa call."
+   ]
+  },
+  {
+   "slug": "ia-construcao-civil-pme-brasil",
+   "title": "IA na construção civil para PME brasileira: casos reais de construtoras que aplicaram",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "construcao-civil"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente",
+    "sem-equipe-tecnica",
+    "roi-incerto"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead dono de construtora que acha que obra é operação 'analógica demais' pra IA funcionar.",
+   "ressalvas": [
+    "Os 4 'casos reais' citam apenas cidade/porte da construtora, sem nome de empresa verificável — se o lead pedir referência concreta, não há como comprovar.",
+    "Percentuais de resultado (60% de redução no tempo de orçamento, 80% menos ligações de ansiedade) sem fonte auditável além do relato do próprio post."
+   ]
+  },
+  {
+   "slug": "ia-contabilidade-pme-guia-pratico",
+   "title": "IA na contabilidade da PME: o que já funciona hoje e o que ainda é promessa",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade",
+    "financeiro"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "ia-erra"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead de PME preocupado que a IA vai errar dado financeiro ou que acha que precisa de sistema caro/dev pra rodar isso.",
+   "ressalvas": [
+    "Post ensina o passo a passo pra fazer sozinho com Claude genérico (colar extrato, prompt) — pode reforçar a objeção 'dá pra fazer sozinho' em vez de levar o lead a contratar a Expert.",
+    "Percentuais de precisão (85-90% subindo pra 95% após um mês) apresentados sem fonte, soam como estimativa do autor."
+   ]
+  },
+  {
+   "slug": "ia-financeiro-cfo-virtual-pme",
+   "title": "CFO virtual com IA: como PME de 20 pessoas tomou controle do financeiro sem contratar",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "financeiro",
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "sem-equipe-tecnica"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead que acha caro demais contratar CFO/estrutura financeira ou duvida que a automação de IA traga retorno real.",
+   "ressalvas": [
+    "O post é essencialmente um tutorial DIY com Claude Pro (US$20/mês) — o lead pode concluir que resolve sozinho, o que enfraquece o link como fechamento de venda.",
+    "O case 'cliente da Expert evitou crise de liquidez em 60 dias' não tem nome nem detalhe verificável, difícil de sustentar se o lead pedir prova."
+   ]
+  },
+  {
+   "slug": "ia-juridico-contratos-documentos",
+   "title": "IA pra contratos e documentos jurídicos: o que a PME já pode usar (e o que ainda não)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "advocacia",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente",
+    "ia-erra",
+    "roi-incerto"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead de escritório de advocacia ou área jurídica que acha que IA não pode encostar em documento legal por causa de risco.",
+   "ressalvas": [
+    "O prompt de análise de contrato é entregue pronto pra copiar — o lead pode usar sozinho com ChatGPT/Claude sem contratar a Expert.",
+    "Os casos citados (NDA, contrato de prestação de serviço) são internos da Expert Integrado, não de cliente pagante — bom como prova de conceito, mas não é case de venda fechada."
+   ]
+  },
+  {
+   "slug": "ia-logistica-pme-pequenas-melhorias",
+   "title": "IA na logística de PME: 4 pontos de atrito que dá pra resolver essa semana",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "logistica",
+    "e-commerce",
+    "varejo",
+    "industria"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead de logística/e-commerce que acha que precisa de time técnico ou integração cara pra usar IA na operação.",
+   "ressalvas": [
+    "Tutorial 100% DIY (colar CSV no Claude, sem API/dev) — o lead pode simplesmente fazer sozinho, o que reforça a objeção 'dá pra fazer sozinho' em vez de neutralizá-la.",
+    "Estatística de ruptura de estoque (18% para 6%) e o caso do fornecedor (8% mais barato / 14% de atraso) não citam empresa nem fonte verificável."
+   ]
+  },
+  {
+   "slug": "ia-marketing-digital-pme-2026",
+   "title": "IA no marketing digital da PME em 2026: o que funciona e o que é só hype",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "marketing-agencias",
+    "e-commerce",
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que duvida que IA em marketing traga retorno real ou acha que é só hype, e quer saber por onde começar.",
+   "ressalvas": [
+    "Ensina passo a passo pra fazer sozinho com o Claude Pro — mesmo risco de reforçar 'dá pra fazer sozinho' em vez de vender o serviço da Expert.",
+    "Estatística da McKinsey (71% reduziram custo) citada de forma genérica, sem link — confirmar antes de repetir como dado duro."
+   ]
+  },
+  {
+   "slug": "ia-planejamento-estrategico-anual",
+   "title": "Planejamento estratégico anual com IA: como comprimimos 3 dias de workshop em meio dia",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo",
+    "roi-incerto"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead de CEO/liderança que acha que não tem tempo pra planejamento estratégico ou que a IA não traria retorno claro nesse processo.",
+   "ressalvas": [
+    "Os números (execução Q1 de 45% pra 80%, 100% das ações com dono) são autorreportados pela própria Expert Integrado sem auditoria externa — bom como narrativa, fraco como prova formal se o lead pedir dado auditável."
+   ]
+  },
+  {
+   "slug": "ia-recrutamento-selecao-pme",
+   "title": "IA no recrutamento e seleção: como encurtei de 45 para 12 dias o processo seletivo",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "rh",
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo",
+    "roi-incerto",
+    "sem-equipe-tecnica"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead de RH/CEO que acha que processo seletivo com IA vai gerar viés, demorar pra montar, ou que só funciona com ATS caro.",
+   "ressalvas": [
+    "FAQ afirma que uma stack simples e gratuita (Typeform + Sheets + API Claude) já resolve — pode reforçar 'dá pra fazer sozinho' se o vendedor não redirecionar pro valor de ter a Expert configurando isso.",
+    "Números (45→12 dias, 60%→80% de aceitação de oferta) vêm de uma única empresa não identificada, sem nome — difícil de comprovar como case auditável."
+   ]
+  },
+  {
+   "slug": "ia-saude-clinica-gestao-pratica",
+   "title": "IA na gestão de clínica e consultório: o que já funciona hoje no Brasil",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente",
+    "medo-dados-lgpd",
+    "roi-incerto"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead do setor de saude/clinica com medo de LGPD ou achando que a area e regulada demais pra usar IA.",
+   "ressalvas": [
+    "Estatistica de reducao de falta '40 a 60%' atribuida a 'estudos do setor' sem citar fonte especifica, dificil de sustentar se o lead pedir a referencia.",
+    "Case da 'clinica de dermatologia em Sao Paulo' e anonimo (sem nome, sem como verificar), risco se o vendedor for cobrado a provar."
+   ]
+  },
+  {
+   "slug": "ia-varejo-pme-aplicacoes-praticas",
+   "title": "IA no varejo da PME: 5 aplicações que geram resultado em menos de 30 dias",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo",
+    "e-commerce"
+   ],
+   "objecoes": [
+    "preco",
+    "sem-equipe-tecnica",
+    "roi-incerto",
+    "sem-tempo",
+    "equipe-vai-resistir"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead de varejo achando que precisa de ERP/verba alta pra usar IA, ou receoso de que o time va resistir.",
+   "ressalvas": [
+    "O post ensina passo a passo pra fazer a analise sozinho colando dados no Claude/GPT, o que reforca a objecao 'da pra fazer sozinho' em vez de neutraliza-la.",
+    "Estatisticas da Juniper Research (2023) e Nielsen (2022) sem link, e os cases (papelaria, moda) sao anonimos e nao verificaveis em call."
+   ]
+  },
+  {
+   "slug": "imposto-invisivel-hora-empresario",
+   "title": "O imposto invisível: quanto vale realmente 1 hora do seu dia como empresário",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto",
+    "preco",
+    "empresa-pequena-demais"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead que hesita no investimento achando caro ou empresa pequena demais - usar pra reenquadrar o custo de nao automatizar.",
+   "ressalvas": [
+    "Estatisticas atribuidas a McKinsey ('5 a 10x maior impacto') e a Harvard Business Review ('27 CEOs, 43% do tempo') sem link ou nome do estudo especifico - dificeis de sustentar se o lead pedir a fonte."
+   ]
+  },
+  {
+   "slug": "integracao-chatguru-pipedrive-1-tarde",
+   "title": "Integração ChatGuru + Pipedrive: como conectei os dois em 1 tarde",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead tecnico/curioso que pergunta se da pra integrar ChatGuru com Pipedrive - mostra competencia tecnica real da Expert Integrado.",
+   "ressalvas": [
+    "Tutorial ensina o passo a passo tecnico completo (payload, campos do Make, idempotencia), dando ao lead o blueprint pra replicar sozinho sem contratar a Expert Integrado.",
+    "A estatistica de velocidade de resposta aqui e atribuida a Harvard Business Review ('7x'), mas o post metricas-comerciais-pme-diario atribui a mesma ideia a InsideSales.com ('10x') - fontes inconsistentes pra alegacao parecida.",
+    "Conteudo pressupoe familiaridade com JSON/webhook/API token, nivel tecnico acima do publico-alvo (CEO nao-tecnico de PME)."
+   ]
+  },
+  {
+   "slug": "mcp-5-minutos-instalar-primeiro",
+   "title": "MCP em 5 minutos: o que é, por que importa pra PME e como instalar o primeiro",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "medo-dados-lgpd"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que acha que precisa de time tecnico/dev pra conectar IA aos sistemas (Pipedrive, ClickUp, Outlook).",
+   "ressalvas": [
+    "O passo a passo de instalacao (3 passos, 5 minutos) ensina o lead a fazer sozinho, podendo reforcar 'da pra fazer sozinho' em vez de gerar dependencia comercial.",
+    "Numero 'mais de 5.000 servidores MCP publicados' e datado 'junho de 2026' sem fonte/link verificavel."
+   ]
+  },
+  {
+   "slug": "metricas-ceo-5-kpis-essenciais",
+   "title": "Os 5 KPIs que todo CEO de PME deveria acompanhar todo dia (sem precisar de BI)",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead no topo do funil buscando conteudo de gestao geral - nao serve pra destravar objecao especifica de venda.",
+   "ressalvas": [
+    "FAQ afirma que planilha Google Sheets/Notion ja basta, sem precisar de ferramenta especifica - reforca a objecao 'da pra fazer sozinho' em vez de justificar automacao paga.",
+    "Estatistica da Bain & Company ('700 empresas, decidem 6x mais rapido') sem link de fonte.",
+    "CTA de mapeamento gratuito aparece descolado do conteudo (o post so menciona IA de forma tangencial no fechamento)."
+   ]
+  },
+  {
+   "slug": "metricas-comerciais-pme-diario",
+   "title": "Quais métricas comerciais um CEO de PME deve olhar todo dia (dashboard em 2 min)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto",
+    "sem-tempo"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que acha que nao tem tempo de acompanhar o comercial de perto, ou duvida que responder rapido faca diferenca na conversao.",
+   "ressalvas": [
+    "Ensina a montar o dashboard sozinho no Pipedrive via filtros/views, sem precisar de nada da Expert Integrado, reforcando 'da pra fazer sozinho'.",
+    "Estatisticas CSO Insights (2.900 organizacoes) e InsideSales.com (3,5 milhoes de leads) sem link de fonte."
+   ]
+  },
+  {
+   "slug": "meu-stack-ia-2026-o-que-uso-todo-dia",
+   "title": "Meu stack de IA em 2026: tudo que uso todo dia pra rodar a Expert Integrado",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "empresa-pequena-demais"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead achando que IA e cara ou sem ROI claro - mostra o gasto real do Eric (R$800-1200/mes) e o retorno em horas liberadas.",
+   "ressalvas": [
+    "A soma dos custos no FAQ (R$580 nucleo + R$250-400 comercial + R$150 operacional = R$980-1130) nao bate exatamente com o 'R$800-1200' citado, e nao inclui o Claude.ai Pro (R$116) nem o Pipedrive (R$250) mencionados separadamente no corpo do texto.",
+    "FAQ admite que Claude Code e os MCPs 'exigem conforto com terminal', o que pode reforcar a objecao sem-equipe-tecnica em vez de neutraliza-la.",
+    "Precos de ferramentas terceiras (Claude Max, Fathom) tendem a mudar e podem estar desatualizados quando o vendedor usar o post."
+   ]
+  },
+  {
+   "slug": "nao-ficar-refem-apps",
+   "title": "Como não ficar refém de aplicativo: a regra dos 4 pra usar IA sem perder o controle",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead cuja objecao e 'ja tenho ferramentas demais' - usar com cautela, pode reforcar a resistencia a adicionar mais uma.",
+   "ressalvas": [
+    "O argumento central ('maximo 4 ferramentas, corte o resto') pode reforcar a resistencia do lead em adicionar mais uma ferramenta (a da Expert Integrado) a uma stack ja cheia - risco de o post jogar contra a venda.",
+    "Estatistica da Productiv ('254 SaaS, 56% sem uso por 90 dias') sem link de fonte.",
+    "CTA final generico destoa do argumento do post, que e sobre cortar ferramentas, nao adicionar."
+   ]
+  },
+  {
+   "slug": "notas-voz-whatsapp-captura-ia",
+   "title": "Notas de voz no WhatsApp como sistema de captura: como transformo áudio em ação",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd",
+    "ia-erra"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead pessoal/produtividade preocupado com privacidade do audio processado por IA ou cetico que a IA erra demais pra confiar.",
+   "ressalvas": [
+    "Post ensina a configurar o proprio workflow (MCP + ClickUp + Brain + prompt de roteamento), dando ao lead o blueprint pra montar sozinho sem contratar a Expert Integrado.",
+    "Menciona 'Expert Brain' como ferramenta interna nao disponivel publicamente, o que pode confundir o lead que tenta replicar o setup a partir do post.",
+    "Referencias a Csikszentmihalyi e 'literatura sobre memoria de trabalho' sao vagas, sem citar estudo especifico verificavel."
+   ]
+  },
+  {
+   "slug": "nps-automatico-pme",
+   "title": "NPS automático pra PME: como coletar, analisar e agir em menos de 1 hora/semana",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que já é cliente ou prospect de CS/retenção alegando não ter tempo/equipe pra rodar pesquisa de satisfação — manda esse post como prova de que dá pra rodar o ciclo inteiro em menos de 1h/semana.",
+   "ressalvas": [
+    "Estatísticas como '68% dos cancelamentos por indiferença percebida', 'clientes que respondem NPS têm 2x mais chance de renovar' e '70% dos detratores é problema operacional' são apresentadas como fato sem fonte citada — vendedor fica exposto se o lead pedir a referência."
+   ]
+  },
+  {
+   "slug": "okr-expert-north-star-scorecard",
+   "title": "OKR Expert: como cruzar North Star, Scorecard TRACK e 3 prioridades trimestrais",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "empresa-pequena-demais"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead de Mentoria/AI Innovation Lab com empresa pequena (menos de 5 pessoas) achando que framework de gestão tipo OKR não se aplica ao tamanho dele.",
+   "ressalvas": []
+  },
+  {
+   "slug": "perfil-contratar-2026-nao-existia",
+   "title": "O perfil que você precisa contratar em 2026 não existia em 2024",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead de Mentoria/palestra sobre RH e IA discutindo como adaptar critério de contratação pra era de agentes de IA (conteúdo educacional de topo, não neutraliza objeção comercial direta do Super SDR).",
+   "ressalvas": [
+    "A estatística 'McKinsey 2025: PMEs com menos de 50 pessoas que adotaram agentes de IA ganharam 34% de produtividade por pessoa' não tem link nem fonte verificável — risco de parecer número inventado se o lead pedir a fonte original."
+   ]
+  },
+  {
+   "slug": "pilar-ia-rotina-ceo-1h-dia",
+   "title": "IA na rotina do CEO: como uso inteligência artificial 1 hora por dia (e o que deixo de lado)",
+   "pilar": "produtividade",
+   "tipo": "pilar",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "roi-incerto",
+    "sem-equipe-tecnica",
+    "ia-erra",
+    "perder-controle"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead cético sobre ROI ou medo de perder controle da operação com IA — manda esse post como prova concreta de que o próprio CEO da Expert Integrado usa IA 1h/dia com humano sempre revisando antes de confirmar.",
+   "ressalvas": [
+    "Os números de ganho de tempo (9h/semana, resposta de 28h para 4h) são autorrelatados pelo Eric, sem validação externa de terceiros — forte como prova de founder, mas fraco se o lead exigir dado auditado de cliente."
+   ]
+  },
+  {
+   "slug": "pilar-lideranca-era-agentica",
+   "title": "Liderança na era agêntica: o que muda (e o que não muda) quando sua equipe inclui agentes de IA",
+   "pilar": "lideranca",
+   "tipo": "pilar",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir",
+    "cliente-odeia-robo",
+    "perder-controle",
+    "empresa-pequena-demais"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead-gestor com medo de que a equipe resista à adoção de agentes de IA ou que a empresa fique 'fria' e perca humanidade com o cliente ao automatizar.",
+   "ressalvas": [
+    "Post é majoritariamente conceitual/framework de liderança, sem case ou número concreto de cliente — reduz o poder de prova pra um lead que pede evidência tangível em vez de argumento teórico."
+   ]
+  },
+  {
+   "slug": "pilar-super-sdr-anatomia",
+   "title": "Anatomia do Super SDR: o que é, como funciona e por que substitui (ou não) um SDR humano",
+   "pilar": "vendas",
+   "tipo": "pilar",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "roi-incerto",
+    "preco"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead avaliando comprar o Super SDR e comparando custo/benefício com contratar um SDR humano, ou preocupado que o cliente perceba que está falando com um robô.",
+   "ressalvas": [
+    "O dado 'transparência de que é bot reduz conversão em menos de 5%' é citado como 'nossa experiência' sem número auditável — vendedor deve estar pronto pra defender ou mostrar o dado real se o lead questionar."
+   ]
+  },
+  {
+   "slug": "pilar-vibe-coding-empresario",
+   "title": "Vibe Coding para empresários: construa ferramentas internas sem depender de desenvolvedor",
+   "pilar": "vibe-coding",
+   "tipo": "pilar",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead de Mentoria/AI Innovation Lab achando que precisa contratar desenvolvedor pra construir uma ferramenta interna simples.",
+   "ressalvas": [
+    "O post ensina o leitor a fazer 100% sozinho (Claude Code + Astro + Vercel) — se usado pra neutralizar a objeção 'não tenho equipe técnica' numa venda do Super SDR, corre o risco de reforçar a ideia de que o lead não precisa contratar a Expert Integrado. É mais adequado pra vender Mentoria/AI Innovation Lab do que o produto de automação comercial."
+   ]
+  },
+  {
+   "slug": "planejamento-trimestral-ia-ceo",
+   "title": "Planejamento trimestral com IA: como faço em 3 horas o que levava 2 dias",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead de Mapeamento/Mentoria alegando não ter tempo pra reestruturar o processo de planejamento estratégico da empresa.",
+   "ressalvas": [
+    "Post detalha um processo majoritariamente DIY com Claude Opus e MCPs — reforça a crença de 'dá pra fazer sozinho' em vez de justificar contratar um serviço; usar com cautela se o objetivo é neutralizar essa objeção específica."
+   ]
+  },
+  {
+   "slug": "playbook-lead-respondeu-5min",
+   "title": "O lead respondeu em 5 min: o que fazer agora (playbook completo)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "roi-incerto"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead com processo comercial lento decidindo se vale a pena implementar o combo Super SDR + SDR humano pra ganhar velocidade no primeiro contato.",
+   "ressalvas": [
+    "A estatística '21x mais qualificação com resposta em 5min' e '7x com resposta em 1h' é atribuída à Harvard Business Review sem link — esse dado é comumente citado (às vezes de forma incorreta) a estudos como InsideSales/Kellogg/Lead Response Management; se o lead conferir a fonte e não achar o estudo da HBR, a credibilidade do post cai."
+   ]
+  },
+  {
+   "slug": "processar-300-emails-15min-ia",
+   "title": "Como processar 300 e-mails por dia em menos de 15 minutos com IA",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo",
+    "ia-erra"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead alegando não ter tempo pra lidar com volume de e-mail, ou com medo de que a IA erre e ele perca um e-mail importante na triagem.",
+   "ressalvas": [
+    "Post é um guia DIY completo com prompt copiável pra usar em ChatGPT/Claude.ai puro — se enviado como resposta à objeção 'dá pra fazer sozinho', reforça a autossuficiência do lead em vez de justificar contratar a Expert Integrado."
+   ]
+  },
+  {
+   "slug": "prompt-engineering-empresarios-guia",
+   "title": "Prompt engineering pra empresários: os 5 padrões que funcionam no trabalho real",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Conteudo educacional de SEO/autoridade sobre prompt engineering; nao endereca objecao de compra especifica, mas pode ser mandado pra lead curioso que quer aprender a usar IA melhor por conta propria antes de decidir automatizar.",
+   "ressalvas": [
+    "Estatisticas citadas (Anthropic 2024 reduz iteracoes em 60%, Google Brain 2022 aumenta acuracia em 40%) nao tem link/fonte verificavel — risco se o lead pedir a fonte em call.",
+    "Post reforca a narrativa de que prompt bem escrito resolve sozinho, o que pode alimentar a objecao 'da pra fazer sozinho' contra a compra de automacao — vale sempre encaminhar junto com quando-prompt-resolve-sem-dev pra fechar o raciocinio."
+   ]
+  },
+  {
+   "slug": "proposta-comercial-ia-3-tiers",
+   "title": "Como montar proposta comercial com IA em 3 tiers (e por que 3 opções convertem mais)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Tutorial de tecnica de vendas (estrutura de proposta em 3 tiers) pra empresario que vende B2B — util como conteudo de metodo/autoridade, mas nao neutraliza diretamente objecao de compra do Super SDR; serve mais pra ensinar o proprio processo comercial do lead.",
+   "ressalvas": [
+    "Afirmacoes de resultado ('a taxa de retorno cai perto de zero', 'a proporcao de fechamento no Avancado e consistentemente a maior') sao vagas e sem numero, enfraquecendo a credibilidade como prova.",
+    "Faixas numericas de precificacao entre tiers (2,5x-3,5x e 4x-6x) sao apresentadas como regra generica sem fonte ou dado que sustente — se o comercial repetir em call como 'estudo mostrou', vira afirmacao sem lastro."
+   ]
+  },
+  {
+   "slug": "quando-ia-decide-quando-intervir",
+   "title": "Quando deixar a IA decidir e quando intervir: o critério que uso todo dia",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "perder-controle"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead que trava dizendo que vai perder o controle da operacao pra automacao/agente de IA — o post entrega framework de 4 dimensoes (reversibilidade, impacto no relacionamento, criatividade, risco de reputacao) com exemplos concretos de quando a IA age sozinha e quando o humano decide.",
+   "ressalvas": [
+    "Estatistica 'HBR 2025: 67% dos erros criticos de agentes vem de ausencia de criterio humano' e citada sem link e com data de publicacao futura em relacao a pesquisas tipicamente disponiveis — risco de ser questionada como fonte em call e nao sustentavel se pedirem a referencia."
+   ]
+  },
+  {
+   "slug": "quando-prompt-resolve-sem-dev",
+   "title": "Não precisa de dev, precisa de prompt bem escrito: quando isso é verdade e quando é cilada",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead que insiste que resolve com ChatGPT/Zapier/estagiario sozinho e nao ve motivo pra contratar automacao real — post traz os 3 casos reais em que o proprio Eric apostou so no prompt e perdeu (relatorio manual, qualificacao de lead, monitoramento de concorrente), mostrando exatamente onde o DIY quebra.",
+   "ressalvas": []
+  },
+  {
+   "slug": "reativacao-base-fria-23-deals",
+   "title": "Reativação de base fria: o template que reabriu 23 deals em 2 semanas",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ja-tentei-nao-funcionou",
+    "roi-incerto",
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead com pipeline cheio de deals frios que acha que 'reativacao de base fria nao funciona' ou nao sabe se vale o esforco — case real com numero (47 deals, 23 responderam, 3 fecharam), templates copiaveis das 3 mensagens, e menciona explicitamente o Super SDR pra quem quer escalar acima de 50 deals.",
+   "ressalvas": [
+    "Percentuais de alta precisao (91%, 78%) calculados sobre uma subamostra pequena (23 respondentes) podem soar fabricados ou fragilizar a credibilidade se o lead pedir a planilha bruta por tras do numero."
+   ]
+  },
+  {
+   "slug": "reflexao-g4-vocabulario-empresario",
+   "title": "Reflexão pública: como o G4 me deu o vocabulário de empresário em 2 anos",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 1,
+   "quando_mandar": "Post de narrativa pessoal/marca sobre a jornada do Eric no G4 — serve pra construir autoridade e humanizar o fundador, mas nao neutraliza nenhuma objecao de compra de automacao; util no maximo se o lead questionar a credibilidade/experiencia do Eric como gestor.",
+   "ressalvas": [
+    "Estatistica 'mais de 70% dos empresarios que chegam ao G4 nunca formalizaram metas com criterios mensuraveis' e atribuida a 'dados do proprio G4' sem link ou fonte verificavel."
+   ]
+  },
+  {
+   "slug": "relatorio-semanal-automatico-time",
+   "title": "Relatório semanal automático pra time: como monto em 10 min com IA",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "sem-tempo"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que acha que nao tem equipe tecnica pra configurar automacao ou que nao tem tempo de montar relatorio/rotina de gestao — mostra queda de 45 min pra 10 min com prompt copiavel e FAQ explicito respondendo 'nao precisa saber programar'.",
+   "ressalvas": []
+  },
+  {
+   "slug": "resumo-reuniao-ia-clickup",
+   "title": "Resumo de reunião gravada que vira ação no ClickUp em menos de 2 minutos",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo",
+    "ia-erra"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que reclama que reuniao nao gera acao e some em 24h, ou que teme a IA inventar prazo/responsavel errado — post mostra o prompt com guardrail explicito ('nao inventar prazos, marcar a definir') e custo total do setup ($20-50/mes).",
+   "ressalvas": []
+  },
+  {
+   "slug": "reuniao-one-on-one-eficaz-ia",
+   "title": "1:1 eficaz com IA: como preparo cada reunião individual em 5 minutos",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "perder-controle",
+    "equipe-vai-resistir"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lider que teme que a IA tire o toque humano da gestao de pessoas ou que a equipe estranhe saber que o gestor usa IA pra se preparar — post tem secao explicita do que NUNCA delega pra IA (escuta ativa, decisao, feedback dificil) e FAQ mostrando reacao positiva do time.",
+   "ressalvas": [
+    "Estatistica 'Gallup 2023: gestores com 1:1 frequente geram 3x mais engajamento' e citada sem link direto pra fonte."
+   ]
+  },
+  {
+   "slug": "reunioes-outlook-agente-13-semana",
+   "title": "Como organizei 13 reuniões por semana com 1 agente e o Outlook",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "sem-tempo"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead com agenda lotada que acha que nao tem tempo ou equipe tecnica pra configurar automacao de agenda — case real do Eric (13 reunioes/semana, de 60% pra 90%+ de calls com contexto) com FAQ explicito 'nao precisa saber programar'.",
+   "ressalvas": [
+    "Afirma que 'o MCP Outlook e open source, esta no repositorio da Expert Integrado' — se o repo nao for de fato publico/acessivel, e uma promessa que o comercial nao consegue sustentar se o lead pedir o link em call; verificar antes de usar esse post em follow-up tecnico."
+   ]
+  },
+  {
+   "slug": "rodar-empresa-notebook-viagem",
+   "title": "Rodar empresa de notebook em viagem: o que funcionou e o que não funcionou",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "perder-controle"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead que teme perder o controle da operação se delegar demais pra IA/agentes — mostra que o CEO manteve a empresa rodando (80% sem intervenção) mesmo viajando por 4 cidades, com protocolo claro de escalada.",
+   "ressalvas": [
+    "Estatísticas (80% da operação sem intervenção, 1h30/dia vs 5-6h) são anedóticas de uma única empresa (a própria Expert), sem validação externa — deixar claro que é relato de experimento pessoal, não pesquisa de mercado, se o lead pedir prova mais ampla."
+   ]
+  },
+  {
+   "slug": "roi-ia-como-calcular-pme",
+   "title": "Como calcular o ROI de IA na sua empresa (a fórmula que uso com todos os clientes)",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead travado achando caro ou inseguro se o investimento no Super SDR vai voltar — manda a fórmula de ROI com o case real de ~955% de retorno no primeiro ano.",
+   "ressalvas": [
+    "O case do cliente de R$400K MRR não é nomeado nem verificável — se o lead cético pedir prova concreta (nome, contrato), o comercial não tem como validar na call.",
+    "A estatística McKinsey 2024 (79%/30%) é citada sem link ou nome do relatório — se questionado sobre a fonte exata, o vendedor não tem como apresentá-la."
+   ]
+  },
+  {
+   "slug": "script-whatsapp-qualificacao-4-perguntas",
+   "title": "O script de 4 perguntas que qualifica lead de WhatsApp em menos de 3 minutos",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "sem-equipe-tecnica"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead cético sobre como a qualificação automática realmente soa no WhatsApp (medo de parecer robô/formulário) — manda o script real com as 4 perguntas do Super SDR em produção.",
+   "ressalvas": [
+    "O post entrega o script completo pronto pra copiar e colar em Make/n8n, o que pode reforçar a objeção 'dá pra fazer sozinho' em vez de neutralizá-la — cuidado ao mandar pra lead já pesquisando alternativa DIY.",
+    "As estatísticas de abandono por pergunta (15% por pergunta, filtro de 30% dos leads) não citam fonte ou metodologia no texto."
+   ]
+  },
+  {
+   "slug": "segundo-cerebro",
+   "title": "Segundo cérebro: pare de usar a cabeça como HD",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 1,
+   "quando_mandar": "Conteúdo de topo de funil pra lead recém-chegado interessado em produtividade pessoal com IA — não serve pra destravar objeção comercial específica.",
+   "ressalvas": [
+    "Conteúdo raso e genérico (4 min de leitura, sem case ou dado concreto da Expert) — fraco como arma comercial direta, funciona melhor como isca de SEO/topo."
+   ]
+  },
+  {
+   "slug": "skills-claude-code-lista-comentada",
+   "title": "Skills do Claude Code que economizam 1h/dia: lista comentada com casos reais",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "tecnologia-saas"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead interessado em aprender a usar IA/Claude Code por conta própria (perfil educação/mentoria), não tanto pra objeção de compra do Super SDR — mostra expertise prática do Eric.",
+   "ressalvas": [
+    "Referencia os repositórios `expertintegrado/skills` e `expertintegrado/expertbrain` (sem hífen) — a org GitHub canônica atual é `Expert-Integrado` (com hífen); a org sem hífen está arquivada, então os links/nomes citados podem estar desatualizados ou quebrados.",
+    "O post ensina o leitor a instalar e criar as próprias skills de graça, o que pode reforçar a objeção 'dá pra fazer sozinho' em vez de vender implementação paga.",
+    "Os números de tempo economizado por skill são estimativas pessoais do Eric, sem validação externa."
+   ]
+  },
+  {
+   "slug": "social-media-empresario-sem-ghostwriter",
+   "title": "Presença no LinkedIn sem ghostwriter: como uso IA pra manter 3 posts/semana em 30 min",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead interessado em criar conteúdo/LinkedIn com IA sem perder autenticidade — mais posicionamento pessoal/mentoria do que venda direta do Super SDR.",
+   "ressalvas": [
+    "O preço de ghostwriter (R$3 mil a R$8 mil/mês) é apresentado como fato de mercado sem fonte — se o lead questionar a faixa, o comercial não tem como comprová-la.",
+    "Métricas de resultado (seguidores de 4.200 pra 6.100, 17% de leads via LinkedIn) são autodeclaradas, sem verificação externa."
+   ]
+  },
+  {
+   "slug": "time-pequeno-agentes-ganha",
+   "title": "Por que o time pequeno com agentes ganha do time grande sem agentes",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "advocacia",
+    "saude-clinicas",
+    "construcao-civil"
+   ],
+   "objecoes": [
+    "empresa-pequena-demais",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 4,
+   "quando_mandar": "Lead de PME pequena que acha que é 'pequeno demais' pra ter IA/agentes ou que seu setor é diferente — mostra a própria Expert Integrado (menos de 10 pessoas) como prova, com exemplos de outros setores (advocacia, clínicas, construtoras).",
+   "ressalvas": [
+    "O post afirma que a Expert Integrado tem 'menos de 10 pessoas no core', enquanto o registro interno mais recente da empresa (abril/2026) indica ~17 pessoas em transição pra 20 — confirmar se é 'core' vs headcount total antes de citar esse número numa call, pra não contradizer o lead se ele perguntar o tamanho real da equipe.",
+    "A estatística do MIT (2023, ganho de 37% em velocidade e 20% em qualidade) não cita o nome do estudo nem link — não é possível apresentar a fonte se o lead pedir."
+   ]
+  },
+  {
+   "slug": "triagem-inbox-ia-secretaria-executiva",
+   "title": "Triagem de inbox com IA: o prompt que substitui sua secretária executiva em 4 etapas",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-tempo",
+    "sem-equipe-tecnica",
+    "medo-dados-lgpd"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead preocupado com LGPD/vazamento de dados ao usar IA, ou que acha que não tem tempo pra começar — mostra que dá pra ter resultado rápido com prompt simples; usar com cautela porque o post ensina a fazer tudo sozinho de graça.",
+   "ressalvas": [
+    "O post entrega o prompt completo e funciona 100% de graça no plano gratuito de ChatGPT/Claude/Gemini — reforça a objeção 'dá pra fazer sozinho' em vez de vender o serviço da Expert; útil só pra objeções pontuais (LGPD, tempo), não pra fechar venda.",
+    "A estatística '52 para 12 minutos de triagem' cita 'clientes que implementaram' sem nomear nenhum nem quantificar quantos — não é verificável se o lead pedir detalhe."
+   ]
+  },
+  {
+   "slug": "vendas-b2b-ia-ciclo-longo",
+   "title": "Vendas B2B com IA: como encurtar ciclo longo sem perder o relacionamento",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "servicos-b2b",
+    "tecnologia-saas"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "equipe-vai-resistir",
+    "preco"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead B2B travado no ciclo de vendas longo, preocupado que a equipe vai resistir (medo de ser substituída) ou que o cliente vai odiar falar com robô — mostra case real (87 pra 41 dias) sem demitir ninguém.",
+   "ressalvas": [
+    "O case de redução de ciclo (87 para 41 dias) não identifica a empresa nem traz prova documental (contrato, depoimento) — comercial deve estar preparado caso o lead cético peça mais detalhe ou verificação."
+   ]
+  },
+  {
+   "slug": "versus-chatgpt-claude-gemini-empresario",
+   "title": "ChatGPT vs Claude vs Gemini pra rotina de empresário PME: qual usar, por contexto",
+   "pilar": "produtividade",
+   "tipo": "versus",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 1,
+   "quando_mandar": "Lead perguntando qual IA genérica usar no dia a dia (não específico do Super SDR) — conteúdo de topo/educacional pra branding, não serve pra destravar objeção comercial.",
+   "ressalvas": [
+    "O conteúdo orienta o leitor a resolver com ferramentas de consumo (ChatGPT/Claude/Gemini) por conta própria, reforçando a objeção 'dá pra fazer sozinho' em vez de neutralizá-la — não é um bom link pra lead avaliando comprar automação da Expert.",
+    "Preços e nomes de produto citados ($20/mês, GPT-4o, Gemini Advanced) mudam com frequência no mercado de IA — o post corre risco de ficar desatualizado rápido."
+   ]
+  },
+  {
+   "slug": "versus-chatguru-zapi-whatsapp-business",
+   "title": "ChatGuru vs Z-API vs WhatsApp Business API: qual usar em 2026",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "financeiro",
+    "saude-clinicas",
+    "advocacia"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead tecnico ou de setor regulado perguntando qual canal de WhatsApp usar (ChatGuru, Z-API ou API oficial) antes de avancar.",
+   "ressalvas": []
+  },
+  {
+   "slug": "versus-contratar-sdr-humano-super-sdr",
+   "title": "Contratar SDR humano ou montar Super SDR: a conta que ninguém faz direito",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "fundo",
+   "setores": [
+    "geral",
+    "servicos-b2b",
+    "advocacia"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "cliente-odeia-robo"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead que acha caro contratar o Super SDR e esta comparando com o custo de contratar um SDR humano.",
+   "ressalvas": [
+    "Estatisticas de tenure de SDR ('pesquisa Outbound Marketing 2024') e conversao em 5min ('estudo HubSpot 2023') citadas sem link/fonte verificavel — ter a fonte pronta se o lead questionar em call."
+   ]
+  },
+  {
+   "slug": "versus-cursor-claude-code-copilot",
+   "title": "Cursor vs Claude Code vs GitHub Copilot: qual o melhor pra não-dev em 2026",
+   "pilar": "vibe-coding",
+   "tipo": "versus",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead da Mentoria/AI Innovation Lab que acha que precisa ser dev pra usar IA no dia a dia.",
+   "ressalvas": [
+    "Afirma que 'a Anthropic publicou benchmarks internos' sobre produtividade com GitHub Copilot — atribuicao estranha/provavelmente equivocada (Copilot e produto da GitHub/Microsoft, nao da Anthropic), risco de derrubar credibilidade se um lead tecnico perceber o erro."
+   ]
+  },
+  {
+   "slug": "versus-n8n-zapier-make-2026",
+   "title": "n8n vs Zapier vs Make em 2026: qual automação faz mais sentido pra PME brasileira",
+   "pilar": "vibe-coding",
+   "tipo": "versus",
+   "funil": "topo",
+   "setores": [
+    "geral",
+    "marketing-agencias",
+    "e-commerce"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Conteudo de autoridade tecnica pra lead de vibe-coding/AIL comparando ferramentas de automacao — nao e arma direta de objecao do Super SDR.",
+   "ressalvas": [
+    "CTA generico (`<InlineCta />` sem props) provavelmente puxa a oferta padrao de Super SDR, desalinhada com o tema n8n/Zapier/Make.",
+    "O post explica onde as ferramentas DIY funcionam bem, o que pode reforcar a objecao 'da pra fazer sozinho' em vez de neutraliza-la."
+   ]
+  },
+  {
+   "slug": "versus-pipedrive-crm-generico-pme",
+   "title": "Pipedrive vs CRM genérico pra PME: por que o contexto importa mais que o preço",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "geral",
+    "servicos-b2b"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho",
+    "preco"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead que ainda usa planilha e questiona se precisa mesmo de CRM antes de considerar o Super SDR integrado.",
+   "ressalvas": [
+    "Estatistica de adocao de CRM (47%, 'estudo Gartner 2024') citada sem link/fonte verificavel."
+   ]
+  },
+  {
+   "slug": "versus-rd-station-activecampaign-hubspot-pme",
+   "title": "RD Station vs ActiveCampaign vs HubSpot pra PME brasileira: análise honesta",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "marketing-agencias",
+    "e-commerce",
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead perguntando qual ferramenta de automacao de marketing usar ao lado do Pipedrive — conteudo de stack, nao neutraliza objecao ao Super SDR.",
+   "ressalvas": [
+    "Numeros de clientes das plataformas (RD Station 50 mil, ActiveCampaign 180 mil, HubSpot 228 mil) e preco do HubSpot Professional (USD 800/mes) sem fonte linkada — podem estar desatualizados.",
+    "CTA generico (`<InlineCta />` sem props) desalinhado com o tema (ferramentas de marketing, nao Super SDR)."
+   ]
+  },
+  {
+   "slug": "versus-super-sdr-chatgpt-whatsapp",
+   "title": "Super SDR vs ChatGPT no WhatsApp: por que ninguém compara essas duas coisas direito",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "fundo",
+   "setores": [
+    "advocacia",
+    "geral"
+   ],
+   "objecoes": [
+    "da-pra-fazer-sozinho",
+    "sem-equipe-tecnica",
+    "roi-incerto"
+   ],
+   "forca": 5,
+   "quando_mandar": "Lead que pergunta 'por que nao uso ChatGPT no WhatsApp em vez do Super SDR' — a resposta mais direta pra essa objecao.",
+   "ressalvas": [
+    "Texto com erro/placeholder nao preenchido: 'Na o escritório de advocacia' e 'o da o escritório de advocacia' — parece variavel de nome do cliente que nao foi substituida, quebra a fluidez e pode levantar duvida sobre a autenticidade do case se enviado a um lead."
+   ]
+  },
+  {
+   "slug": "whatsapp-business-api-guia-pme",
+   "title": "WhatsApp Business API pra PME: guia prático de quando (e como) migrar",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "financeiro",
+    "saude-clinicas",
+    "advocacia",
+    "geral"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 3,
+   "quando_mandar": "Lead de setor regulado (saude, financeiro, juridico) preocupado com compliance ao rodar Super SDR/WhatsApp em canal nao-oficial.",
+   "ressalvas": [
+    "Afirmacoes regulatorias especificas (exigencias da SUSEP, ANS, CFM, Banco Central sobre retencao de comunicacao via WhatsApp) citadas sem fonte — vale checagem juridica antes de usar como argumento decisivo com lead de setor regulado."
+   ]
+  }
+ ]
+}

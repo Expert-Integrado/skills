@@ -73,13 +73,36 @@ Relatório estruturado com:
 - H2 muito longo (mais de 80 chars) → sugerir versão curta
 - Tabela sem cabeçalho ou com mais de 12 linhas → sinalizar
 
+## Dimensão 5: SEGURANÇA — triagem 3 cores (GATE, fora do score)
+
+Camadas 1+2 do protocolo de segurança de conteúdo (`docs/protocolo-conteudo.md` no repo do blog). Não entra na média: é gate binário que pode bloquear sozinho.
+
+**Passo A (Camada 1, determinística):** rodar no repo do blog:
+```bash
+python scripts/check-sensivel.py src/content/blog/<slug>.mdx
+```
+Exit 1 = há match de denylist (R$ de escala-empresa, CNPJ/CPF, telefone, e-mail, token, IP, métrica financeira). Avaliar cada match no Passo B.
+
+**Passo B (Camada 2, semântica):** ler o post inteiro e classificar:
+- Expõe número interno da Expert (MRR, caixa, custo, salário, contagem de clientes)?
+- Identifica cliente, aluno ou pessoa sem consentimento registrado?
+- Contém informação que só poderia vir de fonte interna (reunião, CRM, Brain, WhatsApp)?
+- Promete resultado/prazo que a empresa não sustenta em contrato?
+
+**Cores:**
+- **VERDE**: nenhum item acima; matches do scanner são exemplos hipotéticos marcados ou dados públicos. Segue.
+- **AMARELO**: item duvidoso (número plausível sem fonte clara, case anonimizado mas reconhecível no nicho). NÃO publica sem decisão humana explícita — listar cada exceção no relatório com recomendação.
+- **VERMELHO**: qualquer item confirmado. RETRABALHO MAIOR automático, independente do score das outras dimensões.
+
 ## Critérios de veredicto
 
 | Veredicto | Critério |
 |---|---|
-| APROVADO | Score médio ≥ 7.0 em todas as dimensões, nenhum bloqueador |
-| RETRABALHO MENOR | Score médio ≥ 5.5, sem bloqueador de factualidade, ≤5 violações |
-| RETRABALHO MAIOR | Score médio < 5.5 OU placeholder não preenchido OU >5 violações graves |
+| APROVADO | Score médio ≥ 7.0 em todas as dimensões, nenhum bloqueador, Segurança VERDE |
+| RETRABALHO MENOR | Score médio ≥ 5.5, sem bloqueador de factualidade, ≤5 violações, Segurança VERDE ou AMARELO com exceções listadas |
+| RETRABALHO MAIOR | Score médio < 5.5 OU placeholder não preenchido OU >5 violações graves OU Segurança VERMELHO |
+
+AMARELO na segurança nunca vira APROVADO direto: o veredicto sai "RETRABALHO MENOR — pendente decisão humana nas exceções de segurança".
 
 ## Formato do relatório
 
@@ -92,6 +115,7 @@ Relatório estruturado com:
 | Factualidade | X/10 | ✓/⚠/✗ |
 | GEO/SEO | X/10 | ✓/⚠/✗ |
 | UX Mobile | X/10 | ✓/⚠/✗ |
+| Segurança | VERDE/AMARELO/VERMELHO | gate |
 | **Média** | **X/10** | APROVADO/RETRABALHO |
 
 ### Violações encontradas
@@ -100,6 +124,11 @@ Relatório estruturado com:
    → Patch: [correção sugerida]
 
 2. ...
+
+### Segurança (triagem 3 cores)
+[VERDE | AMARELO | VERMELHO]
+[Se AMARELO: lista de exceções, uma por linha, com recomendação — decisão é humana]
+[Se VERMELHO: o trecho exato e por quê]
 
 ### Veredicto
 [APROVADO | RETRABALHO MENOR | RETRABALHO MAIOR]

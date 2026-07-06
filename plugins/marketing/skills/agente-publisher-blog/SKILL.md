@@ -25,6 +25,24 @@ Post deve ter sido revisado pelo `agente-revisor-blog` com veredicto APROVADO ou
 
 ## Pipeline de publicação
 
+### Passo 0: Gates de segurança (BLOQUEANTES — protocolo `docs/protocolo-conteudo.md`)
+
+1. **Veredicto do revisor**: exige APROVADO com Segurança VERDE, ou AMARELO com decisão humana explícita registrada (quem aprovou cada exceção). Sem isso = ABORTAR.
+2. **Scanner (defesa em profundidade)**: rodar de novo antes do commit:
+   ```bash
+   cd C:\repos\expertintegrado-blog && python scripts/check-sensivel.py src/content/blog/<slug>.mdx
+   ```
+   Exit 1 com match não justificado no relatório do revisor = ABORTAR.
+3. **Gate LGPD de case**: `tipo: case` com nome real de cliente/aluno exige referência do consentimento (onde está registrado). Sem registro = publicar só a versão anonimizada.
+4. **Log de aprovação**: adicionar linha em `docs/log-aprovacoes.md` (mesmo commit do post):
+   ```
+   | <data> | <slug> | <aprovador> | <triagem VERDE/AMARELO+exceções> | <consentimento: n/a ou ref> |
+   ```
+
+### Passo 0.5: Cadência de lote (quando publicando 2+ posts)
+
+Lote NUNCA vai ao ar de uma vez: escalonar `pubDate` 1 post/dia a partir de amanhã. O blog filtra `pubDate` futuro no build; cada rebuild diário revela o post do dia (GitHub Action `daily-rebuild` do repo do blog — se ainda estiver desativada, o rebuild é manual via deploy).
+
 ### Passo 1: Salvar arquivo MDX
 
 ```
@@ -55,7 +73,7 @@ Verificar que o push foi bem-sucedido antes de continuar.
 
 Aguardar ~60s após o push. Então verificar via Playwright:
 ```
-https://expertintegrado.com.br/blog/<slug>
+https://blog.expertintegrado.com.br/blog/<slug>
 ```
 
 Verificar:
@@ -86,7 +104,7 @@ mcp__expert-brain__save_note(
   kind: "fact",
   domains: ["marketing", "ai-applied"],
   body: "Post #X do blog Expert Integrado publicado em 2026-MM-DD.
-URL: https://expertintegrado.com.br/blog/<slug>
+URL: https://blog.expertintegrado.com.br/blog/<slug>
 Pillar: <pillar> | Tipo: <tipo>
 Keyword alvo: <kw>
 Posts relacionados: <lista de slugs>
@@ -102,7 +120,7 @@ Se não existe: criar.
 Se existe: adicionar linha:
 
 ```
-| <#> | <slug> | <pillar> | <tipo> | <pubDate> | https://expertintegrado.com.br/blog/<slug> |
+| <#> | <slug> | <pillar> | <tipo> | <pubDate> | https://blog.expertintegrado.com.br/blog/<slug> |
 ```
 
 ## Relatório de publicação
@@ -111,7 +129,7 @@ Ao final, reportar:
 
 ```
 ✓ Publicado: <slug>
-URL: https://expertintegrado.com.br/blog/<slug>
+URL: https://blog.expertintegrado.com.br/blog/<slug>
 Git: <commit hash>
 Vercel: OK (HTTP 200)
 Brain: nota <id>

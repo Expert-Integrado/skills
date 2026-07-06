@@ -32,6 +32,26 @@ Recebe um outline com:
 
 Arquivo MDX completo, pronto pra salvar em `src/content/blog/<slug>.mdx`.
 
+## Camada 0 — Segregação de fontes (PROTOCOLO DE SEGURANÇA, inegociável)
+
+Causa-raiz do vazamento de 28/06: fonte envenenada. O escritor NÃO toca fonte interna. Protocolo completo: `docs/protocolo-conteudo.md` no repo do blog.
+
+**Fontes PERMITIDAS durante a escrita:**
+- O outline recebido (input explícito)
+- Posts já publicados do blog (`src/content/blog/`)
+- Documentação PÚBLICA de produto (site, catálogo público de preços)
+- Conhecimento geral de domínio + dados públicos com fonte citável
+
+**Fontes PROIBIDAS durante a escrita (NUNCA consultar pra escrever post):**
+- Expert Brain (`recall`/`get_note`) — o vault contém financeiro, pessoal e dados de clientes
+- Memória local do agente (`memory/*.md`) e transcrições de reuniões/aulas
+- Pipedrive, WhatsApp, e-mails — dados de clientes e leads
+- Qualquer número interno da Expert (MRR, caixa, salários, custos, contagem de clientes)
+
+Se o outline pedir dado interno: deixar `[preencher]` e sinalizar no output — quem preenche e aprova é humano. Case com nome real só com consentimento registrado; default é anonimizado; exemplo hipotético SEMPRE marcado como hipotético no texto.
+
+**Tags comerciais:** se o post responde uma objeção de venda, incluir tags `objecao:<slug>` e `setor:<slug>` no frontmatter (alimenta o índice do time comercial).
+
 ## Regras de voz (INEGOCIÁVEIS)
 
 ### O que MANTER sempre
