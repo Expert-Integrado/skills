@@ -1,7 +1,7 @@
 ---
 name: pipe-review
 description: Use quando Eric pedir pra rodar o radar comercial, "pipe review", dashboard de higiene CRM, checagem da disciplina/diligência dos vendedores nos pipelines (Super SDR / Educacional / SaaS), ou o relatório pré pipe review das 8h. Gera dashboard HTML auditando deals abertos do Pipedrive contra 5 regras de higiene e faz deploy em pipe-review.vercel.app. NÃO usar pra criar/editar deal específico, reabordar leads, agendar call, ou transferir lead — essas são outras skills do plugin comercial.
-allowed-tools: Bash, Read, mcp__whatsapp-agent__send
+allowed-tools: Bash, Read, mcp__whatsapp-agent__send, mcp__expert-brain__save_task
 ---
 
 # Pipe Review — Radar Comercial
