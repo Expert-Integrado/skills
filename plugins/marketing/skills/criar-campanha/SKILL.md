@@ -209,7 +209,11 @@ Não reinvente — chame a skill **`criar-reel`** com a pauta/ângulo do criativ
 
 ## Fase 4 — Publicação no Meta (PAUSADA)
 
-Siga `reference/meta-config.md` à risca.
+🔴 **GATE OBRIGATÓRIO — antes de qualquer outra coisa nesta fase:** confirme que as tools `ads_*` (MCP Meta Ads, lista dos Pré-requisitos) existem de fato na sessão.
+- **Se NÃO existirem:** PARE a Fase 4 aqui. Não invente chamada nem IDs. Em vez disso, monte e entregue ao João um **roteiro de publicação manual** no Gerenciador de Anúncios, com tudo pronto pra copiar/colar: nomes de campanha/conjunto/anúncio, targeting, budget, textos, CTA e onde subir cada criativo — seguindo a mesma estrutura de `reference/meta-config.md`.
+- **Proibição explícita: NUNCA reportar campanha criada, IDs ou status de publicação sem retorno real das tools `ads_*`.** Se a tool não rodou, não existiu resultado — não simule um.
+
+Se as tools existirem, siga `reference/meta-config.md` à risca.
 
 ### Passo 0 — descoberta de IDs (sempre, no início da fase)
 
