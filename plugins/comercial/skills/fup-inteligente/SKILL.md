@@ -1,7 +1,7 @@
 ---
 name: fup-inteligente
 description: Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direita para a esquerda (etapa mais avançada primeiro). Lê contexto Pipedrive + WhatsApp pessoal, sugere mensagem com voz Eric, envia após aprovação, registra atividade e agenda próximo follow-up. Quando deal vira Perdido, SEMPRE cria atividade de retomada futura conforme playbook. TRIGGER quando o usuário pedir "follow-up", "fup do pipe", "roda o fup", "vamos rodar o funil X", "deal Y foi perdido", "marca como perdido" ou similar. NÃO usar para criar lead/deal novo (usar prospecta-lead), dashboard de higiene do pipe (pipe-review), reabordagem de base fria em massa (reabordagem), transferir lead entre vendedores (transferir-lead) nem para listar pendências de WhatsApp (estou-devendo).
-allowed-tools: mcp__pipedrive__list_deals, mcp__pipedrive__get_deal, mcp__pipedrive__get_deal_summary, mcp__pipedrive__list_deal_activities, mcp__pipedrive__create_activity, mcp__pipedrive__update_activity, mcp__pipedrive__update_deal, mcp__pipedrive__pipedrive_write, mcp__pipedrive__sync_all, mcp__whatsapp-agent__read, mcp__whatsapp-agent__send, mcp__whatsapp-agent__check_message, mcp__whatsapp-agent__get_voice_guide, Read
+allowed-tools: mcp__pipedrive__list_deals, mcp__pipedrive__get_deal, mcp__pipedrive__get_deal_summary, mcp__pipedrive__list_deal_activities, mcp__pipedrive__create_activity, mcp__pipedrive__update_activity, mcp__pipedrive__update_deal, mcp__pipedrive__pipedrive_write, mcp__pipedrive__sync_all, mcp__whatsapp-agent__read, mcp__whatsapp-agent__send, mcp__whatsapp-agent__check_message, mcp__whatsapp-agent__get_voice_guide, Read, Grep
 ---
 
 # fup-inteligente — Follow-up de Funis Pipedrive
@@ -51,6 +51,8 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 | `playbook/Livro_Objecoes_Contexto_Agente.md` | Objeções específicas para contexto de agente IA |
 | `playbook/Manual_Duvidas_Tecnicas_Super_SDR.md` | Dúvidas técnicas do produto durante a conversa |
 | `playbook/Politica_Comercial_Super_SDR.md` | Política comercial (descontos, condições, exceções) |
+
+**Busca eficiente (OBRIGATÓRIO):** não ler os playbooks inteiros — são documentos longos. Usar `Grep` pelos termos da objeção/dúvida específica do lead (ex: "preço", "sócio", "concorrência", nome do motivo de perda) e ler com `Read` só as seções relevantes que o Grep apontar.
 
 ### IDs fixos
 
