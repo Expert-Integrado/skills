@@ -28,11 +28,10 @@ Se o objetivo da campanha não estiver na tabela, **não invente limite** — re
   +30% SÓ quando o CPL/custo estiver ≤ 50% do limite Bom (ex: WhatsApp Bom < R$5 com CPL ≤ R$2,50).
   Nunca sugerir mais de +30% de uma vez.
 
-### Regras universais (valem pra qualquer produto — vêm do playbook)
+### Regras universais (valem pra qualquer produto)
 - 🔴 CTR < 0,5% **após** 1.000 impressões → matar.
 - 🔴 Frequência > 3,0 → matar (saturação).
 - Nunca sugerir matar mais de 5 anúncios de uma vez sem destacar.
 - Todo motivo cita o número que disparou a regra.
 
-> Baseline/contexto completo continua em `playbooks/trafego-meta-ads.md`. Esta tabela é a fonte
-> de verdade dos **limites por produto**; o playbook é a fonte das regras universais e da operação.
+> Este arquivo é a fonte de verdade única dos guardrails (limites por produto + regras universais).

@@ -17,7 +17,7 @@ Pipeline (parte deterministica, sem LLM):
 A analise visual e o "por que viralizou" NAO sao feitos aqui — sao do Claude
 (ver SKILL.md). Este script entrega os dados objetivos + a midia.
 
-Requisitos (ja presentes no PC do Eric): APIFY_TOKEN, ffmpeg no PATH,
+Requisitos: APIFY_TOKEN, ffmpeg no PATH,
 openai-whisper (import whisper), requests.
 """
 import argparse

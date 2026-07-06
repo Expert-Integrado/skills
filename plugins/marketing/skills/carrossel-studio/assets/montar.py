@@ -46,13 +46,19 @@ def main():
         if s.get("foto"):
             s["foto"] = embutir_foto(s["foto"])
 
-    # injeta window.CARROSSEL imediatamente antes da tag <script> principal,
-    # pra que o boot do editor leia o projeto e ja abra preenchido.
+    # injeta window.CARROSSEL no marcador do template (<!-- INJECT_HERE -->), logo antes
+    # da tag <script> principal, pra que o boot do editor leia o projeto e ja abra preenchido.
+    # Fallback pro rfind("<script>") se o template nao tiver o marcador (versao antiga).
     inj = "<script>window.CARROSSEL = " + json.dumps(proj, ensure_ascii=False) + ";</script>\n"
-    idx = html.rfind("<script>")
-    if idx == -1:
-        raise SystemExit("template invalido: tag <script> nao encontrada")
-    out = html[:idx] + inj + html[idx:]
+    marker = "<!-- INJECT_HERE -->"
+    idx = html.find(marker)
+    if idx != -1:
+        out = html[:idx] + inj + html[idx + len(marker):]
+    else:
+        idx = html.rfind("<script>")
+        if idx == -1:
+            raise SystemExit("template invalido: nem marcador nem tag <script> encontrados")
+        out = html[:idx] + inj + html[idx:]
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(out)
