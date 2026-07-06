@@ -18,6 +18,12 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 
+# Windows decodifica stdout/stderr como cp1252 por default — JSON com acento/emoji
+# nos nomes de chat estoura UnicodeEncodeError sem isto (achado do golden run 06/07/2026)
+for _s in (sys.stdout, sys.stderr):
+    if hasattr(_s, "reconfigure"):
+        _s.reconfigure(encoding="utf-8")
+
 PROJ = os.environ.get("WHATSAPP_AGENT_SUPABASE_PROJECT", "gmpurkzxtvzqlvkqwjkp")
 PAT = os.environ.get("SUPABASE_PAT")
 SERVICE_ROLE = os.environ.get("SUPABASE_SERVICE_ROLE")
@@ -26,7 +32,7 @@ if not PAT:
     print(
         "ERRO: SUPABASE_PAT precisa estar definida no env.\n"
         "       Token canonico no 1Password (vault 'Agentes Eric'):\n"
-        "       op read \"op://Agentes Eric/SUPABASE_PAT/credential\"\n"
+        "       op read \"op://Agentes Eric/SUPABASE_ACCESS_TOKEN/credential\"\n"
         "       Cache local em ~/.claude.json (apos setup-secrets.ps1).",
         file=sys.stderr,
     )
@@ -43,7 +49,7 @@ def sql(q):
         body_path = f.name
     try:
         r = subprocess.run(
-            ["curl", "-s", "-X", "POST", SQL_URL,
+            ["curl", "-s", "--ssl-no-revoke", "-X", "POST", SQL_URL,
              "-H", f"Authorization: Bearer {PAT}",
              "-H", "Content-Type: application/json",
              "--data-binary", f"@{body_path}"],
@@ -52,7 +58,9 @@ def sql(q):
         try:
             return json.loads(r.stdout)
         except Exception:
-            return {"error": r.stdout[:500]}
+            # stdout vazio (ex.: falha TLS) tambem precisa de diagnostico util
+            err = r.stdout[:400] or f"curl rc={r.returncode} stderr={(r.stderr or '')[:200]}"
+            return {"error": err}
     finally:
         os.unlink(body_path)
 
