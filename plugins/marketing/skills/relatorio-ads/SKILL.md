@@ -1,4 +1,5 @@
 ---
+name: relatorio-ads
 description: "Gera o relatório diário de Meta Ads do Super SDR (Expert Integrado): puxa as métricas de cada anúncio ativo (gasto, CPL, CTR, frequência, resultados) via MCP do Meta, monta um resumo legível e, no rodapé, aplica os guardrails do playbook de tráfego marcando os anúncios que bateram regra de MATAR (kill) ou ESCALAR (scale) — só AVISA, nunca pausa nem mexe sozinho. Por padrão imprime o relatório na conversa pra revisão; envia pra um canal (WhatsApp/Zoom/Telegram/Discord) só se o João pedir. Usar quando o João pedir 'roda o relatório de ads', 'como tão as campanhas', 'relatório de tráfego', 'relatorio-ads', 'como tá o Meta Ads hoje', ou quando a tarefa agendada disparar. NÃO usar para criar, editar, pausar ou ativar campanha, mudar budget ou status — esta skill é 100% leitura; criação de campanha é a skill /criar-campanha."
 command: "relatorio-ads"
 ---
