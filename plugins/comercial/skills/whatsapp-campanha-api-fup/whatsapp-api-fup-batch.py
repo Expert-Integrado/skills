@@ -28,7 +28,7 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 # ───────────── CREDENCIAIS — sempre do JSON local, nunca hardcoded ─────────
-SYNC = r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync'
+SYNC = os.environ.get("CLAUDE_SYNC_DIR", r"C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync")
 
 def _load_creds():
     pd = json.load(open(f'{SYNC}/claude_desktop_config.json', encoding='utf-8'))

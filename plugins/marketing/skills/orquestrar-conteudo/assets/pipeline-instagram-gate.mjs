@@ -16,7 +16,12 @@ const brief = A.briefingPath
 const N = A.nSlides || 5
 const MIN_SCORE = 7
 const MAX_TRIES = A.maxTries || 3
-const ws = `C:/tmp/conteudo/${slug}`
+const ws = `${A.conteudoDir || 'C:/tmp/conteudo'}/${slug}`
+// Saida dos PNGs: Workspace migrou pro Google Drive em 05/07/2026 (OneDrive/Workspace = arquivo morto)
+const outBase = A.outDir || 'G:/Meu Drive/claude-workspace/Workspace/temp'
+const PORT = A.port || 8911
+// Deteccao de python no bash gerado (PC nao tem python no PATH do Git Bash)
+const PYLINE = `PY="$(command -v python3 || command -v python || echo "C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe")"`
 if (!slug || !brief) return { status:'erro', message:'args invalido: faltou slug/briefingPath', args_recebido: args }
 
 const COPY_SCHEMA = { type:'object', required:['status','caption','hashtags','slides'], properties:{
@@ -74,7 +79,7 @@ async function montar(tag){
   const r = await agent(
     `Rode SOMENTE este Python (montagem do carrossel — injeta a copy nos tokens):
 \`\`\`bash
-cd "${ws}" && python - << 'PY'
+cd "${ws}" && ${PYLINE} && "$PY" - << 'PY'
 import json
 copy=json.load(open("copywriter-output.json",encoding="utf-8"))
 html=open("carrossel.html",encoding="utf-8").read()
@@ -123,17 +128,17 @@ phase('Export')
 const exp = await agent(
   `Exporte os ${N} slides do carrossel em PNG. Rode no MESMO bash call (servidor http + python playwright, processos nao persistem entre calls):
 \`\`\`bash
-cd "${ws}" && python -m http.server 8911 --bind 127.0.0.1 &
+cd "${ws}" && ${PYLINE} && "$PY" -m http.server ${PORT} --bind 127.0.0.1 &
 SRV=$!; sleep 2
-python - << 'PY'
+"$PY" - << 'PY'
 import asyncio,os
 from playwright.async_api import async_playwright
-OUT=os.path.expanduser("~/OneDrive/Workspace/temp/${slug}"); os.makedirs(OUT,exist_ok=True)
+OUT=r"${outBase}/${slug}"; os.makedirs(OUT,exist_ok=True)
 async def go():
   async with async_playwright() as p:
     b=await p.chromium.launch()
     c=await b.new_context(viewport={"width":1080,"height":1080},device_scale_factor=1)
-    pg=await c.new_page(); await pg.goto("http://127.0.0.1:8911/carrossel-final.html")
+    pg=await c.new_page(); await pg.goto("http://127.0.0.1:${PORT}/carrossel-final.html")
     await pg.add_style_tag(content="body{padding:0!important;gap:0!important} html,body{scrollbar-width:none!important;overflow-x:hidden!important} html::-webkit-scrollbar,body::-webkit-scrollbar{display:none!important}")
     await pg.evaluate("document.fonts.ready"); await pg.wait_for_timeout(1500)
     for i in range(1,${N}+1):
@@ -141,12 +146,12 @@ async def go():
     await b.close()
 asyncio.run(go())
 PY
-kill $SRV 2>/dev/null; ls -la "$HOME/OneDrive/Workspace/temp/${slug}"
+kill $SRV 2>/dev/null; ls -la "${outBase}/${slug}"
 \`\`\`
-Confira que cada PNG tem tamanho variado (300KB-1MB; iguais = falha de render). Retorne SOMENTE {"exported": <n de PNGs gerados>, "dir": "~/OneDrive/Workspace/temp/${slug}"}.`,
+Confira que cada PNG tem tamanho variado (300KB-1MB; iguais = falha de render). Retorne SOMENTE {"exported": <n de PNGs gerados>, "dir": "${outBase}/${slug}"}.`,
   { label:'export', phase:'Export', schema:{ type:'object', required:['exported'], properties:{ exported:{type:'integer'}, dir:{type:'string'} } } }
 )
 
 return { status:'aprovado', score: verdict.score, tries, slides:N,
-         exported: exp?.exported ?? null, out_dir:`~/OneDrive/Workspace/temp/${slug}`,
+         exported: exp?.exported ?? null, out_dir:`${outBase}/${slug}`,
          caption_file:`${ws}/copywriter-output.json` }

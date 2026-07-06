@@ -49,6 +49,7 @@ USO:
     results = eng.run_batch(LEADS, config, log_path=r'C:/tmp/disparo-<nome>/results.jsonl')
 """
 
+import os
 import json, re, time, datetime, sys, urllib.request, urllib.parse, urllib.error
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -60,7 +61,7 @@ except Exception:
     pass
 
 # ---------- CREDENCIAIS (JSON local; nunca hardcoded) ----------
-SYNC = r"C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync"
+SYNC = os.environ.get("CLAUDE_SYNC_DIR", r"C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync")
 
 def _load_creds():
     pd_cfg = json.load(open(f"{SYNC}/claude_desktop_config.json", encoding="utf-8"))

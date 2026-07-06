@@ -35,7 +35,7 @@ The env file must contain:
 import sys, os, time, json, base64, hmac, hashlib, requests
 
 HOSTS = ["https://api.klingai.com", "https://api-singapore.klingai.com"]
-DEFAULT_ENV = r"C:\MCPs\kling.env"
+DEFAULT_ENV = os.environ.get("KLING_ENV", r"C:\MCPs\kling.env")
 DEFAULT_NEG = ("text, letters, words, captions, watermark, logo, brand name, "
                "distorted face, deformed hands, extra fingers, low quality, blurry, "
                "jittery motion, flicker, oversaturated, cartoon")

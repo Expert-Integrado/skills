@@ -20,7 +20,7 @@ import subprocess
 import sys
 import urllib.request
 
-HF = r"C:\MCPs\hf.exe"
+HF = os.environ.get("HF_EXE", r"C:\MCPs\hf.exe")
 
 
 def run(args, parse_json=True):

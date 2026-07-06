@@ -37,8 +37,8 @@ MODEL_URL = (
     "speaker-recongition-models/"
     "3dspeaker_speech_eres2net_sv_en_voxceleb_16k.onnx"
 )
-MODEL_PATH = r"C:\MCPs\speaker-embed.onnx"
-REF_PATH   = r"C:\MCPs\eric-voice-ref.wav"
+MODEL_PATH = os.environ.get("VOICE_MODEL_PATH", r"C:\MCPs\speaker-embed.onnx")
+REF_PATH   = os.environ.get("VOICE_REF_PATH", r"C:\MCPs\eric-voice-ref.wav")
 MODEL_SIZE_MB = 25.3
 
 

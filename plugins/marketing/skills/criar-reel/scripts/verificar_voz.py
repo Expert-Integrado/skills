@@ -24,8 +24,8 @@ import sys
 import numpy as np
 
 SR = 16000
-DEFAULT_MODEL = "C:/MCPs/speaker-embed.onnx"
-DEFAULT_REF = "C:/MCPs/eric-voice-ref.wav"
+DEFAULT_MODEL = os.environ.get("VOICE_MODEL_PATH", "C:/MCPs/speaker-embed.onnx")
+DEFAULT_REF = os.environ.get("VOICE_REF_PATH", "C:/MCPs/eric-voice-ref.wav")
 
 
 def _load_pcm(path, max_s=30):
