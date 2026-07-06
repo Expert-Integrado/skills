@@ -37,11 +37,9 @@ Gera/edita imagens do Eric ou da marca. Backend primário = OpenAI gpt-image-2 (
   # IMG_SCRIPT: esta e uma skill de PLUGIN (nao standalone) — o image_gen.py vive ao lado deste SKILL.md,
   # em scripts/image_gen.py. Resolver o 1o path existente (cache do plugin, versao-agnostico; repo clonado como fallback):
   if [ -z "$IMG_SCRIPT" ]; then
-    for cand in \
-      "$HOME/.claude/plugins/cache/expertintegrado/marketing"/*/skills/imagem/scripts/image_gen.py \
-      "C:/repos/expertintegrado-skills/plugins/marketing/skills/imagem/scripts/image_gen.py"; do
-      [ -f "$cand" ] && IMG_SCRIPT="$cand" && break
-    done
+    # sort -V | tail -1 = versao MAIS NOVA do cache (glob cru pegaria a mais antiga — achado do golden run 06/07)
+    IMG_SCRIPT="$(ls -1d "$HOME/.claude/plugins/cache/expertintegrado/marketing"/*/skills/imagem/scripts/image_gen.py 2>/dev/null | sort -V | tail -1)"
+    [ -f "$IMG_SCRIPT" ] || IMG_SCRIPT="C:/repos/expertintegrado-skills/plugins/marketing/skills/imagem/scripts/image_gen.py"
   fi
   [ -f "$IMG_SCRIPT" ] || echo "image_gen.py nao encontrado — setar IMG_SCRIPT manual (ver Erros comuns)"
   WORK="${IMG_WORK:-C:/tmp}"; mkdir -p "$WORK"

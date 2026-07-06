@@ -39,10 +39,11 @@ Os proprios scripts resolvem `competitors.txt` e `output/` via `__file__` (relat
 
 ### Token Apify — resolver `APIFY_TOKEN` (obrigatorio, nao-circular)
 O script aceita `APIFY_TOKEN` OU `APIFY_API_TOKEN`. Resolver nesta ordem, parando no primeiro que funciona:
-1. **Ja no ambiente?** `printenv APIFY_TOKEN APIFY_API_TOKEN` — se qualquer um tiver valor, nao fazer mais nada (no PC do Eric ja esta setado no ambiente).
-2. **Senao, via 1Password** (se `op` instalado E autenticado): exportar do cofre na MESMA chamada de Bash que roda o script (o env NAO persiste entre chamadas — ver comando do Passo 1). O guard abaixo evita sobrescrever um token ja valido com string vazia caso o `op read` falhe:
+1. **Ja no ambiente?** `printenv APIFY_TOKEN APIFY_API_TOKEN` — se qualquer um tiver valor, usar. ATENCAO (achado do golden run 06/07): presenca nao e validade — se a run falhar com `HTTP Error 401: Unauthorized`, o token do env esta expirado; NAO repetir com ele: cair pro item 2 (cofre) e re-rodar com o token do 1Password inline.
+2. **Senao (ou apos 401 do env), via 1Password** (se `op` instalado E autenticado): exportar do cofre na MESMA chamada de Bash que roda o script (o env NAO persiste entre chamadas — ver comando do Passo 1). CORRECAO-DE-FATO (golden run 06/07): o item real do vault chama `Apify` e o campo tem rotulo em portugues `credencial` (nao existe item APIFY_TOKEN):
    ```bash
-   [ -n "$APIFY_TOKEN$APIFY_API_TOKEN" ] || { command -v op >/dev/null 2>&1 && export APIFY_TOKEN="$(op read 'op://Agentes Eric/APIFY_TOKEN/credential')"; }
+   [ -n "$APIFY_TOKEN$APIFY_API_TOKEN" ] || { command -v op >/dev/null 2>&1 && export APIFY_TOKEN="$(op read 'op://Agentes Eric/Apify/credencial')"; }
+   # pos-401 do env: forcar o token do cofre mesmo com env presente -> APIFY_TOKEN="$(op read 'op://Agentes Eric/Apify/credencial')" APIFY_API_TOKEN="" na frente do comando
    ```
 3. **Se `op` nao existir / nao estiver autenticado E nenhuma env var tiver valor:** PARAR e pedir ao Eric pra deixar o token disponivel — ou autenticando o 1Password (`op signin`), ou exportando `APIFY_TOKEN` no ambiente ele mesmo. NUNCA pedir, colar ou gravar o VALOR LITERAL do token no chat/arquivo (e secret — ver bloco NUNCA). Nao ha outra fonte: sem env var e sem cofre acessivel, a run nao roda.
 

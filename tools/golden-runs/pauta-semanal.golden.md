@@ -19,3 +19,4 @@
 
 | data | máquina | versão plugin | resultado |
 |---|---|---|---|
+| 06/07/2026 | PC (executor Fable) | marketing 2.13.0 | APROVADO com 4 ACHADOS corrigidos: (1) resolução pegava versão stale do cache (sort alfabético), (2) detecção de PY aceitava interpretador sem testar capacidade, (3) recovery não cobria 401 token-presente-inválido, (4) op path do token apontava item inexistente (real: Apify/credencial). Run real: 1 handle, 3 posts, Whisper ok, 5 pautas entregues e salvas |

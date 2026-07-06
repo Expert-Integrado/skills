@@ -20,3 +20,4 @@
 
 | data | máquina | versão plugin | resultado |
 |---|---|---|---|
+| 06/07/2026 | PC (executor Fable, seguindo só o texto) | marketing 2.13.0 (repo) | APROVADO 7/7 + 1 ACHADO corrigido: glob do IMG_SCRIPT pegava a versão mais ANTIGA do cache (2.11.0) — trocado por sort -V. Imagem gerada em 1024x1024, rosto preservado, paleta Expert no telão, escolha de foto determinística sem pergunta |

@@ -19,3 +19,4 @@
 
 | data | máquina | versão plugin | resultado |
 |---|---|---|---|
+| 06/07/2026 | PC (executor Fable, seguindo só o texto) | marketing 2.13.0 (repo) | APROVADO 6/6 — OK impresso, PNG em Downloads, autor default com avatar via env, negrito exato, acentos ok, sem corte, zero pergunta |

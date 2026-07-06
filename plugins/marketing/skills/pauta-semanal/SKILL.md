@@ -41,12 +41,12 @@ Transforma a pesquisa de concorrentes da semana em **5 pautas de conteúdo pront
      RESEARCH_DIR=""
      for base in "$HOME/.claude/plugins" "$HOME/.claude/skills" "$PWD/.claude/skills" "$PWD/plugins" "$PWD"; do
        [ -d "$base" ] || continue
-       # sort torna a ordem determinística: quando há mais de uma cópia no MESMO base-dir, ganha o caminho alfabeticamente menor.
-       hits="$(find "$base" -maxdepth 9 -type f -path '*/ig-competitor-research/scripts/research.py' 2>/dev/null | sort)"
+       # sort -V | tail -n1 = determinístico E pega a versão MAIS NOVA quando o cache tem várias (2.11.0 vs 2.13.0 — sort alfabético cru pegava a mais antiga; achado do golden run 06/07).
+       hits="$(find "$base" -maxdepth 9 -type f -path '*/ig-competitor-research/scripts/research.py' 2>/dev/null | sort -V)"
        [ -z "$hits" ] && continue
        n="$(printf '%s\n' "$hits" | grep -c .)"
-       hit="$(printf '%s\n' "$hits" | head -n1)"
-       [ "$n" -gt 1 ] && printf 'AVISO: %s cópias de ig-competitor-research em %s; usando a 1a (alfabética). Pra forçar outra, rode com RESEARCH_DIR=<caminho> setado.\n%s\n' "$n" "$base" "$hits"
+       hit="$(printf '%s\n' "$hits" | tail -n1)"
+       [ "$n" -gt 1 ] && printf 'AVISO: %s cópias de ig-competitor-research em %s; usando a mais nova (sort -V). Pra forçar outra, rode com RESEARCH_DIR=<caminho> setado.\n%s\n' "$n" "$base" "$hits"
        RESEARCH_DIR="$(dirname "$(dirname "$hit")")"; break
      done
      echo "RESEARCH_DIR=${RESEARCH_DIR:-<vazio>}"
@@ -71,6 +71,9 @@ Transforma a pesquisa de concorrentes da semana em **5 pautas de conteúdo pront
    PY="$(command -v python3 || command -v python || command -v py)"
    # Se nada no PATH: no Windows o launcher `py` sabe o caminho absoluto do interpretador
    [ -z "$PY" ] && PY="$(py -3 -c 'import sys; print(sys.executable)' 2>/dev/null)"
+   # Validar por CAPACIDADE, não só por -x: o stub do WindowsApps (…/WindowsApps/python3) é executável
+   # mas não roda nada (abre a Microsoft Store) — achado do golden run 06/07. Stub reprova neste teste:
+   [ -n "$PY" ] && ! "$PY" -c "import sys" >/dev/null 2>&1 && PY=""
    # Fallback documentado do PC do Eric (Python 3.12 não fica no PATH aqui — ground truth CLAUDE.md)
    if [ -z "$PY" ] || { [ "$PY" != "py" ] && [ ! -x "$PY" ]; }; then
      for cand in "$HOME/AppData/Local/Programs/Python/Python312/python.exe" \
@@ -186,6 +189,7 @@ Pode **combinar até dois** desses formatos com `+` quando fizer sentido (ex.: "
 
 ## Erros comuns e recovery
 - **`ERRO: APIFY_TOKEN nao encontrado`** → env var não setada. Setar `APIFY_TOKEN` (ou `APIFY_API_TOKEN`) e repetir o Passo 2.
+- **`HTTP Error 401: Unauthorized` no traceback (RC=1)** → token PRESENTE mas inválido/expirado (a checagem do Passo 1.3 só vê presença, não validade — achado do golden run 06/07). Recovery: buscar token válido na ordem de credenciais do ambiente (env, depois 1Password — no vault do Eric o item é `Apify` e o campo tem rótulo em português: `op read "op://Agentes Eric/Apify/credencial"`) e repetir o Passo 2 com ele inline; se nenhum funcionar, orientar a regenerar o token em apify.com e parar.
 - **`Nenhum post recente na janela` (exit 1)** → aumentar a janela (`--dias 14`) ou conferir os handles.
 - **Perfil privado/inexistente** → o Apify retorna sem `latestPosts`; o script ignora e segue com os demais. Nada a fazer.
 - **Emoji/caption quebrando no Windows** → garantir `PYTHONUTF8=1` na frente do comando.
