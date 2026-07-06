@@ -3229,6 +3229,380 @@
    "ressalvas": [
     "post novo (jul/2026), ainda sem auditoria de força comercial"
    ]
+  },
+  {
+   "slug": "agenda-vendedor-3-4-reunioes-dia",
+   "title": "3-4 reuniões por dia por vendedor: a agenda que sustenta a meta",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "3 a 4 reuniões de venda por dia é o teto sustentável pra um closer que também prepara, faz follow-up e atualiza CRM. Passar disso costuma trocar volume por qualidade.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "agente-que-cria-agente-automacao-recursiva",
+   "title": "Agente que cria agente: até onde vai a automação recursiva numa PME",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Um agente orquestrador que aciona outros agentes especializados, e cria automações novas quando falta uma, já é rotina em operação madura. Veja o que isso significa numa PME e onde o humano continua obrigatório.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "automatizar-em-ano-de-crise",
+   "title": "Automatizar em ano de crise: gasto ou proteção de caixa?",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "momento-errado"
+   ],
+   "forca": null,
+   "quando_mandar": "Em crise de caixa aguda (menos de 60 dias de runway), adiar automação é o certo. Fora disso, processo que vaza leads custa mais que os R$ 8.000 a R$ 15.000 de setup de um agente.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "avaliar-fornecedor-novo-tecnologia",
+   "title": "\\\"Nunca ouvi falar de vocês\\\": como avaliar um fornecedor novo de tecnologia",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "nunca-ouvi-falar"
+   ],
+   "forca": null,
+   "quando_mandar": "Não conhecer a marca reduz o esforço de checar referências, não o risco do contrato. Veja o protocolo de 3 pedidos pra avaliar qualquer fornecedor novo antes de assinar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ceo-nao-tecnico-minimo-para-nao-ser-enganado",
+   "title": "CEO que não entende de tecnologia: o mínimo que você precisa saber pra não ser enganado",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Você não precisa aprender a programar pra não ser enganado numa venda de IA. Precisa de uns 8 conceitos essenciais (chatbot vs agente, alucinação, API, treinar vs configurar) e 3 perguntas que desmontam qualquer vendedor de hype.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "contrato-consultoria-ia-clausulas",
+   "title": "Contrato de consultoria de IA: as cláusulas que protegem os dois lados",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "As cláusulas que equilibram um contrato de consultoria de IA: escopo com entregável nomeado, critério de aceite, propriedade dos dados, confidencialidade bilateral, SLA de suporte e cláusula de cooperação do cliente. Orientação geral, não é aconselhamento jurídico.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "glossario-ia-empresario-100-termos",
+   "title": "Glossário de IA pro empresário: 100 termos sem tecniquês",
+   "pilar": "lideranca",
+   "tipo": "pilar",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Definição direta de 100 termos de IA que todo empresário ouve em reunião mas raramente pergunta o significado, organizados por bloco temático pra consulta rápida.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-agencias-viagem-roteiro-cotacao",
+   "title": "IA para agências de viagem: roteiro, cotação e follow-up de orçamento",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "turismo"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Cliente que pede cotação de viagem compara 2 ou 3 agências ao mesmo tempo. Um agente de IA qualifica o perfil da viagem, monta pré-roteiro com opções e faz o follow-up antes que o orçamento perca validade.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-arquitetura-engenharia-briefing",
+   "title": "IA para arquitetura e engenharia: triagem de briefing e proposta",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "arquitetura"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Um agente de IA faz a triagem do briefing antes da reunião: mede m2, orçamento, prazo e terreno, e só agenda quem tem orçamento real para o projeto.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-distribuidoras-atacado-pedido-recorrente",
+   "title": "IA para distribuidoras e atacado: pedido recorrente sem vendedor digitador",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "distribuidoras"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Na distribuição e no atacado, o vendedor perde o dia digitando pedido repetido de cliente de carteira. Um agente de IA recebe o pedido por WhatsApp, confere contra catálogo e histórico, sugere reposição pelo ciclo de compra e lança no ERP com validação.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-franquias-padronizar-atendimento",
+   "title": "IA para franquias: padronizar atendimento em todas as unidades",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "franquias"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Atendimento desigual entre franquias vem de arquitetura descentralizada, não de treinamento fraco. Um agente de IA central com roteamento por CEP resolve isso: mesmo tom, mesma qualificação e mesmo SLA em toda a rede.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-oficinas-autopecas-orcamento",
+   "title": "IA para oficinas e autopeças: orçamento por foto e retorno de revisão",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "oficinas"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Cliente manda foto da peça quebrada ou descreve o barulho, e a oficina demora pra montar o orçamento e some pro concorrente. Um agente de IA no WhatsApp coleta modelo, ano e sintoma, monta pré-orçamento com validação humana e agenda, além de puxar de volta quem passou da revisão.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "ia-pet-shops-veterinarias",
+   "title": "IA para pet shops e clínicas veterinárias: banho, vacina e recompra",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "pet"
+   ],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Pet shop e clínica veterinária vivem de recorrência disfarçada de balcão: banho quinzenal, vacina anual, ração mensal. Um agente de IA agenda pelo WhatsApp, lembra vacina pelo histórico do pet, avisa quando a ração está acabando e fala do bicho pelo nome.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "lead-de-anuncio-some-mais-rapido",
+   "title": "Por que lead de anúncio some mais rápido (e a janela de minutos que decide)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Lead de anúncio esfria em minutos porque ele preencheu o formulário comparando várias empresas ao mesmo tempo. Veja a conta de custo real por conversa e como estruturar resposta instantânea sem robotizar mal.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "orcamento-ia-2027-quanto-reservar",
+   "title": "Orçamento de IA 2027: quanto uma PME deveria reservar (faixas por porte)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "A faixa de partida é 1% a 4% do faturamento mensal, dividida em três blocos: ferramenta, automação e educação. O erro mais caro de 2026 foi comprar ferramenta antes de definir dono do processo.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "pagamento-software-cartao-alternativas",
+   "title": "Pagamento de software no cartão estourou? Alternativas de contratação pra PME",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "limite-cartao"
+   ],
+   "forca": null,
+   "quando_mandar": "Limite de cartão baixo não devia travar a compra. Parcelar em mais de um cartão, boleto ou PIX parcelado e separar setup de mensalidade resolvem sem esperar o mês que vem.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "primeira-hora-devolvida-por-onde-comecar",
+   "title": "Sua primeira hora devolvida: por onde começar (o mapa do mapeamento)",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Pra achar a primeira hora a devolver, mapeia 5 dias úteis anotando toda tarefa repetida, ranqueia por minutos por semana e ataca a de maior frequência primeiro, com a ferramenta mais simples possível.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "primeiros-30-dias-depois-de-contratar-ia",
+   "title": "Os primeiros 30 dias depois de contratar IA: o que exigir do fornecedor",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Os primeiros 30 dias depois de contratar IA definem o projeto: kickoff com dono nomeado na semana 1, fluxo aprovado por escrito na semana 2, piloto com amostra real na semana 3 e medição contra o critério combinado na semana 4.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "projeto-precisa-dev-de-verdade",
+   "title": "Sinais de que seu projeto precisa de dev de verdade (e como contratar bem)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Cinco sinais dizem que um projeto passou do teto do vibe coding: dado de cliente em escala, integração crítica com terceiro, requisito de performance, compliance formal ou custo de falha maior que o de um dev. Veja como contratar bem sendo não-técnico.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "reviews-ferramenta-ia-o-que-olhar",
+   "title": "O que olhar em reviews de ferramenta de IA (e o que os reviews não contam)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "reviews"
+   ],
+   "forca": null,
+   "quando_mandar": "Review de ferramenta de IA vale quando mostra padrão repetido, não reclamação isolada, e quando a resposta da empresa ao problema diz mais do que a nota. O que o review nunca conta é a qualidade da implantação no seu caso.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "role-play-ia-treinar-vendedor",
+   "title": "Role play com IA: treinar vendedor sem queimar lead real",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Role play com IA treina vendedor contra um comprador simulado, com objeção, evasiva e mau humor configuráveis, sem gastar lead real no aprendizado. O gestor revisa a transcrição depois.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "segunda-feira-ceo-com-ia-hora-a-hora",
+   "title": "A segunda-feira do CEO com IA: a rotina real, hora a hora",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Como fica a segunda-feira de um CEO com stack de IA madura, hora a hora: inbox triado, pipeline com alertas e reuniões com pauta pronta antes da primeira call. O contraste com a segunda sem IA, e o que continua manual de propósito.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "sinais-de-compra-conversa-morna",
+   "title": "Sinais de compra em conversa morna: quando insistir e quando arquivar",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [],
+   "forca": null,
+   "quando_mandar": "Pergunta sobre preço, prazo ou integração, e resposta rápida mesmo curta, são sinais de insistir. Resposta monossilábica repetida e sumiço após proposta pedem quarentena, não mais uma tentativa.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "testar-ia-antes-de-assinar",
+   "title": "A demo era linda, o dia a dia nem tanto: como testar IA antes de assinar",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "quero-prova"
+   ],
+   "forca": null,
+   "quando_mandar": "Demo mostra o fornecedor no melhor dia dele. Pra saber se a IA aguenta o dia a dia da sua empresa, teste com conversa real, perguntas difíceis e um piloto com prazo e critério definidos antes de assinar.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
+  },
+  {
+   "slug": "um-agente-ou-varios-multi-produto",
+   "title": "1 agente ou vários? Como funciona IA pra quem vende mais de um produto",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [],
+   "objecoes": [
+    "agente-por-produto"
+   ],
+   "forca": null,
+   "quando_mandar": "Nem 1 agente genérico pra tudo, nem 1 agente por produto desde o dia 1. A regra prática: comece pelo produto principal, meça, e só separe quando funil e comprador mudarem.",
+   "ressalvas": [
+    "post novo (jul/2026), ainda sem auditoria de força comercial"
+   ]
   }
  ]
 }

@@ -30,7 +30,7 @@ Regra da casa (decisão Eric 05/07/2026): **apareceu objeção de lead, procura 
 
 `<skill-dir>` = diretório deste SKILL.md (derivar do path real; nunca hardcodar — varia por máquina/instalação).
 
-- `<skill-dir>/data/indice.json` — índice completo: 98 posts com `objecoes`, `setores`, `forca` (1-5), `quando_mandar`, `ressalvas`, mais `base_url` e `utm_padrao`. Fonte canônica para o MODO CONSULTAR.
+- `<skill-dir>/data/indice.json` — índice completo: 202 posts com `objecoes`, `setores`, `forca` (1-5), `quando_mandar`, `ressalvas`, mais `base_url` e `utm_padrao`. Fonte canônica para o MODO CONSULTAR.
 - `<skill-dir>/templates/post-objecao.md` — template do MODO CRIAR.
 
 Taxonomia de objeções (usar exatamente estes slugs): `preco`, `meu-setor-e-diferente`, `sem-equipe-tecnica`, `ia-erra`, `cliente-odeia-robo`, `sem-tempo`, `ja-tentei-nao-funcionou`, `medo-dados-lgpd`, `equipe-vai-resistir`, `roi-incerto`, `da-pra-fazer-sozinho`, `empresa-pequena-demais`, `perder-controle`, `momento-errado`.
