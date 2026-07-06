@@ -82,7 +82,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
 | apresentacao-html | A1 | HTML local | fila | — |
-| aula-mentoria | A1 | local | fila | telemetria acusou 1 erro — investigar |
+| aula-mentoria | B/C (era A1) | gravações reais + Smart Player alunos + ClickUp | PARCIAL 06/07 | 1 achado corrigido (encoding output PS); IDs ClickUp validados; completo no próximo uso real |
 | briefing-pre-call | A2 | Pipedrive/Zoom read | fila | — |
 | claude-task | A2 | task no Brain (reversível) | fila | — |
 | criar-aula | A1 (ramo teste) / C (deploy) | deploy só no ramo real | FEITO 06/07 (ramo teste) | APROVADO, 7 achados corrigidos (lab 3.10.1); iconv ausente era o provável erro da telemetria; ramo deploy fica pra curso real |
@@ -93,7 +93,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | onboarding-cliente-ganho | B | ClickUp writes | aguarda OK | card TESTE + delete |
 | pos-reuniao-acoes | A2/B | verificar writes na leitura | fila | — |
 | proposta-3-tiers | A1 | doc local | fila | — |
-| triagem-matinal | A2 | inbox read | fila | telemetria acusou 1 erro — investigar |
+| triagem-matinal | A2 | read-only 4 fontes | FEITO 06/07 | APROVADO ponta a ponta, 7 achados corrigidos (lab 3.10.2); painel real gerado |
 
 ## pessoal (1) · conselho (1) · whatsapp-agent (2)
 
