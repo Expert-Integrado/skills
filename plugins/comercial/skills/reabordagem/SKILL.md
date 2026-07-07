@@ -25,6 +25,7 @@ Campanha de reabordagem/reativação de leads no Pipedrive: recebe uma lista de 
 - SEMPRE mensagem NO TOPO da nota da atividade — o vendedor abre e já vê o que enviar.
 - SEMPRE validar o PRIMEIRO lead com o usuário antes de processar o resto do lote.
 - SEMPRE classificar como DESCARTAR lead sem telefone E sem email (sem canal de contato) — não criar atividade, listar no resumo com motivo.
+- SEMPRE checar no histórico de atividades (Passo 2) se o lead JÁ recebeu reabordagem nos últimos 90 dias (atividade concluída com "Reabordagem"/"Retomada" no subject). SE sim: NÃO pular o lead, mas (a) sinalizar no CONTEXTO ADICIONAL da nota ("reabordagem anterior em <data> por <resp> — ajustar o tom, não repetir a mesma oferta") e (b) listar no resumo final. Reabordar quem foi reabordado semana passada com a mesma mensagem queima a base.
 - SEMPRE gerar o resumo final da campanha (template no Passo 8).
 
 ## Pré-requisitos
