@@ -16,7 +16,7 @@ Dispara os 7 toques de WhatsApp de um webinario-lancamento (do lembrete de vespe
 - **NUNCA disparar sem `--confirmar` aprovado pelo Eric.** Modo padrao e SEMI: preview + aprovacao explicita. So rodar com `--confirmar` depois do Eric ver a copy e a lista.
 - **NUNCA disparar FUP (toques 6/7) pra quem ja agendou.** O script exclui `stage_id in {54, 60, 79}` automaticamente; nao burlar.
 - **NUNCA usar whatsapp-agent pessoal nem Z-API direto pra este fluxo.** So ChatGuru API Oficial (`s13.expertintegrado.app`, institucional/corporativo).
-- **NUNCA hardcodar token.** O script le PIPEDRIVE_API_KEY e credenciais do ChatGuru do cache local (populado do 1Password). Se um token estiver invalido, rotacionar no 1P e rodar `setup-secrets.ps1` — nao editar o JSON na mao.
+- **NUNCA hardcodar token.** O script le PIPEDRIVE_API_KEY e credenciais do ChatGuru do cache local da claude-sync. Se um token estiver invalido: rotacionar no 1P e ATUALIZAR o valor no JSON da claude-sync (o `setup-secrets.ps1` v2 grava so `~/.claude.json` e NAO propaga mais esse cache) — sem colar o secret em chat/log.
 - **NUNCA prometer copy A/B ativa por perfil.** O script classifica decisor vs funcionario e mostra a contagem, mas hoje envia o MESMO miolo pros dois (ver secao SEGMENTACAO).
 - **NUNCA converter o cron pra UTC nem usar sufixo Z / `fireAt` ISO.** Cron de 5 campos em horario LOCAL = BRT (America/Sao_Paulo).
 
@@ -66,7 +66,7 @@ Confirmar com o Eric (perguntar so o que faltar): path do CSV de inscritos, Deta
 
 O texto do "Detalhe da origem do evento" e o valor que o script casa por substring case-insensitive contra o campo `Detalhes da origem da oportunidade` dos deals do Pipedrive (ver secao FILTRO POR EVENTO). Um erro de digitacao do Eric (acento a mais/menos, palavra trocada) faz o filtro casar 0 deals (→ `VAO RECEBER: 0`) ou, pior, casar o evento errado se a string for substring de outro nome. Como esta skill NAO tem tool de leitura direta do Pipedrive (`allowed-tools` = Bash, Read, CronCreate, CronList, CronDelete), a validacao do texto e feita pelo PROPRIO preview do script no Passo 3, assim:
 
-- Pegar o valor do Eric EXATAMENTE como ele escreveu (nao "corrigir" acento/maiuscula por conta propria — o script ja e case-insensitive, mas troca de palavra muda o resultado).
+- Pegar o valor do Eric EXATAMENTE como ele escreveu (nao "corrigir" por conta propria — desde 07/07/2026 o match do script e case-insensitive E acento-insensitive, entao "Imposto Invisivel" casa "Imposto Invisível"; mas troca/falta de PALAVRA muda o resultado).
 - Se o Eric der um nome aproximado ou incompleto, preferir o TRECHO mais curto e distintivo do nome do evento (ex: `Imposto Invisivel` em vez da frase inteira) — substring menor casa mais tolerante a variacao, mas confirmar com o Eric qual trecho usar antes de rodar.
 - A validacao real acontece no Passo 3: se o preview vier `VAO RECEBER: 0` ou um numero muito abaixo do total de inscritos do CSV, o `--evento` provavelmente nao bate → voltar aqui e reconferir o texto com o Eric. NAO seguir pro disparo com contagem suspeita.
 
@@ -97,7 +97,7 @@ SCRIPT="$(find "$HOME" -type f -name disparar_toque.py -path '*notificacao-webin
 - SE ainda assim `$SCRIPT` vazio → reportar "disparar_toque.py nao encontrado no filesystem" e parar.
 - SE achou → daqui pra frente usar a variavel `$SCRIPT` (path absoluto ja resolvido) em TODAS as chamadas ao Python. Nao usar `SKILL_DIR` nem path relativo.
 
-> Nota: o script tem um path interno chumbado (`C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync`) de onde carrega a engine `whatsapp-api-fup-batch.py` e le o token do Pipedrive. Esse path e do ambiente do PC/notebook do Eric; em headless (VPS) o script nao roda como esta (PENDENTE-SCRIPT: portar o path da engine pra env var). Este passo resolve apenas a localizacao do PROPRIO `disparar_toque.py`.
+> Nota: o path da `claude-sync` (de onde o script carrega a engine `whatsapp-api-fup-batch.py` e le o token do Pipedrive) se resolve sozinho desde 07/07/2026: env var `CLAUDE_SYNC_DIR` → autodeteccao (`G:/Meu Drive/claude-workspace/Workspace/claude-sync` primeiro, depois o legado do OneDrive). Em maquina com claude-sync fora dos 2 paths (VPS/headless): exportar `CLAUDE_SYNC_DIR` antes de rodar. Este passo resolve apenas a localizacao do PROPRIO `disparar_toque.py`.
 
 ### Passo 3 — PREVIEW do toque (obrigatorio, nao dispara)
 
@@ -306,7 +306,7 @@ Duas camadas:
 5. **Multi-evento (atinge grupo errado).** Sempre filtrar pelo Detalhe da origem do evento atual; nunca a base inteira. Recovery: conferir `--evento` bate com o Detalhe no Pipedrive; conferir a contagem do preview.
 6. **CronCreate depende do Claude Code aberto e idle.** Sem `durable: true` os jobs somem ao fechar a sessao (por isso esta skill passa `durable: true` em TODOS os toques — ver Passo 7); jobs so disparam com a REPL idle (nao mid-query). `durable: true` sobrevive a restart mas NAO liga a maquina sozinho. Recovery: pra toques ao vivo (T0/pitch), garantir a maquina ligada com a sessao aberta, ou disparo manual.
 7. **`VAO RECEBER: 0` no preview.** Causas: CSV errado/vazio, `--evento` nao bate com o Detalhe da origem, ou (toque 6/7) todos ja agendaram. Recovery: conferir CSV, conferir Detalhe da origem, checar se e FUP. NAO disparar as cegas.
-8. **Token invalido (Pipedrive/ChatGuru).** O script le do cache local populado do 1Password. Recovery: rotacionar no 1P e rodar `setup-secrets.ps1` pra atualizar o cache. NAO editar o JSON na mao.
+8. **Token invalido (Pipedrive/ChatGuru).** O script le do cache local da claude-sync. Recovery: rotacionar no 1P e atualizar o valor no JSON da claude-sync (o `setup-secrets.ps1` v2 grava so `~/.claude.json` — nao propaga esse cache), sem colar o secret em chat/log.
 9. **`dialog_execute` retorna success mas nao entrega.** Success != entrega. Recovery: conferir no painel ChatGuru (chats arquivados) se a mensagem chegou.
 
 ## Exemplo (fluxo tipico de um evento)

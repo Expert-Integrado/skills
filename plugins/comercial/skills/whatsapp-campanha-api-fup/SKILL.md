@@ -35,7 +35,7 @@ Dispara campanha de follow-up em lote pelo aparelho da **API Oficial** do ChatGu
 ## Pre-requisitos
 
 - **Python 3**: detectar com `command -v python3 || command -v python` (nunca assumir caminho fixo de binario).
-- **Workspace**: `WORKSPACE_DIR="${WORKSPACE_DIR:-$HOME/OneDrive/Workspace}"` (default do PC do Eric; em headless, exportar a env var).
+- **Workspace**: `WORKSPACE_DIR="${WORKSPACE_DIR:-G:/Meu Drive/claude-workspace/Workspace}"` (Google Drive — default dos PCs do Eric desde 05/07/2026; em headless, exportar a env var). ATENCAO: `~/OneDrive/Workspace` e ARQUIVO MORTO — nao escrever la; a copia legada do claude-sync que mora la so serve de fallback de leitura.
 - **Engine (single source of truth executavel)**: `$WORKSPACE_DIR/claude-sync/scripts/whatsapp-api-fup-batch.py`.
   - O arquivo `whatsapp-api-fup-batch.py` ao lado deste SKILL.md e apenas ESPELHO de leitura pra referencia/versionamento.
   - SE a copia de `claude-sync/scripts/` existe → importar SEMPRE ela (a do repo nao roda em producao e pode ficar atras).
@@ -43,12 +43,12 @@ Dispara campanha de follow-up em lote pelo aparelho da **API Oficial** do ChatGu
 - **Credenciais** (4 valores: `PIPEDRIVE_API_KEY`, `CHATGURU_API_KEY`, `CHATGURU_ACCOUNT_ID`, `CHATGURU_PHONE_ID_OFICIAL`): a engine le do JSON local (cache do 1Password gravado pelo `setup-secrets.ps1`), em 2 arquivos:
   - `{SYNC}/claude_desktop_config.json` → chave `mcpServers.pipedrive.env.PIPEDRIVE_API_KEY`. A engine chama esse valor de `PD_TOKEN` — **`PD_TOKEN` e `PIPEDRIVE_API_KEY` sao a MESMA string**, so muda o nome interno; toda mencao a `{PD_TOKEN}` nesta skill = valor de `PIPEDRIVE_API_KEY`.
   - `{SYNC}/claude_desktop_config-ERICLUCIANO-PC.json` (fallback: `-PC-2.json`) → chaves `mcpServers.chatguru-mcp.env.{CHATGURU_API_KEY, CHATGURU_ACCOUNT_ID, CHATGURU_PHONE_ID_OFICIAL}`.
-  - **`SYNC` e constante CHUMBADA no topo da engine** (~linha 31): `SYNC = r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync'`. A engine NAO le `WORKSPACE_DIR`. Como conferir se bate com a maquina atual (a engine e arquivo local — legivel com Read/Grep): (1) `grep -n "^SYNC" "$WORKSPACE_DIR/claude-sync/scripts/whatsapp-api-fup-batch.py"`; (2) `[ -f "$WORKSPACE_DIR/claude-sync/claude_desktop_config.json" ] && echo OK`. SE o valor de `SYNC` == `$WORKSPACE_DIR/claude-sync` E o teste (2) da OK → nada a fazer. SENAO → editar a linha do `SYNC` na copia de PRODUCAO pro path real do claude-sync desta maquina antes de rodar (limitacao do script, nao desta skill). **Validacao obrigatoria pos-edicao:** apos editar a linha do `SYNC`, repetir o `grep -n "^SYNC" "$WORKSPACE_DIR/claude-sync/scripts/whatsapp-api-fup-batch.py"` e confirmar que o novo path aparece na saida ANTES de rodar a engine. SE o grep nao mostrar o path novo (edicao nao pegou) → NAO rodar; refazer a edicao ate o grep confirmar.
+  - **`SYNC` se resolve SOZINHO no topo da engine** (~linha 31, desde 07/07/2026): ordem = env var `CLAUDE_SYNC_DIR` → autodeteccao (`G:/Meu Drive/claude-workspace/Workspace/claude-sync` primeiro, depois o legado `C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync` — ganha o primeiro que tiver `claude_desktop_config.json`). A engine NAO le `WORKSPACE_DIR`. Verificacao rapida antes de rodar: `[ -f "$WORKSPACE_DIR/claude-sync/claude_desktop_config.json" ] && echo OK`. Em maquina cujo claude-sync mora fora dos 2 paths conhecidos → exportar `CLAUDE_SYNC_DIR` apontando pra pasta certa (nao editar a engine). SE a engine em producao for uma copia ANTIGA (grep `grep -n "CLAUDE_SYNC_DIR" .../whatsapp-api-fup-batch.py` nao acha nada) → atualizar a copia de producao a partir do espelho do repo antes de rodar.
   - Ordem de busca se um token faltar no JSON:
   1. Env var homonima (`echo "$CHATGURU_API_KEY"` etc.);
   2. 1Password (fonte canonica): `op read "op://Agentes Eric/<TOKEN>/credential"` — detectar `op` com `command -v op`;
   3. Se nao achou → reportar ao usuario qual token falta e PARAR (nao inventar valor).
-  - Ao rotacionar um token: rotacionar no 1P E re-rodar `setup-secrets.ps1` pra propagar o cache. Em PC novo, rodar `setup-secrets.ps1` — ele popula `CHATGURU_PHONE_ID_OFICIAL` na secao `chatguru-mcp.env`. Nao copiar JSON com secret por canal inseguro.
+  - **Ao rotacionar um token (ATENCAO — procedimento mudou):** o `setup-secrets.ps1` atual (v2, repo `secrets-bootstrap`) grava em `~/.claude.json` e NAO propaga mais os `claude_desktop_config*.json` do claude-sync — que sao o cache que a ENGINE le. Apos rotacionar no 1P: atualizar o valor tambem no JSON do claude-sync (edicao manual do campo, sem colar o secret em chat/log) OU exportar a env var homonima antes de rodar. Gotcha adicional: `~/.claude.json` NAO tem `CHATGURU_PHONE_ID_OFICIAL` (so o claude-sync tem) — nao da pra migrar a engine pra ~/.claude.json sem antes incluir essa chave no manifesto do secrets-bootstrap. Nao copiar JSON com secret por canal inseguro.
 - **Pasta da campanha (log persistente)**: o `results.jsonl` PRECISA sobreviver entre sessoes (dedup) — NAO usar `mktemp -d`. Definir uma vez por campanha:
   ```python
   import os
@@ -284,7 +284,7 @@ Validar com o usuario 1-2 exemplos ANTES de gerar os miolos do batch inteiro —
 ```python
 import os, sys
 from importlib.util import spec_from_file_location, module_from_spec
-WS = os.environ.get('WORKSPACE_DIR', os.path.expanduser('~/OneDrive/Workspace'))
+WS = os.environ.get('WORKSPACE_DIR', 'G:/Meu Drive/claude-workspace/Workspace')
 ENGINE = f'{WS}/claude-sync/scripts/whatsapp-api-fup-batch.py'
 if not os.path.exists(ENGINE):
     # headless/sem OneDrive: usar o espelho ao lado deste SKILL.md
@@ -397,4 +397,4 @@ Referencia pra diagnostico; a engine ja implementa tudo isso.
 11. **Sucessos "orfaos" na etapa de origem** — a engine NAO move stage no sucesso por padrao (premissa: leads ja estao em "Tentando contato"). SE o batch partir de outra etapa (ex: Lead Mapeado em retry) → passar `target_stage_on_success=65` no `run_batch()` (descoberto em 21/05/2026, retry de 35 leads Calendly).
 12. **HTTP 400 `ERR_STAGE_NOT_FOUND` ao mover deal** → usou `stage_id=2`; "Tentando contato" no pipeline Prospeccao e **65**. Conferir o mapa de stages nas Constantes.
 13. **Template nao entregou mas `dialog_execute` deu `success`** → provavelmente `\n` no miolo (Gupshup 132018) ou rejeicao posterior do Gupshup. Conferir historico do chat/WhatsApp do destinatario; corrigir miolo pra 1 linha e re-disparar SO os afetados.
-14. **Token faltando no JSON local** → buscar env var → `op read "op://Agentes Eric/<TOKEN>/credential"` → se nada, reportar e parar. Ao rotacionar: 1P + re-rodar `setup-secrets.ps1`.
+14. **Token faltando no JSON local** → buscar env var → `op read "op://Agentes Eric/<TOKEN>/credential"` → se nada, reportar e parar. Ao rotacionar: 1P + atualizar o JSON do claude-sync manualmente (o `setup-secrets.ps1` v2 grava so `~/.claude.json` — nao propaga o cache da engine; ver Pre-requisitos).

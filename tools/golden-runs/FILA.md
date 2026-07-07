@@ -59,16 +59,16 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | reabordagem | A2 | até o rascunho (NÃO envia) | FEITO 06/07 | APROVADO no escopo (3 deals perdidos reais do Educacional: 2 QUENTE + 1 DESCARTAR sem contato; mensagem + estratégia do deal 25; parou no gate do Passo 6, create_activity fica pra onda 2); 1 achado corrigido (comercial 2.5.10): sem sinalização de reabordagem <90 dias — os 2 leads vivos JÁ tinham reabordagem de mar-abr/2026 e a skill mandava abordar de novo sem aviso. Obs MCP: list_deals(pipeline_id=6) vazou 2 deals Super SDR |
 | fup-inteligente | A2 | até o rascunho (NÃO envia) | FEITO 06/07 | APROVADO no escopo (funil Educacional real: triagem pulou 3 pendentes-futuras, deal 10964 Madeplant R$39,6K acionado, Livro de Objeções timing, check_message 9.5, template completo; parou no gate do Passo 5); 2 achados corrigidos (comercial 2.5.11): filtro pipeline_id do MCP VAZA (75 deals de todos os funis) → filtro defensivo client-side no Passo 1; get_voice_guide estoura token limit (~90K) → recovery documentado (ler Motor+TL;DR do arquivo salvo) |
 | transferir-lead | B | muda dono de deal | FEITO 07/07 | APROVADO (ciclo real sem terceiros: chat pessoal↔corporativo do Eric como lead, deal 15030 + nota + 2 atividades + send real pro corporativo; limpeza total com origem da pessoa revertida); 4 defeitos corrigidos (comercial 2.5.14): Referência A desatualizada vs enum real (Eric presencialmente→Eric conheceu presencialmente, faltavam Imersão Expert Integrado/ADS Webinário, acentos) + expert-mcps CLAUDE.md sincronizado, sobrescrita silenciosa de origem preenchida (enum vem como ID — pré-check com hashes canônicos), mesmo defeito herdado na prospecta-lead, timeout do search sem recovery. Obs: nota Brain 60ri3np9ja65 tinha número corporativo errado (corrigida); update_person do MCP não valida enum nem avisa sobrescrita de custom_fields (pendência expert-mcps) |
-| whatsapp-campanha-api-fup | C | disparo em massa | fila (até preview/fila) | — |
-| whatsapp-campanha-central-prospeccao | C | disparo em massa | fila (até preview) | — |
+| whatsapp-campanha-api-fup | C | disparo em massa | PARCIAL 07/07 | gate humano (dialog_id + piloto); validado até o gate: engine importada da produção, creds OK, token Pipedrive vivo, list_deals e fallbacks 12↔13 conferidos; 3 achados corrigidos (comercial 2.5.15): WORKSPACE_DIR no OneDrive morto, SYNC da engine hardcoded com espelho do repo À FRENTE da produção (agora env CLAUDE_SYNC_DIR + autodetecção G:), instrução de rotação defasada (setup-secrets v2 não propaga o cache da engine) |
+| whatsapp-campanha-central-prospeccao | C | disparo em massa | PARCIAL 07/07 | gate humano (dialog_id por SDR + piloto); dry-run oficial com 2 deals reais + _clean_first_name/brt_to_utc/contrato das 3 lambdas validados; 4 achados corrigidos (comercial 2.5.15): SYNC hardcoded + espelho à frente, 3 seções do SKILL documentando o hardcode antigo, WORKSPACE_DIR OneDrive morto, rotação defasada |
 
 ## eventos (3)
 
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
 | verificar-convites | A2/B (writes em funil real) | MCP expert-integrado obrigatório | PARCIAL 06/07 | MCP ausente na sessão (parada legítima); pré-requisitos adicionados à skill; run completo no próximo ciclo real de convites da imersão |
-| convidar-evento | C | disparo em massa | fila (até preview) | — |
-| notificacao-webinario | C | disparo | fila (até preview) | — |
+| convidar-evento | C | disparo em massa | PARCIAL 07/07 | preso: MCP expert-integrado ausente nesta sessão (fonte da verdade da skill); validado o que dava: whatsapp-agent vivo (2 instâncias), segmentacao.json 138 itens íntegro no G:, tools citadas existem; 1 achado corrigido (eventos 2.5.3): atalho local citava OneDrive morto |
+| notificacao-webinario | C | disparo | FEITO 07/07 | APROVADO (preview REAL com CSV de 125 inscritos do Imposto Invisível cruzado com 199 deals: camada 1 descartou 174, VAO RECEBER 25, camada 2 do FUP ativa, A/B 10/15, copy correta); 3 achados corrigidos (eventos 2.5.3): match do --evento era acento-sensível e o exemplo da própria skill retornava 0 (fix _fold NFD), SYNC do disparar_toque hardcoded (PENDENTE-SCRIPT resolvido), rotação defasada |
 
 ## operacoes (2)
 
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho root aposentada 07/07, 2 cópias de worktree ignoradas)
-- Processadas: 53 (45 FEITO + 7 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 131 · Onda 1: CONCLUÍDA · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (goal 07/07 liberou deploy/publicação; disparo em massa segue na regra do piloto): 4
+- Processadas: 57 (46 FEITO + 10 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 142 · Onda 1: CONCLUÍDA · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (goal 07/07 liberou deploy/publicação; disparo em massa segue na regra do piloto): 0 — onda 4 esgotada; disparos reais aguardam campanha/evento do Eric

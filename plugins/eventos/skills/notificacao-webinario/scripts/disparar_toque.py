@@ -20,11 +20,15 @@ Toques: 1=T-12h 2=T-1h 3=T0 4=pitch 5=abertura-sessao 6=FUP1 7=FUP2
 Regras: linha unica (template rejeita \\n), sem travessao, segmenta cargo (decisor/funcionario).
 Credenciais SEMPRE do JSON local. dialog_execute OK != entrega (conferir no painel arquivados).
 """
-import sys, json, re, os, csv, urllib.request, argparse
+import sys, json, re, os, csv, urllib.request, argparse, unicodedata
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 from importlib.util import spec_from_file_location, module_from_spec
 
-SYNC = r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync'
+SYNC = os.environ.get('CLAUDE_SYNC_DIR') or next(
+    (p for p in (r'G:/Meu Drive/claude-workspace/Workspace/claude-sync',
+                 r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync')
+     if os.path.exists(f'{p}/claude_desktop_config.json')),
+    r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync')
 spec = spec_from_file_location('eng', f'{SYNC}/scripts/whatsapp-api-fup-batch.py')
 eng = module_from_spec(spec); spec.loader.exec_module(eng)
 PD_TOKEN = json.load(open(f'{SYNC}/claude_desktop_config.json'))['mcpServers']['pipedrive']['env']['PIPEDRIVE_API_KEY']
@@ -44,6 +48,9 @@ def alt(t):
     if len(t)==13 and t.startswith('55') and t[4]=='9': return t[:4]+t[5:]
     if len(t)==12 and t.startswith('55'): return t[:4]+'9'+t[4:]
     return None
+def _fold(s):
+    # match de evento tolerante a acento: 'Imposto Invisivel' casa 'Imposto Invisível'
+    return ''.join(c for c in unicodedata.normalize('NFD', str(s or '').lower()) if not unicodedata.combining(c))
 def valido(x): return x and str(x).strip().lower() not in LIXO and len(str(x).strip())>1
 def eh_decisor(c): return any(k in (c or '').lower() for k in DECISOR_KW)
 
@@ -72,7 +79,7 @@ def deals_origem(evento):
             data=json.loads(r.read())
         for d in (data.get('data') or []):
             det=(d.get(DETALHE_KEY) or '')
-            if isinstance(det,str) and evento.lower() in det.lower():
+            if isinstance(det,str) and _fold(evento) in _fold(det):
                 out.append(d)
         more=(data.get('additional_data') or {}).get('pagination',{})
         if more.get('more_items_in_collection'): start=more.get('next_start',start+500)
