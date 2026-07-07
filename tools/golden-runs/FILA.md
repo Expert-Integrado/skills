@@ -83,7 +83,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 |---|---|---|---|---|
 | apresentacao-html | A1 | HTML local | FEITO 06/07 | APROVADO no escopo (deck real de 7 slides em C:/tmp/golden-apresentacao, QA visual Playwright: letterbox escuro 16:10, position absolute, bg por slide, reveals; deploy pulado no gate); 2 achados corrigidos (lab 3.10.4): path default 01_Palestras/Eventos NÃO existe no Drive → convenção real 01_Aulas_e_Palestras/YYYY-MM-DD - Evento - Tema (15 medidos); foto do quem-sou sem fonte operacional (não existe eric.jpg) → pré-req aponta pasta canônica de fotos. Obs: cache do plugin 3 versões atrás do repo; Google Fonts externo degrada offline |
 | aula-mentoria | B/C (era A1) | gravações reais + Smart Player alunos + ClickUp | PARCIAL 06/07 | 1 achado corrigido (encoding output PS); IDs ClickUp validados; completo no próximo uso real |
-| briefing-pre-call | A2 | Pipedrive/Zoom read | fila | — |
+| briefing-pre-call | A2 | Pipedrive/Zoom read | FEITO 06/07 | APROVADO (dossiê real do Gustavo Lobo/Madeplant, 4 fontes cruzadas, 1-pager no template exato, recall achou as notas-exemplo da própria skill); 2 achados corrigidos (lab 3.10.5): WhatsApp search sem guarda de homônimo (Gustavo Lobo da Antiescola 2023 misturado ao da Madeplant) e Outlook ler_emails com falsos positivos fuzzy (3 emails que não eram do lead) → guardas de pertinência nos Passos 4 e 5 |
 | claude-task | A2 | task no Brain (reversível) | FEITO 06/07 | APROVADO ponta a ponta; achado TRANSVERSAL do fuso (TZ IANA sem tzdata no Git Bash) corrigido em 7 skills |
 | criar-aula | A1 (ramo teste) / C (deploy) | deploy só no ramo real | FEITO 06/07 (ramo teste) | APROVADO, 7 achados corrigidos (lab 3.10.1); iconv ausente era o provável erro da telemetria; ramo deploy fica pra curso real |
 | criar-voice-guide | A2 | WhatsApp read | fila | — |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 29 (23 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 63 · Onda 1 restante: ~13 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 30 (24 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 65 · Onda 1 restante: ~12 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
