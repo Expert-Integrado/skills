@@ -48,11 +48,15 @@ O script aceita `APIFY_TOKEN` OU `APIFY_API_TOKEN`. Resolver nesta ordem, parand
 3. **Se `op` nao existir / nao estiver autenticado E nenhuma env var tiver valor:** PARAR e pedir ao Eric pra deixar o token disponivel — ou autenticando o 1Password (`op signin`), ou exportando `APIFY_TOKEN` no ambiente ele mesmo. NUNCA pedir, colar ou gravar o VALOR LITERAL do token no chat/arquivo (e secret — ver bloco NUNCA). Nao ha outra fonte: sem env var e sem cofre acessivel, a run nao roda.
 
 ### Python + midia
-- **Python 3 + `ffmpeg` + `openai-whisper` (`import whisper`) + `requests`.** O shell NAO mantem env entre chamadas, entao cada comando Python abaixo resolve o interpretador inline via `$PY` na MESMA chamada de Bash: `python3` (ou `python`) na maioria dos ambientes; no PC do Eric nao ha `python`/`python3` no PATH, entao cai no caminho absoluto documentado. Checar dependencias:
+- **Python 3 + `ffmpeg` + `openai-whisper` (`import whisper`) + `requests`.** O shell NAO mantem env entre chamadas, entao cada comando Python abaixo resolve o interpretador inline via `$PY` na MESMA chamada de Bash. Resolver por CAPACIDADE (quem ja tem whisper), nao por PATH — no PC do Eric o `python3` do PATH e o 3.14 da Windows Store, mas o ecossistema whisper/ffmpeg documentado vive no 3.12; instalar `openai-whisper` num interpretador novo e download pesado desnecessario:
   ```bash
-  PY="$(command -v python3 || command -v python || echo "$HOME/AppData/Local/Programs/Python/Python312/python.exe")"
+  PY=""
+  for cand in "$(command -v python3 || true)" "$(command -v python || true)" \
+    "$HOME/AppData/Local/Programs/Python/Python312/python.exe"; do
+    [ -n "$cand" ] && "$cand" -c "import whisper, requests" >/dev/null 2>&1 && PY="$cand" && break
+  done
+  [ -n "$PY" ] || { PY="$(command -v python3 || command -v python || echo "$HOME/AppData/Local/Programs/Python/Python312/python.exe")"; "$PY" -m pip install -U openai-whisper requests; }
   command -v ffmpeg >/dev/null 2>&1 || echo "instale ffmpeg e coloque no PATH"
-  "$PY" -c "import whisper, requests" 2>/dev/null || "$PY" -m pip install -U openai-whisper requests
   ```
   Se `ffmpeg` ou `whisper` faltarem e nao der pra instalar agora, rodar com `--no-transcribe` (so metadados + capa; sem transcricao dos Reels).
 
@@ -69,8 +73,13 @@ O script aceita `APIFY_TOKEN` OU `APIFY_API_TOKEN`. Resolver nesta ordem, parand
 Rodar sempre com `PYTHONUTF8=1`. Como o shell nao persiste env entre chamadas, este bloco unico resolve `SKILL_DIR`, `$PY` e o token e roda o script — tudo na MESMA chamada de Bash (substitua o caminho de `SKILL_DIR` e os handles/flags):
 ```bash
 SKILL_DIR="<caminho absoluto da pasta deste SKILL.md>"
-PY="$(command -v python3 || command -v python || echo "$HOME/AppData/Local/Programs/Python/Python312/python.exe")"
-[ -n "$APIFY_TOKEN$APIFY_API_TOKEN" ] || { command -v op >/dev/null 2>&1 && export APIFY_TOKEN="$(op read 'op://Agentes Eric/APIFY_TOKEN/credential')"; }
+PY=""
+for cand in "$(command -v python3 || true)" "$(command -v python || true)" \
+  "$HOME/AppData/Local/Programs/Python/Python312/python.exe"; do
+  [ -n "$cand" ] && "$cand" -c "import whisper, requests" >/dev/null 2>&1 && PY="$cand" && break
+done
+[ -n "$PY" ] || { echo "nenhum interpretador com whisper — ver Pre-requisitos"; }
+[ -n "$APIFY_TOKEN$APIFY_API_TOKEN" ] || { command -v op >/dev/null 2>&1 && export APIFY_TOKEN="$(op read 'op://Agentes Eric/Apify/credencial')"; }
 PYTHONUTF8=1 "$PY" "$SKILL_DIR/scripts/research.py" <@handles...> [flags]
 ```
 O script: scrapeia via Apify (1 chamada batch) -> filtra a janela (`--dias`, descarta pinned) -> calcula engajamento (`likes + comentarios*3`) e **outlier score** (engajamento / mediana do proprio perfil) -> top N por handle -> reordena global -> baixa a capa (`displayUrl`) de cada pick e, pros Reels, baixa o mp4, extrai audio com ffmpeg e transcreve com Whisper local. Sai um `output/<timestamp>/` com `research_data.json` (metricas + `transcript` + `frame_path`) e a pasta `frames/`.

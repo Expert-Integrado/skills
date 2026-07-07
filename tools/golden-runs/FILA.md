@@ -35,7 +35,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | reel-para-post | A2 | Whisper local | FEITO 06/07 | APROVADO (faster-whisper GPU real: 45s em 6,7s; tese+outline+embed+UTM); 1 achado corrigido (marketing 2.13.6): memória faster-whisper-gpu inacessível do projeto atual — copiada + gotcha do cublas inline na skill |
 | carrossel-studio | A1 (era A2 — não usa API nenhuma) | editor HTML offline | FEITO 06/07 | APROVADO (Express real: HTML de 5 slides em Downloads, boot validado headless, contraste WCAG medido, ramo foto com gh api + dataURL); 2 achados corrigidos (marketing 2.13.7): campo foto com path POSIX falha silencioso no Windows (dado em JSON não passa pela conversão do Git Bash) + fonte local de fotos derivada de WORKSPACE_DIR quebrada pela migração do workspace |
 | gerar-hero-blog | A2 | API imagem (centavos) | FEITO 06/07 | APROVADO (ciclo real em post de teste: gpt-image-2 HIGH 144s, WebP 45KB, frontmatter acentuado, skip idempotente, build 214 páginas verde, deploy gated); 2 achados corrigidos (marketing 2.13.8): geração de 144s estoura o timeout default de 120s da tool + resolução de Python com premissa caducada (agora por capacidade/Pillow) |
-| ig-competitor-research | A2 | Apify ~US$0,10 | fila | completar: build_report.py + relatório |
+| ig-competitor-research | A2 | Apify ~US$0,10 | FEITO 06/07 | APROVADO ciclo completo (análise dos 3 posts do scrape real + analysis.json + build_report.py com merge OK + report.html 520KB + padrões/pautas); 2 achados corrigidos (marketing 2.13.9): op path do Passo 1 não recebeu a correção do item Apify + resolução de $PY por capacidade (premissa de PATH caducada, pip install no interpretador errado) |
 | relatorio-ads | A2 | Meta API read-only | fila | — |
 | criar-campanha | C | cria campanha Meta Ads | fila (até payload) | criar pausada só com OK |
 | criar-webinario | B | cria webinar Zoom real | aguarda OK | criar + deletar |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 22 (17 FEITO + 4 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 52 · Onda 1 restante: ~20 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 23 (18 FEITO + 4 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 54 · Onda 1 restante: ~19 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
