@@ -60,7 +60,7 @@
       "name": "operacoes",
       "source": "./plugins/operacoes",
       "description": "Skills de operacoes internas: email-cleaner, onboard.",
-      "version": "2.2.2",
+      "version": "2.2.3",
       "category": "productivity",
       "tags": [
         "operacoes",

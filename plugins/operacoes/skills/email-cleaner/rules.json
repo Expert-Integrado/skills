@@ -46,7 +46,7 @@
       "folder": "Reuniões/Gravações",
       "match_type": "domain_suffix",
       "domains": ["@zoom.us"],
-      "subject_must_match": "(?i)recursos de reunião|meeting recap|gravação",
+      "subject_must_match": "recursos de reunião|meeting recap|gravação",
       "reason": "Recaps Zoom de reuniões reais - manter pra histórico. ATENÇÃO: ler antes pra distinguir Daily/recorrentes vazios vs reuniões importantes com cliente."
     },
     {
@@ -118,7 +118,7 @@
       "folder": "Afiliados",
       "match_type": "domain_suffix",
       "domains": ["@lovable.dev"],
-      "subject_must_match": "(?i)commission|affiliate|comissão",
+      "subject_must_match": "commission|affiliate|comissão",
       "reason": "Comissões Lovable - resto vai pra Notificações Sistema."
     },
     {
@@ -135,7 +135,7 @@
       "folder": "Recibo",
       "match_type": "domain_suffix",
       "domains": ["@inter.co", "@bancointer.com.br"],
-      "subject_must_match": "(?i)pix realizado|pagamento|recibo|comprovante",
+      "subject_must_match": "pix realizado|pagamento|recibo|comprovante",
       "reason": "Comprovantes Pix Banco Inter."
     },
     {
@@ -144,7 +144,7 @@
       "folder": "Recibo",
       "match_type": "domain_suffix",
       "domains": ["@paypal.com.br", "@paypal.com"],
-      "subject_must_match": "(?i)recibo|receipt",
+      "subject_must_match": "recibo|receipt",
       "reason": "Recibos PayPal."
     },
     {
@@ -160,7 +160,7 @@
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
       "domains": ["@supabase.com", "@supabase.io"],
-      "subject_must_match": "(?i)security|vulnerability|CVE|breach|exposed",
+      "subject_must_match": "security|vulnerability|CVE|breach|exposed",
       "reason": "Alertas de segurança Supabase - precisa atenção imediata. Regra mais específica vem ANTES da genérica (first-match-wins)."
     },
     {
@@ -217,7 +217,7 @@
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
       "domains": ["@email.meta.com", "@global.metamail.com", "@business-updates.facebook.com", "@facebookmail.com", "@business.facebook.com"],
-      "subject_must_not_match": "(?i)desativada|disabled|suspended|payment failed",
+      "subject_must_not_match": "desativada|disabled|suspended|payment failed",
       "reason": "Aprovações de anúncios e recibos Meta. ATENÇÃO: se contém 'desativada' / 'disabled' → Alertas Segurança."
     },
     {
@@ -226,7 +226,7 @@
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
       "domains": ["@business.facebook.com", "@facebookmail.com"],
-      "subject_must_match": "(?i)desativada|disabled|suspended|payment failed",
+      "subject_must_match": "desativada|disabled|suspended|payment failed",
       "reason": "Conta de anúncios Meta com problema crítico."
     },
     {
@@ -235,7 +235,7 @@
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
       "domains": ["@google.com", "@accounts.google.com", "@payments.google.com"],
-      "subject_must_not_match": "(?i)drive|document|planilha|sheet|compartilh|shared",
+      "subject_must_not_match": "drive|document|planilha|sheet|compartilh|shared",
       "reason": "Logins, alertas Cloud Platform, billing."
     },
     {
@@ -244,7 +244,7 @@
       "folder": "Comunicação Cliente",
       "match_type": "domain_suffix",
       "domains": ["@google.com"],
-      "subject_must_match": "(?i)drive|document|planilha|sheet|compartilh|shared",
+      "subject_must_match": "drive|document|planilha|sheet|compartilh|shared",
       "reason": "Compartilhamentos de docs - geralmente humano da equipe ou parceiro."
     },
     {
@@ -253,7 +253,7 @@
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
       "domains": ["@vercel.com"],
-      "subject_must_not_match": "(?i)CVE|vulnerability|security",
+      "subject_must_not_match": "CVE|vulnerability|security",
       "reason": "Deploys, sign-in, domain config."
     },
     {
@@ -262,7 +262,7 @@
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
       "domains": ["@vercel.com"],
-      "subject_must_match": "(?i)CVE|vulnerability|security",
+      "subject_must_match": "CVE|vulnerability|security",
       "reason": "Vulnerabilidades Next.js / React."
     },
     {
@@ -271,7 +271,7 @@
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
       "domains": ["@info.hostinger.com", "@updates.hostinger.com"],
-      "subject_must_match": "(?i)kernel|vulnerability|security|attention",
+      "subject_must_match": "kernel|vulnerability|security|attention",
       "reason": "Alertas de kernel/segurança VPS."
     },
     {

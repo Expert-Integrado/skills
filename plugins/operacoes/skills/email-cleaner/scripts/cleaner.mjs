@@ -213,12 +213,14 @@ function ruleMatches(rule, addr, subject) {
   }
   if (!addrMatches) return false;
 
-  // Subject modifiers
+  // Subject modifiers (case-insensitive, como o match de address; aceita e descarta
+  // prefixo (?i) legado de regex estilo Python, que o RegExp do JS rejeita)
+  const subjectRe = (src) => new RegExp(String(src).replace(/^\(\?i\)/, ""), "i");
   if (rule.subject_must_match) {
-    if (!new RegExp(rule.subject_must_match).test(subject)) return false;
+    if (!subjectRe(rule.subject_must_match).test(subject)) return false;
   }
   if (rule.subject_must_not_match) {
-    if (new RegExp(rule.subject_must_not_match).test(subject)) return false;
+    if (subjectRe(rule.subject_must_not_match).test(subject)) return false;
   }
   return true;
 }

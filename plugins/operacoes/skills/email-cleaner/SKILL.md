@@ -101,7 +101,7 @@ node "${SKILL_DIR}/scripts/cleaner.mjs" --auth-check
 ```
 - Critério de sucesso (verificável na saída literal do script): a primeira linha é exatamente uma de três: `status: OK`, `status: SEM_AUTH` ou `status: TOKEN_INVALIDO`. Em `OK` o exit code é 0; nos outros dois é 1.
 - SE a saída contém `status: OK` → seguir pro Passo 2.
-- SE a saída contém `status: SEM_AUTH` OU `status: TOKEN_INVALIDO` → o Eric precisa rodar o device-code flow NO TERMINAL DELE (o agente não completa o flow interativo — o `--auth` bloqueia esperando o código no navegador). Reportar pro Eric o comando abaixo e ESPERAR confirmação dele antes de continuar. NÃO seguir sem auth.
+- SE a saída contém `status: SEM_AUTH` OU `status: TOKEN_INVALIDO` → é preciso completar o device-code flow. Caminho padrão: o Eric roda o comando abaixo NO TERMINAL DELE — reportar o comando e ESPERAR confirmação. Caminho alternativo (SÓ se o Eric tiver autorizado o agente a resolver auth sozinho nesta sessão): rodar o `--auth` em background com a saída redirecionada pra um log, ler URL + código no log, navegar com o Playwright MCP até `https://login.microsoft.com/device`, digitar o código e selecionar a conta `contato@expertintegrado.com.br` já logada (o profile do Playwright desta máquina mantém a sessão Microsoft do Eric — validado 07/07/2026). Se aparecer tela de SENHA em vez da conta logada → PARAR e voltar pro caminho padrão (nunca digitar credenciais). NÃO seguir sem auth.
 ```bash
 # Se o status era TOKEN_INVALIDO, rodar primeiro:  node "${SKILL_DIR}/scripts/cleaner.mjs" --logout
 node "${SKILL_DIR}/scripts/cleaner.mjs" --auth
