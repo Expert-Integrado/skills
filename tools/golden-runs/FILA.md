@@ -74,7 +74,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
-| email-cleaner | B | move/arquiva emails reais (reversível) | aguarda OK | — |
+| email-cleaner | B | move/arquiva emails reais (reversível) | PARCIAL 07/07 | Executado até o gate de auth (Passo 0 fallback real + npm install condicional + auth-check SEM_AUTH literal); 1 defeito corrigido (operacoes 2.2.2): fallback do find retorna 3 paths e a skill assumia 1 — regra de maior versão em plugins/cache. Device flow travado por causa externa: MCP playwright preso em "Browser is already in use" (estado interno; taskkill+locks não resolveram — restart do MCP pendente). Retomar: Eric roda --auth OU restart do playwright, segue do Passo 2 |
 | onboard | A1 | escrita local (sandbox; ~/.claude real intocado) | FEITO 06/07 | APROVADO (Etapa 0 literal no ~/.claude real → gate seguraria; pipeline completo em CONFIG_DIR sandbox com os templates reais: 0 placeholders restantes, campo 7 na seção certa, 4 cópias byte-idênticas, caixa livre preservada; auditoria: zero "Eric"/confidencial nos templates); 2 defeitos doc corrigidos (operacoes 2.2.1): SEMPRE de acentuação contradizia cópia byte-a-byte de templates sem acento (rescopado pra conversa) e resumo Etapa 4 literal `~/.claude/` vs checklist exigindo path absoluto (agora `<CONFIG_DIR>`) |
 
 ## lab (13)
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho root aposentada 07/07, 2 cópias de worktree ignoradas)
-- Processadas: 44 (37 FEITO + 6 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 105 · Onda 1: CONCLUÍDA · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (goal 07/07 liberou deploy/publicação; disparo em massa segue na regra do piloto): 8
+- Processadas: 45 (37 FEITO + 7 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 106 · Onda 1: CONCLUÍDA · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (goal 07/07 liberou deploy/publicação; disparo em massa segue na regra do piloto): 8

@@ -46,7 +46,7 @@ test -f "$SKILL_DIR/rules.json" && echo "rules.json: OK" || echo "rules.json: NA
   # Windows/Git Bash: procura o cleaner.mjs no cache de plugins do usuário.
   find "$HOME/.claude/plugins" -type f -name cleaner.mjs -path "*email-cleaner*" 2>/dev/null
   ```
-  Pegar o caminho retornado, remover o sufixo `/scripts/cleaner.mjs` e usar o restante como `SKILL_DIR`. Se `find` não achar nada → avisar o Eric que a skill `operacoes/email-cleaner` não está instalada e PARAR.
+  O `find` costuma retornar MAIS DE UM caminho (uma pasta por versão em `plugins/cache/.../operacoes/<versão>/...` + o clone-fonte em `plugins/marketplaces/...`). Regra de escolha: usar o caminho sob `plugins/cache/` com a MAIOR `<versão>` (ordenação semver do segmento de versão do path); ignorar os de `plugins/marketplaces/` (é o clone-fonte do marketplace, não a instalação). Pegar o caminho escolhido, remover o sufixo `/scripts/cleaner.mjs` e usar o restante como `SKILL_DIR`. Se `find` não achar nada → avisar o Eric que a skill `operacoes/email-cleaner` não está instalada e PARAR.
 - SE ambos `cleaner.mjs: OK` e `rules.json: OK` → seguir. SE qualquer um imprimir `NAO ENCONTRADO` → PARAR e reportar ao Eric (instalação incompleta; não improvisar path).
 
 Nos passos abaixo, `${SKILL_DIR}/scripts/cleaner.mjs` é o caminho completo do script (também abreviado como `.../cleaner.mjs`). SEMPRE executar com o caminho completo resolvido acima, nunca com a abreviação literal.
