@@ -4,7 +4,6 @@
     "last_updated": "2026-05-03",
     "principle": "Ler antes de deletar. Mover pra pasta semântica é sempre preferível a delete. Delete só pra phishing comprovado e propaganda 100% genérica."
   },
-
   "folders_to_create_if_missing": [
     "Reuniões/Gravações",
     "Notificações Sistema",
@@ -16,20 +15,23 @@
     "Comunicação Cliente",
     "Convites Eventos"
   ],
-
   "rules": [
     {
       "name": "Phishing Bradesco fake (azurecomm)",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": [".azurecomm.net"],
+      "domains": [
+        ".azurecomm.net"
+      ],
       "reason": "Domínio Azure usado por scammers fingindo ser Bradesco. Confirmado phishing em 03/05/2026."
     },
     {
       "name": "Chicuta Consultoria (golpe INPI)",
       "action": "delete",
       "match_type": "exact_address",
-      "addresses": ["chicutaconsultoria@gmail.com"],
+      "addresses": [
+        "chicutaconsultoria@gmail.com"
+      ],
       "reason": "Oferece 'recurso INPI por R$349' - golpe confirmado."
     },
     {
@@ -37,7 +39,9 @@
       "action": "move",
       "folder": "Newsletter",
       "match_type": "domain_suffix",
-      "domains": ["@notification.circle.so"],
+      "domains": [
+        "@notification.circle.so"
+      ],
       "reason": "Newsletter da Comunidade Lendária - já consumida."
     },
     {
@@ -45,8 +49,11 @@
       "action": "move",
       "folder": "Reuniões/Gravações",
       "match_type": "domain_suffix",
-      "domains": ["@zoom.us"],
-      "subject_must_match": "recursos de reunião|meeting recap|gravação",
+      "domains": [
+        "@zoom.us",
+        "@fireflies.ai"
+      ],
+      "subject_must_match": "recursos de reunião|meeting recap|gravação|recap",
       "reason": "Recaps Zoom de reuniões reais - manter pra histórico. ATENÇÃO: ler antes pra distinguir Daily/recorrentes vazios vs reuniões importantes com cliente."
     },
     {
@@ -54,7 +61,10 @@
       "action": "move",
       "folder": "Linkedin",
       "match_type": "domain_suffix",
-      "domains": ["@linkedin.com", "@e.linkedin.com"],
+      "domains": [
+        "@linkedin.com",
+        "@e.linkedin.com"
+      ],
       "reason": "Notificações LinkedIn (digest, gamificação). Pasta Linkedin já existe."
     },
     {
@@ -62,14 +72,19 @@
       "action": "move",
       "folder": "Newsletter",
       "match_type": "domain_suffix",
-      "domains": ["@substack.com"],
+      "domains": [
+        "@substack.com"
+      ],
       "reason": "Newsletter pessoal Eric assina."
     },
     {
       "name": "Vivo Empresas marketing",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": ["@mail.vivo.com.br", "@vivo.com.br"],
+      "domains": [
+        "@mail.vivo.com.br",
+        "@vivo.com.br"
+      ],
       "reason": "Spam comercial Vivo - Eric não tem conta empresarial relevante."
     },
     {
@@ -77,7 +92,9 @@
       "action": "move",
       "folder": "Newsletter",
       "match_type": "domain_suffix",
-      "domains": ["@asimov.academy"],
+      "domains": [
+        "@asimov.academy"
+      ],
       "reason": "Newsletter educacional - pode ser útil consultar depois."
     },
     {
@@ -93,7 +110,9 @@
       "action": "move",
       "folder": "Recibo",
       "match_type": "domain_suffix",
-      "domains": ["@stripe.com"],
+      "domains": [
+        "@stripe.com"
+      ],
       "reason": "Recibos de pagamento Stripe - histórico fiscal."
     },
     {
@@ -101,7 +120,11 @@
       "action": "move",
       "folder": "Asaas",
       "match_type": "domain_suffix",
-      "domains": ["@asaas.com.br", "@asaas.com", "@security.asaas.com"],
+      "domains": [
+        "@asaas.com.br",
+        "@asaas.com",
+        "@security.asaas.com"
+      ],
       "reason": "Recebimentos Expert Integrado via Asaas."
     },
     {
@@ -109,7 +132,9 @@
       "action": "move",
       "folder": "Afiliados",
       "match_type": "domain_suffix",
-      "domains": ["@rewardful.com"],
+      "domains": [
+        "@rewardful.com"
+      ],
       "reason": "Comissões de afiliados."
     },
     {
@@ -117,7 +142,9 @@
       "action": "move",
       "folder": "Afiliados",
       "match_type": "domain_suffix",
-      "domains": ["@lovable.dev"],
+      "domains": [
+        "@lovable.dev"
+      ],
       "subject_must_match": "commission|affiliate|comissão",
       "reason": "Comissões Lovable - resto vai pra Notificações Sistema."
     },
@@ -126,7 +153,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@lovable.dev"],
+      "domains": [
+        "@lovable.dev"
+      ],
       "reason": "Notificações de produto Lovable."
     },
     {
@@ -134,7 +163,10 @@
       "action": "move",
       "folder": "Recibo",
       "match_type": "domain_suffix",
-      "domains": ["@inter.co", "@bancointer.com.br"],
+      "domains": [
+        "@inter.co",
+        "@bancointer.com.br"
+      ],
       "subject_must_match": "pix realizado|pagamento|recibo|comprovante",
       "reason": "Comprovantes Pix Banco Inter."
     },
@@ -143,7 +175,10 @@
       "action": "move",
       "folder": "Recibo",
       "match_type": "domain_suffix",
-      "domains": ["@paypal.com.br", "@paypal.com"],
+      "domains": [
+        "@paypal.com.br",
+        "@paypal.com"
+      ],
       "subject_must_match": "recibo|receipt",
       "reason": "Recibos PayPal."
     },
@@ -151,7 +186,9 @@
       "name": "PayPal news/marketing",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": ["@news.paypal.com"],
+      "domains": [
+        "@news.paypal.com"
+      ],
       "reason": "Marketing PayPal."
     },
     {
@@ -159,7 +196,10 @@
       "action": "move",
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
-      "domains": ["@supabase.com", "@supabase.io"],
+      "domains": [
+        "@supabase.com",
+        "@supabase.io"
+      ],
       "subject_must_match": "security|vulnerability|CVE|breach|exposed",
       "reason": "Alertas de segurança Supabase - precisa atenção imediata. Regra mais específica vem ANTES da genérica (first-match-wins)."
     },
@@ -168,7 +208,10 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@supabase.com", "@supabase.io"],
+      "domains": [
+        "@supabase.com",
+        "@supabase.io"
+      ],
       "reason": "Aprovações OAuth e notificações de sistema (não-segurança)."
     },
     {
@@ -176,7 +219,12 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@tm.openai.com", "@tm1.openai.com", "@email.openai.com", "@openai.com"],
+      "domains": [
+        "@tm.openai.com",
+        "@tm1.openai.com",
+        "@email.openai.com",
+        "@openai.com"
+      ],
       "reason": "Recargas, billing, novidades OpenAI."
     },
     {
@@ -184,7 +232,11 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@mail.anthropic.com", "@email.claude.com"],
+      "domains": [
+        "@mail.anthropic.com",
+        "@email.claude.com",
+        "@email.anthropic.com"
+      ],
       "reason": "Billing e novidades Anthropic."
     },
     {
@@ -192,7 +244,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@hotmart.com"],
+      "domains": [
+        "@hotmart.com"
+      ],
       "reason": "Compras + área de membros."
     },
     {
@@ -200,7 +254,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@pipedrive.com"],
+      "domains": [
+        "@pipedrive.com"
+      ],
       "reason": "Sumários, security, notifications."
     },
     {
@@ -208,7 +264,10 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@make.com", "@us1.make.com"],
+      "domains": [
+        "@make.com",
+        "@us1.make.com"
+      ],
       "reason": "Operations limit, scenarios pause."
     },
     {
@@ -216,7 +275,13 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@email.meta.com", "@global.metamail.com", "@business-updates.facebook.com", "@facebookmail.com", "@business.facebook.com"],
+      "domains": [
+        "@email.meta.com",
+        "@global.metamail.com",
+        "@business-updates.facebook.com",
+        "@facebookmail.com",
+        "@business.facebook.com"
+      ],
       "subject_must_not_match": "desativada|disabled|suspended|payment failed",
       "reason": "Aprovações de anúncios e recibos Meta. ATENÇÃO: se contém 'desativada' / 'disabled' → Alertas Segurança."
     },
@@ -225,7 +290,10 @@
       "action": "move",
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
-      "domains": ["@business.facebook.com", "@facebookmail.com"],
+      "domains": [
+        "@business.facebook.com",
+        "@facebookmail.com"
+      ],
       "subject_must_match": "desativada|disabled|suspended|payment failed",
       "reason": "Conta de anúncios Meta com problema crítico."
     },
@@ -234,7 +302,11 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@google.com", "@accounts.google.com", "@payments.google.com"],
+      "domains": [
+        "@google.com",
+        "@accounts.google.com",
+        "@payments.google.com"
+      ],
       "subject_must_not_match": "drive|document|planilha|sheet|compartilh|shared",
       "reason": "Logins, alertas Cloud Platform, billing."
     },
@@ -243,7 +315,9 @@
       "action": "move",
       "folder": "Comunicação Cliente",
       "match_type": "domain_suffix",
-      "domains": ["@google.com"],
+      "domains": [
+        "@google.com"
+      ],
       "subject_must_match": "drive|document|planilha|sheet|compartilh|shared",
       "reason": "Compartilhamentos de docs - geralmente humano da equipe ou parceiro."
     },
@@ -252,7 +326,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@vercel.com"],
+      "domains": [
+        "@vercel.com"
+      ],
       "subject_must_not_match": "CVE|vulnerability|security",
       "reason": "Deploys, sign-in, domain config."
     },
@@ -261,7 +337,9 @@
       "action": "move",
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
-      "domains": ["@vercel.com"],
+      "domains": [
+        "@vercel.com"
+      ],
       "subject_must_match": "CVE|vulnerability|security",
       "reason": "Vulnerabilidades Next.js / React."
     },
@@ -270,7 +348,10 @@
       "action": "move",
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
-      "domains": ["@info.hostinger.com", "@updates.hostinger.com"],
+      "domains": [
+        "@info.hostinger.com",
+        "@updates.hostinger.com"
+      ],
       "subject_must_match": "kernel|vulnerability|security|attention",
       "reason": "Alertas de kernel/segurança VPS."
     },
@@ -278,7 +359,9 @@
       "name": "Hostinger marketing",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": ["@updates.hostinger.com"],
+      "domains": [
+        "@updates.hostinger.com"
+      ],
       "reason": "Spam comercial - exceto alertas."
     },
     {
@@ -286,7 +369,10 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@notify.cloudflare.com", "@em1.cloudflare.com"],
+      "domains": [
+        "@notify.cloudflare.com",
+        "@em1.cloudflare.com"
+      ],
       "reason": "Welcome, domain ativo."
     },
     {
@@ -294,7 +380,10 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@godaddy.com", "@e.godaddy.com"],
+      "domains": [
+        "@godaddy.com",
+        "@e.godaddy.com"
+      ],
       "reason": "Confirmações de pedido, configurações."
     },
     {
@@ -302,7 +391,9 @@
       "action": "move",
       "folder": "Alertas Segurança",
       "match_type": "domain_suffix",
-      "domains": ["@ssl.com"],
+      "domains": [
+        "@ssl.com"
+      ],
       "reason": "Verificação de identidade - precisa atenção."
     },
     {
@@ -310,7 +401,9 @@
       "action": "move",
       "folder": "Convites Eventos",
       "match_type": "domain_suffix",
-      "domains": ["@calendly.com"],
+      "domains": [
+        "@calendly.com"
+      ],
       "reason": "Convites de reunião agendados."
     },
     {
@@ -318,7 +411,9 @@
       "action": "move",
       "folder": "Convites Eventos",
       "match_type": "domain_suffix",
-      "domains": ["@sympla.com.br"],
+      "domains": [
+        "@sympla.com.br"
+      ],
       "reason": "Confirmações de evento."
     },
     {
@@ -326,7 +421,10 @@
       "action": "move",
       "folder": "Convites Eventos",
       "match_type": "domain_suffix",
-      "domains": ["@websummit.com", "@info.websummit.com"],
+      "domains": [
+        "@websummit.com",
+        "@info.websummit.com"
+      ],
       "reason": "Web Summit Rio - inscrições, descontos."
     },
     {
@@ -334,7 +432,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@gupshup.io"],
+      "domains": [
+        "@gupshup.io"
+      ],
       "reason": "WhatsApp Business policy violations - já lidas."
     },
     {
@@ -342,7 +442,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@z-api.io"],
+      "domains": [
+        "@z-api.io"
+      ],
       "reason": "Renovação de instância, cobrança WhatsApp API."
     },
     {
@@ -358,7 +460,10 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@clara.com", "@invoices.clara.com"],
+      "domains": [
+        "@clara.com",
+        "@invoices.clara.com"
+      ],
       "reason": "Cartão Clara - faturas e transações."
     },
     {
@@ -366,7 +471,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@elevenlabs.io"],
+      "domains": [
+        "@elevenlabs.io"
+      ],
       "reason": "Live invitations, billing."
     },
     {
@@ -374,7 +481,10 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@email.heygen.com", "@heygen.com"],
+      "domains": [
+        "@email.heygen.com",
+        "@heygen.com"
+      ],
       "reason": "Notificações HeyGen."
     },
     {
@@ -382,7 +492,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@redis.com"],
+      "domains": [
+        "@redis.com"
+      ],
       "reason": "Faturas Redis."
     },
     {
@@ -390,7 +502,11 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@tasks.clickup.com", "@clickup.com", "@help.clickup.com"],
+      "domains": [
+        "@tasks.clickup.com",
+        "@clickup.com",
+        "@help.clickup.com"
+      ],
       "reason": "Logins, mentions, support."
     },
     {
@@ -398,7 +514,10 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "domain_suffix",
-      "domains": ["@email.loggi.com", "@loggi.com"],
+      "domains": [
+        "@email.loggi.com",
+        "@loggi.com"
+      ],
       "reason": "Notificações entregas."
     },
     {
@@ -406,21 +525,28 @@
       "action": "move",
       "folder": "Convites Eventos",
       "match_type": "domain_suffix",
-      "domains": ["@summitdeinteligenciaartificial.com"],
+      "domains": [
+        "@summitdeinteligenciaartificial.com"
+      ],
       "reason": "Convites Summit IA."
     },
     {
       "name": "Instagram",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": ["@mail.instagram.com", "@instagram.com"],
+      "domains": [
+        "@mail.instagram.com",
+        "@instagram.com"
+      ],
       "reason": "Notificações Instagram - sem valor."
     },
     {
       "name": "G4 plataforma (notificações leads)",
       "action": "delete",
       "match_type": "exact_address",
-      "addresses": ["plataforma@g4educacao.com"],
+      "addresses": [
+        "plataforma@g4educacao.com"
+      ],
       "reason": "Notificações automáticas de leads/login - Eric vê na plataforma direto. Confirmado em 03/05/2026."
     },
     {
@@ -428,7 +554,9 @@
       "action": "move",
       "folder": "Recibo",
       "match_type": "exact_address",
-      "addresses": ["contasareceber@g4educacao.com"],
+      "addresses": [
+        "contasareceber@g4educacao.com"
+      ],
       "reason": "NFSe G4 - histórico fiscal."
     },
     {
@@ -436,7 +564,9 @@
       "action": "move",
       "folder": "Notificações Sistema",
       "match_type": "exact_address",
-      "addresses": ["sistema@expertintegrado.com.br"],
+      "addresses": [
+        "sistema@expertintegrado.com.br"
+      ],
       "reason": "ENC OpenAI funded, API thresholds, Affiliate payout failed."
     },
     {
@@ -460,32 +590,152 @@
       "action": "move",
       "folder": "Newsletter",
       "match_type": "domain_suffix",
-      "domains": ["@digitalmanager.guru"],
+      "domains": [
+        "@digitalmanager.guru"
+      ],
       "reason": "Newsletter conteúdo."
     },
     {
       "name": "Thais Martan propaganda",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": ["@thaismartan.com.br"],
+      "domains": [
+        "@thaismartan.com.br"
+      ],
       "reason": "Propaganda curso GPT Business / OpenClaw."
     },
     {
       "name": "TMB marketing",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": ["@tmb.com.br"],
+      "domains": [
+        "@tmb.com.br"
+      ],
       "reason": "TMB Class, premiações, propaganda."
     },
     {
       "name": "Link School of Business",
       "action": "delete",
       "match_type": "domain_suffix",
-      "domains": ["@lsb.edu.br"],
+      "domains": [
+        "@lsb.edu.br"
+      ],
       "reason": "Propaganda Jornada Link / Tech Day."
+    },
+    {
+      "name": "D4Sign lembretes de assinatura",
+      "action": "move",
+      "folder": "Notificações Sistema",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@d4sign.com.br"
+      ],
+      "reason": "Lembretes diários de documento pendente viram ruído; o documento em si continua pendente no D4Sign. Decisão triagem 07/07/2026 — docs pendentes são citados no briefing."
+    },
+    {
+      "name": "Meeting Hub agenda notificações",
+      "action": "move",
+      "folder": "Notificações Sistema",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@agenda.expertintegrado.com.br"
+      ],
+      "reason": "Notificações do próprio Meeting Hub (agendou/cancelou/confirmado). Triagem 07/07/2026."
+    },
+    {
+      "name": "Zoom alertas de conta",
+      "action": "move",
+      "folder": "Notificações Sistema",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@zoom.us"
+      ],
+      "subject_must_match": "anfitri|contagem|limite|suspen",
+      "reason": "Alertas operacionais da conta Zoom (ex: 90% dos hosts). Vem ANTES da regra de marketing Zoom."
+    },
+    {
+      "name": "Zoom marketing",
+      "action": "move",
+      "folder": "Newsletter",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@zoom.us"
+      ],
+      "reason": "Novidades/webinars/CS lives da Zoom. Regra de recap e de alerta vêm antes. Triagem 07/07/2026."
+    },
+    {
+      "name": "Cielo boletos de acordo",
+      "action": "move",
+      "folder": "Cobranças Falhas",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@cielo.com.br"
+      ],
+      "reason": "Boleto real de acordo de débitos (R$ 14,02 em 07/2026) — atenção 24h, não é marketing."
+    },
+    {
+      "name": "SaaS notificações diversas",
+      "action": "move",
+      "folder": "Notificações Sistema",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@product.miro.com",
+        "@1password.com",
+        "@twilio.com",
+        "@notifications.pipedrive.com",
+        "@eveo.com.br",
+        "@supergrupos.com.br",
+        "@mail.app.supabase.io"
+      ],
+      "reason": "Approvals/recargas/OTP/manutenção sem ação estratégica. Triagem 07/07/2026."
+    },
+    {
+      "name": "Newsletters e marketing SaaS/parceiros",
+      "action": "move",
+      "folder": "Newsletter",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@info.totalpass.com.br",
+        "@messaging.metamail.com",
+        "@agendor.com.br",
+        "@gofurthergroup.com.br",
+        "@saasacademy.com",
+        "@sprinklr.com",
+        "@lia.com.br",
+        "@turboscribe.ai",
+        "@g4educacao.com",
+        "@mail.salesforce.com",
+        "@info.digitalocean.com",
+        "@updates.resend.com",
+        "@mail.chatbase.co",
+        "@clint.digital",
+        "@promovaweb.com"
+      ],
+      "reason": "Broadcast/marketing recorrente sem ação. G4 lives ficam aqui (Eric participa quando quer). Triagem 07/07/2026."
+    },
+    {
+      "name": "NF e reembolsos (Microsoft/WebISS/Hapvida)",
+      "action": "move",
+      "folder": "Recibo",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@webiss.com.br",
+        "@contato.hapvidandi.com.br"
+      ],
+      "reason": "NFS-e emitidas e reembolsos programados. Triagem 07/07/2026."
+    },
+    {
+      "name": "Microsoft faturas",
+      "action": "move",
+      "folder": "Recibo",
+      "match_type": "domain_suffix",
+      "domains": [
+        "@microsoft.com"
+      ],
+      "subject_must_match": "fatura|nota fiscal|invoice",
+      "reason": "Faturas/NF Microsoft 365. Subject filtrado pra não engolir emails técnicos da Microsoft."
     }
   ],
-
   "preserve_addresses": [
     "leandro.rebustini@g4educacao.com",
     "asafesilva@expertintegrado.com.br",
@@ -495,14 +745,12 @@
     "hugo@elopatentes.com.br",
     "michele.regis@atlascopco.com"
   ],
-
   "preserve_domains": [
     "@expertintegrado.com.br",
     "@elopatentes.com.br",
     "@edificarpatentes.com.br",
     "@carvalhoecia.com.br"
   ],
-
   "client_complaint_check": {
     "description": "Antes de propor ação a email de cliente externo, recall no Brain (ona1g1cgyqz3) e verificar Lista Satisfação ClickUp",
     "brain_note_id": "ona1g1cgyqz3",
