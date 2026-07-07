@@ -126,10 +126,10 @@ Listar pro usuario: pessoa (nome+ID+link), negocio (titulo+ID+link+pipeline/etap
 | ADS | Campanha paga |
 | APP | Produto/app proprio |
 
-### Opcoes validas (usar EXATAMENTE como escrito):
+### Opcoes validas (usar EXATAMENTE como escrito — valores de enum carregam acento porque o match e exato; lista sincronizada com o Pipedrive real em 07/07/2026 via aviso do MCP):
 ```
-ORG | Automacao do @ericluciano
-ORG | Automacao do @expertintegrado
+ORG | Automação do @ericluciano
+ORG | Automação do @expertintegrado
 ORG | SE Bio @ericluciano
 ORG | SE Bio @expertintegrado
 ORG | Mensagem receptiva de whatsapp
@@ -138,7 +138,7 @@ ORG | Site Super SDR
 SS | @ericluciano
 SS | @expertintegrado
 OUT | Outbound Manual
-OUT | Outbound Automatico
+OUT | Outbound Automático
 INDIC | ChatGuru
 INDIC | Geral
 INDIC | Direta do Eric
@@ -152,21 +152,23 @@ CROS | Downsell de Educacional
 CROS | Upsell de Educacional
 EVENTO | ADVBOX
 EVENTO | IA Summit Joinville 2025
-EVENTO | Imersao Highticket 23
-EVENTO | Imersao Highticket 24
+EVENTO | Imersão Highticket 23
+EVENTO | Imersão Highticket 24
 EVENTO | Growth Conference 2024
 EVENTO | Nova Era
 EVENTO | WebSummit
-EVENTO | Eric presencialmente
+EVENTO | Imersão Expert Integrado
+EVENTO | Eric conheceu presencialmente
 PUBLI | ADVBOX
 PUBLI | G4 Tools
 ADS | Facebook Leads
-ADS | LP > Formulario
+ADS | LP > Formulário
 ADS | LP > WhatsApp
 ADS | SE LP
 ADS | SE Manychat
+ADS | Webinário
 ADS | WhatsApp > SDR
-Lancamento Mentoria Automacoes Inteligentes
+Lançamento Mentoria Automações Inteligentes
 APP | Voice AI
 Desconhecido
 ```
@@ -176,7 +178,7 @@ Desconhecido
 - "indicacao do Eric" / "indicacao minha" → `INDIC | Direta do Eric`
 - "indicacao" (generico) → `INDIC | Geral`
 - "Instagram" → `SS | @ericluciano` ou `SS | @expertintegrado`
-- "evento" + nome → `EVENTO | <nome>` ou `EVENTO | Eric presencialmente`
+- "evento" + nome → `EVENTO | <nome>` ou `EVENTO | Eric conheceu presencialmente`
 - "outbound" → `OUT | Outbound Manual`
 - "cliente" → `CROS | Cliente Ativo` ou `CROS | Cliente Inativo`
 - Sem inferencia clara: perguntar.
@@ -292,3 +294,22 @@ Academia e empresas de esporte, Agencias em geral, Agencia de Marketing, Arte e 
 9. **Links clicaveis**: Sempre incluir link do Pipedrive no resumo final
 10. **Motivos de Perda**: Parou de responder, Fora do orcamento, Adiou contratacao (Reversiveis); Mudanca de prioridade, Contratou outra, Internalizou (Dificil); Nao e o que buscava, Ferramenta incompativel (Definitivo)
 11. **Lead perdido → atividade de retomada**: Toda marcacao de Perdido dispara criacao obrigatoria de atividade de retomada futura (30/90/180 dias por motivo de perda)
+
+---
+
+# CONTEXTO COMERCIAL — Calendly + ClickUp
+
+> Migrado do CLAUDE.md global (auditoria versao B, 04/07/2026). Carregado pela skill comercial:* e por sessoes comerciais. Se um trigger comercial aparecer e este contexto nao estiver carregado, fazer Read deste arquivo (independente do cwd).
+
+## 7. AGENDAMENTO DE CALL COM LEAD (Calendly)
+
+- Agendar via skill `comercial:calendly-agendar` (Playwright no Calendly do Eric: https://calendly.com/eric_expertintegrado/diagnostico) ou `comercial:calendly-link` (link unico single-use).
+- Calendly JA integra nativo com Pipedrive: ao confirmar a reserva, cria automaticamente (1) atividade "Demonstracao" com link Zoom oficial, (2) atividade "Confirmacao de agendamento" pro SDR, (3) atividade "Ligacao de Confirmacao" pro Eric 12-24h antes. NAO criar atividade Pipedrive manual antes do Calendly — vira duplicata.
+- Antes do Calendly: atualizar pessoa/org/stage do deal no Pipedrive e OK. A atividade da reuniao em si: deixar o Calendly criar.
+- Apos confirmar no Calendly, voltar pro Eric com a confirmacao (Pipedrive ja foi atualizado pela integracao).
+- NUNCA pedir pro Eric agendar manualmente — o agente executa pelo Calendly.
+
+## 8. CLICKUP COMERCIAL
+
+- team_id fixo = `30962394`.
+- Reclamacao/cancelamento de cliente (qualquer canal): consultar lista "Satisfacao dos clientes" (list_id `901305474727`, Space Operacoes > Folder Gestao de Contas) ANTES de propor resposta. Card existe + assignee CS ativo → Eric NAO intervem. Card sem movimento → escalar internamente. Sem card + cliente reclamando → criar card e atribuir ao CS. → Brain `ona1g1cgyqz3`.
