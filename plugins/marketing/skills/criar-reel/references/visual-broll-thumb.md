@@ -1,7 +1,7 @@
-# Frames de B-roll e Thumb — padrão visual (Nano Banana / Gemini)
+# Frames de B-roll e Thumb — padrão visual
 
-Imagens são geradas no **Nano Banana (Gemini) MCP** (`mcp__nanobanana-mcp__gemini_generate_image`),
-modelo `pro`, sempre `9:16`. Canva AI é proibido. HTML/CSS+Playwright só como último fallback.
+Imagens são geradas com **`scripts/openai_image.py`** (GPT Image 2 / OpenAI, credencial `C:/MCPs/openai.env`),
+sempre `9:16`, como mandam as etapas 5, 8 e 9 da SKILL. Canva AI é proibido. HTML/CSS+Playwright só como último fallback.
 
 ## Estilo visual da série (manter coeso entre Reels)
 Paleta: **fundo escuro carvão + brilho âmbar/coral**, render 3D cinematográfico, god rays volumétricos,
@@ -14,7 +14,7 @@ alto contraste, premium high-tech, ultra-detalhado. Esse look amarra B-roll + th
   `no text, no words, no logos`. E evitar logos de marca reais (renderizam torto).
 - Representar marcas/conceitos de forma **abstrata** (ex: pagamento = rede de nós brilhando;
   "uma IA" = esfera de energia; arquivo = folha/card genérico).
-- Salvar em `<output_dir>/frames/frame-01.png ... frame-NN.png`, `conversation_id` único por frame.
+- Salvar em `$REEL/frames/frame-01.png ... frame-NN.png`.
 - Sufixo de estilo recomendado no prompt:
   `Style: cinematic 3D render, dark charcoal studio background, warm amber and coral glow, volumetric god rays, high contrast, premium high-tech mood, ultra-detailed, sharp focus, no text, no words, no logos, vertical 9:16 with clean negative space at the top.`
 
@@ -24,11 +24,11 @@ text, letters, words, captions, watermark, logo, brand name, distorted face, def
 ```
 
 ## Thumb do Reel (realista, COM texto)
-- Diferente do B-roll: aqui é **fotográfico/cinematográfico realista** e **leva texto** (renderiza bem no modelo pro).
+- Diferente do B-roll: aqui é **fotográfico/cinematográfico realista** e **leva texto** (o GPT Image 2 renderiza texto bem).
 - Fórmula da série: visual dramático que traduz o gancho + **headline branca em CAIXA ALTA** no terço
   superior (negrão, sombra leve, com espaço limpo atrás) + **selo/pill âmbar** embaixo com 1 palavra
   (o nome da ferramenta/tema). Headline curta (3-4 palavras).
-- Salvar em `C:\Users\Joao\Downloads\thumb-<tema>-reels.png` (thumbs avulsas sempre vão pra Downloads).
+- Salvar em `$REEL/thumb-<tema>-reels.png` (junto dos demais artefatos do reel).
 - Conferir o resultado (Read na imagem). Oferecer variações de gancho e, se fizer sentido, versão com o
   rosto do Eric (pedir foto dele olhando pra câmera, usar como reference_images).
 - Atenção: moedas/ícones podem sair com cara de cripto — pedir "neutral generic coins, no crypto symbols"

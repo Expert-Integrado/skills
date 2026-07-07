@@ -67,9 +67,14 @@ def cmd_get(bank, ids, out):
     n = 0
     for i, cid in enumerate([x for x in ids if x in by], 1):
         dest = os.path.join(out, f"clip-{i:02d}.mp4")
+        if os.path.exists(dest):
+            print(f"AVISO: sobrescrevendo clip-{i:02d}.mp4 existente — a numeracao recomeca em 01 a cada chamada; use UMA chamada com todos os ids na ordem final", file=sys.stderr)
         sz = download_cached(by[cid]["url"], dest)
         print(f"clip-{i:02d}.mp4 <- {cid} ({sz//1024} KB)")
         n += 1
+    stale = sorted(f for f in os.listdir(out) if f.startswith("clip-") and f.endswith(".mp4") and f > f"clip-{n:02d}.mp4")
+    if stale:
+        print(f"AVISO: {', '.join(stale)} ficaram de uma chamada anterior com mais ids — apagar ou re-baixar a lista completa", file=sys.stderr)
     print(f"OK: {n} clips -> {out}")
 
 
