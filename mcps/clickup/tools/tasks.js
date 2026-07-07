@@ -117,8 +117,12 @@ Priority values: 1=Urgent, 2=High, 3=Normal, 4=Low`,
         ...(params.status && { status: params.status }),
         priority: params.priority || defaults.priority || null,
         ...(due_date && { due_date }),
+        ...(due_date &&
+          params.due_date &&
+          hasExplicitTime(params.due_date) && { due_date_time: true }),
         ...(params.start_date && {
           start_date: toTimestamp(params.start_date),
+          ...(hasExplicitTime(params.start_date) && { start_date_time: true }),
         }),
         ...(params.time_estimate && { time_estimate: params.time_estimate }),
         ...(params.parent && { parent: params.parent }),
@@ -209,9 +213,14 @@ Priority values: 1=Urgent, 2=High, 3=Normal, 4=Low`,
         body.markdown_description = params.description;
       if (params.status) body.status = params.status;
       if (params.priority !== undefined) body.priority = params.priority;
-      if (params.due_date) body.due_date = toTimestamp(params.due_date);
-      if (params.start_date)
+      if (params.due_date) {
+        body.due_date = toTimestamp(params.due_date);
+        if (hasExplicitTime(params.due_date)) body.due_date_time = true;
+      }
+      if (params.start_date) {
         body.start_date = toTimestamp(params.start_date);
+        if (hasExplicitTime(params.start_date)) body.start_date_time = true;
+      }
       if (params.time_estimate !== undefined)
         body.time_estimate = params.time_estimate;
       if (params.archived !== undefined) body.archived = params.archived;
@@ -346,9 +355,25 @@ function toTimestamp(value) {
   if (!value) return undefined;
   const n = Number(value);
   if (!isNaN(n) && n > 1e12) return n; // already ms timestamp
+  // Date-only (YYYY-MM-DD): ancorar ao meio-dia BRT. new Date("YYYY-MM-DD") daria
+  // meia-noite UTC (= 21h do dia ANTERIOR em BRT) e o ClickUp normaliza a due all-day
+  // pro dia local do instante — a task nasceria um dia antes do pedido.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(value).trim())) {
+    const d = new Date(`${String(value).trim()}T12:00:00-03:00`);
+    return isNaN(d.getTime()) ? undefined : d.getTime();
+  }
   const d = new Date(value);
   if (isNaN(d.getTime())) return undefined;
   return d.getTime();
+}
+
+// ClickUp descarta o horario da due/start a menos que o payload traga
+// due_date_time/start_date_time = true. Epoch ms e strings com hora contam como hora explicita.
+function hasExplicitTime(value) {
+  if (!value) return false;
+  const n = Number(value);
+  if (!isNaN(n) && n > 1e12) return true;
+  return /T\d{2}:|\d{1,2}:\d{2}/.test(String(value));
 }
 
 function okText(msg) {
