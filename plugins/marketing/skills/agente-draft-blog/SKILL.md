@@ -191,6 +191,10 @@ heroAlt: "Ilustração editorial em tons de azul representando o artigo: <títul
 readingTime: "<N> min de leitura"
 tags: [<tags>]
 related: [<slugs>]
+takeaways:
+  - "<claim autocontido e específico, com número quando houver; máx ~140 chars>"
+  - "<segundo claim citável por LLM>"
+  - "<terceiro; 3-4 no total>"
 ---
 
 import InlineCta from '../../components/InlineCta.astro';
@@ -286,7 +290,7 @@ Só executar se `pubDate` NÃO veio no outline. Nunca decidir a data às cegas: 
 
 1. Localizar o repo do blog: usar a env `BLOG_DIR` se estiver definida, senão o default `${BLOG_DIR:-C:/repos/expertintegrado-blog}` (no PC do Eric é `C:\repos\expertintegrado-blog`; repos vivem em `C:\repos`, fora do `$HOME`). Listar e ler o frontmatter dos posts publicados em `$BLOG_DIR/src/content/blog/*.mdx` e coletar o valor de `pubDate` de cada um. Ler posts publicados é fonte PERMITIDA (Camada 0).
 2. Cadência-alvo: seg/qua/sex, dentro da janela 2026-06-24 a 2026-11-30, começando em 2026-06-25.
-3. `pubDate` = a PRIMEIRA data dessa cadência (seg/qua/sex, a partir de 2026-06-25) que ainda NÃO apareça em nenhum `pubDate` coletado no passo 1. Registrar no relatório de pendências qual data foi escolhida.
+3. `pubDate` = a PRIMEIRA data dessa cadência (seg/qua/sex) que (a) ainda NÃO apareça em nenhum `pubDate` coletado no passo 1 E (b) NÃO seja anterior à data de hoje — post novo nunca nasce retrodatado; a janela começa em max(2026-06-25, hoje). Comparar por DIA: o repo tem `pubDate` em dois formatos (`YYYY-MM-DD` e datetime `YYYY-MM-DDTHH:MM:SSZ`, usado nos lotes de 05-06/07/2026) — truncar no dia pra comparação e emitir `YYYY-MM-DD` simples. Registrar no relatório de pendências qual data foi escolhida.
 4. Se `$BLOG_DIR` (ou o default) não existir na máquina, ou não der pra ler os posts publicados (repo indisponível) → deixar `pubDate: [preencher]` e sinalizar no relatório como parada legítima (sem os posts publicados não há como descobrir a próxima data livre da cadência). Nunca chutar nem inventar uma data.
 
 ## Passo 5 — Autocheck antes de entregar
@@ -304,7 +308,7 @@ Rodar esta checklist no MDX gerado. Qualquer item que falhar → corrigir antes 
 - [ ] FAQ com 5-8 pares `**Pergunta?**` + resposta de 60-120 palavras.
 - [ ] Contagem de palavras dentro da faixa do `tipo`.
 - [ ] Se o post responde objeção de venda, tem tags `objecao:<slug>` e `setor:<slug>` no frontmatter.
-- [ ] Frontmatter completo (title, description, pubDate, pillar, tipo, status, heroImage, heroAlt, readingTime, tags, related) — sem placeholder não preenchido, exceto `[preencher]` de métrica/dado ausente (sinalizado). `heroImage` termina em `.webp`; `heroAlt` segue a fórmula fixa; `readingTime` = arredonda(palavras/225).
+- [ ] Frontmatter completo (title, description, pubDate, pillar, tipo, status, heroImage, heroAlt, readingTime, tags, related, takeaways) — sem placeholder não preenchido, exceto `[preencher]` de métrica/dado ausente (sinalizado). `heroImage` termina em `.webp`; `heroAlt` segue a fórmula fixa; `readingTime` = arredonda(palavras/225); `takeaways` com 3-4 claims autocontidos (o build gera o box "Em resumo" a partir deles — sem o campo, o post publica sem resumo).
 - [ ] Nenhum `<` solto nem `{...}` solto na prosa (quebra o parser MDX).
 
 ## Erros comuns e recovery

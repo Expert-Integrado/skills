@@ -26,8 +26,8 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | pauta-semanal | A2 | Apify ~US$0,10 | FEITO 06/07 | APROVADO, 4 achados corrigidos |
 | criar-script | A1 | nenhum | FEITO 06/07 | APROVADO 8/8, zero defeito na skill, 1 achado lateral (CLAUDE.md) corrigido |
 | blog-para-linkedin | A1 | nenhum | FEITO 06/07 | APROVADO ponta a ponta (Post 7 real derivado do caso-cliente-juridico, check 9/10, registrado na fila); 2 achados corrigidos (marketing 2.13.3): fallback de voz apontava pra memory inexistente + aviso operacional do get_voice_guide/check_message |
-| criar-post-blog | A1 | draft local, NÃO publica | fila | alimenta decisão h48d9cxqowqt |
-| agente-draft-blog | A1 | draft local | fila | — |
+| criar-post-blog | A1 | draft local, NÃO publica | N/A 06/07 (DEPRECATED) | Deprecated 29/06 pelo pipeline modular (draft->revisor->publisher); validação = description bloqueia disparo (OK) + reference/voz-e-geo.md íntegra (OK). Golden run vai pro pipeline substituto |
+| agente-draft-blog | A1 | draft local | FEITO 06/07 | APROVADO (MDX real de 1529 palavras, Camada 0 e [preencher] exercitados, fato HBR verificado); 2 achados corrigidos (marketing 2.13.4): template sem takeaways + Passo 4 de pubDate escolhia data no passado |
 | agente-revisor-blog | A1 | local | fila | — |
 | agente-publisher-blog | C | PUBLICA blog prod | fila (até preview) | — |
 | gerar-srt | A2 | Whisper local (clipe teste 45s em C:/tmp) | FEITO 06/07 | APROVADO (SRT real, caminho A + encoding do B); 3 achados corrigidos (marketing 2.13.1): limiar foreground 60s->30s (timeout 120s matava Whisper), mojibake cp1252 nos 2 scripts, sentinela EXIT no background |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 16 (12 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 43 · Onda 1 restante: ~26 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 18 (13 FEITO + 4 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 45 · Onda 1 restante: ~24 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
