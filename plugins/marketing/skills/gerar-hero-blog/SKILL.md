@@ -24,13 +24,17 @@ Cria a imagem de capa (hero) de um post do blog `expertintegrado.com.br/blog` (A
 - Custo por imagem: ~US$0,165 (~R$0,85) em HIGH 1536x1024 (~5.488 tokens). 100 imagens ~R$88. Brain: notas `3oh96mtgtl1f` e `ph2qohd66nhh`.
 
 ## Pre-requisitos
-- **Python** disponivel. Resolver o interpretador numa variavel ANTES de rodar o script (o PC do Eric NAO tem `python`/`python3` no PATH):
+- **Python com Pillow** disponivel. Resolver o interpretador por CAPACIDADE (quem tem Pillow), nao por PATH — no PC do Eric o `python3` do PATH e o 3.14 da Windows Store, que pode nao ter os pacotes; o ecossistema documentado vive no 3.12:
   ```
-  PY="${PYTHON:-$(command -v python3 || command -v python)}"
-  [ -z "$PY" ] && PY="/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"  # fallback PC (Python 3.12)
+  PY=""
+  for cand in "${PYTHON:-}" "$(command -v python3 || true)" "$(command -v python || true)" \
+    "/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"; do
+    [ -n "$cand" ] && "$cand" -c "import PIL" >/dev/null 2>&1 && PY="$cand" && break
+  done
   ```
-  - Parada legitima: SE nem `python3`/`python` no PATH nem o caminho documentado do PC existirem (`[ ! -x "$PY" ]`) -> PARAR e reportar: instalar Python 3.12+ (ex.: `winget install Python.Python.3.12`) ou setar `PYTHON` pro interpretador. NUNCA rodar o script sem interpretador valido.
-  O script usa a lib padrao + Pillow (`"$PY" -m pip install pillow`) pra converter PNG->WebP.
+  - SE `PY` saiu vazio mas algum interpretador existe -> instalar Pillow nele (`"<interpretador>" -m pip install pillow`) e re-resolver.
+  - Parada legitima: SE nenhum interpretador existe (nem PATH nem o 3.12 documentado) -> PARAR e reportar: instalar Python 3.12+ (ex.: `winget install Python.Python.3.12`) ou setar `PYTHON` pro interpretador. NUNCA rodar o script sem interpretador valido.
+  O script usa a lib padrao + Pillow pra converter PNG->WebP.
 - **`OPENAI_API_KEY`** no ambiente. Se ausente: `op read "op://Agentes Eric/OPENAI_API_KEY/credential"` (detectar `op` com `command -v op`) e exportar antes de rodar. O script aborta com erro se a chave nao estiver no env.
   - Parada legitima: SE `command -v op` falha E `OPENAI_API_KEY` nao esta no env -> PARAR e reportar as 2 saidas (instalar o 1Password CLI: `winget install AgileBits.1Password.CLI`; OU exportar a chave direto: `export OPENAI_API_KEY=<sua-chave>`). NUNCA prosseguir sem a credencial.
 - **Repo do blog** clonado. Default do script: `C:\repos\expertintegrado-blog` (passar `--blog-dir` pra outro caminho). Post-alvo em `<blog-dir>/src/content/blog/<slug>.mdx`.
@@ -89,6 +93,7 @@ Ler (via tool Read no arquivo `<blog-dir>/src/content/blog/<slug>.mdx`) o `title
 ```
 "$PY" scripts/gerar-hero.py --slug <slug-do-post> --concept "<conceito em ingles>"
 ```
+**Timeout:** a geracao em HIGH leva 30-150s (medido no PC: 144s) — ACIMA do timeout default de 120s da tool Bash, que mataria o script no meio da chamada paga. SEMPRE rodar esta chamada com `timeout: 300000` explicito (ou em background com log + sentinela `EXIT=$?` se for gerar varios posts em sequencia).
 Flags opcionais:
 - `--alt "<texto acentuado>"` — define o `heroAlt` manualmente. Sem ela, o script gera um `heroAlt` acentuado a partir do titulo do post.
 - `--blog-dir "<caminho>"` — outro repo do blog (default `C:\repos\expertintegrado-blog`).
