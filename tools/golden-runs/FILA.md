@@ -91,7 +91,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | innovation-lab | A1 | local | fila | — |
 | mentoria-equipe-seg-16h | A1 | local | fila | — |
 | onboarding-cliente-ganho | B | ClickUp writes | aguarda OK | card TESTE + delete |
-| pos-reuniao-acoes | A2/B | verificar writes na leitura | fila | — |
+| pos-reuniao-acoes | A2/B | propose-only (gate no Passo 7) | FEITO 06/07 | APROVADO (call REAL do Gustavo/Madeplant 21/05 processada ponta a ponta, parou no gate, zero escrita); 3 achados corrigidos (lab 3.10.7): sem guarda de call antiga (proporia re-avançar etapa que o deal já visitou e regrediu — "só avançar" não pega re-avanço), diretório Plaud default inexistente (cascata real: Transcricoes Calls/ + transcricoes/ + Downloads), clickup_get_workspace_hierarchy estoura token limit (~67K, recovery grep no arquivo salvo) |
 | proposta-3-tiers | A1 | doc local | FEITO 06/07 | APROVADO (proposta real do Gustavo Lobo/Madeplant: PDF 4 págs Midnight Executive no Drive + nota 18289 marcada [GOLDEN RUN]); 4 achados corrigidos (lab 3.10.6): template canônico sem NENHUM placeholder (Passo 6 reescrito com mapa de inserção + validação real), case == cliente (Indústria→Madeplant no deal DA Madeplant), Total de colaboradores vem como FAIXA "201 a 500" (ROI assume número), trigger de tier indefinido (Combo Prata/Mentoria Platina) só disparava com "tier pedido" — gap silencioso em proposta completa |
 | triagem-matinal | A2 | read-only 4 fontes | FEITO 06/07 | APROVADO ponta a ponta, 7 achados corrigidos (lab 3.10.2); painel real gerado |
 
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 31 (25 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 69 · Onda 1 restante: ~11 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 32 (26 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 72 · Onda 1 restante: ~10 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
