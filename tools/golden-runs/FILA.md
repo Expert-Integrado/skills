@@ -81,7 +81,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
-| apresentacao-html | A1 | HTML local | fila | — |
+| apresentacao-html | A1 | HTML local | FEITO 06/07 | APROVADO no escopo (deck real de 7 slides em C:/tmp/golden-apresentacao, QA visual Playwright: letterbox escuro 16:10, position absolute, bg por slide, reveals; deploy pulado no gate); 2 achados corrigidos (lab 3.10.4): path default 01_Palestras/Eventos NÃO existe no Drive → convenção real 01_Aulas_e_Palestras/YYYY-MM-DD - Evento - Tema (15 medidos); foto do quem-sou sem fonte operacional (não existe eric.jpg) → pré-req aponta pasta canônica de fotos. Obs: cache do plugin 3 versões atrás do repo; Google Fonts externo degrada offline |
 | aula-mentoria | B/C (era A1) | gravações reais + Smart Player alunos + ClickUp | PARCIAL 06/07 | 1 achado corrigido (encoding output PS); IDs ClickUp validados; completo no próximo uso real |
 | briefing-pre-call | A2 | Pipedrive/Zoom read | fila | — |
 | claude-task | A2 | task no Brain (reversível) | FEITO 06/07 | APROVADO ponta a ponta; achado TRANSVERSAL do fuso (TZ IANA sem tzdata no Git Bash) corrigido em 7 skills |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 28 (22 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 61 · Onda 1 restante: ~14 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 29 (23 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 63 · Onda 1 restante: ~13 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
