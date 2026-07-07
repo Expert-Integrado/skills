@@ -19,7 +19,7 @@ Canal decidido em 05/07/2026: **perfil pessoal do Eric** (é onde mora a entidad
 
 ## SEMPRE
 
-- SEMPRE rodar `get_voice_guide` + `check_message` no texto final ANTES de fixar o draft (regra hard da voz do Eric; se o MCP não estiver disponível na máquina, ler `eric-voice.md` da memória e marcar o draft como "pendente check_message").
+- SEMPRE rodar `get_voice_guide` + `check_message` no texto final ANTES de fixar o draft (regra hard da voz do Eric; se o MCP não estiver disponível na máquina, ler `~/.claude/voice-guide.md` direto e marcar o draft como "pendente check_message"). O guide tem ~90KB e estoura o limite de retorno da tool (vira arquivo persistido) — ler dele as seções TL;DR, "Vocabulário evitado" e "Anti-padrões", não o arquivo inteiro. Os soft warnings de comprimento do `check_message` são régua de CHAT — não valem pra post de feed; o que trava é violação hard (score < 7 ou violations > 0).
 - SEMPRE UTM no link do comentário: `https://blog.expertintegrado.com.br/blog/<slug>?utm_source=linkedin&utm_medium=social&utm_campaign=blog-derivado`.
 - SEMPRE acentuação correta (texto externo).
 - SEMPRE variar o formato entre posts da semana (história pessoal / dado + leitura / posição contrária / bastidor) — 3 posts iguais seguidos viram papel de parede.

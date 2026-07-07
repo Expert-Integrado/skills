@@ -25,7 +25,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | imagem | A2 | API imagem (centavos) | FEITO 06/07 | APROVADO 7/7, 1 achado corrigido |
 | pauta-semanal | A2 | Apify ~US$0,10 | FEITO 06/07 | APROVADO, 4 achados corrigidos |
 | criar-script | A1 | nenhum | FEITO 06/07 | APROVADO 8/8, zero defeito na skill, 1 achado lateral (CLAUDE.md) corrigido |
-| blog-para-linkedin | A1 | nenhum | fila | — |
+| blog-para-linkedin | A1 | nenhum | FEITO 06/07 | APROVADO ponta a ponta (Post 7 real derivado do caso-cliente-juridico, check 9/10, registrado na fila); 2 achados corrigidos (marketing 2.13.3): fallback de voz apontava pra memory inexistente + aviso operacional do get_voice_guide/check_message |
 | criar-post-blog | A1 | draft local, NÃO publica | fila | alimenta decisão h48d9cxqowqt |
 | agente-draft-blog | A1 | draft local | fila | — |
 | agente-revisor-blog | A1 | local | fila | — |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 15 (11 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 41 · Onda 1 restante: ~27 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 16 (12 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 43 · Onda 1 restante: ~26 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
