@@ -105,8 +105,8 @@ Mesmas regras da skill `/voz`. Aplicar **antes** de passar o texto para o Eleven
 - `para` → `pra`
 - `você` → `cê`
 - `está` → `tá` / `estou` → `tô`
-- Verbos infinitivos longos (>3 sílabas): drop do R (`falar` → `falá`, `dizer` → `dizê`, `fazer` → `fazê`)
-- Exceções (não dropar R): `ser, ter, ver, ler, ir, vir, sair`
+- Infinitivos com 5+ letras terminados em "ar/er/ir": drop do R final com acento (`falar` → `falá`, `dizer` → `dizê`, `fazer` → `fazê`) — mesma régua da skill `/voz`, fonte canônica
+- Exceções (não dropar R): `ser, ter, ver, ler, ir, vir, sair` (lista completa no `scripts/humanizar.py` da skill `/voz`, dicionário `NAO_DROPAR`)
 
 **Regras leve:**
 - `para` → `pra`
@@ -175,6 +175,7 @@ curl -s --ssl-no-revoke -X POST "https://api.elevenlabs.io/v1/text-to-speech/$VO
 ```bash
 "$PY" - "$WORK/heygen-audio.mp3" << 'PYEOF'
 import sys
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 head = open(sys.argv[1], "rb").read(4)
 ok = head[:3] == b"ID3" or (len(head) and head[0] == 0xFF)
 print("OK: MP3 válido" if ok else "FALHA: não é MP3 (provável JSON de erro) — ver Erros comuns (ElevenLabs 401)")
@@ -190,10 +191,13 @@ O HeyGen precisa de uma URL pública pra baixar o MP3. Duas opções — usar a 
 
 #### Opção A — HeyGen Asset Upload (preferido, só usa HEYGEN_API_KEY)
 
+O endpoint espera o arquivo como **corpo binário cru** com `Content-Type: audio/mpeg` — NUNCA multipart `-F` (a API rejeita com `{"code":40001,"message":"asset data must be provided"}`; e no Git Bash/Windows o path POSIX embutido em `-F "file=@..."` nem chega a ser lido — curl exit 26, porque a conversão de path do MSYS não alcança strings com `@` embutido). Validado 07/07/2026; mesmo formato do uploader do `criar-reel`.
+
 ```bash
 AUDIO_URL=$(curl -s --ssl-no-revoke -X POST "https://upload.heygen.com/v1/asset" \
   -H "X-Api-Key: $HEYGEN_API_KEY" \
-  -F "file=@$WORK/heygen-audio.mp3;type=audio/mpeg" \
+  -H "Content-Type: audio/mpeg" \
+  --data-binary @"$WORK/heygen-audio.mp3" \
   | "$PY" -c "import sys,json; print(json.load(sys.stdin)['data']['url'])")
 echo "Audio URL: $AUDIO_URL"
 ```
@@ -287,6 +291,7 @@ Retorna `"status": "completed"` com `video_url` (S3 assinada, ~24h). Se `"status
 ```bash
 "$PY" - "$WORK/status.json" << 'PYEOF'
 import json, sys
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 d = json.load(open(sys.argv[1], encoding="utf-8")).get("data") or {}
 print("URL:", d.get("video_url", ""))
 print("Duração: " + str(d.get("duration", "?")) + "s")
@@ -328,3 +333,4 @@ Duração: [duration]s
 
 - **v2.1**: `input_text` obrigatório junto com `audio_url` (sem ele: `"word time metadata is missing"`).
 - **v2.2**: HeyGen Asset Upload como Opção A (só HEYGEN_API_KEY); Supabase rebaixado a Opção B (fallback). Credenciais mínimas: HEYGEN_API_KEY + ELEVENLABS_API_KEY.
+- **v2.3** (golden run 07/07/2026): Opção A corrigida de multipart `-F` pra corpo binário cru (a API rejeitava com 40001 e, no Git Bash, o path POSIX no `-F` nem era lido — exit 26); régua do drop de R alinhada com a skill `/voz` (5+ letras ar/er/ir — a antiga ">3 sílabas" contradizia os próprios exemplos); reconfigure UTF-8 nos snippets que imprimem acento (mojibake cp1252 no PC).
