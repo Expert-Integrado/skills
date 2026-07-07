@@ -25,7 +25,7 @@ Pega uma ideia de live/webinário e entrega tudo pronto pra rodar: `brief.md`, l
 - NUNCA abrir criativo com pergunta abstrata ("quanto custa sua hora?"). Abrir com cena concreta de dor operacional repetitiva.
 - NUNCA subir a campanha no Meta com play direto. Publicar SEMPRE pausada; Eric/responsável revisa e dá play.
 - NUNCA inventar case, número ou benchmark. Conferir os números na 1ª edição (`references/funil-e-metricas.md`) antes de citar; se não tiver o dado, não citar.
-- NUNCA pôr chave/token/pixel_id real dentro dos arquivos versionados da skill. Valores da edição vão nos tokens `{{ASSIM}}` preenchidos na pasta do webinário.
+- NUNCA pôr chave/token real nem hardcodar pixel_id nos templates ou HTMLs versionados da skill. Valores da edição vão nos tokens de chaves duplas preenchidos na pasta do webinário. (Única exceção versionada: `references/pixel-e-tracking.md` documenta o pixel da conta — a Fase 1 depende dele.)
 - NUNCA disparar WhatsApp fora da sequência de 4 toques (vira spam) nem pedir dado sensível por WhatsApp (só lembrete + link). Respeitar quem pedir pra sair.
 - NUNCA colocar mais de 3 campos no formulário da LP. Só nome + WhatsApp + nº de funcionários.
 

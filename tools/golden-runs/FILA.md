@@ -38,7 +38,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | ig-competitor-research | A2 | Apify ~US$0,10 | FEITO 06/07 | APROVADO ciclo completo (análise dos 3 posts do scrape real + analysis.json + build_report.py com merge OK + report.html 520KB + padrões/pautas); 2 achados corrigidos (marketing 2.13.9): op path do Passo 1 não recebeu a correção do item Apify + resolução de $PY por capacidade (premissa de PATH caducada, pip install no interpretador errado) |
 | relatorio-ads | A2 | Meta API read-only | PARCIAL 06/07 | MCP do Meta Ads ausente na sessão (parada legítima; conector é do ambiente do João); local validado (reference íntegro, tabelas consistentes); 1 achado corrigido (marketing 2.13.10): regra de +30% vaga no metas-cpl.md vs critério dos 50% do SKILL.md; run completo na sessão do João |
 | criar-campanha | C | cria campanha Meta Ads | fila (até payload) | criar pausada só com OK |
-| criar-webinario | B | cria webinar Zoom real | aguarda OK | criar + deletar |
+| criar-webinario | B | funil LP+pixel+Meta+lembretes (classificação antiga "webinar Zoom" estava ERRADA) | PARCIAL 07/07 | Fases 1-3 APROVADAS com edição TESTE (brief, LPs geradas com 0 tokens pendentes, A/B só headline, roteiro pixel entregue; deploy/Meta/lembretes/live = paradas legítimas); 2 defeitos corrigidos (marketing 2.13.12): {{ASSIM}} literal no comentário do template quebrava a validação da Fase 2 pra sempre, NUNCA #7 contradiz a reference que documenta o pixel da conta (Fase 1 depende dela) |
 | criar-reel | B-custo | Kling/HF (créditos) | aguarda OK custo | — |
 | video | B-custo | API vídeo (créditos) | aguarda OK custo | — |
 | reels-studio | B-custo | API vídeo (créditos) | aguarda OK custo | — |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho root aposentada 07/07, 2 cópias de worktree ignoradas)
-- Processadas: 40 (34 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 93 · Onda 1: CONCLUÍDA · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 41 (34 FEITO + 6 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 95 · Onda 1: CONCLUÍDA · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
