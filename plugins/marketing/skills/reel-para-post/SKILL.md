@@ -18,7 +18,7 @@ O reel morre em 48h; o post acumula pra sempre. Todo reel que performar (acima d
 ## Fluxo
 
 1. **Input**: link do reel. Baixar o vídeo (yt-dlp funciona pra Instagram público; se falhar, pedir o arquivo ao Eric).
-2. **Transcrever**: Whisper local (faster-whisper GPU — ver memória `faster-whisper-gpu.md`; fallback: caminho absoluto do Python 3.12 + whisper CPU).
+2. **Transcrever**: Whisper local (faster-whisper GPU; fallback: caminho absoluto do Python 3.12 + whisper CPU). Gotcha make-or-break do faster-whisper no Windows: prepender os bin dirs do pacote `nvidia` no `PATH` ANTES de `from faster_whisper import WhisperModel` (senão `cublas64_12.dll` não carrega e trava/erra no primeiro transcribe); usar `language='pt', vad_filter=True, beam_size=1, condition_on_previous_text=False`. Snippet completo na memória `faster-whisper-gpu.md` (no PC está no memory do projeto `c--repos`). Medido na RTX 3070: ~7-12x realtime.
 3. **Extrair a tese**: qual é A afirmação do reel? Ela vira o título do post (orientado a busca) e a resposta direta do primeiro parágrafo (pirâmide invertida GEO).
 4. **Expandir**: chamar o padrão do `agente-draft-blog` com outline derivado: H2s = as perguntas que o reel provoca mas não responde; passo a passo acionável; 1 exemplo concreto; FAQ. Tags `objecao:`/`setor:` quando couber.
 5. **Embed**: incluir o reel no MDX:
