@@ -129,6 +129,7 @@ ${BLOG_DIR}/src/content/blog/<slug>.mdx
 - Frontmatter completo: `title`, `description`, `pubDate`, `pillar`, `tipo`, `status: "published"`. Os posts do repo também trazem `heroImage`, `heroAlt`, `readingTime`, `tags`, `related`, `takeaways` — preservar os que vierem no MDX aprovado, não removê-los.
 - Se o post usa o componente InlineCta, o import `import InlineCta from '../../components/InlineCta.astro';` deve estar presente (logo após o frontmatter).
 - Sem placeholder não preenchido (grep por `<...>`, `TODO`, `[inserir]`, `[preencher]`, `Lorem`).
+- **O arquivo do `heroImage` EXISTE no repo**: `ls "${BLOG_DIR}/public<heroImage do frontmatter>"` (ex.: `public/images/<slug>-hero.webp`). O frontmatter "completo" não garante o arquivo — post publicado com hero 404 é defeito visível em prod (validado 07/07/2026). SE não existir → rodar a skill `gerar-hero-blog` pro slug ANTES de commitar (ela gera o WebP e reaplica o frontmatter) e **incluir o `.webp` novo no `git add` do Passo 2**.
 
 Se qualquer validação falhar → NÃO commitar; reportar ao Eric o campo/placeholder problemático e parar.
 
@@ -139,6 +140,7 @@ Commitar o post E a linha do log de aprovação (Passo 0.4) JUNTOS:
 ```bash
 cd "${BLOG_DIR:-C:/repos/expertintegrado-blog}"
 git add src/content/blog/<slug>.mdx docs/log-aprovacoes.md
+# SE o hero foi gerado agora (validação do Passo 1): adicionar também public/images/<slug>-hero.webp
 git commit -m "feat(blog): post <slug>
 
 Publish: <título curto>
@@ -155,11 +157,20 @@ Preenchimento dos placeholders do commit (todos vêm do frontmatter, sem inventa
 
 Se falhar → ver "Erros comuns e recovery". Não avançar pro Passo 3 sem push confirmado.
 
-## Passo 3 — Aguardar e validar o deploy Vercel
+## Passo 3 — Deployar e validar na Vercel
 
-O push na branch `master` dispara o build automático na Vercel. Aguardar o deploy antes de validar.
+**O auto-deploy do push está MORTO neste repo** (validado 07/07/2026: projeto Vercel é de time `team_UAgnWON7MrvFUEjnZinLfUpg`, mesmo bloqueio de 15/06 do Meeting Hub — `gh api .../deployments` retorna vazio após push). O push do Passo 2 continua obrigatório (backup + fonte da verdade), mas **NÃO publica nada**. O deploy é manual:
 
-Caminho primário (agnóstico, funciona headless) — polling com `curl` até HTTP 200, tentando por ~180s:
+```bash
+cd "$BLOG_DIR" && npx --yes vercel@latest deploy --prod --yes \
+  --token "$(op read "op://Agentes Eric/Token_Vercel_Produto_Claude_Eric/credential")"
+```
+
+- A CLI `vercel` NÃO está instalada no PC — `npx --yes vercel@latest` resolve (deploy típico fica Ready em <60s).
+- SEMPRE `--prod` (sem a flag cai em preview e o domínio continua servindo o build antigo). NUNCA `vercel build`.
+- Token via `op read` inline — nunca colar o valor.
+
+Depois do deploy, validar com polling `curl` até HTTP 200 (na prática 1-2 tentativas; manter o loop por resiliência de propagação):
 
 ```bash
 URL="https://blog.expertintegrado.com.br/blog/<slug>"
@@ -192,6 +203,7 @@ Para CADA slug em `related`:
 2. Read do arquivo. Localizar o array `related:` no frontmatter.
 3. SE o array `related` já inclui `<slug-novo>` → nada a fazer, pular.
 4. SENÃO → Edit adicionando `"<slug-novo>"` ao array `related` (apenas adicionar; não remover os existentes).
+   - **Limite de render = 5**: o template (`src/pages/blog/[...slug].astro`) faz `.slice(0, 5)` no array — entrada da 6ª posição em diante NÃO aparece na página (validado 07/07/2026: cross-link na 6ª posição ficou invisível em prod). SE o array já tem 5+ entradas → inserir `<slug-novo>` na 5ª posição (índice 4), movendo a entrada deslocada pro fim do array (nada é removido, mas ela fica fora do render), e REGISTRAR no relatório final que o post `<slug-relacionado>` está com 6+ related pra curadoria do Eric decidir qual sai.
 5. Commitar individualmente:
 
 ```bash
@@ -317,7 +329,7 @@ Se algum item ficou pendente, adicionar linha `Pendências: <descrição>` (ex.:
 | `git pull` com conflito | Parar e reportar ao Eric. Não sobrescrever nem forçar. |
 | `git push` rejeitado (non-fast-forward) | `git pull --rebase` e repetir o push. Se persistir conflito de conteúdo → resolver ou reportar. |
 | HTTP 200 mas `grep -qiF` do título não bateu | NÃO declarar falha ainda. Confirmar VISUALMENTE com Playwright (`mcp__playwright__browser_navigate` na URL + `mcp__playwright__browser_snapshot`) que o título aparece na página. SE aparece → era só encoding/fragmento do grep, considerar publicado OK. SE não aparece → tratar como deploy incompleto (linha do 404). |
-| Vercel HTTP 404 após ~180s | Sem acesso à Vercel nesta sessão (nenhuma tool Vercel em `allowed-tools`) — NÃO inventar leitura de build log. Validar localmente o frontmatter do MDX (campo faltando quebra o build do Astro) e reportar ao Eric o HTTP recebido + o que foi checado. SE `gh` disponível (`command -v gh`) → `gh run list --workflow=daily-rebuild.yml -R ericlucianoferreira/expertintegrado-blog` como diagnóstico adicional (só reflete rebuilds disparados, não o build nativo do push). NÃO seguir pro Passo 4. |
+| Vercel HTTP 404 após ~180s | Causa nº 1 (validada 07/07/2026): o deploy manual do Passo 3 não rodou — o push sozinho NÃO publica (auto-deploy morto, projeto de time). Rodar o `npx vercel deploy --prod` do Passo 3 e repetir o polling. Se o 404 persistir APÓS deploy Ready: checar o filtro de data do Astro (`pubDate` no futuro fica fora do build — `pubDate <= new Date()` compara com 00:00Z do dia) e o frontmatter do MDX (campo faltando quebra o build). Reportar ao Eric o HTTP recebido + o que foi checado. NÃO seguir pro Passo 4. |
 | Vercel HTTP 500 | Sem acesso à Vercel nesta sessão (fora de `allowed-tools`) — provável erro de build (import inválido, sintaxe MDX quebrada). Revisar o MDX localmente; se achar o erro, corrigir e fazer novo commit+push. Reportar ao Eric o HTTP + o que foi checado. SE `gh` disponível → checar o status da Action `daily-rebuild` como diagnóstico adicional. NÃO seguir pro Passo 4. |
 | `curl` falha schannel (exit 35) | Já usar a flag `--ssl-no-revoke` (presente nos comandos acima). |
 | Brain timeout | Tentar de novo 1x (D1 eventually consistent). Se falhar, registrar "Brain: pendente" e seguir. |
