@@ -23,8 +23,9 @@ Recebe um tema (empresa fictícia), inventa TUDO que faltar (nome, números, cop
 ## SEMPRE
 - SEMPRE disparar o vídeo (ElevenLabs + HeyGen) ANTES de qualquer outra etapa, em background (`run_in_background: true`).
 - SEMPRE 4 imagens `1536x1024` (3:2) com a foto ref do Eric e `Preserve his exact face and identity` no prompt.
-- SEMPRE paleta de UMA cor só e copy específica (números, autoridade real do Eric) — nunca genérica.
+- SEMPRE paleta com UMA cor de destaque escolhida PRO TEMA (nunca o mesmo CSS de toda demo) e copy específica (números, autoridade real do Eric) — nunca genérica.
 - SEMPRE acentuação correta do português em TODO texto da landing (é texto externo).
+- SEMPRE rodar o UX Review do passo 5.5 ANTES do deploy — deployar só com no máximo 1 FAIL nos 10 itens.
 - SEMPRE `vercel deploy --prod` (sem `--prod` cai em preview e o domínio serve build antigo).
 - SEMPRE entregar em DUAS mensagens: a mensagem 1 com o link `.vercel.app` logo após o passo 6 (SEM a linha do domínio próprio); a mensagem 2, curta e separada, só quando o passo 7d confirmar o domínio (200 + grep do conteúdo).
 - SEMPRE limpar o workdir no fim (`rm -rf "$WORK"`).
@@ -93,6 +94,7 @@ Recebe um tema (empresa fictícia), inventa TUDO que faltar (nome, números, cop
     - [ ] Sem saudação vazia de IA ("Olá pessoal", "Bom dia, tudo bem?"): começar direto no problema/promessa.
     - [ ] Sem "exatamente"/"faz todo sentido"/"com certeza" (fingerprint de IA).
     - [ ] Frases curtas e concretas, com pelo menos 1 dos números de impacto inventados.
+    - [ ] **Humanizada pro TTS** (validado no fork OpenClaw: soa muito mais natural): contrações reais da fala — "você está" vira "cê tá", "para" vira "pra", "estou" vira "tô", e dá pra dropar o R de infinitivo ("falá", "mostrá") em 1-2 pontos. A GRAFIA continua com acentuação correta ("cê tá", não "ce ta"); humanizar é registro falado, não erro de português.
 
 ### 2. VÍDEO PRIMEIRO — disparar em background no segundo 0
 Escrever `$WORK/video.sh` (tool Write) com, NESTA ordem:
@@ -109,9 +111,9 @@ ELEVENLABS_API_KEY="${ELEVENLABS_API_KEY:-$(op read "op://Agentes Eric/ELEVENLAB
 
 Rodar com a tool Bash em `run_in_background: true` (comando: `bash "$WORK/video.sh"`). O `trap` garante que SEMPRE exista um sentinela (`video.done` ou `video.fail`) mesmo num erro inesperado — é assim que o passo 5 sabe que acabou, já que a skill não tem tool de acompanhamento de background. Só depois seguir pro passo 3, sem esperar aqui.
 
-a) **TTS ElevenLabs** (voz Eric casual `HSqIMKW3FHpkAcy8JJLM`, modelo `eleven_turbo_v2_5`). Montar o corpo JSON com `node` lendo `$WORK/fala.txt` — o `JSON.stringify` escapa aspas, quebras de linha, barras e acentos da fala. NUNCA interpolar a fala crua na string `-d` (aspas/quebras na fala quebram o JSON e o shell):
+a) **TTS ElevenLabs** (voz Eric casual `HSqIMKW3FHpkAcy8JJLM`, modelo `eleven_turbo_v2_5`). Settings validados no fork OpenClaw: `style 0.30` (style alto, 0.50+, BORRA o clone de voz), `stability 0.45`, `speed 0.95`. Montar o corpo JSON com `node` lendo `$WORK/fala.txt` — o `JSON.stringify` escapa aspas, quebras de linha, barras e acentos da fala. NUNCA interpolar a fala crua na string `-d` (aspas/quebras na fala quebram o JSON e o shell):
 ```bash
-node -e 'const fs=require("fs");const t=fs.readFileSync(process.argv[1],"utf8").trim();process.stdout.write(JSON.stringify({text:t,model_id:"eleven_turbo_v2_5",voice_settings:{stability:0.35,similarity_boost:0.75,style:0.50,use_speaker_boost:true}}))' "$WORK/fala.txt" > "$WORK/tts.json"
+node -e 'const fs=require("fs");const t=fs.readFileSync(process.argv[1],"utf8").trim();process.stdout.write(JSON.stringify({text:t,model_id:"eleven_turbo_v2_5",voice_settings:{stability:0.45,similarity_boost:0.75,style:0.30,speed:0.95,use_speaker_boost:true}}))' "$WORK/fala.txt" > "$WORK/tts.json"
 curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/HSqIMKW3FHpkAcy8JJLM?output_format=mp3_44100_128" \
   -H "xi-api-key: $ELEVENLABS_API_KEY" -H "Content-Type: application/json" \
   --data @"$WORK/tts.json" \
@@ -131,7 +133,7 @@ ASSET_ID=$(curl -s -X POST "https://upload.heygen.com/v1/asset" \
 c) **Gerar o vídeo** — avatar "Eric 2026" + voice `type=audio` + `input_text` OBRIGATÓRIO (mesmo com áudio pronto, a API exige). Montar o corpo com `node` (injeta `$ASSET_ID` e a fala escapada de `$WORK/fala.txt`) e capturar `data.video_id`. **A recuperação de avatar (abaixo) tem que estar EMBUTIDA aqui no `video.sh`:** o script roda detached (`run_in_background`), então não dá pra, depois de lançado, listar avatares e reaplicar à mão — ou a lógica está escrita no script, ou não acontece. Por isso o guarda de `VIDEO_ID` vazio já resolve o avatar e regera, tudo dentro do script:
 ```bash
 AVATAR_ID="bd4f2d9e3ed342a2999b2f585dacc567"
-gen_body(){ node -e 'const fs=require("fs");const t=fs.readFileSync(process.argv[1],"utf8").trim();const a=process.argv[2];const av=process.argv[3];process.stdout.write(JSON.stringify({video_inputs:[{character:{type:"avatar",avatar_id:av},voice:{type:"audio",audio_asset_id:a,input_text:t}}],dimension:{width:1280,height:720}}))' "$WORK/fala.txt" "$ASSET_ID" "$1"; }
+gen_body(){ node -e 'const fs=require("fs");const t=fs.readFileSync(process.argv[1],"utf8").trim();const a=process.argv[2];const av=process.argv[3];process.stdout.write(JSON.stringify({video_inputs:[{character:{type:"avatar",avatar_id:av},voice:{type:"audio",audio_asset_id:a,input_text:t},background:{type:"color",value:"#101010"}}],dimension:{width:1280,height:720}}))' "$WORK/fala.txt" "$ASSET_ID" "$1"; }
 generate(){ curl -s -X POST "https://api.heygen.com/v2/video/generate" -H "x-api-key: $HEYGEN_API_KEY" -H "Content-Type: application/json" --data @"$WORK/gen.json" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const j=JSON.parse(d);process.stdout.write((j.data&&j.data.video_id)||"")})'; }
 gen_body "$AVATAR_ID" > "$WORK/gen.json"; VIDEO_ID=$(generate)
 if [ -z "$VIDEO_ID" ]; then          # avatar pode ter mudado — resolver pelo avatar_name, DENTRO do script
@@ -193,21 +195,44 @@ curl -s -X POST "https://api.openai.com/v1/images/edits" \
 As 4 podem rodar em paralelo (`&` + `wait`). **Validação de cada `.png`:** (a) tamanho > 50KB; (b) é PNG de verdade — `file "$WORK/site/hero.png"` contém "PNG image" (se vier < 50KB ou não-PNG, o curl devolveu JSON de erro em vez da imagem). SE uma falhar → retry 1x; persistiu → seguir sem ela (ajustar o HTML) e avisar na entrega.
 
 ### 4. Montar o `index.html` (landing real, não vitrine)
-Escrever em `$WORK/site/index.html`, já com a seção de vídeo apontando pra `video-eric.mp4` (que chega no passo 5). Seções NESTA ordem:
+Escrever em `$WORK/site/index.html`, já com a seção de vídeo apontando pra `video-eric.mp4` (que chega no passo 5). Benchmark visual: `corretor.ericluciano.com.br`.
 
-`nav → hero → barra de números → como funciona → quem está por trás (autoridade real do Eric: educador há 25 anos, CEO da Expert Integrado, mentor de IA no G4) → carrossel → vídeo → jogo → formulário → footer`
+**4a. Design thinking ANTES de escrever o HTML (30s de decisão, validado no fork OpenClaw):**
+1. **Tema visual** — qual a vibe da empresa fictícia? Escolher UMA direção e se comprometer com ela.
+2. **Paleta** — cores que servem O TEMA, com UMA cor de destaque. NUNCA o mesmo CSS de toda demo (base azul/preto Expert pode, mas o accent temático é obrigatório).
+3. **Tipografia** — par display + body do Google Fonts. NUNCA as fontes clichê de IA: Inter, Roboto, Arial, Space Grotesk, DM Sans, Bebas Neue.
+4. **Diferenciação** — o que alguém vai LEMBRAR dessa página? Definir 1 detalhe memorável.
+5. **Layout** — assimetria, 1 elemento dominante por seção. NUNCA 3 cards iguais em grid previsível.
 
-> **Sobre "preços" (o frontmatter e o resumo dizem que a skill inventa preços):** preço é dado inventável OPCIONAL, exibido INLINE na copy quando fizer sentido pra empresa fictícia (ex.: um "a partir de R$ X" no hero, dentro de "como funciona" ou perto do CTA/formulário). NÃO é uma seção própria: a lista de 10 seções acima é FIXA — não criar uma seção "Preços"/"Planos" dedicada nem mudar a ordem. Se a empresa fictícia não pede preço (serviço sob orçamento, etc.), simplesmente não citar preço. O checklist final conta essas mesmas 10 seções.
+**4b. Seções NESTA ordem (11 seções):**
 
-Regras duras ANTI-CARA-DE-IA:
-1. Foto sempre com overlay/gradiente — nunca retrato cru gigante.
-2. Paleta de UMA cor só.
-3. Ícones SVG de linha — nunca emoji nos cards.
-4. Copy específica (números, autoridade) — nunca genérica.
+`nav sticky (logo texto + âncoras + CTA, backdrop-filter blur) → hero FULL-BLEED (foto de background da tela toda com gradiente sobreposto, headline + subhead + 2 CTAs + trust badges) → barra de números (4 stats, fundo diferente) → como funciona (cards com número, ícone SVG em container arredondado, hover translateY) → quem está por trás (autoridade real do Eric: educador há 25 anos, CEO da Expert Integrado, mentor de IA no G4 — foto grande com badge nome/cargo + lista de diferenciais com SVG check) → carrossel → vídeo → depoimentos (3 cards: estrelas, quote, avatar de iniciais em círculo colorido, nome fictício) → jogo → formulário → footer multi-coluna`
+
+> **Sobre "preços" (o frontmatter e o resumo dizem que a skill inventa preços):** preço é dado inventável OPCIONAL, exibido INLINE na copy quando fizer sentido pra empresa fictícia (ex.: um "a partir de R$ X" no hero, dentro de "como funciona" ou perto do CTA/formulário). NÃO é uma seção própria: a lista de 11 seções acima é FIXA — não criar uma seção "Preços"/"Planos" dedicada nem mudar a ordem. Se a empresa fictícia não pede preço (serviço sob orçamento, etc.), simplesmente não citar preço. O checklist final conta essas mesmas 11 seções.
+
+**Scroll reveal:** todas as seções usam `.reveal` (opacity 0 + translateY 24px, virando 1 + 0 ao entrar no viewport, delay < 300ms).
+
+**4c. Anti-padrões de IA — PROIBIDOS (delatam página feita por IA):**
+1. Emoji como ícone (o MAIOR delator) — ícone é SVG de linha, stroke-width 1.2-1.5, sempre com label de texto.
+2. Grid simétrico de cards idênticos — quebrar com assimetria.
+3. Números decorativos gigantes transparentes no canto.
+4. Ticker/marquee rolando no topo.
+5. Copy saturando metáfora — copy direta e específica ganha de alegoria forçada.
+6. Tipografia clichê (lista do 4a item 3).
+7. Gradiente roxo sobre fundo branco.
+8. Padrão "card de vidro" repetido em tudo.
+9. Todos os elementos com o mesmo spacing (rigidez matemática) — alternar seções densas com respiro.
+10. Ornamentos decorativos de IA e foto em bolinha — retrato é FULL-BLEED com overlay/gradiente, nunca cru gigante nem miniatura redonda.
+
+**4d. Regras técnicas (validadas no fork OpenClaw):**
+- Vídeo: SEM autoplay com som (mobile bloqueia); player pausado com poster + botão TOCAR visível.
+- Som toggle: `addEventListener('click', ...)` usando `this` — NUNCA `onclick="fn()"` com `event.target` (quebra quando o clique cai num filho).
+- `onerror` nas `<img>`: fallback SVG com iniciais.
+- Responsivo desde 375px; touch targets de no mínimo 44x44px; scroll horizontal = defeito.
 
 **Carrossel:** 3 imagens (c1/c2/c3), CSS literal `.slide img{width:100%;aspect-ratio:3/2;height:auto;object-fit:cover}` — proporção travada em 3:2 (a mesma das imagens geradas), nunca corta. Setas + dots + autoplay.
 
-**Jogo:** alvos em chips estilizados (borda + glow + animação pop), não emoji solto. Alvo dourado = +5; alvo errado = -3 (a evitar); combo x2 a partir de 3 acertos seguidos e x3 a partir de 6, com barra de combo; animação de hit; ranking no fim.
+**Jogo:** alvos em chips estilizados (borda + glow + animação pop), não emoji solto. Alvo dourado = +5; alvo errado = -3 (a evitar); combo x2 a partir de 3 acertos seguidos e x3 a partir de 6, com barra de combo; animação de hit; ranking no fim. Tema do jogo = problema real da empresa fictícia (não genérico). Suporte a touch (pointer events), não só click de mouse.
 
 **Formulário:** estático, SEM backend — é demo. O botão de submit NÃO tem endpoint real (nenhum POST/fetch pra lugar nenhum); ao enviar, o JS previne o envio e troca o form por uma mensagem de confirmação fake no próprio HTML (ex.: "Recebemos seu contato, retornamos em breve").
 
@@ -224,6 +249,24 @@ A skill só tem Read/Write/Edit/Bash/telegram — sem tool de acompanhamento de 
 - **SE `DONE`** → confirmar `$WORK/site/video-eric.mp4` existe e > 500KB (`ls -l "$WORK/site/video-eric.mp4"`) → manter a `<section>` de vídeo no HTML apontando pra `video-eric.mp4`.
 - **SE `FAIL`** → remover a `<section>` de vídeo do HTML (tool Edit) e anotar pra avisar o Eric na entrega.
 - **SE `PENDING`** → o render ainda roda. Como o `video.sh` foi lançado com `run_in_background`, o harness te re-invoca quando ele terminar; ao ser re-invocado (ou após ~30-60s), rodar o mesmo check de novo. Repetir até `DONE`/`FAIL` — nunca fica infinito porque o `video.sh` tem teto de 15min e grava `video.fail` ao estourar. NÃO seguir pro deploy (passo 6) enquanto estiver `PENDING`: o deploy é de TUDO junto (nunca deploy parcial + redeploy).
+
+### 5.5 UX Review — checkpoint obrigatório entre HTML pronto e deploy
+Base teórica: Nielsen (10 heurísticas), Krug (Don't Make Me Think), Norman (affordances). Validado no fork OpenClaw desde 03/07: custo ~30s, pega CTA fraco, spacing inconsistente e mobile quebrado ANTES de ir pro ar. Ler o HTML final e marcar cada item como PASS ou FAIL:
+
+| # | Critério | O que verificar |
+|---|----------|-----------------|
+| 1 | CTA visível e acionável | CTA principal aparece sem scroll; copy é verbo de ação ("Agendar", "Quero"), não "Saiba mais"/"Clique aqui". |
+| 2 | Hierarquia visual | 1 elemento dominante por seção; título > sub > corpo em escala clara (mínimo 1.3x); nada de 3 elementos do mesmo peso competindo. |
+| 3 | Scan de 5 segundos | Headline + subhead + CTA respondem: o que É, pra que SERVE, o que FAZER. |
+| 4 | Spacing consistente | Escala base 8px (8/16/24/48/64); seções densas alternam com respiro; sem padding aleatório. |
+| 5 | Feedback imediato | Hover em TODOS os interativos; form valida on-blur; jogo responde < 100ms; reveal com delay < 300ms. |
+| 6 | Reconhecimento > memória | Ícones sempre com label de texto; óbvio o que cada seção faz sem interagir. |
+| 7 | Contraste AA | Texto sobre imagem: overlay escuro >= 40%; texto pequeno: contraste >= 4.5:1. |
+| 8 | Mobile 375px funcional | Touch targets >= 44x44px; menu colapsa; vídeo e jogo funcionam; scroll horizontal = FAIL automático. |
+| 9 | Affordance | Botão PARECE botão (elevação, cor, cursor); o não-clicável NÃO parece clicável. |
+| 10 | Prevenção de erro no form | Required marcado; não aceita submit vazio; `type=email`/`type=tel` corretos; mensagem de sucesso clara. |
+
+**Gate:** 0-1 FAIL = corrigir se for barato e deployar. 2+ FAILs = corrigir ANTES do deploy, sem exceção. Registrar o veredito numa linha (ex.: `UX REVIEW: 8/10 PASS. FAILs: 4 e 8, corrigidos`) pra citar na entrega.
 
 ### 6. Deploy Vercel (escopo resolvido em runtime — NUNCA cravar)
 - Renomear a pasta pro slug (o nome da pasta vira o nome do projeto): `mv "$WORK/site" "$WORK/{slug}"`.
@@ -297,9 +340,10 @@ https://{slug}.vercel.app
 ## Validação final (checklist)
 - [ ] Vídeo do avatar embutido e servido (ou Eric avisado de que a demo saiu sem vídeo).
 - [ ] 4 imagens gpt-image-2 no ar com content-type de imagem (ou aviso das que faltaram).
-- [ ] Landing com as 10 seções na ordem do passo 4.
-- [ ] Anti-cara-de-IA: overlay na foto, 1 cor, SVG de linha, copy com números.
-- [ ] Carrossel 3:2 sem corte, setas + dots + autoplay; jogo com dourado +5 / errado -3 / combo x2-x3 / ranking.
+- [ ] Landing com as 11 seções na ordem do passo 4b (inclui depoimentos) + scroll reveal.
+- [ ] Anti-padrões de IA do passo 4c respeitados: hero full-bleed com overlay, accent temático, SVG de linha com label, tipografia fora da lista clichê, copy com números.
+- [ ] Carrossel 3:2 sem corte, setas + dots + autoplay; jogo temático com touch, dourado +5 / errado -3 / combo x2-x3 / ranking.
+- [ ] UX Review (passo 5.5) executado com no máximo 1 FAIL antes do deploy, veredito registrado.
 - [ ] Acentuação correta em todo o texto da landing.
 - [ ] `.vercel.app` verificado por CONTEÚDO (grep > 0), SSO desabilitado.
 - [ ] Link `.vercel.app` entregue primeiro; domínio próprio só após 200 + grep.
@@ -325,3 +369,5 @@ https://{slug}.vercel.app
 
 ## Nota de validação
 v3.1 (30/06/2026), validada em 6 demos reais: Cano Mestre, EcoRota, NovaFibra, Codeflow, Sapatto Mania e "Eric Domador de Leões" (fluxo vídeo-primeiro + token/scope Vercel + TXT de verificação).
+
+v3.2 (07/07/2026): port das melhorias v4.0-v6.1 do fork OpenClaw da VPS (validadas em demos reais lá; backup do fork em ericlucianoferreira/fred-brain): design thinking antes do HTML, anti-padrões de IA ampliados (4 pra 10), estrutura de 11 seções com depoimentos e scroll reveal, regras técnicas de vídeo/som/form/touch, TTS eric-casual style 0.30 + humanização da fala, background #101010 no HeyGen e UX Review checkpoint (Nielsen/Krug/Norman) com gate de deploy.
