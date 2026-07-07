@@ -34,7 +34,7 @@ Faz auditoria de 4 dimensões pontuadas num draft MDX (frontmatter + body) do bl
   - Referenciado por slug/arquivo → ler com `Read` em `<BLOG_DIR>/src/content/blog/<slug>.mdx`, onde `BLOG_DIR="${BLOG_DIR:-C:/repos/expertintegrado-blog}"` (repo Astro do blog no PC do Eric; em headless, apontar `BLOG_DIR` pro clone local).
 - **Referência de voz e GEO (fonte da verdade):** `voz-e-geo.md` (voz Eric Luciano v1.4, estrutura GEO 2026, pilares, tipos, armadilhas MDX), publicado dentro da skill irmã em `plugins/marketing/skills/criar-post-blog/reference/voz-e-geo.md`. Ler com `Read` se precisar dirimir dúvida de voz/GEO; os red flags operacionais abaixo já estão inline nesta skill.
 - **Protocolo de segurança (fonte da verdade):** `<BLOG_DIR>/docs/protocolo-conteudo.md` — Dimensão 5 implementa as Camadas 1 (scanner) + 2 (triagem 3 cores) desse protocolo. Ler só se precisar de contexto; o gate operacional já está inline no Passo 6.
-- **Scanner de segurança (Camada 1):** `<BLOG_DIR>/scripts/check-sensivel.py`. Interpretador Python: detectar com `command -v python3 || command -v python`; no PC do Eric não há python no PATH → fallback documentado `/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe` (ou env `PYTHON_BIN`).
+- **Scanner de segurança (Camada 1):** `<BLOG_DIR>/scripts/check-sensivel.py`. Interpretador Python: detectar com `command -v python3 || command -v python` (o script é stdlib puro — qualquer Python 3 serve, inclusive o 3.14 da Store que hoje está no PATH do PC do Eric); fallback documentado `/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe` (ou env `PYTHON_BIN`).
 - **Tools:** `Read` (ler o MDX e as referências), `Glob`/`Grep` (checar se slugs de `related` existem em `src/content/blog/`), `Bash` (rodar o scanner de segurança). Nenhuma tool MCP, nenhum deploy, nenhuma escrita no post.
 
 ## Passos
@@ -198,10 +198,10 @@ Preencher exatamente este formato (substituir os placeholders `<...>`; não alte
 
 | Dimensão | Score | Status |
 |---|---|---|
-| Voz | X/10 | ✓/⚠/✗ |
-| Factualidade | X/10 | ✓/⚠/✗ |
-| GEO/SEO | X/10 | ✓/⚠/✗ |
-| UX Mobile | X/10 | ✓/⚠/✗ |
+| Voz | X/10 | OK/ALERTA/FALHA |
+| Factualidade | X/10 | OK/ALERTA/FALHA |
+| GEO/SEO | X/10 | OK/ALERTA/FALHA |
+| UX Mobile | X/10 | OK/ALERTA/FALHA |
 | Segurança | VERDE/AMARELO/VERMELHO | gate |
 | **Média** | **X/10** | APROVADO / RETRABALHO MENOR / RETRABALHO MAIOR |
 
@@ -224,7 +224,7 @@ Preencher exatamente este formato (substituir os placeholders `<...>`; não alte
 
 ## Validação final (checklist antes de entregar)
 
-- [ ] A tabela tem score numérico nas 4 dimensões + linha de Segurança (cor) + média ponderada calculada com os pesos 40/25/25/10.
+- [ ] A tabela tem score numérico nas 4 dimensões + linha de Segurança (cor) + média ponderada calculada com os pesos 40/25/25/10. Status em texto (OK ≥7.0 / ALERTA 5.5-6.9 / FALHA <5.5) — nunca dingbats/emoji de status: o relatório sai no chat pro Eric e o hook de zero-emoji bloqueia a resposta inteira.
 - [ ] Cada violação foi classificada GRAVE ou COMUM (Passo 7.1) e cada score de dimensão veio da fórmula do Passo 7.2 (10 − 2.5×graves − 1.0×comuns, piso 1.0). A contagem de violações que decide o veredicto usa só as GRAVES.
 - [ ] O gate de segurança rodou (Camada 1 scanner + Camada 2 semântica) OU o relatório registra por que a Camada 1 foi pulada.
 - [ ] Cada violação cita o TRECHO EXATO do texto (não descrição vaga) e tem um patch acionável.
