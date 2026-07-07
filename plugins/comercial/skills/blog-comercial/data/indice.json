@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-07-06",
+ "gerado_em": "2026-07-07",
  "fonte": "auditoria 10 agentes sobre 98 posts (jun/2026) + auditoria 104 agentes Sonnet (06/07/2026) — 202/202 com forca",
  "base_url": "https://blog.expertintegrado.com.br/blog/",
  "utm_padrao": "?utm_source=whatsapp&utm_medium=comercial&utm_campaign=objecao&utm_content=deal-{DEAL_ID}",
@@ -3788,6 +3788,1848 @@
     "É página interativa, não artigo: avisar o lead que leva 1 minuto preencher",
     "Cita a faixa de investimento do Super SDR nas premissas — coerente com o corpus, mas ancora preço: usar quando preço já está em pauta"
    ]
+  },
+  {
+   "slug": "adocao-ia-time-inteiro-30-dias",
+   "title": "Adoção de IA pro time inteiro em 30 dias (sem virar treinamento que ninguém usa)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir",
+    "time-nao-vai-usar"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: programa prático de 4 semanas"
+  },
+  {
+   "slug": "advocacia-captacao-limites-oab",
+   "title": "Advogado pode captar cliente pelo WhatsApp? Os limites do Provimento 205 da OAB",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: sim, mas só quando o cliente procura primeiro"
+  },
+  {
+   "slug": "advocacia-chatbot-generico-ou-agente-juridico",
+   "title": "Chatbot genérico ou agente especializado: por que triagem jurídica não é FAQ",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: chatbot de faq responde pergunta fixa"
+  },
+  {
+   "slug": "advocacia-cliente-liga-status-processo",
+   "title": "Cliente liga toda hora perguntando do processo: o custo oculto de não automatizar o status",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: um escritório com 120 processos ativos recebendo 15 ligações de status por dia perde cerca de 22 horas por mês só respondendo 'com"
+  },
+  {
+   "slug": "advocacia-cobranca-honorarios-atrasados",
+   "title": "Honorários atrasados: por que cobrar cliente de advocacia é diferente de cobrar qualquer outro",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: cobrar honorário atrasado exige separar parcela contratual de honorário de êxito, trocar o canal usado no processo e nunca soar co"
+  },
+  {
+   "slug": "advocacia-como-escolher-fornecedor-ia",
+   "title": "O que perguntar antes de contratar um fornecedor de IA pra escritório de advocacia",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "contrato-longo",
+    "garantia",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: antes de assinar, exija resposta clara sobre sigilo profissional e lgpd, integração com o sistema de andamento processual, respeit"
+  },
+  {
+   "slug": "advocacia-follow-up-pos-consulta",
+   "title": "O cliente gostou da consulta e não fechou: o follow-up que recupera esse caso",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: cliente que gostou da consulta jurídica e some não fez isso por desinteresse"
+  },
+  {
+   "slug": "advocacia-funil-triagem-por-area",
+   "title": "Funil de triagem por área jurídica: trabalhista, família e empresarial não se qualificam igual",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: um funil único de qualificação trata trabalhista, família e empresarial como se fossem a mesma dor"
+  },
+  {
+   "slug": "advocacia-lead-perdido-antes-reuniao",
+   "title": "Por que o escritório de advocacia perde cliente antes da primeira reunião",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: o cliente em potencial fecha com quem responde primeiro, não com quem tem o melhor advogado"
+  },
+  {
+   "slug": "advocacia-lgpd-sigilo-profissional",
+   "title": "LGPD e sigilo profissional na advocacia: o que a IA pode (e não pode) tocar nos dados do cliente",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd",
+    "ia-erra",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: a lgpd não substitui o sigilo profissional do advogado (estatuto da oab, art"
+  },
+  {
+   "slug": "advocacia-quanto-custa-automatizar-captacao",
+   "title": "Quanto custa automatizar a captação de um escritório de advocacia",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: setup entre r$8"
+  },
+  {
+   "slug": "advocacia-script-triagem-5-perguntas",
+   "title": "O script de 5 perguntas que qualifica caso jurídico antes da reunião com o advogado",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: um script de 5 perguntas no whatsapp filtra o caso antes da reunião"
+  },
+  {
+   "slug": "advocacia-status-processo-automatizado",
+   "title": "Como manter o cliente informado do processo sem virar central de plantão 24 horas",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "advocacia"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (advocacia) com a dor: cliente que liga toda semana perguntando do processo é sinal de comunicação mal desenhada, não de cliente ansioso"
+  },
+  {
+   "slug": "agencia-humana-o-que-sobra-pro-humano",
+   "title": "IA faz o trabalho, você faz a escolha: agência humana como novo diferencial",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: quando a ia executa a tarefa, o valor migra pra quem define o objetivo, julga a qualidade e assume a responsabilidade"
+  },
+  {
+   "slug": "agente-com-memoria-cliente-nao-repete",
+   "title": "Cliente odeia repetir: agentes com memória mudam o jogo do atendimento",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: recontar o problema a cada contato é uma das queixas mais comuns de atendimento"
+  },
+  {
+   "slug": "agente-de-voz-telefone-empresa",
+   "title": "Agente de voz: o telefone da sua empresa atendido por IA de verdade",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: agente de voz atende ligação, entende contexto e transfere pra humano quando precisa"
+  },
+  {
+   "slug": "agente-generico-vs-vertical-setor",
+   "title": "Agente genérico ou especialista do seu setor: qual contratar",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: agente vertical de saúde, jurídico ou imobiliário cresce numa estimativa de mercado de 62% ao ano e tende a qualificar melhor que o genérico"
+  },
+  {
+   "slug": "agentic-commerce-vender-para-agentes",
+   "title": "Quando o comprador for um agente: como vender pra IA dos outros",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: estimativas do mercado apontam que agentes de ia devem tocar por volta de 20% das tarefas de e-commerce até o fim do ano"
+  },
+  {
+   "slug": "atendimento-vira-conversa-fim-do-app",
+   "title": "O app da sua empresa pode morrer: atendimento e venda viram conversa",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: ninguém baixa app de pme"
+  },
+  {
+   "slug": "auditar-atendimentos-ia-cem-por-cento",
+   "title": "Auditar 100% dos atendimentos com IA (antes só dava pra amostrar)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ia-erra",
+    "perder-controle",
+    "cliente-odeia-robo"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: supervisão manual cobre uma fração pequena das conversas de atendimento"
+  },
+  {
+   "slug": "chefe-de-gabinete-ia-agenda-do-dono",
+   "title": "Chefe de gabinete de IA: a agenda do dono gerida por agente",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: um agente que prioriza a semana por objetivo, protege bloco de foco, prepara briefing de cada reunião e despacha o operacional da agenda"
+  },
+  {
+   "slug": "cliente-precisa-saber-que-fala-com-ia",
+   "title": "Seu cliente precisa saber que está falando com IA?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: sim, moralmente já era assim, e o pl 2338 está perto de tornar isso obrigação legal"
+  },
+  {
+   "slug": "clinica-cfm-cro-publicidade-medica-whatsapp",
+   "title": "O que o CFM e o CRO permitem (e proíbem) numa mensagem automática de clínica",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: cfm e cro tratam mensagem automática de whatsapp como propaganda médica"
+  },
+  {
+   "slug": "clinica-convenio-particular-triagem-perde-tempo",
+   "title": "Convênio ocupa a agenda e não dá lucro: o problema que a recepção não resolve sozinha",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: convênio ocupa a agenda e paga menos por procedimento; particular paga mais e desiste rápido quando a recepção demora"
+  },
+  {
+   "slug": "clinica-follow-up-orcamento-fechar-mais",
+   "title": "Como montar follow-up de orçamento odontológico e estético sem parecer insistente",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: o follow-up certo depois do orçamento tem 3 mensagens em 10 dias, cada uma com uma função"
+  },
+  {
+   "slug": "clinica-implantar-ia-sem-parar-atendimento",
+   "title": "Como implantar IA na clínica sem parar o atendimento nem arriscar dado de paciente",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: implantar ia numa clínica segue as mesmas 5 fases de qualquer pme, mas exige mapeamento de dado, revisão jurídica leve e piloto co"
+  },
+  {
+   "slug": "clinica-medo-lgpd-automatizar-paciente",
+   "title": "Tenho medo de automatizar a clínica e cair na LGPD: o que é risco real e o que é mito",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd",
+    "ia-erra",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: a lgpd não proíbe automatizar agenda ou lembrete de consulta"
+  },
+  {
+   "slug": "clinica-orcamento-aprovado-nao-fecha",
+   "title": "Paciente aprova o orçamento e some: por que o tratamento não fecha",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: orçamento aprovado que não vira tratamento fechado quase nunca é falta de interesse"
+  },
+  {
+   "slug": "clinica-paciente-abandona-tratamento-meio",
+   "title": "Paciente sumiu no meio do tratamento: o que fazer na ortodontia e na estética",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: paciente que some no meio da ortodontia, do protocolo estético ou da fisioterapia raramente abandonou por insatisfação"
+  },
+  {
+   "slug": "clinica-pos-procedimento-acompanhamento-automatico",
+   "title": "Acompanhamento pós-procedimento automatizado: até onde a IA pode ir sem virar orientação médica",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: ia pode perguntar sobre dor, inchaço e satisfação no pós-procedimento, mas não pode avaliar se um sintoma é normal"
+  },
+  {
+   "slug": "clinica-quanto-custa-automatizar-consultorio",
+   "title": "Quanto custa automatizar confirmação, triagem e reativação numa clínica",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: confirmação de consulta custa r$300 a r$600 por mês"
+  },
+  {
+   "slug": "clinica-reativar-base-pacientes-inativos",
+   "title": "Como reativar paciente que sumiu há 6 meses sem parecer venda forçada",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: paciente sem retorno há 6 meses ou mais reativa quando o gatilho é tempo desde a última visita, o tom é de cuidado (não de promoçã"
+  },
+  {
+   "slug": "clinica-super-sdr-generico-vs-especialista-saude",
+   "title": "Super SDR genérico ou especialista em clínicas: qual escolher",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: clínica que configura um agente de vendas genérico na marra corre risco regulatório que um fluxo desenhado pra saúde desde o iníci"
+  },
+  {
+   "slug": "clinica-triagem-convenio-particular-como-montar",
+   "title": "Como montar a triagem de convênio x particular no WhatsApp antes da recepção",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "saude-clinicas"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (saude-clinicas) com a dor: um fluxo de 3 perguntas no whatsapp (convênio, especialidade, urgência) separa o paciente antes da recepção atender e prioriza o e"
+  },
+  {
+   "slug": "clone-de-conhecimento-do-fundador",
+   "title": "Clone de conhecimento do fundador: escalar o dono sem clonar o dono",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: um clone de conhecimento do fundador é um agente de ia treinado com as decisões e critérios de quem manda na empresa, pra reduzir a fila de "
+  },
+  {
+   "slug": "como-escolher-modelo-ia-sem-benchmark",
+   "title": "Ignore os benchmarks: como escolher modelo de IA na prática",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: ranking de benchmark não prevê resultado no seu caso"
+  },
+  {
+   "slug": "computer-use-agente-que-usa-o-computador",
+   "title": "O agente que usa o computador: automação sem API e sem projeto de integração",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: computer use é a tecnologia que deixa um agente de ia ver a tela, mover o mouse e digitar como um humano, automatizando até sistema sem api,"
+  },
+  {
+   "slug": "contabilidade-cliente-atrasa-documento",
+   "title": "Cliente atrasa documento todo mês: por que perseguir nota fiscal consome o escritório contábil",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: cliente que atrasa extrato e nota fiscal todo mês transforma contador em cobrador"
+  },
+  {
+   "slug": "contabilidade-cobranca-documento-fechamento-mensal",
+   "title": "Como configurar cobrança automática de documento pro fechamento mensal sem perseguir cliente",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: cobrança automática de documento funciona com 4 lembretes escalonados no whatsapp (d-5, d-2, d0, d+2), cada um com tom diferente, "
+  },
+  {
+   "slug": "contabilidade-cobranca-recorrente-honorario",
+   "title": "Cobrança recorrente de honorário contábil: o fluxo de WhatsApp que reduz inadimplência sem soar rude",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: o fluxo que reduz inadimplência de honorário contábil é lembrete automático 3 dias antes do vencimento, com tom de aviso (não de c"
+  },
+  {
+   "slug": "contabilidade-implantar-ia-escritorio-tempo",
+   "title": "Implantar atendimento com IA num escritório contábil: quanto tempo leva e o que muda na rotina da equipe",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: implantar atendimento com ia num escritório contábil leva cerca de 4 semanas"
+  },
+  {
+   "slug": "contabilidade-mei-atendimento-escala",
+   "title": "Atender 300 clientes MEI sem contratar mais gente: dá pra automatizar?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: escritório com muitos clientes mei trava no atendimento repetitivo, não na complexidade fiscal"
+  },
+  {
+   "slug": "contabilidade-onboarding-cliente-novo",
+   "title": "Como automatizar o onboarding de cliente novo no escritório contábil, do contrato ao primeiro fechamento",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: onboarding manual de cliente contábil trava porque depende de 6 a 8 mensagens em dias diferentes"
+  },
+  {
+   "slug": "contabilidade-quanto-custa-automatizar-atendimento",
+   "title": "Quanto custa automatizar o atendimento de um escritório contábil (a conta por número de clientes)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "cliente-odeia-robo"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: automatizar o atendimento de um escritório contábil custa entre r$8"
+  },
+  {
+   "slug": "contabilidade-triagem-duvidas-whatsapp",
+   "title": "Triagem de dúvidas contábeis no WhatsApp: o que a IA responde sozinha e o que vai pro contador",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: dúvida contábil no whatsapp se divide em dois blocos"
+  },
+  {
+   "slug": "contabilidade-upsell-bpo-financeiro",
+   "title": "Como escritório contábil vende BPO financeiro pro cliente que já paga a mensalidade contábil",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: o upsell de bpo financeiro pro cliente contábil não precisa de campanha nova"
+  },
+  {
+   "slug": "contabilidade-whatsapp-resposta-lenta-custo",
+   "title": "Por que seu escritório contábil demora pra responder cliente no WhatsApp (e o que isso custa)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "contabilidade"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "cliente-odeia-robo"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (contabilidade) com a dor: escritório contábil que demora pra responder no whatsapp não perde cliente por reclamação"
+  },
+  {
+   "slug": "conteudo-ia-generico-afunda-marcas",
+   "title": "Conteúdo de IA genérico está afundando marcas: como usar IA sem virar ruído",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: conteúdo genérico de ia já é punido pelo google, pelo linkedin e pela audiência, nessa ordem"
+  },
+  {
+   "slug": "contratar-na-era-da-ia-novo-perfil",
+   "title": "A vaga mudou: o que contratar quando a IA faz o operacional",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir",
+    "time-nao-vai-usar"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: quando agentes assumem o trabalho repetitivo, o perfil que valoriza é outro"
+  },
+  {
+   "slug": "contrato-fornecedor-ia-clausulas",
+   "title": "Contratando IA de terceiros: as 7 cláusulas que protegem sua empresa",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "contrato-longo",
+    "garantia"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: contrato de fornecedor de ia assinado no padrão do fornecedor é risco encomendado"
+  },
+  {
+   "slug": "copiloto-vs-agente-autonomo-orcamento",
+   "title": "Copiloto ou agente autônomo: a diferença que muda seu orçamento de IA",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: copiloto custa r$120 a r$180 por usuário/mês e assiste quem decide"
+  },
+  {
+   "slug": "corretora-planejador-financeiro-resposta-lenta",
+   "title": "Corretora e planejador financeiro perdem cliente por demora no WhatsApp (mesmo com bom produto)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: em corretora de investimento e escritório de planejamento financeiro, o produto é confiança"
+  },
+  {
+   "slug": "custo-de-esperar-ia-por-trimestre",
+   "title": "O custo de esperar: o que sua empresa perde por trimestre sem IA",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "momento-errado"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: cada trimestre sem ia tem um custo mensurável"
+  },
+  {
+   "slug": "custo-ia-despencou-orcamento-2026",
+   "title": "IA ficou 10x mais barata em 2 anos: a desculpa do custo acabou",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: o preço por token despencou e os planos empresariais ficaram acessíveis"
+  },
+  {
+   "slug": "dados-proprietarios-fosso-competitivo",
+   "title": "Seus dados são o único fosso que a concorrência não copia",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "crm-nao-integra"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: modelo de ia todo mundo aluga igual"
+  },
+  {
+   "slug": "deep-research-decisao-de-mercado",
+   "title": "Pesquisa profunda com IA: a decisão de mercado que levava 2 semanas sai em 20 minutos",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: deep research virou recurso padrão nos assistentes de ia"
+  },
+  {
+   "slug": "escola-alerta-evasao-dados-que-ja-tem",
+   "title": "Como montar um alerta de evasão com os dados que a escola já tem",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "crm-nao-integra",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: frequência, financeiro e histórico de atendimento no whatsapp já existem na sua escola"
+  },
+  {
+   "slug": "escola-anuncio-lead-nao-vira-matricula",
+   "title": "Por que o lead de anúncio da escola não vira matrícula (mesmo respondendo rápido)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: o lead de anúncio não vira matrícula porque a escola trata ele igual lead orgânico e reabre a triagem do zero, ignorando o dado qu"
+  },
+  {
+   "slug": "escola-cobranca-mensalidade-regua-inadimplencia",
+   "title": "Cobrança de mensalidade sem estremecer a relação com os pais: a régua que funciona em escola",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: cobrar mensalidade sem virar inimigo dos pais depende do tom certo em cada etapa"
+  },
+  {
+   "slug": "escola-comunicacao-pais-sem-grupo-whatsapp",
+   "title": "Como organizar a comunicação oficial com os pais sem depender de grupo de WhatsApp",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: grupo de whatsapp de turma não tem dono nem histórico e mistura recado oficial com desabafo de pai"
+  },
+  {
+   "slug": "escola-evasao-sinais-antes-cancelamento",
+   "title": "Evasão de aluno: os sinais que aparecem meses antes do cancelamento e que ninguém rastreia",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: a decisão de não renovar a matrícula é tomada meses antes da escola perceber"
+  },
+  {
+   "slug": "escola-funil-anuncio-whatsapp-matricula",
+   "title": "Como funciona o funil de anúncio até matrícula automatizado no WhatsApp",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: o funil automatizado captura o lead do formulário do anúncio, dispara a primeira mensagem personalizada no whatsapp em minutos e u"
+  },
+  {
+   "slug": "escola-grupo-whatsapp-pais-comunicacao-oficial",
+   "title": "Grupo de WhatsApp virou o canal oficial da escola com os pais: o problema que ninguém percebeu",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: grupo de whatsapp de pais virou canal oficial sem a escola decidir isso, e quando ninguém audita quem fala ali, um aviso sobre sus"
+  },
+  {
+   "slug": "escola-implantar-automacao-sem-atrapalhar-calendario",
+   "title": "Como implantar automação de rematrícula e cobrança sem atrapalhar o calendário letivo",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: o segredo é começar fora do pico"
+  },
+  {
+   "slug": "escola-quanto-custa-automatizar-comunicacao-cobranca",
+   "title": "Quanto custa automatizar comunicação e cobrança de uma escola, além da matrícula",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: ampliar o agente de matrícula pra cobrir rematrícula, cobrança e comunicação com os pais fica na mesma faixa do super sdr, r$8"
+  },
+  {
+   "slug": "escola-regua-rematricula-automatica",
+   "title": "Régua de rematrícula: quando e como automatizar o lembrete pra cada família",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: régua de rematrícula genérica trata a família satisfeita do mesmo jeito que trata quem tem pendência financeira"
+  },
+  {
+   "slug": "escola-rematricula-atraso-pais",
+   "title": "Rematrícula atrasada: por que os pais que a escola mais quer manter demoram mais pra confirmar",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: pai satisfeito não compara escola, então não sente pressa pra confirmar rematrícula"
+  },
+  {
+   "slug": "escola-sistema-gestao-vs-ia-whatsapp",
+   "title": "Sistema de gestão escolar já manda mensagem pros pais: preciso de outra ferramenta de IA?",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "educacao"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (educacao) com a dor: sistema de gestão escolar resolve boleto, comunicado padrão e portal do aluno, comunicação de mão única"
+  },
+  {
+   "slug": "esperar-proximo-modelo-e-desculpa",
+   "title": "Esperar o próximo modelo é desculpa: o gargalo é implantação, não tecnologia",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "momento-errado",
+    "nao-e-o-momento"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: sempre vai ter modelo de ia novo em três meses"
+  },
+  {
+   "slug": "esteira-de-agentes-processo-ponta-a-ponta",
+   "title": "Esteira de agentes: quando um processo inteiro roda sozinho do início ao fim",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: esteira de agentes é uma cadeia de agentes especializados cobrindo um processo inteiro, do lead ao contrato ou do pedido à entrega, sem para"
+  },
+  {
+   "slug": "evitar-lock-in-fornecedor-ia",
+   "title": "Não case com um fornecedor de IA: como evitar lock-in sem virar Frankenstein",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "contrato-longo",
+    "garantia"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: o modelo líder troca de nome a cada poucos meses, e a empresa presa a um fornecedor que envelheceu paga caro pra sair"
+  },
+  {
+   "slug": "geo-como-aparecer-nas-respostas-da-ia",
+   "title": "GEO: como fazer sua empresa aparecer nas respostas do ChatGPT",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: a gartner projeta queda de 25% na busca tradicional até 2026, e 28% das páginas mais citadas pelo chatgpt nem rankeiam no google (ahrefs)"
+  },
+  {
+   "slug": "golpe-do-audio-do-chefe-deepfake",
+   "title": "O golpe do áudio do chefe: deepfakes já miram empresas pequenas",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd",
+    "ia-erra"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: voz clonada pedindo pix urgente, vídeo falso em call"
+  },
+  {
+   "slug": "ia-em-cima-de-erp-legado",
+   "title": "Sistema velho não é desculpa: IA em cima de ERP legado",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "crm-nao-integra"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: erp sem api não é mais desculpa pra travar o projeto de ia"
+  },
+  {
+   "slug": "ia-financeiro-conciliacao-cobranca",
+   "title": "IA no financeiro: conciliação, cobrança e fluxo de caixa sem mutirão de planilha",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: o payback de agente financeiro é mais lento que o de vendas (na casa de 9 meses, em estimativa de mercado), mas o ganho é composto"
+  },
+  {
+   "slug": "imobiliaria-administracao-alugueis-ia",
+   "title": "Administração de aluguel com IA: vencimento, renovação e reajuste sem planilha",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: administradora que responde 'quando vence meu aluguel' na mão perde tempo que devia ir pra negociação"
+  },
+  {
+   "slug": "imobiliaria-checklist-escolher-fornecedor-ia",
+   "title": "O que perguntar antes de contratar um fornecedor de IA pra imobiliária",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "contrato-longo",
+    "garantia",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: antes de assinar com um fornecedor de ia, a imobiliária precisa perguntar onde fica o dado financeiro do comprador, como funciona "
+  },
+  {
+   "slug": "imobiliaria-corretor-autonomo-vs-equipe-setup-ia",
+   "title": "Corretor autônomo ou imobiliária com equipe: o setup de IA muda",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir",
+    "time-nao-vai-usar",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: corretor autônomo não precisa de roteamento nem dashboard de equipe"
+  },
+  {
+   "slug": "imobiliaria-follow-up-pos-visita-vou-pensar",
+   "title": "Cliente visitou o imóvel e disse 'vou pensar': o follow-up que reabre a conversa",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: cliente elogiou o imóvel na visita e fechou com 'vou pensar'? o follow-up que funciona não pergunta se já decidiu, pergunta pela o"
+  },
+  {
+   "slug": "imobiliaria-lancamento-pico-de-leads",
+   "title": "Lançamento imobiliário: como atender 300 leads em 1 semana sem contratar plantonista extra",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: lançamento pode gerar 300 leads no primeiro fim de semana com só 2 corretores escalados"
+  },
+  {
+   "slug": "imobiliaria-lead-duplicado-varios-canais",
+   "title": "Lead entrou pelo portal, pelo Instagram e por indicação ao mesmo tempo: como não duplicar atendimento",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: quando o mesmo comprador entra por portal, instagram e indicação ao mesmo tempo, dois corretores respondem com preço diferente por"
+  },
+  {
+   "slug": "imobiliaria-locacao-vs-venda-qualificacao",
+   "title": "Locação ou venda: por que o script de qualificação da imobiliária não pode ser o mesmo",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: locação decide em dias e depende de renda, fiador e seguro fiança"
+  },
+  {
+   "slug": "imobiliaria-no-show-visita-confirmacao",
+   "title": "Cliente marcou visita e não apareceu: como reduzir no-show na visita de imóvel",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: cliente que marca visita de imóvel e não aparece custa deslocamento e combustível do corretor sem gerar decisão nenhuma"
+  },
+  {
+   "slug": "imobiliaria-plantao-24h-lead-fim-de-semana",
+   "title": "Imobiliária sem plantão 24h: o que fazer com o lead que chega sábado à noite",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: lead de imobiliária costuma chegar fora do horário comercial, à noite e no fim de semana"
+  },
+  {
+   "slug": "imobiliaria-qualificacao-antes-da-visita",
+   "title": "Como qualificar antes de marcar visita (e não perder a tarde com curioso)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: qualificar o lead na entrada (perfil, faixa de valor, financiamento) não garante que ele tem entrada disponível ou documentação pr"
+  },
+  {
+   "slug": "imobiliaria-quanto-custa-por-numero-corretores",
+   "title": "Quanto custa IA pra imobiliária: a conta muda com 2, 10 ou 30 corretores",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: setup de ia pra imobiliária fica entre r$8 mil e r$15 mil e a infraestrutura entre r$550 e r$650 por mês, mas o número de corretor"
+  },
+  {
+   "slug": "imobiliaria-reativacao-base-fria-compradores",
+   "title": "Base de leads mortos no CRM: como reativar quem visitou e sumiu",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "imobiliaria"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (imobiliaria) com a dor: lead que visitou e sumiu não perdeu o interesse, perdeu o timing"
+  },
+  {
+   "slug": "lead-que-vem-do-chatgpt-converte-mais",
+   "title": "O lead que vem do ChatGPT converte mais (e ninguém está olhando pra ele)",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: estimativas apontam que tráfego vindo do chatgpt converte numa faixa de 7% contra 5% do google e fica quase 3x mais tempo no site, mas menos"
+  },
+  {
+   "slug": "limpeza-de-dados-com-ia",
+   "title": "Sua base está bagunçada? A IA arruma antes de usar",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "crm-nao-integra"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: a ia deduplica, padroniza e enriquece cadastro em dias, não meses"
+  },
+  {
+   "slug": "marco-legal-ia-pl-2338-o-que-muda-pme",
+   "title": "Marco Legal da IA (PL 2338): o que muda pra sua empresa quando a lei passar",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: o pl 2338 foi aprovado no senado e está parado na câmara, com votação esperada em 2026"
+  },
+  {
+   "slug": "mcp-padrao-integracao-o-que-significa",
+   "title": "MCP virou o padrão: o que isso significa pros sistemas da sua empresa",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: mcp passou de zero a uma estimativa de mais de 9"
+  },
+  {
+   "slug": "memoria-institucional-empresa-que-lembra",
+   "title": "A empresa que lembra: memória institucional com IA (o fim do 'só o fulano sabia')",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: quando alguém sai da empresa, leva junto anos de contexto que não estavam escritos em lugar nenhum"
+  },
+  {
+   "slug": "metricas-para-medir-resultado-ia",
+   "title": "As 5 métricas pra saber se sua IA está dando resultado (sem virar tese)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ia-erra",
+    "perder-controle"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: as 5 métricas de negócio que mostram resultado real de ia são horas devolvidas, tempo de resposta, taxa de resolução sem humano, receita inf"
+  },
+  {
+   "slug": "micro-saas-com-ia-sem-ser-dev",
+   "title": "Micro-SaaS com IA: a oportunidade pra quem entende de um problema (não de código)",
+   "pilar": "vibe-coding",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "sem-equipe-tecnica",
+    "da-pra-fazer-sozinho"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: conhecimento profundo de um nicho mais vibe coding virou combinação vendável"
+  },
+  {
+   "slug": "modelos-abertos-ia-barata-quando-vale",
+   "title": "Modelo aberto e barato: quando vale rodar IA fora dos grandes provedores",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: deepseek, llama e outros modelos abertos derrubaram o piso de preço da ia"
+  },
+  {
+   "slug": "n8n-make-ou-agente-qual-automacao",
+   "title": "n8n, Make ou agente de IA: qual automação pra cada tipo de problema",
+   "pilar": "produtividade",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: fluxo previsível pede automação clássica (n8n, make); julgamento e linguagem pedem agente de ia; e a maioria das operações maduras usa o híb"
+  },
+  {
+   "slug": "observabilidade-agentes-logs-metricas",
+   "title": "Como saber se o agente fez certo: observabilidade pra quem não é técnico",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ia-erra",
+    "perder-controle"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: observabilidade de agente de ia é log de toda conversa, amostra revisada por humano toda semana e taxa de escalação monitorada"
+  },
+  {
+   "slug": "onboarding-cliente-com-ia",
+   "title": "Onboarding de cliente com IA: do contrato ao go-live sem fricção",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: onboarding lento é onde o cliente novo esfria e o churn precoce nasce"
+  },
+  {
+   "slug": "payback-agente-ia-quanto-tempo-se-paga",
+   "title": "Quanto tempo até o agente se pagar: payback real de 3 a 9 meses",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: o payback de um agente de ia fica, em estimativa conservadora, entre 3 e 9 meses"
+  },
+  {
+   "slug": "pergunte-aos-seus-dados-fim-dashboard",
+   "title": "Chega de dashboard: pergunte aos seus dados em português",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "crm-nao-integra"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: analytics conversacional é perguntar 'qual vendedor mais perdeu deal esse mês e por quê?' e receber a resposta na hora, com dado real"
+  },
+  {
+   "slug": "por-que-projetos-de-ia-falham",
+   "title": "95% dos pilotos de IA falham. Os 5 motivos (nenhum é tecnologia)",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "ia-erra",
+    "perder-controle"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: estudo do mit apontou que cerca de 95% dos pilotos corporativos de ia generativa não geram retorno mensurável"
+  },
+  {
+   "slug": "precificacao-com-ia-sem-planilha",
+   "title": "Precificação com IA: cobrar certo sem virar refém da planilha do ano passado",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: a maioria das pmes precifica com planilha desatualizada e desconto no feeling"
+  },
+  {
+   "slug": "prompt-injection-agente-enganado",
+   "title": "Seu agente pode ser enganado: prompt injection explicado pro dono",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "medo-dados-lgpd",
+    "ia-erra"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: cliente malicioso pode convencer um bot mal protegido a dar desconto indevido, vazar informação ou executar ação que não devia"
+  },
+  {
+   "slug": "proposta-comercial-ia-10-minutos",
+   "title": "Proposta comercial em 10 minutos: IA no fim do funil, onde o dinheiro trava",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: proposta que demora 3 dias esfria deal quente"
+  },
+  {
+   "slug": "reuniao-que-vira-acao-atas-ia",
+   "title": "Reunião que vira ação: IA transcreve, resume e cobra o follow-up sozinha",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: ata automática virou o básico; o valor real está no que vem depois"
+  },
+  {
+   "slug": "roi-funcionario-digital-como-calcular",
+   "title": "Mão de obra digital: como calcular o ROI de um funcionário que não dorme",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: o roi de um agente de ia se calcula comparando custo por hora disponível"
+  },
+  {
+   "slug": "software-cobrado-por-resultado",
+   "title": "Software cobrado por resultado: o fim da licença por usuário?",
+   "pilar": "lideranca",
+   "tipo": "satelite",
+   "funil": "topo",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: outcome-based pricing cresce no mercado de ia"
+  },
+  {
+   "slug": "triagem-curriculos-ia-recrutamento",
+   "title": "Triagem de currículos com IA: contratar melhor sem ler 400 CVs",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [
+    "equipe-vai-resistir",
+    "time-nao-vai-usar"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: triagem de currículos com ia funciona quando troca busca por palavra-chave por avaliação de evidência, soma entrevista assíncrona à decisão "
+  },
+  {
+   "slug": "varejo-atendimento-pico-perde-venda",
+   "title": "Por que o atendimento trava exatamente nos dias de pico de vendas?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: o atendimento trava no pico porque a equipe é dimensionada pela média do mês, não pelo dia de maior demanda"
+  },
+  {
+   "slug": "varejo-automatizar-trocas-devolucoes",
+   "title": "Como automatizar troca e devolução sem virar pesadelo de atendimento",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: troca de tamanho ou defeito vira reclamação pública quando o processo depende de e-mail e demora dias"
+  },
+  {
+   "slug": "varejo-catalogo-whatsapp-desatualizado",
+   "title": "Por que o catálogo que você manda no WhatsApp está sempre desatualizado?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: o catálogo desatualiza porque vive separado do estoque real da loja"
+  },
+  {
+   "slug": "varejo-catalogo-whatsapp-estoque-tempo-real",
+   "title": "Como sincronizar o catálogo do WhatsApp com o estoque em tempo real",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: catálogo do whatsapp desatualiza em horas quando o estoque varia todo dia"
+  },
+  {
+   "slug": "varejo-cliente-nao-volta-comprar",
+   "title": "Por que o cliente que já comprou não volta a comprar?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: o cliente que compra uma vez raramente some por preço"
+  },
+  {
+   "slug": "varejo-cliente-vip-tratamento-automatico",
+   "title": "Como identificar e tratar o cliente VIP automaticamente no WhatsApp",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: cliente vip se identifica cruzando ticket médio, frequência de compra e recência, não por achismo de quem 'parece' comprar mais"
+  },
+  {
+   "slug": "varejo-integrar-erp-pdv-agente-ia",
+   "title": "ERP, PDV e agente de IA: dá pra integrar sem trocar de sistema?",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "crm-nao-integra",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: sim, dá"
+  },
+  {
+   "slug": "varejo-omnichannel-cliente-troca-canal",
+   "title": "Por que o cliente pesquisa no site e compra na loja física (ou o contrário)?",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: o cliente troca de canal (instagram, whatsapp, site, loja física) e cada um trata a conversa como se fosse a primeira vez porque f"
+  },
+  {
+   "slug": "varejo-omnichannel-loja-fisica-whatsapp-unico",
+   "title": "Como unificar loja física e vendas online numa única conversa de WhatsApp",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: a resposta está em um agente de ia que junta histórico de instagram, loja física e e-commerce num único número de whatsapp, ligado"
+  },
+  {
+   "slug": "varejo-quanto-custa-automatizar-loja-fisica",
+   "title": "Quanto custa automatizar o atendimento de uma loja física com IA",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "fundo",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "preco",
+    "roi-incerto",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: automatizar loja física com ia custa entre r$8"
+  },
+  {
+   "slug": "varejo-rastreio-proativo-reduz-suporte",
+   "title": "Como o rastreio proativo evita a pergunta \\\"cadê meu pedido?\\\"",
+   "pilar": "vendas",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: notificação proativa em cada etapa do pedido, do \\\"confirmado\\\" ao \\\"entregue\\\", reduz o volume de mensagens reativas perguntando "
+  },
+  {
+   "slug": "varejo-versus-shopify-nuvemshop-tray-whatsapp",
+   "title": "Shopify, Nuvemshop ou Tray: qual integra melhor com WhatsApp e IA?",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "varejo"
+   ],
+   "objecoes": [
+    "cliente-odeia-robo",
+    "meu-setor-e-diferente"
+   ],
+   "forca": 2,
+   "quando_mandar": "Lead do setor (varejo) com a dor: nuvemshop já tem apps prontos de whatsapp na loja de aplicativos, shopify exige graphql admin api pra apps novos desde 2025, e tra"
+  },
+  {
+   "slug": "versus-sistema-contabil-chat-agente-ia",
+   "title": "Sistema de contabilidade com chat integrado ou agente de IA dedicado: qual escolher",
+   "pilar": "vendas",
+   "tipo": "versus",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: portal de sistema de gestão contábil costuma ter baixa adoção porque o cliente não quer baixar outro app"
+  },
+  {
+   "slug": "video-com-ia-marketing-pme",
+   "title": "Vídeo gerado por IA no marketing: o que já dá pra usar sem passar vergonha",
+   "pilar": "produtividade",
+   "tipo": "satelite",
+   "funil": "meio",
+   "setores": [
+    "geral"
+   ],
+   "objecoes": [],
+   "forca": 2,
+   "quando_mandar": "Lead ou contato discutindo o tema: a geração de vídeo por ia amadureceu rápido (runway, veo e companhia), mas nem tudo que impressiona em demo serve pra sua marca"
   }
  ]
 }
