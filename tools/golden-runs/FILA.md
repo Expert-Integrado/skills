@@ -33,7 +33,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | gerar-srt | A2 | Whisper local (clipe teste 45s em C:/tmp) | FEITO 06/07 | APROVADO (SRT real, caminho A + encoding do B); 3 achados corrigidos (marketing 2.13.1): limiar foreground 60s->30s (timeout 120s matava Whisper), mojibake cp1252 nos 2 scripts, sentinela EXIT no background |
 | cortar-respiros | A2 | ffmpeg local (mesmo input) | FEITO 06/07 | APROVADO (--both real, 2 saídas medidas); 3 achados corrigidos (marketing 2.13.2): resolução de PY por capacidade (drift: Python 3.14 da Store entrou no PATH), UnicodeDecodeError na captura do subprocess, mojibake stdout |
 | reel-para-post | A2 | Whisper local | FEITO 06/07 | APROVADO (faster-whisper GPU real: 45s em 6,7s; tese+outline+embed+UTM); 1 achado corrigido (marketing 2.13.6): memória faster-whisper-gpu inacessível do projeto atual — copiada + gotcha do cublas inline na skill |
-| carrossel-studio | A2 | API imagem (centavos) | fila | — |
+| carrossel-studio | A1 (era A2 — não usa API nenhuma) | editor HTML offline | FEITO 06/07 | APROVADO (Express real: HTML de 5 slides em Downloads, boot validado headless, contraste WCAG medido, ramo foto com gh api + dataURL); 2 achados corrigidos (marketing 2.13.7): campo foto com path POSIX falha silencioso no Windows (dado em JSON não passa pela conversão do Git Bash) + fonte local de fotos derivada de WORKSPACE_DIR quebrada pela migração do workspace |
 | gerar-hero-blog | A2 | API imagem (centavos) | fila | — |
 | ig-competitor-research | A2 | Apify ~US$0,10 | fila | completar: build_report.py + relatório |
 | relatorio-ads | A2 | Meta API read-only | fila | — |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 20 (15 FEITO + 4 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 48 · Onda 1 restante: ~22 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 21 (16 FEITO + 4 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 50 · Onda 1 restante: ~21 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
