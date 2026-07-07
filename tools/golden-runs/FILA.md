@@ -88,7 +88,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | criar-aula | A1 (ramo teste) / C (deploy) | deploy só no ramo real | FEITO 06/07 (ramo teste) | APROVADO, 7 achados corrigidos (lab 3.10.1); iconv ausente era o provável erro da telemetria; ramo deploy fica pra curso real |
 | criar-voice-guide | A2 | WhatsApp read | fila | — |
 | curar-brain-semanal | A2 | Brain read-mostly | fila | CUIDADO: não duplicar relatório da cron de domingo |
-| innovation-lab | A1 | local | fila | — |
+| innovation-lab | A1 | local (writes gated + evidência de produção Play55) | FEITO 06/07 | APROVADO no escopo A2 (bindings + detecção de fase contra a edição real Play55; IDs ClickUp conferidos na hierarquia real); 1 defeito composto corrigido (lab 3.10.8): edições legadas (Suno/Play55) são pré-convenção — sem 00_Inputs/ a detecção por gatilho chamaria imersão CONCLUÍDA de "pré-imersão", e a idempotência via clickup_log.md falha (Play55: 20 cards na lista, zero log) → retomada legada entra pelo HANDOFF + fase por entregáveis + idempotência pela lista real |
 | mentoria-equipe-seg-16h | A1 | local | fila | — |
 | onboarding-cliente-ganho | B | ClickUp writes | aguarda OK | card TESTE + delete |
 | pos-reuniao-acoes | A2/B | propose-only (gate no Passo 7) | FEITO 06/07 | APROVADO (call REAL do Gustavo/Madeplant 21/05 processada ponta a ponta, parou no gate, zero escrita); 3 achados corrigidos (lab 3.10.7): sem guarda de call antiga (proporia re-avançar etapa que o deal já visitou e regrediu — "só avançar" não pega re-avanço), diretório Plaud default inexistente (cascata real: Transcricoes Calls/ + transcricoes/ + Downloads), clickup_get_workspace_hierarchy estoura token limit (~67K, recovery grep no arquivo salvo) |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 32 (26 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 72 · Onda 1 restante: ~10 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 33 (27 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 73 · Onda 1 restante: ~9 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
