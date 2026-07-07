@@ -57,7 +57,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | blog-comercial | A1 | draft local | FEITO 06/07 | APROVADO (MODO CONSULTAR real: objeção+setor advocacia, 2 casos força 5, links verificados 200 em prod, UTM sem-deal, ressalvas); 1 achado corrigido (comercial 2.5.9): 22 slugs de objeção do índice fora da taxonomia deixavam 24 posts invisíveis (aliases na calculadora + varredura dos slugs reais antes do MODO CRIAR) |
 | prospecta-lead | B | cria person+deal+activity no Pipedrive | aguarda OK | lead TESTE + delete |
 | reabordagem | A2 | até o rascunho (NÃO envia) | FEITO 06/07 | APROVADO no escopo (3 deals perdidos reais do Educacional: 2 QUENTE + 1 DESCARTAR sem contato; mensagem + estratégia do deal 25; parou no gate do Passo 6, create_activity fica pra onda 2); 1 achado corrigido (comercial 2.5.10): sem sinalização de reabordagem <90 dias — os 2 leads vivos JÁ tinham reabordagem de mar-abr/2026 e a skill mandava abordar de novo sem aviso. Obs MCP: list_deals(pipeline_id=6) vazou 2 deals Super SDR |
-| fup-inteligente | A2 | até o rascunho (NÃO envia) | fila | — |
+| fup-inteligente | A2 | até o rascunho (NÃO envia) | FEITO 06/07 | APROVADO no escopo (funil Educacional real: triagem pulou 3 pendentes-futuras, deal 10964 Madeplant R$39,6K acionado, Livro de Objeções timing, check_message 9.5, template completo; parou no gate do Passo 5); 2 achados corrigidos (comercial 2.5.11): filtro pipeline_id do MCP VAZA (75 deals de todos os funis) → filtro defensivo client-side no Passo 1; get_voice_guide estoura token limit (~90K) → recovery documentado (ler Motor+TL;DR do arquivo salvo) |
 | transferir-lead | B | muda dono de deal | aguarda OK | deal TESTE |
 | whatsapp-campanha-api-fup | C | disparo em massa | fila (até preview/fila) | — |
 | whatsapp-campanha-central-prospeccao | C | disparo em massa | fila (até preview) | — |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 27 (21 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 59 · Onda 1 restante: ~15 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 28 (22 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 61 · Onda 1 restante: ~14 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8

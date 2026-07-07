@@ -103,7 +103,9 @@ Para o funil da vez:
 mcp__pipedrive__list_deals({ status: "open", pipeline_id: <ID do funil>, user_id: 17987703, buscar_todos: true })
 ```
 
-Ordenar os deals retornados pela ordem de etapas da tabela (mais avançada primeiro). SE o funil não tem deals abertos do Eric → invocação genérica: passar ao próximo funil da ordem; funil nomeado: reportar "sem deals abertos" e encerrar na Validação final.
+**Filtro defensivo OBRIGATÓRIO:** o parâmetro `pipeline_id` do MCP pode VAZAR deals de outros funis (reproduzido em 06/07/2026: `pipeline_id: 6` devolveu deals de TODOS os pipelines misturados). Antes de ordenar, DESCARTAR todo deal cujo campo `pipeline` do retorno seja diferente do nome do funil da vez (ex: manter só `pipeline: "Educacional"`). Nunca confiar só no parâmetro do filtro.
+
+Ordenar os deals restantes pela ordem de etapas da tabela (mais avançada primeiro). SE o funil não tem deals abertos do Eric → invocação genérica: passar ao próximo funil da ordem; funil nomeado: reportar "sem deals abertos" e encerrar na Validação final.
 
 Durante o sweep, anotar também deals com `status: lost` sem atividade pendente futura (auditoria passiva — ver "Lead Perdido", situação 2).
 
@@ -164,7 +166,7 @@ Com o contexto (Pipedrive + WhatsApp), definir:
 2. Abrir referenciando o último evento CONCRETO do histórico (proposta enviada dia X, demo de Y, última resposta do lead) — NUNCA abrir com "passando para dar um oi" ou saudação vazia.
 3. Terminar com exatamente 1 pergunta aberta OU 1 CTA — nunca dois pedidos na mesma mensagem.
 4. Sem saudação formal ("Prezado", "Bom dia, tudo bem?") e sem assinatura — é o WhatsApp pessoal do Eric.
-5. Voz do Eric: o critério VERIFICÁVEL é `check_message` sem violações (abaixo). Gatilho objetivo do `mcp__whatsapp-agent__get_voice_guide()`: chamar UMA vez por sessão, antes de redigir a PRIMEIRA mensagem da sessão (calibra a voz). Nas mensagens seguintes, NÃO repetir a chamada — só chamar de novo se o `check_message` de uma mensagem apontar violação de voz (aí recarregar o guide e recalibrar antes de re-checar).
+5. Voz do Eric: o critério VERIFICÁVEL é `check_message` sem violações (abaixo). Gatilho objetivo do `mcp__whatsapp-agent__get_voice_guide()`: chamar UMA vez por sessão, antes de redigir a PRIMEIRA mensagem da sessão (calibra a voz). Nas mensagens seguintes, NÃO repetir a chamada — só chamar de novo se o `check_message` de uma mensagem apontar violação de voz (aí recarregar o guide e recalibrar antes de re-checar). SE o retorno do `get_voice_guide` estourar o limite de tokens da tool (o guide atual tem ~90K chars — acontece em qualquer sessão), o próprio erro salva o conteúdo num arquivo e indica o caminho: ler DESSE arquivo a seção "0. Motor da voz" + o "TL;DR" (primeiras ~120 linhas) — bastam pra calibrar; não re-chamar a tool.
 6. SE a etapa exige Livro de Objeções (tabela "Fluxo de uso por etapa") → seguir "Como aplicar a quebra na mensagem".
 7. SE a etapa NÃO exige (ex.: Sem contato / Contato realizado — a tabela manda NÃO consultar) → mensagem de reengajamento simples: referência ao ponto de contato anterior + valor em 1 frase + pergunta aberta. Exemplo (etapa "Sem contato"):
    > Fulano, tentei te alcançar semana passada sobre o diagnóstico do atendimento de vocês. Faz sentido a gente conversar 15 minutos essa semana, ou prefere que eu te mande um resumo por aqui mesmo?
