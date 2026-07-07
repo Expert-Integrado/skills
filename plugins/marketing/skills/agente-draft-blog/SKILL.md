@@ -1,6 +1,6 @@
 ---
 name: agente-draft-blog
-description: Escreve post completo em MDX pra o blog expertintegrado.com.br/blog. Recebe outline (título, tipo, pillar, H2s, FAQ, CTA) e produz MDX com voz Eric Luciano v1.4 + GEO 2026 + schema JSON-LD. TRIGGER quando Claude pedir pra escrever draft de post do blog da Expert ou quando Eric pedir "escreve o post X", "draft do artigo Y", "gera o MDX de Z". NÃO dispara pra publicar/deployar post (isso é agente-publisher-blog) nem pra decidir pauta/tema (isso é criar-post-blog/pauta-semanal) — esta skill só ESCREVE o MDX a partir de um outline já definido.
+description: Escreve post completo em MDX pra o blog expertintegrado.com.br/blog. Recebe outline (título, tipo, pillar, H2s, FAQ, CTA) e produz MDX com voz Eric Luciano v1.4 + GEO 2026 + schema JSON-LD. TRIGGER quando Claude pedir pra escrever draft de post do blog da Expert ou quando Eric pedir "escreve o post X", "draft do artigo Y", "gera o MDX de Z". NÃO dispara pra publicar/deployar post (isso é agente-publisher-blog) nem pra decidir pauta/tema (isso é pauta-semanal) — esta skill só ESCREVE o MDX a partir de um outline já definido.
 ---
 
 # Agente Draft Blog — Expert Integrado
