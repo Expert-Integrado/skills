@@ -47,7 +47,12 @@ Produz conteúdo completo (copy + design) orquestrando um time de subagentes nat
     "$HOME/.claude/plugins/cache/"*/marketing/*/skills/orquestrar-conteudo/assets/pipeline-instagram-gate.mjs \
     "$HOME/.claude/plugins/marketplaces/"*/plugins/marketing/skills/orquestrar-conteudo/assets/pipeline-instagram-gate.mjs \
     "C:/repos/expertintegrado-skills/plugins/marketing/skills/orquestrar-conteudo/assets/pipeline-instagram-gate.mjs" \
-    2>/dev/null | head -1)
+    2>/dev/null | sort -V | tail -1)
+  # sort -V | tail -1 (NUNCA head -1): o cache guarda VÁRIAS versões do plugin lado a lado e
+  # head -1 pegava a MAIS VELHA (validado 07/07/2026: cache tinha 2.11.0 e 2.13.0, head -1
+  # devolveu 2.11.0 — cujo export usa `python` cru e falha neste PC). Com sort -V a maior
+  # versão ganha; se C:/repos existir (máquina de dev), o path "C:/..." ordena por último e
+  # ganha — comportamento desejado (repo = fonte canônica em desenvolvimento).
   SKILL_DIR=$(dirname "$(dirname "$GATE")")   # => .../skills/orquestrar-conteudo
   echo "SKILL_DIR=$SKILL_DIR"; echo "GATE=$GATE"; test -f "$GATE" && echo OK || echo "GATE NAO ENCONTRADO"
   ```
@@ -57,7 +62,7 @@ Produz conteúdo completo (copy + design) orquestrando um time de subagentes nat
   - `VERCEL_TOKEN` → fallback `op read "op://Agentes Eric/VERCEL_API_TOKEN/credential"` (deploy de sites).
   - HeyGen/ElevenLabs: a skill `video` resolve as próprias credenciais.
 - **Workspace do job**: `CONTEUDO_DIR="${CONTEUDO_DIR:-C:/tmp/conteudo}"` → job em `$CONTEUDO_DIR/<slug>/` (ou subpasta `handoffs/<slug>/` do projeto). ATENÇÃO: o pipeline `instagram` via Workflow EXIGE o default `C:/tmp/conteudo/<slug>` — o script do gate crava esse path. Copie TODAS as fotos/assets pra lá antes de começar.
-- **Saída dos PNGs**: `WORKSPACE_DIR="${WORKSPACE_DIR:-$HOME/OneDrive/Workspace}"` → `$WORKSPACE_DIR/temp/<slug>/`.
+- **Saída dos PNGs**: `WORKSPACE_DIR="${WORKSPACE_DIR:-G:/Meu Drive/claude-workspace/Workspace}"` → `$WORKSPACE_DIR/temp/<slug>/`. O Workspace migrou pro Google Drive em 05/07/2026 — `~/OneDrive/Workspace` é ARQUIVO MORTO, nunca escrever lá (o gate atual já usa o default novo via `outBase`).
 - **Banco de fotos do Eric**: `ERIC_FOTOS_DIR="${ERIC_FOTOS_DIR:-$HOME/OneDrive/Imagens/Perfil profissional}"` (sincroniza via OneDrive; mesma fonte da skill `tweet-print`).
 - **Python + Playwright** (só pro export do carrossel): detectar com `PY=$(command -v python3 || command -v python)`; SE vazio no Windows → `PY="$LOCALAPPDATA/Programs/Python/Python312/python.exe"`.
 
@@ -267,8 +272,8 @@ sleep 2
 import asyncio, os
 from playwright.async_api import async_playwright
 
-# NUNCA cravar o nome do usuario (ex: "Eric Luciano"); ~/env resolve pro user atual (ericl, etc)
-OUTPUT = os.path.join(os.environ.get("WORKSPACE_DIR", os.path.expanduser("~/OneDrive/Workspace")), "temp", "<slug>")
+# Workspace novo (Google Drive, 05/07/2026); ~/OneDrive/Workspace = arquivo morto, nunca escrever la
+OUTPUT = os.path.join(os.environ.get("WORKSPACE_DIR", "G:/Meu Drive/claude-workspace/Workspace"), "temp", "<slug>")
 os.makedirs(OUTPUT, exist_ok=True)
 
 async def export():
@@ -407,7 +412,8 @@ Item bloqueante violado derruba o score pra < 7, independente do resto. A sessã
 - **Preview mostra listagem de arquivos** → a galeria não está como `index.html` na raiz do server; renomear e recarregar.
 - **Foto/CTA chegou depois do spawn** → salvar em `handoffs/<slug>/late/`, esperar os agentes, patch + redeploy (respawn do Designer só se crítico).
 - **Eric mudou requisito fundamental mid-flight** → parar os subagentes, atualizar o briefing e redisparar.
-- PENDENTE-SCRIPT: `assets/pipeline-instagram-gate.mjs` tem 3 hardcodes nos prompts internos (corrigir no script, fora do escopo desta skill): (1) **marca @ericluciano** — o Copywriter recebe "carrossel do @ericluciano", o Designer força fundo CSS `navy #0B1220→#10243F + glow ciano #2BB7E0` quando `eric_photos` está vazio (IGNORA `color_palette`/`brand_rules` do briefing) e o Revisor reprova o que não for "navy + ciano, texto branco, sem dourado"; (2) `python` sem detecção `command -v`; (3) `~/OneDrive/Workspace/temp` (ignora `WORKSPACE_DIR`). CONSEQUÊNCIA da (1): o Workflow gate hoje só entrega carrossel coerente pro **@ericluciano** — pra @expertintegrado ou qualquer outro perfil o gate sai com as cores do @ericluciano OU reprova a paleta certa em loop; nesse caso use o **fallback manual** (Agents com o brand-kit do perfil), NÃO o Workflow, até o script ser corrigido. Em máquina sem `python` no PATH, SE o export interno do gate falhar → também usar o fallback manual com o protocolo de export desta skill (que detecta `$PY`).
+- **Workflow rejeitou o `scriptPath` ("script contains control characters")** → o `.mjs` do cache veio com CRLF (checkout Windows) e o handler de permissão rejeita control chars. Normalizar pra uma cópia e usar a cópia: `tr -d '\r' < "$GATE" > C:/tmp/conteudo/pipeline-instagram-gate.lf.mjs` e passar esse path no `scriptPath` (validado 07/07/2026).
+- PENDENTE-SCRIPT: `assets/pipeline-instagram-gate.mjs` tem 1 hardcode remanescente nos prompts internos (corrigir no script, fora do escopo desta skill): **marca @ericluciano** — o Copywriter recebe "carrossel do @ericluciano", o Designer força fundo CSS `navy #0B1220→#10243F + glow ciano #2BB7E0` quando `eric_photos` está vazio (IGNORA `color_palette`/`brand_rules` do briefing) e o Revisor reprova o que não for "navy + ciano, texto branco, sem dourado". CONSEQUÊNCIA: o Workflow gate hoje só entrega carrossel coerente pro **@ericluciano** — pra @expertintegrado ou qualquer outro perfil use o **fallback manual** (Agents com o brand-kit do perfil), NÃO o Workflow, até o script ser corrigido. JÁ RESOLVIDOS no script (07/07/2026): detecção de python (`$PY` com fallback pro 3.12 canônico) e saída no Workspace novo do Google Drive; o script também aceita args opcionais `conteudoDir`, `outDir` e `port` além de `slug`/`briefingPath`/`nSlides`/`maxTries`.
 
 ## Exemplo (mini — carrossel)
 Pedido: "monta um carrossel pro @ericluciano sobre os 3 erros de quem começa com IA".

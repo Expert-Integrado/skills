@@ -180,12 +180,13 @@ Exemplo (empresa fictícia "Cano Mestre", encanamento inteligente):
 - c2: `Eric guiding a technician installing a smart valve under a kitchen sink`
 - c3: `Eric reviewing a water-savings dashboard on a wall screen, satisfied`
 
-Comando (repetir para as 4, trocando o `quality` e o arquivo de saída — `hero.png`, depois `c1.png`/`c2.png`/`c3.png`):
+Comando (repetir para as 4, trocando o `quality` e o arquivo de saída — `hero.png`, depois `c1.png`/`c2.png`/`c3.png`). **No Windows/Git Bash, converter o path da foto ANTES do `-F`** — path POSIX (`/tmp/...`) embutido em `-F "image[]=@..."` NÃO é convertido pelo MSYS e o curl nativo falha com exit 26 e stdout vazio (validado 07/07/2026; mesmo gotcha do upload HeyGen):
 ```bash
+FOTO="$WORK/eric.jpg"; command -v cygpath >/dev/null && FOTO=$(cygpath -m "$FOTO")
 curl -s -X POST "https://api.openai.com/v1/images/edits" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -F model=gpt-image-2 -F size=1536x1024 -F quality=high \
-  -F "image[]=@$WORK/eric.jpg" \
+  -F "image[]=@$FOTO" \
   -F "prompt={cena da demo}. Preserve his exact face and identity." \
 | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>process.stdout.write(Buffer.from(JSON.parse(d).data[0].b64_json,"base64")))' > "$WORK/site/hero.png"
 ```
@@ -224,24 +225,24 @@ A skill só tem Read/Write/Edit/Bash/telegram — sem tool de acompanhamento de 
 - **SE `FAIL`** → remover a `<section>` de vídeo do HTML (tool Edit) e anotar pra avisar o Eric na entrega.
 - **SE `PENDING`** → o render ainda roda. Como o `video.sh` foi lançado com `run_in_background`, o harness te re-invoca quando ele terminar; ao ser re-invocado (ou após ~30-60s), rodar o mesmo check de novo. Repetir até `DONE`/`FAIL` — nunca fica infinito porque o `video.sh` tem teto de 15min e grava `video.fail` ao estourar. NÃO seguir pro deploy (passo 6) enquanto estiver `PENDING`: o deploy é de TUDO junto (nunca deploy parcial + redeploy).
 
-### 6. Deploy Vercel (time expert-integrados-projects)
+### 6. Deploy Vercel (escopo resolvido em runtime — NUNCA cravar)
 - Renomear a pasta pro slug (o nome da pasta vira o nome do projeto): `mv "$WORK/site" "$WORK/{slug}"`.
-- CLI: se não houver `vercel` global, instalar local no `$WORK/cli`:
+- **Resolver o TEAM do token em runtime** — o escopo do `Token_Vercel_Produto_Claude_Eric` MUDA (validado 07/07/2026: o slug `expert-integrados-projects` cravado aqui deixou de existir pro token, que hoje só acessa `contato-5574s-projects`; o deploy morria com "The specified scope does not exist"). E em modo não-interativo a CLI EXIGE `--scope` explícito (sem ele: `action_required: missing_scope`, exit 1 sem deployar). Sempre:
 ```bash
-command -v vercel >/dev/null || npm i --prefix "$WORK/cli" vercel   # instala em $WORK/cli/node_modules/.bin/vercel (NÃO entra no PATH sozinho)
+read -r TEAM_ID TEAM_SLUG <<< "$(curl -s --ssl-no-revoke "https://api.vercel.com/v2/teams" \
+  -H "Authorization: Bearer $VTOK" \
+  | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const t=(JSON.parse(d).teams||[])[0]||{};process.stdout.write((t.id||"")+" "+(t.slug||""))})')"
+[ -z "$TEAM_SLUG" ] && { echo "token sem team acessível — reportar ao Eric"; }
 ```
-- **Resolver o caminho do binário** — o local instalado não está no PATH, então o deploy tem que invocar o caminho completo (sem isto, `vercel deploy` dá "command not found"):
-```bash
-VERCEL_BIN="$(command -v vercel || echo "$WORK/cli/node_modules/.bin/vercel")"
-```
-- Deploy (limpar env de projeto herdado; usar o `$VERCEL_BIN` resolvido acima):
+- CLI: `npx --yes vercel@latest` (a CLI não fica instalada nas máquinas; o `npm i --prefix "$WORK/cli"` + `.bin/vercel` falhava com exit 127 no Git Bash — npx validado em produção 07/07/2026).
+- Deploy (limpar env de projeto herdado; `--scope` com o slug resolvido acima):
 ```bash
 cd "$WORK/{slug}" && env -u VERCEL_ORG_ID -u VERCEL_PROJECT_ID \
-  "$VERCEL_BIN" deploy --prod --yes --token "$VTOK" --scope expert-integrados-projects
+  npx --yes vercel@latest deploy --prod --yes --token "$VTOK" --scope "$TEAM_SLUG"
 ```
-- **Desabilitar SSO** (o projeto nasce com `ssoProtection` e pede login Vercel):
+- **Desabilitar SSO** (o projeto nasce com `ssoProtection` e pede login Vercel) — `teamId` = o `$TEAM_ID` resolvido acima:
 ```bash
-curl -s -X PATCH "https://api.vercel.com/v9/projects/{slug}?teamId=team_UAgnWON7MrvFUEjnZinLfUpg" \
+curl -s -X PATCH "https://api.vercel.com/v9/projects/{slug}?teamId=$TEAM_ID" \
   -H "Authorization: Bearer $VTOK" -H "Content-Type: application/json" -d '{"ssoProtection":null}'
 ```
 - **Verificar CONTEÚDO** (não só 200):
@@ -253,9 +254,9 @@ curl -sI "https://{slug}.vercel.app/hero.png" | grep -i "content-type: image"
 - **Entregar o link `.vercel.app` JÁ** — mandar AGORA a mensagem 1 (template do passo 8, SEM a linha do domínio próprio), sem esperar o domínio próprio.
 
 ### 7. Domínio próprio `{slug}.ericluciano.com.br`
-a) **Anexar no Vercel:**
+a) **Anexar no Vercel** (`$TEAM_ID` = o resolvido no passo 6 — nunca cravar teamId):
 ```bash
-curl -s -X POST "https://api.vercel.com/v10/projects/{slug}/domains?teamId=team_UAgnWON7MrvFUEjnZinLfUpg" \
+curl -s -X POST "https://api.vercel.com/v10/projects/{slug}/domains?teamId=$TEAM_ID" \
   -H "Authorization: Bearer $VTOK" -H "Content-Type: application/json" \
   -d '{"name":"{slug}.ericluciano.com.br"}'
 ```
@@ -305,10 +306,13 @@ https://{slug}.vercel.app
 - [ ] Print enviado (viewport, não fullPage) e `WORK` limpo.
 
 ## Erros comuns e recovery
-- **Vercel 403 em escrita** → token pessoal SAML em uso. Trocar pro `Token_Vercel_Produto_Claude_Eric` (time `expert-integrados-projects`).
+- **Vercel 403 em escrita** → token pessoal SAML em uso. Trocar pro `Token_Vercel_Produto_Claude_Eric`.
+- **"The specified scope does not exist" no deploy** → o slug de time cravado não vale mais pro token; resolver o team em runtime (`GET /v2/teams`, passo 6) e usar o slug retornado no `--scope`.
+- **CLI sai com `action_required: missing_scope` (exit != 0, nada deployado)** → modo não-interativo exige `--scope` explícito; passar o `$TEAM_SLUG` resolvido.
 - **Página pede login Vercel** → `ssoProtection` ativo; rodar o PATCH do passo 6.
 - **Domínio `verified:false`** → esperado (zona noutra conta Vercel); seguir o fluxo TXT `_vercel` do passo 7c.
 - **curl exit 35 (Windows)** → faltou `--ssl-no-revoke`.
+- **curl exit 26 com stdout vazio no `-F` (Windows/Git Bash)** → path POSIX embutido no `@` de um `-F`/`--data-binary` (o MSYS só converte paths que são argumentos inteiros, não strings com `@` embutido). Converter antes: `cygpath -m "$WORK/arquivo"` e usar o resultado no `-F`.
 - **HeyGen upload 4xx** → provavelmente multipart; refazer com `--data-binary` + `Content-Type: audio/mpeg`.
 - **HeyGen generate reclama de voice** → faltou `input_text` (obrigatório mesmo com `type=audio`).
 - **`fala.mp3` começa com `{`** → ElevenLabs devolveu erro JSON (key/quota); ler a mensagem e reportar.
