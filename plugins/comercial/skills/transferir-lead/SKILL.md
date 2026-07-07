@@ -131,7 +131,7 @@ Eric: "Niverton"
    - SE **nenhum resultado dá "match forte"** mas há resultados (só bateram por nome parecido) → tratar como pessoa NOVA e criar (fluxo do "0 resultados" acima). Não reaproveitar registro que não casa por telefone nem e-mail.
    - SE **≥2 `person_id` distintos dão "match forte"** → é ambíguo de verdade: listar os candidatos pro Eric (nome + telefone + e-mail + link, usando `mcp__pipedrive__get_person(person_id=<id>)` pra detalhar) e perguntar qual usar. NÃO escolher sozinho, NÃO criar um terceiro.
    - Não fazer mais rodadas de busca além dessas duas (nome + telefone): a decisão é tomada com o que essas duas retornaram; se continuar ≥2 match forte, a saída é SEMPRE perguntar ao Eric (não "tentar de novo").
-3. Preencher origem da PESSOA (obrigatório — `custom_fields` é STRING JSON, não objeto):
+3. Preencher origem da PESSOA (obrigatório — `custom_fields` é STRING JSON, não objeto). **PRÉ-CHECK obrigatório quando a pessoa JÁ EXISTIA** (o `update_person` do MCP NÃO avisa sobrescrita de campo personalizado — o aviso dele cobre só campos nativos; comprovado em 07/07/2026, origem preenchida foi sobrescrita em silêncio): rodar `mcp__pipedrive__get_person(person_id=<id>)` e olhar os DOIS campos hash da conta — `0408a55afe22de8efee2d0353a6cbb9b02bb1bb8` (= "Origem do Contato"; enum vem como ID numérico de opção, ex. `"357"`, NÃO como texto) e `3c41f4490e65e3e1c22ff95b517896b2717a2c05` (= "Detalhes da origem do contato"). SE qualquer um dos dois for não-nulo → NÃO enviar origem/detalhes (1x na vida); enviar só o que estiver null. Pessoa recém-criada no item 2 → enviar normalmente:
    ```
    mcp__pipedrive__update_person({
      person_id: <id do item 2>,
@@ -189,11 +189,11 @@ Etapa inicial obrigatória (a que representa "sem contato ainda do vendedor" —
 
 Espelho literal de `C:/MCPs/expert-mcps/CLAUDE.md` seção 2 (embutido aqui pra executar sem o arquivo externo). Usar o valor EXATAMENTE como escrito (com o `|`, espaços e maiúsculas). Os dois campos ("Origem do Contato" da pessoa e "Origem da Oportunidade" do deal) aceitam esta mesma lista.
 
-**Valores válidos (copiar tal e qual):**
+**Valores válidos (copiar tal e qual — os valores carregam ACENTO porque o match do MCP é exato; lista sincronizada com o Pipedrive real em 07/07/2026, capturada do aviso de opções do próprio MCP):**
 
 ```
-ORG | Automacao do @ericluciano
-ORG | Automacao do @expertintegrado
+ORG | Automação do @ericluciano
+ORG | Automação do @expertintegrado
 ORG | SE Bio @ericluciano
 ORG | SE Bio @expertintegrado
 ORG | Mensagem receptiva de whatsapp
@@ -202,7 +202,7 @@ ORG | Site Super SDR
 SS | @ericluciano
 SS | @expertintegrado
 OUT | Outbound Manual
-OUT | Outbound Automatico
+OUT | Outbound Automático
 INDIC | ChatGuru
 INDIC | Geral
 INDIC | Direta do Eric
@@ -216,24 +216,28 @@ CROS | Downsell de Educacional
 CROS | Upsell de Educacional
 EVENTO | ADVBOX
 EVENTO | IA Summit Joinville 2025
-EVENTO | Imersao Highticket 23
-EVENTO | Imersao Highticket 24
+EVENTO | Imersão Highticket 23
+EVENTO | Imersão Highticket 24
 EVENTO | Growth Conference 2024
 EVENTO | Nova Era
 EVENTO | WebSummit
-EVENTO | Eric presencialmente
+EVENTO | Imersão Expert Integrado
+EVENTO | Eric conheceu presencialmente
 PUBLI | ADVBOX
 PUBLI | G4 Tools
 ADS | Facebook Leads
-ADS | LP > Formulario
+ADS | LP > Formulário
 ADS | LP > WhatsApp
 ADS | SE LP
 ADS | SE Manychat
+ADS | Webinário
 ADS | WhatsApp > SDR
-Lancamento Mentoria Automacoes Inteligentes
+Lançamento Mentoria Automações Inteligentes
 APP | Voice AI
 Desconhecido
 ```
+
+SE o `update_deal_fields` retornar aviso de "valor inválido" listando as opções → a lista acima envelheceu: usar a lista DO AVISO como verdade, escolher o valor equivalente e repetir a chamada UMA vez (e atualizar esta Referência + `C:/MCPs/expert-mcps/CLAUDE.md` seção 2).
 
 **Mapeamento contexto do lead → valor exato** (é o que casa com os cenários típicos desta skill):
 
@@ -245,7 +249,7 @@ Desconhecido
 | Instagram do Eric | `SS | @ericluciano` | — |
 | Instagram da Expert | `SS | @expertintegrado` | — |
 | Evento com nome que está na lista acima | `EVENTO | <nome exato da lista>` | — |
-| Evento presencial com o Eric (sem nome específico na lista) | `EVENTO | Eric presencialmente` | — |
+| Evento presencial com o Eric (sem nome específico na lista) | `EVENTO | Eric conheceu presencialmente` | — |
 | Palestra do Eric | `ORG | Palestra Eric Luciano` | — |
 | WhatsApp receptivo (ele chamou primeiro no zap) | `ORG | Mensagem receptiva de whatsapp` | — |
 | Origem existe na conversa mas não casa em nenhuma linha acima | perguntar ao Eric qual valor da lista usar | — |
@@ -426,6 +430,7 @@ O link `wa.me` do lead vai SEMPRE no report, pro Eric clicar caso queira acompan
 |---|---|---|
 | `This tool has been disabled in your connector settings.` | Callback do Claude Desktop bloqueia `create_*` | Reexecutar via `mcp__pipedrive__pipedrive_write({ action, params })` |
 | Chat do lead não encontrado no `search` | Busca por número completo (com/sem 9) | Buscar pelos últimos 8 dígitos; se persistir, perguntar ao Eric; sem histórico → `prospecta-lead` |
+| `search` retorna `canceling statement due to statement timeout` | Query curta demais varre a base inteira | Repetir UMA vez; SE repetir o timeout → pular o search e resolver direto com `mcp__whatsapp-agent__read(chat="<telefone ou nome>")` (o `read` resolve nome/telefone/chat_id e retorna candidatos se ambíguo) |
 | Áudio sem conteúdo na análise | Transcrição pendente | `mcp__whatsapp-agent__transcribe_audio(chat=...)` e reler (NUNCA API OpenAI direta) |
 | `⚠ POSSÍVEL DUPLICATA` no `create_person` | Pessoa já existe | Usar o `person_id` existente; NÃO forçar criação |
 | `⚠ DEAL ABERTO EXISTENTE` no `create_deal` | Contato já tem deal aberto | Mostrar ao Eric e perguntar (novo com `force: true` OU usar o existente) |

@@ -294,10 +294,11 @@ Coletar:
 
 SE a pessoa JA existia — como verificar o que esta vazio (importante: o `update_person` NAO bloqueia sobrescrita de campo personalizado; a protecao e responsabilidade do agente):
 
-1. `mcp__pipedrive__get_person(person_id={person_id})` — atencao: campos personalizados vem com keys HASH (40 caracteres, nao traduzidas). Criterio verificavel — procurar nos VALORES do JSON os literais conhecidos:
-   - Algum valor bate com uma opcao de origem (ex: `PUBLI | G4 Tools`, `EVENTO | ...`, `INDIC | ...`) → `Origem do Contato` JA preenchida.
-   - Algum valor e um literal de `Nível de decisão` (`Único decisor`/`Sócio decisor`/`Não é decisor`) → campo JA preenchido.
-   - Algum valor e uma string de cargo (ex: `CEO`, `Sócio`, `Diretor Comercial`) → `Cargo` JA preenchido.
+1. `mcp__pipedrive__get_person(person_id={person_id})` — atencao: campos personalizados vem com keys HASH (40 caracteres, nao traduzidas) e **campo ENUM vem como ID NUMERICO da opcao (ex: `"357"`), nunca como o texto da opcao** (comprovado 07/07/2026 — procurar literais tipo `PUBLI | G4 Tools` NAO funciona pra enum). Criterio verificavel:
+   - Hash `0408a55afe22de8efee2d0353a6cbb9b02bb1bb8` (= `Origem do Contato`, enum) nao-nulo → JA preenchida.
+   - Hash `3c41f4490e65e3e1c22ff95b517896b2717a2c05` (= `Detalhes da origem do contato`, texto) nao-nulo → JA preenchido.
+   - Demais enums (ex: `Nível de decisão`): qualquer hash com valor que e SO digitos curtos (ID de opcao) → tratar como enum JA preenchido (na duvida, nao enviar).
+   - Campo de TEXTO vem literal: algum valor e uma string de cargo (ex: `CEO`, `Sócio`, `Diretor Comercial`) → `Cargo` JA preenchido.
 2. Enviar no `custom_fields` SOMENTE os campos comprovadamente vazios (nenhum valor correspondente achado no JSON). Na duvida (nao da pra afirmar que esta vazio) → NAO enviar o campo e registrar em `campos_ja_preenchidos_sem_overwrite`.
 3. `Origem do Contato`/`Detalhes da origem do contato`: NUNCA reenviar se ja tem valor (preenchidos 1x na vida).
 
