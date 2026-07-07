@@ -145,7 +145,7 @@ Cada etapa nomeia o script exato. Rode com `"$PY" scripts/<nome>`. Etapas 3+ sã
 - Critério verificável do gancho (1ª frase, ~2s de fala): tem que cumprir **pelo menos um** de — (a) gera curiosidade, (b) cria expectativa, (c) é forte/polêmica (os mesmos 3 critérios do `gancho.py`). Se a 1ª frase não cumpre nenhum, reescreva antes de seguir.
 - **Confirme o roteiro com a pessoa antes da etapa 3** (a etapa 3 é API paga).
 
-**2. Planejar o b-roll** — quebre o roteiro em cenas: nº de cenas ≈ duração ÷ 5s. Como o avatar (etapa 3) ainda não existe, **estime a duração a partir do texto do roteiro**: `duração_s ≈ (nº de caracteres do roteiro) ÷ 17,8` — 17,8 caracteres/s é o ritmo de fala medido em `criar-reel/scripts/simular_custo.py`; os scripts desta skill não documentam taxa própria, então trate como estimativa. Depois `nº de cenas ≈ ceil(duração_s ÷ 5)`. Escreva `cenas.json` (uma cena por take) usando os personagens do elenco:
+**2. Planejar o b-roll** — quebre o roteiro em cenas: nº de cenas ≈ duração ÷ 5s. **Sem texto legível nas cenas por padrão:** o gpt-image-2 renderiza texto em português com typos (validado 07/07/2026: "CONQUISTO", "pará envio") — inclua `no readable text, no words` na `acao`/`extra` de cada cena, salvo pedido explícito da pessoa por texto na cena; nesse caso, confira letra por letra na aprovação da etapa 4. Como o avatar (etapa 3) ainda não existe, **estime a duração a partir do texto do roteiro**: `duração_s ≈ (nº de caracteres do roteiro) ÷ 17,8` — 17,8 caracteres/s é o ritmo de fala medido em `criar-reel/scripts/simular_custo.py`; os scripts desta skill não documentam taxa própria, então trate como estimativa. Depois `nº de cenas ≈ ceil(duração_s ÷ 5)`. Escreva `cenas.json` (uma cena por take) usando os personagens do elenco:
 ```json
 [
   {"id":"c01","personagens":["principal","mascote"],"acao":"...o que acontece...","extra":"...elementos/texto na cena..."}
@@ -164,7 +164,7 @@ Cada etapa nomeia o script exato. Rode com `"$PY" scripts/<nome>`. Etapas 3+ sã
 ```bash
 "$PY" scripts/2_broll_imagens.py cenas.json <pasta_img>
 ```
-- Validação: cada cena imprime `IMAGEM OK <id>` e a pasta tem os `_16x9.jpg`. **Mostre as imagens pra pessoa aprovar (Read em cada jpg) ANTES de animar.**
+- Validação: cada cena imprime `IMAGEM OK <id>` e a pasta tem os `_16x9.jpg`. **Mostre as imagens pra pessoa aprovar (Read em cada jpg) ANTES de animar.** Na aprovação, confira também: texto renderizado com typo (se escapou algum texto), mascote/personagens consistentes com o elenco entre as cenas.
 - Se `IMAGEM FALHOU <id>`: ajuste a `acao`/`extra` daquela cena no `cenas.json` e rode de novo. Não anime sem aprovação.
 
 **5. Movimento (ffmpeg)**
