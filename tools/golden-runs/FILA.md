@@ -42,7 +42,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | criar-reel | B-custo | Kling/HF (créditos) | aguarda OK custo | — |
 | video | B-custo | API vídeo (créditos) | aguarda OK custo | — |
 | reels-studio | B-custo | API vídeo (créditos) | aguarda OK custo | — |
-| editar-video-motion | A2? | verificar se é só ffmpeg local | fila | — |
+| editar-video-motion | A2 (confirmado: STT centavos + local) | ElevenLabs Scribe + ffmpeg | FEITO 06/07 | APROVADO no escopo distintivo (doctor, STT real 259 tokens, segment_map, cut real 45s->27,2s com offsets, word_times; render coberto pela validação de produção 24/06); 2 achados corrigidos (marketing 2.13.11): curl do transcribe.py sem --ssl-no-revoke (HTTP 000 sempre no PC) + mojibake cp1252 no stdout dos 4 scripts |
 | demonstracao-agente | C | deploy Vercel | fila (até build local) | v3.3 já roda em prod na VPS (OpenClaw) |
 | orquestrar-conteudo | C | pipeline com gate | fila (até o gate) | — |
 
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 24 (18 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 55 · Onda 1 restante: ~18 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 25 (19 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 57 · Onda 1 restante: ~17 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8

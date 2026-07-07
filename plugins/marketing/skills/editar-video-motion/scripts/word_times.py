@@ -7,6 +7,8 @@ clean_time = orig_word_start - piece_orig_start + piece_clean_start
 (piece_clean_start = soma das duracoes dos trechos anteriores; modo VIDEO, sem gaps)
 """
 import json, sys
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8", errors="replace")
 
 def main():
     if len(sys.argv) < 3:

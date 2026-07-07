@@ -13,6 +13,8 @@ IMPORTANTE (Windows): passe o caminho da fonte como C:/Users/... (o Python nativ
 Imprime os OFFSETS da timeline limpa por trecho (use pra sincronizar os overlays).
 """
 import os, sys, json, subprocess, argparse, shutil
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8", errors="replace")
 
 def norm(p):
     if len(p) > 3 and p[0] == '/' and p[2] == '/' and p[1].isalpha():

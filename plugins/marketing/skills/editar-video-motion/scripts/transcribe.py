@@ -7,6 +7,8 @@ Saidas: out.json (default transcript.json) + <input>-audio.mp3 (audio cru, se fo
 Procura a chave em: $ELEVENLABS_API_KEY, C:/MCPs/elevenlabs.env, ~/.config/elevenlabs.env
 """
 import os, sys, subprocess, json, tempfile
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8", errors="replace")
 
 def norm(p):  # /c/Users/... -> C:/Users/...
     if len(p) > 3 and p[0] == '/' and p[2] == '/' and p[1].isalpha():
@@ -45,14 +47,18 @@ def main():
         audio = inp
 
     print("transcrevendo (ElevenLabs Scribe)...")
-    r = subprocess.run([
-        "curl", "-s", "-X", "POST", "https://api.elevenlabs.io/v1/speech-to-text",
+    cmd = ["curl", "-s"]
+    if os.name == "nt":
+        cmd.append("--ssl-no-revoke")  # schannel do Windows falha a checagem de revogacao (exit 35 / HTTP 000) sem isso
+    cmd += [
+        "-X", "POST", "https://api.elevenlabs.io/v1/speech-to-text",
         "-H", f"xi-api-key: {key}",
         "-F", "model_id=scribe_v1", "-F", "language_code=por",
         "-F", "timestamps_granularity=word", "-F", "diarize=false",
         "-F", f"file=@{audio};type=audio/mpeg",
         "-o", out, "-w", "%{http_code}"
-    ], capture_output=True, text=True)
+    ]
+    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     code = (r.stdout or "").strip()
     if code != "200":
         sys.exit(f"ERRO STT HTTP {code}: {open(out).read()[:300] if os.path.exists(out) else r.stderr}")

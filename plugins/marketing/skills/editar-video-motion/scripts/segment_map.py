@@ -5,6 +5,8 @@ Uso:  python segment_map.py transcript.json [segmentos.txt]
 Saida: linhas [idx] inicio-fim (dur) texto   (eventos de audio marcados com <<...>>)
 """
 import json, sys
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8", errors="replace")
 
 def main():
     if len(sys.argv) < 2:
