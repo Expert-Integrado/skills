@@ -17,7 +17,7 @@ Configura do zero a memoria nativa do Claude Code de um colaborador NOVO da Expe
 - NUNCA disparar varios popups AskUserQuestion seguidos para a coleta (AskUserQuestion aceita no maximo 4 perguntas por chamada). Preferir UMA mensagem de conversa com a lista numerada.
 
 ## SEMPRE
-- SEMPRE escrever todos os arquivos em portugues brasileiro com acentuacao correta.
+- SEMPRE conversar com o colaborador (mensagens, perguntas, resumo final) em portugues brasileiro com acentuacao correta. Os ARQUIVOS gerados seguem os templates COMO ESTAO (convencao de config interna, majoritariamente sem acento) — nao "corrigir" acentuacao de template; a copia byte-a-byte prevalece.
 - SEMPRE usar os templates bundlados nesta skill como base — nao inventar conteudo do zero.
 - SEMPRE preencher TODOS os placeholders `{{...}}` (6 em CLAUDE.md, 2 em MEMORY.md) antes de gravar, e conferir com `Read` que nenhum `{{` sobrou.
 - SEMPRE manter as secoes do template CLAUDE.md; so remover uma secao se ela ficar factualmente falsa/vazia para o colaborador (com o template atual isso nao ocorre — ver Etapa 2, passo 1). Na duvida, NAO remover.
@@ -152,17 +152,17 @@ Validacao da Etapa 2: os 6 arquivos existem em `<CONFIG_DIR>/` e nenhum contem a
    - NAO copiar conversas inteiras.
 
 ### Etapa 4 — Verificacao e proximos passos
-Mostrar ao colaborador o resumo (template literal):
+Mostrar ao colaborador o resumo (template literal — substituir `<CONFIG_DIR>` pelo path absoluto resolvido na Etapa 0, ex.: `C:\Users\Joao\.claude`; e a UNICA substituicao):
 ```
 Memoria configurada com sucesso!
 
 Arquivos criados:
-  ~/.claude/CLAUDE.md                   — Suas preferencias pessoais
-  ~/.claude/rules/preferences.md        — Regras de comunicacao
-  ~/.claude/memory/MEMORY.md            — Indice da memoria
-  ~/.claude/memory/expert-integrado.md  — Info da empresa
-  ~/.claude/memory/produtos.md          — Produtos da Expert
-  ~/.claude/memory/tech-stack.md        — Ferramentas e MCPs
+  <CONFIG_DIR>\CLAUDE.md                   — Suas preferencias pessoais
+  <CONFIG_DIR>\rules\preferences.md        — Regras de comunicacao
+  <CONFIG_DIR>\memory\MEMORY.md            — Indice da memoria
+  <CONFIG_DIR>\memory\expert-integrado.md  — Info da empresa
+  <CONFIG_DIR>\memory\produtos.md          — Produtos da Expert
+  <CONFIG_DIR>\memory\tech-stack.md        — Ferramentas e MCPs
 
 Para testar, feche e reabra o Claude Code. Depois pergunte:
   "Qual e meu cargo na Expert Integrado?"
@@ -180,7 +180,7 @@ Se precisar ajustar algo depois, e so pedir:
 - [ ] CLAUDE.md tem os 6 valores (nome/cargo/departamento/gestor/ferramentas/tom) e MEMORY.md tem nome/cargo — todos com o texto EXATO informado pelo colaborador (incluindo departamento/ferramenta fora da lista de exemplos).
 - [ ] Nenhum arquivo cita "Eric" pelo nome (so "CEO"/"fundador").
 - [ ] Nenhum dado confidencial (MRR, folha, turnover, OKRs, precos detalhados) foi incluido.
-- [ ] Todos os textos em PT-BR com acentuacao correta, sem emoji.
+- [ ] Conversa com o colaborador em PT-BR com acentuacao correta, sem emoji; arquivos identicos aos templates (fora placeholders e linha do campo 7) — NAO reprovar arquivo por acentuacao herdada do template.
 - [ ] Resumo da Etapa 4 foi exibido com o caminho absoluto de cada arquivo (usar `<CONFIG_DIR>` real, nao a string `~/.claude/`).
 
 ## Erros comuns e recovery

@@ -75,7 +75,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | skill | classe | side-effect / custo | status | resultado |
 |---|---|---|---|---|
 | email-cleaner | B | move/arquiva emails reais (reversível) | aguarda OK | — |
-| onboard | A1? | verificar na leitura | fila | — |
+| onboard | A1 | escrita local (sandbox; ~/.claude real intocado) | FEITO 06/07 | APROVADO (Etapa 0 literal no ~/.claude real → gate seguraria; pipeline completo em CONFIG_DIR sandbox com os templates reais: 0 placeholders restantes, campo 7 na seção certa, 4 cópias byte-idênticas, caixa livre preservada; auditoria: zero "Eric"/confidencial nos templates); 2 defeitos doc corrigidos (operacoes 2.2.1): SEMPRE de acentuação contradizia cópia byte-a-byte de templates sem acento (rescopado pra conversa) e resumo Etapa 4 literal `~/.claude/` vs checklist exigindo path absoluto (agora `<CONFIG_DIR>`) |
 
 ## lab (13)
 
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 36 (30 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 79 · Onda 1 restante: ~6 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 37 (31 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 81 · Onda 1 restante: ~5 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
