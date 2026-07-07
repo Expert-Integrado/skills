@@ -11,7 +11,7 @@ expertintegrado/skills (este repo)
 │   ├── comercial/      ← reabordagem, pipe-review, prospecta-lead, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo (+ futuras: fup-pipedrive)
 │   ├── eventos/        ← convidar-evento, verificar-convites
 │   ├── marketing/      ← tweet-print, pesquisa-instagram (+ futuras: imagem, video)
-│   ├── operacoes/      ← email-cleaner, onboard
+│   ├── operacoes/      ← email-cleaner, onboard, zoom-brain-digest
 │   └── setup/          ← telegram-setup
 └── mcps/               ← MCPs (Pipedrive, ClickUp, Zoom, Outlook, ChatGuru)
 ```

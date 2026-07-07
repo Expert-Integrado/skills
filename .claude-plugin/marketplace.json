@@ -59,13 +59,15 @@
     {
       "name": "operacoes",
       "source": "./plugins/operacoes",
-      "description": "Skills de operacoes internas: email-cleaner, onboard.",
-      "version": "2.2.4",
+      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest.",
+      "version": "2.3.0",
       "category": "productivity",
       "tags": [
         "operacoes",
         "email",
-        "onboarding"
+        "onboarding",
+        "zoom",
+        "brain"
       ]
     }
   ]
