@@ -3778,7 +3778,9 @@
    "objecoes": [
     "esta-caro",
     "roi",
-    "preciso-pensar"
+    "preciso-pensar",
+    "preco",
+    "roi-incerto"
    ],
    "forca": 4,
    "quando_mandar": "Lead travado em preço/ROI ou \"preciso pensar\": manda a calculadora pra ele fazer a conta com os próprios números (3 cenários, premissas abertas, payback contra a faixa publicada).",

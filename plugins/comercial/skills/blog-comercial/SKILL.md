@@ -33,7 +33,9 @@ Regra da casa (decisão Eric 05/07/2026): **apareceu objeção de lead, procura 
 - `<skill-dir>/data/indice.json` — índice completo: 205 posts com `objecoes`, `setores`, `forca` (1-5), `quando_mandar`, `ressalvas`, mais `base_url` e `utm_padrao`. Fonte canônica para o MODO CONSULTAR.
 - `<skill-dir>/templates/post-objecao.md` — template do MODO CRIAR.
 
-Taxonomia de objeções (usar exatamente estes slugs): `preco`, `meu-setor-e-diferente`, `sem-equipe-tecnica`, `ia-erra`, `cliente-odeia-robo`, `sem-tempo`, `ja-tentei-nao-funcionou`, `medo-dados-lgpd`, `equipe-vai-resistir`, `roi-incerto`, `da-pra-fazer-sozinho`, `empresa-pequena-demais`, `perder-controle`, `momento-errado`.
+Taxonomia CANÔNICA de objeções (o mapeamento da fala do lead começa por estes slugs): `preco`, `meu-setor-e-diferente`, `sem-equipe-tecnica`, `ia-erra`, `cliente-odeia-robo`, `sem-tempo`, `ja-tentei-nao-funcionou`, `medo-dados-lgpd`, `equipe-vai-resistir`, `roi-incerto`, `da-pra-fazer-sozinho`, `empresa-pequena-demais`, `perder-controle`, `momento-errado`.
+
+**O índice contém TAMBÉM slugs mais finos fora desta lista** (ex.: `bloqueio-whatsapp`, `garantia`, `socio`, `quero-prova`, `contrato-longo`, `ja-tenho-ferramenta`...). Antes de concluir que não há post pra uma objeção, liste os slugs distintos presentes no índice (`node -e` ou `jq` em cima de `data/indice.json`) e cheque se algum slug fino casa melhor com a fala do lead do que o canônico — só depois disso oferecer o MODO CRIAR. NUNCA concluir "sem post" filtrando só pelos 14 canônicos.
 
 ## MODO CONSULTAR (padrão)
 

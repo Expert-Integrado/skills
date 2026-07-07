@@ -54,7 +54,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | estou-devendo | A2 | WhatsApp read-only | FEITO 06/07 | APROVADO (caminho primário real), 4 achados corrigidos (comercial 2.5.6); 20 pendências fósseis viraram observação de produto |
 | calendly-link | A2 | link single-use real (inofensivo) | FEITO 06/07 | APROVADO 8/8; match por slug validado; 1 achado de doc (max_event_count não existe na resposta) corrigido |
 | calendly-agendar | B | agendamento real | aguarda OK | agendar + cancelar |
-| blog-comercial | A1 | draft local | fila | — |
+| blog-comercial | A1 | draft local | FEITO 06/07 | APROVADO (MODO CONSULTAR real: objeção+setor advocacia, 2 casos força 5, links verificados 200 em prod, UTM sem-deal, ressalvas); 1 achado corrigido (comercial 2.5.9): 22 slugs de objeção do índice fora da taxonomia deixavam 24 posts invisíveis (aliases na calculadora + varredura dos slugs reais antes do MODO CRIAR) |
 | prospecta-lead | B | cria person+deal+activity no Pipedrive | aguarda OK | lead TESTE + delete |
 | reabordagem | A2 | até o rascunho (NÃO envia) | fila | — |
 | fup-inteligente | A2 | até o rascunho (NÃO envia) | fila | — |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 25 (19 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 57 · Onda 1 restante: ~17 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 26 (20 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 58 · Onda 1 restante: ~16 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
