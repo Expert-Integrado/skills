@@ -208,7 +208,7 @@ SE `mcp__pipedrive__search_persons(term=nome)` retornar mais de 1 pessoa:
 
 ## Voice Guide do Eric — regras hard (resumo; fonte canonica via `get_voice_guide`)
 
-O guia completo mora em `claude-sync/memory/eric-voice.md` (~298 linhas, validado A/B em 13.526 mensagens reais, score 7.8/10) e e retornado integralmente por `mcp__whatsapp-agent__get_voice_guide()`. Regras hard (checadas por regex no `check_message`):
+O guia completo mora em `~/.claude/voice-guide.md` (fonte canonica; o antigo `claude-sync/memory/eric-voice.md` era seed legado e NAO existe mais) e e retornado integralmente por `mcp__whatsapp-agent__get_voice_guide()`. Regras hard (checadas por regex no `check_message`):
 
 | Regra | O que NAO fazer | Severidade |
 |---|---|---|
@@ -261,7 +261,7 @@ c. **Site oficial da empresa — criterio verificavel** (vale tambem pro sinal B
    - SE o WebFetch falhar → aceitar como oficial SO se o dominio contem o nome normalizado COMPLETO; senao descartar.
    - SE a pagina revela homonimo incompativel (cidade/atividade que contradiz input ou pesquisa) → DESCARTAR o site: nao usar em `Mídias e redes` nem como sinal B, registrar em `atencao_manual`.
    - **Desempate (2+ dominios passam no criterio):** preferir o dominio que contem o nome MAIS COMPLETO da empresa (mais tokens do nome normalizado no dominio). SE persiste empatado → preferir `.com.br` sobre `.com`. SE ainda empatado → NAO escolher no chute: deixar o campo `site` (e `Mídias e redes`) sem esse link e marcar `❌ INFORMAÇÃO PENDENTE` no campo `site` do JSON do Passo 2, registrando a ambiguidade em `atencao_manual`.
-d. `mcp__expert-brain__recall("dor segmento {X}")` — pattern de dor SO pra inspirar a mensagem. NAO gravar no campo "Dores" do Pipedrive.
+d. `mcp__expert-brain__recall("dor segmento {X}")` — pattern de dor SO pra inspirar a mensagem. NAO gravar no campo "Dores" do Pipedrive. SE o segmento nao foi determinado (input sem segmento E pesquisa sem fonte) → PULAR este item (nao ha `{X}` pra preencher) e deixar `dor_inferida` vazio.
 e. Aplicar a REGRA ZERO e classificar `confianca` (alta/media/nao-confirmada).
 
 Coletar:
@@ -321,6 +321,8 @@ SE a pessoa JA existia — como verificar o que esta vazio (importante: o `updat
 ### Passo 7 — Rascunhar mensagem WhatsApp (Voice Guide)
 
 **7.1 — Carregar Voice Guide** (1x por sessao, cacheavel): `mcp__whatsapp-agent__get_voice_guide()`. Ler o markdown retornado e usar como referencia ativa. Nao parafrasear o guide — incorporar os patterns reais (lexico, sintaxe, vocativo, tempo verbal).
+
+SE o resultado estourar o limite de tokens (~91K chars — o harness salva o output num arquivo e retorna erro) → NAO re-chamar a tool: ler as secoes `## 0. Motor da voz` + `## TL;DR` do guide canonico `~/.claude/voice-guide.md` (ou do arquivo salvo pelo harness), seguir com a tabela "Regras hard" desta skill e registrar `"voice_guide_via_arquivo": true` no output do Passo 10.
 
 **7.2 — Rascunhar 4 linhas** (estrutura base — adaptar ao contexto, nao copiar literal):
 
