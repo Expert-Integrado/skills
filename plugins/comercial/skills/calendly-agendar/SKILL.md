@@ -79,7 +79,9 @@ SE a chamada falhar (erro de auth/token) → reportar o erro literal ao usuário
 Chamar `mcp__calendly__calendly_list_available_slots` com:
 - `event_type_uri`: do Passo 2
 - `start_date`: hoje (`YYYY-MM-DD`, data de Brasília)
-- `end_date`: hoje + 7 dias (máximo aceito pela tool é 7 dias por chamada)
+- `end_date`: hoje + 6 dias (a API do Calendly aceita no máximo 7 dias corridos por chamada; como o MCP converte `start_date` para 00:00 de Brasília, `hoje + 7` estoura o limite)
+
+SE a chamada falhar com erro 400 ("supplied parameters are invalid") → repetir UMA vez com `start_date` = amanhã e `end_date` = amanhã + 6 (versões antigas do MCP mandavam start no passado — 00:00 de hoje — e a API rejeita janela que começa no passado). SE ainda falhar → reportar o erro literal e parar.
 
 A resposta é `{ slots: [...], count: N }`. Cada item de `slots` tem os campos `start_time_utc`, `start_time_brt`, `status`, `invitees_remaining`. `count` é o tamanho de `slots` (número de horários disponíveis retornados). Considerar disponível todo slot da lista (o MCP só retorna horários abertos).
 
@@ -90,7 +92,7 @@ A resposta é `{ slots: [...], count: N }`. Cada item de `slots` tem os campos `
   - SE NÃO existir nenhum slot no dia pedido → NÃO escolher um dia diferente por conta própria. Reportar ao Eric: "não há horário disponível [dia pedido]; os horários mais próximos são: [listar os 3 slots — `start_time_brt` — mais próximos do pedido, podendo ser em outros dias]" e aguardar o Eric dizer qual usar (ou pedir outra janela).
   - Achado o slot (exato ou mais próximo no mesmo dia) → apresentar ao Eric o `start_time_brt` desse slot **e o tipo de evento** (Passo 2) e AGUARDAR confirmação antes do Passo 4 (regra do bloco NUNCA).
 - **SENÃO** (nenhum horário foi pedido) → apresentar os primeiros 5 itens de `slots` pelo campo `start_time_brt` (com o tipo de evento escolhido no Passo 2) e aguardar a escolha do usuário.
-- SE `count` == 0 → repetir a chamada UMA vez com a janela seguinte (`start_date` = hoje+8, `end_date` = hoje+14, ambos `YYYY-MM-DD` em Brasília). SE ainda `count` == 0 → reportar "sem slots disponíveis nas próximas 2 semanas" e parar.
+- SE `count` == 0 → repetir a chamada UMA vez com a janela seguinte (`start_date` = hoje+7, `end_date` = hoje+13, ambos `YYYY-MM-DD` em Brasília). SE ainda `count` == 0 → reportar "sem slots disponíveis nas próximas 2 semanas" e parar.
 
 Guardar o `start_time_utc` do slot escolhido, **exatamente como veio na resposta** (é uma string ISO 8601 em UTC terminando em `Z`, ex.: `2026-07-03T13:00:00.000000Z`). NÃO converter esse valor — no Passo 4 ele é passado como está.
 
@@ -178,10 +180,12 @@ Tirar `mcp__playwright__browser_take_screenshot()` e `mcp__playwright__browser_s
 - SE a página confirma o agendamento → extrair horário e link Zoom da página e ir ao Passo 6.
 - SE aparecer CAPTCHA ou "Esta reserva não pode ser concluída" → recovery E2.
 
+**Nota técnica (desfazer agendamento feito pelo fallback):** o fluxo browser NÃO retorna o `event_uuid` que `mcp__calendly__calendly_cancel` exige. A URL da página de confirmação contém o `invitee_uuid` (trecho `/invitees/<uuid>` ou parâmetro na URL) — guardar essa URL no report. Para cancelar um agendamento feito pelo fallback, usar a página pública `https://calendly.com/cancellations/<invitee_uuid>` no browser (botão de confirmar cancelamento), não o MCP.
+
 ### 6. Registrar no Pipedrive
 
 1. Chamar `mcp__pipedrive__search_deals` com `term` = nome do lead. SE a resposta vier com 0 resultados → repetir a chamada UMA vez com `term` = nome da empresa.
-2. **Selecionar o deal** entre os resultados. Cada resultado de `search_deals` tem os campos `id`, `titulo`, `valor`, `status`, `etapa`, `pipeline`, `contato`, `empresa`. Considerar "deal aberto" todo resultado cujo `status` seja `open` (ignorar os com `status` `won` ou `lost`). Então:
+2. **Selecionar o deal** entre os resultados. Cada resultado de `search_deals` tem os campos `id`, `titulo`, `valor`, `status`, `etapa`, `pipeline`, `contato`, `empresa`. **Primeiro, descartar falso-positivo:** a busca do Pipedrive é fuzzy e pode devolver deals sem relação com o termo — só considerar resultado cujo `contato`, `empresa` OU `titulo` contenha o nome buscado (comparação sem caixa/acentos). Depois, considerar "deal aberto" todo resultado restante cujo `status` seja `open` (ignorar os com `status` `won` ou `lost`). Então:
    - **0 deals abertos** → seguir para o item 5 (não registrar nada).
    - **Exatamente 1 deal aberto** → é esse; seguir para o item 3.
    - **2+ deals abertos** → NÃO adivinhar: apresentar ao Eric a lista dos deals abertos (`titulo` + `id` + `pipeline`/`etapa` de cada) e perguntar em qual registrar a nota; aguardar a resposta. SE o Eric não responder / o fluxo for não-interativo → registrar no PRIMEIRO deal aberto da lista retornada (a busca já vem ordenada por relevância do Pipedrive; `search_deals` não expõe data de criação para desempate) e mencionar no report final que havia mais de um deal aberto, para o Eric revisar.
