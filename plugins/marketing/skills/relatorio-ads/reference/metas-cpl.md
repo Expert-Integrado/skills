@@ -24,8 +24,9 @@ Se o objetivo da campanha não estiver na tabela, **não invente limite** — re
 - 🔴 **Matar — sem resultado:** 0 conversões após gastar o valor do limite **Ruim** do produto
   (ex: webinário com R$80 gastos e 0 lead; mentoria com R$400 e 0 reunião).
 - 🟢 **Escalar:** CPL/custo < limite **Bom** do produto **e** volume mínimo de resultados
-  (webinário ≥ 10 leads; mentoria ≥ 3 reuniões; WhatsApp ≥ 10 conversas) → sugerir +20%
-  (ou +30% se estiver bem abaixo do Bom). Nunca sugerir mais de +30% de uma vez.
+  (webinário ≥ 10 leads; mentoria ≥ 3 reuniões; WhatsApp ≥ 10 conversas) → sugerir +20% por padrão;
+  +30% SÓ quando o CPL/custo estiver ≤ 50% do limite Bom (ex: WhatsApp Bom < R$5 com CPL ≤ R$2,50).
+  Nunca sugerir mais de +30% de uma vez.
 
 ### Regras universais (valem pra qualquer produto — vêm do playbook)
 - 🔴 CTR < 0,5% **após** 1.000 impressões → matar.
