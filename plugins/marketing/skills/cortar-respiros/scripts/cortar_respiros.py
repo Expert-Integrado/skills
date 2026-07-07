@@ -17,10 +17,16 @@ Requer: auto-editor (pip install auto-editor) e ffmpeg/ffprobe no PATH.
 """
 import sys, os, subprocess
 
+# Console/pipe do Windows usa cp1252 — sem isto os acentos do que o script imprime viram mojibake.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 
 def duration(path):
     r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration",
-                        "-of", "default=nk=1:nw=1", path], capture_output=True, text=True)
+                        "-of", "default=nk=1:nw=1", path], capture_output=True,
+                       text=True, encoding="utf-8", errors="replace")
     try:
         return float(r.stdout.strip())
     except ValueError:
@@ -36,8 +42,9 @@ def run_autoeditor(src, out, margin, threshold):
     if threshold is not None:
         cmd += ["--edit", f"audio:threshold={threshold}%"]
     print(f"-> cortando (margem {margin}s{', limiar '+str(threshold)+'%' if threshold else ''})...", flush=True)
-    # captura a saída pra esconder as barras de progresso
-    r = subprocess.run(cmd, capture_output=True, text=True)
+    # captura a saída pra esconder as barras de progresso; encoding explícito porque no Windows
+    # o default (cp1252) faz o reader thread do subprocess crashear com o output UTF-8 do auto-editor
+    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:
         print(r.stdout[-800:]); print(r.stderr[-800:])
         raise SystemExit(f"auto-editor falhou (margem {margin}).")

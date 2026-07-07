@@ -23,7 +23,7 @@ Remove os trechos de silêncio (respiros, pausas, tempos mortos) de um vídeo gr
 
 ## Pré-requisitos
 Verificar ANTES de rodar (passo 0). Todos precisam existir:
-- **Python 3** — resolver o interpretador em `$PY` (passo 0): env `PYTHON_BIN` → `command -v python3` → `command -v python` → fallback documentado do PC do Eric (`C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe`, porque nesse PC o Python NÃO está no PATH).
+- **Python 3** — resolver o interpretador em `$PY` (passo 0) por CAPACIDADE: o primeiro candidato que JÁ TEM o `auto_editor` vence (candidatos: env `PYTHON_BIN`, `python3`, `python`, e o 3.12 documentado do PC do Eric — `C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe`). Só resolver "por PATH" não basta: máquina com mais de um Python (o PC do Eric tem um 3.14 da Store no PATH e o 3.12 com o ecossistema whisper/ffmpeg fora dele) faria instalar o auto-editor num interpretador órfão. SE nenhum candidato tem o módulo → usar `PYTHON_BIN` se setada, senão o 3.12 documentado se existir, senão `python3`/`python` — e instalar nele.
 - **auto-editor** — instalar com `"$PY" -m pip install auto-editor` se faltar.
 - **ffmpeg** e **ffprobe** — detectar com `command -v ffmpeg` e `command -v ffprobe`. Se faltar, avisar o Eric que precisa instalar o FFmpeg (o script depende do `ffprobe` pra medir a duração).
 - Script: `cortar_respiros.py`, em `$SKILL_DIR/scripts/` (o `$SKILL_DIR` absoluto é resolvido no passo 0). É o único recurso; NÃO editar.
@@ -34,9 +34,19 @@ Verificar ANTES de rodar (passo 0). Todos precisam existir:
 > O cwd e as variáveis de shell RESETAM entre chamadas Bash (execução como subagente). Por isso este passo resolve o interpretador (`$PY`) e o diretório da skill (`$SKILL_DIR`) como caminhos ABSOLUTOS e os ECOA. Nos passos seguintes, substitua `$PY` e `$SKILL_DIR` pelas strings literais que este passo imprimir (OU cole este bloco no topo do mesmo comando Bash que roda o script — os passos 2 e 3 já mostram como). Nunca chamar `python`/`python3` nem `scripts/...` com caminho relativo.
 
 ```bash
-# 1) Interpretador: env > python3 > python > caminho documentado do PC do Eric (lá o Python NÃO está no PATH)
-PY="${PYTHON_BIN:-$(command -v python3 || command -v python)}"
-[ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
+# 1) Interpretador: por CAPACIDADE — o primeiro que já tem o auto_editor vence (ver Pré-requisitos).
+PY=""
+for cand in "${PYTHON_BIN:-}" "$(command -v python3 || true)" "$(command -v python || true)" \
+  "C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"; do
+  [ -n "$cand" ] && "$cand" -m auto_editor --version >/dev/null 2>&1 && PY="$cand" && break
+done
+# Nenhum tem o módulo ainda -> escolher onde INSTALAR: PYTHON_BIN > 3.12 documentado > python3 > python.
+if [ -z "$PY" ]; then
+  for cand in "${PYTHON_BIN:-}" "C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe" \
+    "$(command -v python3 || true)" "$(command -v python || true)"; do
+    [ -n "$cand" ] && [ -x "$cand" ] && PY="$cand" && break
+  done
+fi
 
 # 2) Diretório ABSOLUTO desta skill. O Claude Code exporta CLAUDE_PLUGIN_ROOT apontando pra raiz do plugin `marketing`
 #    (a pasta que contém .claude-plugin/plugin.json). Se estiver vazia, cair pro cache do marketplace e depois pro repo clonado.
