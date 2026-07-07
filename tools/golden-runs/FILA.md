@@ -102,9 +102,9 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | voz | B (era A1) | send_voice real: WhatsApp + quota ElevenLabs | PARCIAL 06/07 | Parte 1 (local) APROVADA com 4 achados corrigidos (voz 2.1.1); Parte 2 (send pro Eric) na onda 2 |
 | conselho | A1 | conversacional (longo) | fila | root SKILL.md duplicada — decisão na task 116k46s84rpc |
 | transcrever-conversa (wa) | A2 | WhatsApp read + Whisper | FEITO 06-07/07 | APROVADO ponta a ponta (4 áudios reais do grupo Eric & Fred baixados+transcritos no Whisper local, cache validado no João Vaqueiro, resumo entregue; canônica = legacy/main do whatsapp-agent); 4 defeitos corrigidos (legacy/main 419e146): cascata de localização 100% quebrada no checkout main v3 (recovery via git show legacy/main), curl sem --ssl-no-revoke nas 3 chamadas (PENDENTE-SCRIPT resolvido na causa raiz, condicional Windows), cp1252 no print do JSON (reconfigure utf-8), regra de ambiguidade 1P parava com 2 service roles no vault (tentar mais recente primeiro; nomes reais documentados) |
-| estou-devendo (wa) | A2 | variante standalone da comercial | fila | validar separado |
+| estou-devendo (wa) | A2 | variante standalone da comercial | FEITO 07/07 | APROVADO (run real: 564 pendências absolutas, top 10 auditado, briefing entregue; canônica = legacy/main); 4 defeitos corrigidos (legacy/main b42923c): curl sem --ssl-no-revoke, cp1252 no print do JSON, total_pendencias calculado APÓS o limit (fix count OVER — 564 vs 10), execução Windows documentada 100% quebrada (python não-canônico + script inexistente + dica $env: PowerShell) |
 
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 38 (32 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 85 · Onda 1 restante: ~4 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 39 (33 FEITO + 5 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 89 · Onda 1 restante: ~3 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
