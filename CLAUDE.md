@@ -5,7 +5,7 @@ Marketplace de skills profissionais da Expert Integrado pra Claude Code. Reestru
 ## Estrutura
 
 ```
-expertintegrado/skills (este repo)
+Expert-Integrado/skills (este repo)
 ├── .claude-plugin/marketplace.json  ← cataloga os 5 plugins
 ├── plugins/
 │   ├── comercial/      ← reabordagem, pipe-review, prospecta-lead, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo (+ futuras: fup-pipedrive)
@@ -20,7 +20,7 @@ expertintegrado/skills (este repo)
 
 PC, notebook, VPS:
 ```
-/plugin marketplace add expertintegrado/skills
+/plugin marketplace add Expert-Integrado/skills
 /plugin install comercial@expertintegrado
 /plugin install eventos@expertintegrado
 /plugin install marketing@expertintegrado
@@ -39,7 +39,7 @@ Apos qualquer push pra main:
 
 ## Critério de graduacao (Sandbox → Production)
 
-Skills novas nascem em `ericlucianoferreira/skills` (incubator pessoal). Pra entrar neste repo (`expertintegrado/skills`), precisam atender os 5:
+Skills novas nascem em `ericlucianoferreira/skills` (incubator pessoal). Pra entrar neste repo (`Expert-Integrado/skills`), precisam atender os 5:
 
 1. **Uso real ≥ 5x em producao** (nao em demo)
 2. **Sem bug critico nos ultimos 14 dias**
