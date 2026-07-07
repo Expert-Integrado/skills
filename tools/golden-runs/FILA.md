@@ -30,7 +30,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | agente-draft-blog | A1 | draft local | fila | — |
 | agente-revisor-blog | A1 | local | fila | — |
 | agente-publisher-blog | C | PUBLICA blog prod | fila (até preview) | — |
-| gerar-srt | A2 | Whisper local (input: mp4 do RUN_DIR 20260706_152645) | fila | — |
+| gerar-srt | A2 | Whisper local (clipe teste 45s em C:/tmp) | FEITO 06/07 | APROVADO (SRT real, caminho A + encoding do B); 3 achados corrigidos (marketing 2.13.1): limiar foreground 60s->30s (timeout 120s matava Whisper), mojibake cp1252 nos 2 scripts, sentinela EXIT no background |
 | cortar-respiros | A2 | ffmpeg local (mesmo input) | fila | — |
 | reel-para-post | A2 | Whisper local | fila | — |
 | carrossel-studio | A2 | API imagem (centavos) | fila | — |
@@ -107,4 +107,4 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 ## Placar
 
 - Únicas: 52 (estou-devendo em 2 repos, conselho com root duplicada, 2 cópias de worktree ignoradas)
-- Processadas: 13 (9 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 35 · Onda 1 restante: ~29 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8
+- Processadas: 14 (10 FEITO + 4 PARCIAL) · Defeitos reais corrigidos: 38 · Onda 1 restante: ~28 · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (parciais por natureza): 8

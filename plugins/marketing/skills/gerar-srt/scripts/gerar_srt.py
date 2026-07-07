@@ -18,6 +18,11 @@ Requer: openai-whisper instalado e ffmpeg no PATH.
 """
 import sys, os, re, shutil, subprocess
 
+# Console/pipe do Windows usa cp1252 — sem isto os acentos do que o script imprime viram mojibake.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 # Padrão de legenda curta: nº máx. de palavras por segmento na tela (estilo Reels).
 WORDS_PER_LINE = 4
 
@@ -55,7 +60,8 @@ def run_whisper(video, model, lang, out_dir, words):
         cmd += ["--word_timestamps", "True", "--max_words_per_line", str(words)]
     print(f"-> whisper ({model}) transcrevendo"
           f"{f' (até {words} palavras/legenda)' if words else ''}...", flush=True)
-    subprocess.run(cmd, check=True)
+    # PYTHONUTF8=1: o whisper (também Python) herda o console cp1252 e imprime os segmentos com mojibake sem isto.
+    subprocess.run(cmd, check=True, env={**os.environ, "PYTHONUTF8": "1"})
     base = os.path.splitext(os.path.basename(video))[0]
     srt = os.path.join(out_dir, base + ".srt")
     if not os.path.exists(srt):

@@ -64,9 +64,10 @@ test -f "$SKILL_DIR/scripts/gerar_srt.py" && echo "scripts: OK" || echo "scripts
    - Por padrão o `.srt` sai na MESMA pasta do vídeo. SE precisar gravar em outra pasta (ex: quando a skill `criar-reel` chama este script via `../gerar-srt/scripts/gerar_srt.py ... --model medium --out "$REEL"`) → adicionar `--out <pasta>`. Contrato do script (não mudar): posicional `<video>` + `--model`, `--lang`, `--out`, `--words`.
    - Legendas curtas (padrão): o script quebra em trechos de até 4 palavras coladas na fala (timestamps por palavra do Whisper), pra não deixar uma frase de 3–4 linhas parada na tela por vários segundos. Ajustar com `--words N` (ex: `--words 3` mais curto, `--words 5` mais longo); `--words 0` volta ao modo frase-inteira.
    - **Foreground x background — decidir ANTES de rodar, por critério medido (não por palpite de "longo"):** rodar em **background** (`run_in_background: true`) SE QUALQUER uma:
-     - Duração do vídeo ≥ 60s. Medir: `ffprobe -v error -show_entries format=duration -of default=nk=1:nw=1 "<caminho-do-video>.mp4"` → imprime os segundos (ex.: `84.3`). SE o `ffprobe` faltar ou falhar → tratar como ≥60s (background por segurança).
+     - Duração do vídeo ≥ 30s. Medir: `ffprobe -v error -show_entries format=duration -of default=nk=1:nw=1 "<caminho-do-video>.mp4"` → imprime os segundos (ex.: `84.3`). SE o `ffprobe` faltar ou falhar → tratar como ≥30s (background por segurança). Por que 30s: em CPU (FP32) o `small` roda entre ~1,5x e ~3x o tempo real dependendo da carga da máquina (medido no PC do Eric: um clipe de 45s levou de 69s a >120s) — com o timeout default de 120s da tool Bash, vídeo ≥30s já flerta com o kill.
      - OU o modelo ainda não foi baixado nesta máquina (o Whisper baixa na 1ª vez): o arquivo `~/.cache/whisper/<model>.pt` não existe — `small.pt` ~500MB, `medium.pt` ~1,5GB. Verificar: `test -f ~/.cache/whisper/small.pt` (troque `small` pelo modelo que vai usar).
-     - SENÃO (vídeo < 60s E o modelo já em cache) → rodar em **foreground** normal. Nota: o custo é só tempo de espera — em caso de dúvida, background nunca prejudica (só desacopla a execução).
+     - SENÃO (vídeo < 30s E o modelo já em cache) → rodar em **foreground**, e mesmo assim com folga: passar `timeout: 300000` (5 min) na tool Bash, porque o default de 120s mata o Whisper vivo (exit 143) em máquina carregada. Nota: o custo do background é só desacoplar a execução — em caso de dúvida, background nunca prejudica.
+     - No background, redirecionar pra um log com sentinela de exit (`> "$LOG" 2>&1; echo "EXIT=$?" >> "$LOG"`) e validar pelo `EXIT=0` no fim do log — NUNCA encadear `| tail`/`| head` na chamada (esconde o stderr e o exit code real quando falha).
 2. **Validar:** o script imprime `-> N correções automáticas aplicadas.`, o caminho `SRT pronto: <path>` e, quando houver, um bloco `REVISAR (termos sensíveis ao contexto...)` listando os termos a checar.
    - SE o script sair com `ERRO: 'whisper' não está no PATH` → ver Erros comuns abaixo.
    - SE o script sair com `ERRO: SRT não gerado` → ver Erros comuns abaixo.
@@ -153,6 +154,7 @@ Sem roteiro pra conferir, ouvi no áudio: {termos/números ouvidos, ex: "'140 mi
 - `ERRO: arquivo não encontrado: <path>` → path errado. Conferir o caminho do vídeo (barra normal, sem aspas quebradas) e reexecutar.
 - `ERRO: arquivo de segmentos vazio.` (Caminho B) → o arquivo do passo 1 (`C:/tmp/gerar-srt-segmentos.txt`) está sem conteúdo. Reescrever com os segmentos do print (uma legenda por linha) e reexecutar.
 - Whisper demora muito / trava → rodar em background e monitorar; a 1ª execução baixa o modelo.
+- Processo morto com exit 143 (SIGTERM) e log truncado no meio da transcrição → foi o timeout da tool Bash que matou o Whisper, não erro do script. Re-rodar em background (ou foreground com `timeout: 300000`).
 
 ## Recursos
 Todos dentro da pasta desta skill (o `$SKILL_DIR`/`SKILL_DIR_WIN` resolvido no Preparo):

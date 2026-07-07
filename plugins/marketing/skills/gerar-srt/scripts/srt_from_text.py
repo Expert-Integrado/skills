@@ -12,6 +12,11 @@ segmentos.txt: um segmento de legenda por linha (linhas em branco são ignoradas
 """
 import sys, os
 
+# Console/pipe do Windows usa cp1252 — sem isto os acentos do que o script imprime viram mojibake.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 
 def fmt(t):
     h = int(t // 3600); m = int((t % 3600) // 60); s = int(t % 60)
