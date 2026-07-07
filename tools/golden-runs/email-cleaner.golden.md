@@ -2,7 +2,7 @@
 
 - **Data:** 07/07/2026 (2 sessões) · máquina: PC · executor literal
 - **Cenário:** rodada real na inbox do Outlook do Eric. Sessão 1: Passo 0 + setup + `--auth-check` (parou no gate de auth). Sessão 2 (carta branca 07/07, Playwright destravado): auth completada pelo agente via browser, Passos 2 e 3 executados de verdade contra a inbox real (359 não-lidos).
-- **Resultado: PARCIAL — pipeline validado do Passo 0 ao Passo 3 (dry-run) com 2 defeitos corrigidos (operacoes 2.2.3); parado no gate de confirmação de volumes do Eric (NUNCA #2 da skill — comportamento correto).**
+- **Resultado: FEITO — fluxo COMPLETO executado de ponta a ponta na inbox real (Passos 0-9) após OK do Eric ("continue") nos volumes.** 2 defeitos corrigidos (2.2.3) + aprendizado de regras real (2.2.4). Execução: 183 pela regra (0 fail), 123 triados e movidos (0 fail), 40 ruído mark-read, 2 humanos pro briefing (caso Miyashiro com checagem ClickUp Satisfação executada: 0 cards casaram, regra "sem card" seguida — ambíguo, não criou card sem confirmar CS), 9 regras novas + 2 estendidas no rules.json, logout com pegada zero. Inbox: 359 não-lidos viraram 18 (16 equipe + 2 humano).
 
 ## Achados e fixes (operacoes 2.2.2 + 2.2.3)
 
@@ -18,7 +18,7 @@
 - Passo 2: `--inspect-all` dumpou 359 não-lidos no formato prometido.
 - Passo 3: dry-run real — 179 de 359 afetados (49,9%), 56 preservados, 124 não cobertos; breakdown por regra impresso no contrato literal (`DEL`/`READ`/`MOVE-><Pasta>`).
 
-## Parada (gate de volumes — por design)
+## Gate de volumes (por design — destravado pelo "continue" do Eric)
 
 - NUNCA #2 da skill: `--execute` só com confirmação explícita do Eric sobre os volumes. Volumes apresentados no relatório da sessão: 179 afetados (14 DEL: 1 phishing + 6 Vivo marketing + 1 Instagram + 6 G4 leads; 165 MOVE/READ), 56 preservados, 124 pra triagem cognitiva (maiores grupos: 46 d4sign, 6 agenda.expertintegrado, 5 zoom.us, 4 Cielo, 4 TotalPass).
 - Token isolado MANTIDO em `C:/tmp/email-cleaner-token.json` aguardando o OK (o `--logout` do Passo 9 roda no fim do fluxo; re-auth via Playwright leva 1 min se preferir apagar antes).
