@@ -4,6 +4,7 @@ import { z } from "zod";
 import { readFileSync, writeFileSync, existsSync, renameSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { homedir } from "os";
 
 // ─── CONFIGURAÇÃO ────────────────────────────────────────────────────────────
 
@@ -12,9 +13,39 @@ const __dirname = dirname(__filename);
 const TOKENS_PATH = join(__dirname, "tokens.json");
 
 // Client ID PÚBLICO do app Expert Integrado (OAuth PKCE). Público por design —
-// pode ficar no código. Sobrescreva via env ZOOM_CLIENT_ID p/ usar outro app.
+// pode ficar no código. Cada MÁQUINA usa um app Zoom próprio (o Zoom mantém só
+// 1 refresh token por usuário+app — dois devices no mesmo app se revogam).
+// Resolução por máquina, na ordem (idêntica no auth.js — NUNCA divergir):
+//   1. env ZOOM_CLIENT_ID (vem do claude.json quando o Claude Code sobe o MCP)
+//   2. claude.json direto (cobre execução manual fora do Claude Code)
+//   3. .env local desta pasta (gitignored, POR MÁQUINA — sobrevive a reset do claude.json)
+//   4. default embutido = app da VPS
 const PUBLIC_CLIENT_ID = "gBJbWx7zSpKTr_PIgmBuoA";
-const CLIENT_ID = process.env.ZOOM_CLIENT_ID || PUBLIC_CLIENT_ID;
+
+function clientIdFromClaudeJson() {
+  try {
+    const cj = JSON.parse(readFileSync(join(homedir(), ".claude.json"), "utf-8"));
+    return cj?.mcpServers?.["zoom-mcp"]?.env?.ZOOM_CLIENT_ID || null;
+  } catch {
+    return null;
+  }
+}
+
+function clientIdFromDotEnv() {
+  try {
+    const m = readFileSync(join(__dirname, ".env"), "utf-8")
+      .match(/^\s*ZOOM_CLIENT_ID\s*=\s*"?([\w-]+)"?\s*$/m);
+    return m ? m[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+const CLIENT_ID =
+  process.env.ZOOM_CLIENT_ID ||
+  clientIdFromClaudeJson() ||
+  clientIdFromDotEnv() ||
+  PUBLIC_CLIENT_ID;
 const BASE_URL = "https://api.zoom.us/v2";
 
 // ─── TOKEN MANAGEMENT ────────────────────────────────────────────────────────
@@ -88,6 +119,8 @@ async function refreshAccessToken() {
     // Sempre partir do refresh_token mais novo do disco.
     let tokens = loadTokensFromDisk();
 
+    // Renovar SEMPRE com o app que mintou o token (carimbado pelo auth.js em
+    // tokens.client_id). Renovar com outro client_id dá invalid_client.
     const doRefresh = (refreshToken) =>
       fetch("https://zoom.us/oauth/token", {
         method: "POST",
@@ -95,7 +128,7 @@ async function refreshAccessToken() {
         body: new URLSearchParams({
           grant_type: "refresh_token",
           refresh_token: refreshToken,
-          client_id: CLIENT_ID,
+          client_id: tokens.client_id || CLIENT_ID,
         }),
       });
 
@@ -115,9 +148,12 @@ async function refreshAccessToken() {
 
     if (!response.ok) {
       const errText = await response.text();
+      const usedId = tokens.client_id || CLIENT_ID;
       throw new Error(
         `Falha ao renovar token (HTTP ${response.status}): ${errText}\n` +
-        "Execute `node auth.js` novamente para reautorizar."
+        `App usado na renovação: ${usedId}` +
+        (usedId !== CLIENT_ID ? ` (token foi criado nesse app; a config atual aponta pra ${CLIENT_ID})` : "") +
+        "\nExecute `node auth.js` novamente para reautorizar."
       );
     }
 
@@ -129,6 +165,7 @@ async function refreshAccessToken() {
       expires_in: data.expires_in,
       scope: data.scope,
       created_at: Date.now(),
+      client_id: tokens.client_id || CLIENT_ID,
     };
     saveTokens(newTokens);
     return newTokens;
