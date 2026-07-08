@@ -25,7 +25,12 @@ const PUBLIC_CLIENT_ID = "gBJbWx7zSpKTr_PIgmBuoA";
 function clientIdFromClaudeJson() {
   try {
     const cj = JSON.parse(readFileSync(join(homedir(), ".claude.json"), "utf-8"));
-    return cj?.mcpServers?.["zoom-mcp"]?.env?.ZOOM_CLIENT_ID || null;
+    // "zoom-chat" e o nome atual do server; "zoom-mcp" e o legado (VPS ainda usa)
+    return (
+      cj?.mcpServers?.["zoom-chat"]?.env?.ZOOM_CLIENT_ID ||
+      cj?.mcpServers?.["zoom-mcp"]?.env?.ZOOM_CLIENT_ID ||
+      null
+    );
   } catch {
     return null;
   }
@@ -326,8 +331,8 @@ async function zoomRequestAllPages(path, { query = {}, resultKey = null, maxPage
 // ─── MCP SERVER ──────────────────────────────────────────────────────────────
 
 const server = new McpServer({
-  name: "zoom-mcp",
-  version: "2.0.0",
+  name: "Zoom Chat",
+  version: "2.1.0",
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
