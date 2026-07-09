@@ -7,6 +7,22 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 
 Toda ferramenta/produto da Expert Integrado com repositório ganha uma página pública que explica O QUE o sistema faz e COMO funciona, visualmente, com o branding da empresa. Referência canônica (padrão-ouro): `https://expert-integrado.github.io/expert-brain/` (fonte em `docs/index.html` do repo expert-brain).
 
+## SEMPRE
+
+- SEMPRE rodar o gate de auditoria PII/segredo no HTML final ANTES de commitar/publicar.
+- SEMPRE self-contained: CSS inline, zero CDN/font/imagem externa.
+- SEMPRE desenhar o fluxo a partir do código REAL do repo — cada etapa do diagrama existe no sistema.
+- SEMPRE verificar a URL publicada com curl (200 + conteúdo novo) antes de declarar publicado.
+- SEMPRE linkar a página no topo do README no padrão canônico.
+
+## NUNCA
+
+- NUNCA publicar dado real de negócio, nome de cliente/colaborador, telefone, token, ID de projeto ou path de máquina na página.
+- NUNCA habilitar Pages em repo privado sem OK explícito do dono (a página fica pública).
+- NUNCA inventar etapa de fluxo que não existe no código — na dúvida, perguntar.
+- NUNCA gerar imagem paga (GPT Image 2) sem OK explícito do dono — HTML/CSS/SVG é o default.
+- NUNCA recriar a página do zero num `--update` — editar a existente.
+
 ## Quando um repo é elegível
 
 - SIM: produto, ferramenta interna, MCP, agente, biblioteca com README — algo que alguém (time, aluno, cliente, comunidade) vai olhar.
