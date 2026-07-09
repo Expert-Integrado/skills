@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{NOME_PROJETO}} — como funciona</title>
+<meta name="description" content="{{DESCRICAO_1_FRASE}}">
+<style>
+  /* Tokens oficiais Expert Integrado (referencia canonica: expert-brain/docs/index.html) */
+  :root{
+    --bg: #0b0f14;
+    --bg-raised: #10161d;
+    --bg-card: #131a22;
+    --line: #212b36;
+    --line-soft: #1a232c;
+    --ink: #e7edf3;
+    --ink-dim: #a7b3bf;
+    --ink-faint: #6b7885;
+    --accent: #6ee7c4;
+    --accent-dim: #3fae8c;
+    --warn: #f2b866;
+    --radius: 14px;
+    --maxw: 1080px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  *{ box-sizing: border-box; margin: 0; }
+  body{ background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.6; }
+  .wrap{ max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  a{ color: var(--accent); text-decoration: none; }
+  a:hover{ text-decoration: underline; }
+  code, .mono{ font-family: var(--mono); }
+
+  /* HERO */
+  header{ padding: 72px 0 48px; border-bottom: 1px solid var(--line-soft); }
+  .kicker{ font-family: var(--mono); font-size: .82rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+  h1{ font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 10px 0 14px; }
+  .lead{ color: var(--ink-dim); font-size: 1.08rem; max-width: 46rem; }
+
+  /* SECOES */
+  section{ padding: 56px 0; border-bottom: 1px solid var(--line-soft); }
+  h2{ font-size: 1.4rem; margin-bottom: 22px; }
+  h2 .num{ color: var(--accent); font-family: var(--mono); margin-right: 8px; }
+
+  /* FLUXO (etapas numeradas) */
+  .flow{ display: flex; flex-direction: column; gap: 14px; }
+  .step{ display: flex; gap: 16px; background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+  .step-n{ flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--bg-raised); border: 1px solid var(--accent-dim); color: var(--accent); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: .9rem; }
+  .step h3{ font-size: 1rem; margin-bottom: 4px; }
+  .step p{ color: var(--ink-dim); font-size: .95rem; }
+
+  /* FEATURES em cards */
+  .grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .card{ background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; }
+  .card h3{ font-size: 1rem; margin-bottom: 6px; }
+  .card p{ color: var(--ink-dim); font-size: .93rem; }
+
+  /* STACK (pills) */
+  .pills{ display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill{ padding: 5px 11px; border-radius: 999px; font-family: var(--mono); font-size: .82rem; background: var(--bg-raised); border: 1px solid var(--line); color: var(--ink-dim); }
+
+  /* FOOTER */
+  footer{ padding: 48px 0 64px; }
+  .footer-grid{ display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; }
+  .footer-note{ color: var(--ink-faint); font-size: .85rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">Expert Integrado</div>
+    <h1>{{NOME_PROJETO}}</h1>
+    <p class="lead">{{DESCRICAO_1_FRASE — o que o sistema faz e pra quem, sem hype}}</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2><span class="num">01</span>Como funciona</h2>
+    <div class="flow">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div><h3>{{ETAPA_1}}</h3><p>{{o que acontece nesta etapa, em 1-2 frases}}</p></div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div><h3>{{ETAPA_2}}</h3><p>{{...}}</p></div>
+      </div>
+      <!-- repetir .step pra cada etapa REAL do fluxo -->
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="num">02</span>O que ele faz</h2>
+    <div class="grid">
+      <div class="card"><h3>{{FEATURE}}</h3><p>{{beneficio concreto}}</p></div>
+      <!-- 4 a 8 cards -->
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><span class="num">03</span>Stack</h2>
+    <div class="pills">
+      <span class="pill">{{tecnologia}}</span>
+      <!-- 1 pill por tecnologia relevante -->
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div class="footer-note">Feito pela <a href="https://expertintegrado.com.br">Expert Integrado</a> — IA aplicada a negócios.</div>
+    <div class="footer-note"><a href="https://github.com/Expert-Integrado/{{REPO}}">Código no GitHub</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

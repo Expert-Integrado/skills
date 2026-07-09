@@ -59,8 +59,8 @@
     {
       "name": "operacoes",
       "source": "./plugins/operacoes",
-      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest.",
-      "version": "2.3.0",
+      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages).",
+      "version": "2.4.0",
       "category": "productivity",
       "tags": [
         "operacoes",
