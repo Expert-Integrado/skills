@@ -28,7 +28,7 @@ Todos os comandos de checagem abaixo rodam via a tool `Bash` (POSIX sh no Git Ba
 
 - **Env `SUPABASE_PAT`** (obrigatória pro script; `SUPABASE_SERVICE_ROLE` NÃO é necessária pra esta skill). Fonte canônica: 1Password, vault `Agentes Eric`, item `SUPABASE_ACCESS_TOKEN` (CORREÇÃO-DE-FATO golden run 06/07/2026: o item `SUPABASE_PAT` NÃO existe no vault — só a env var local usa esse nome). Cache local em `~/.claude.json` após `setup-secrets.ps1`; na VPS (container claude-code) já vem exportada pelo `boot-tmux.sh`. Como o valor é sensível, NUNCA imprimir o token — checar só a PRESENÇA (ver passo 2 pro comando exato que não vaza o valor).
 - **Env `WHATSAPP_AGENT_SUPABASE_PROJECT`** (opcional; default `gmpurkzxtvzqlvkqwjkp`). Não precisa setar — o script já usa esse default.
-- **Python** — detectar com `command -v python3 || command -v python` (nunca assumir caminho fixo; nunca usar `which`). O primeiro que imprimir um caminho é o binário a usar; se `python3` imprime caminho → usar `python3`; senão se `python` imprime caminho → usar `python`; se nenhum imprime nada → Python ausente, pular pro fallback 3-B.
+- **Python** — no PC Windows do Eric o binário canônico é o caminho absoluto `C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe` (o `python3`/`python` do PATH pode ser stub da Microsoft Store e falhar — nunca confiar no nome pelado nesta máquina; achado da auditoria de config 07/2026: a skill quebrava em todo run por isso). Detecção portátil (funciona no PC e na VPS): o bloco `PY=...` do passo 3-A testa o caminho absoluto do Windows primeiro e cai pra `command -v python3` / `command -v python` (nunca usar `which`). SE nem o caminho absoluto existe nem `command -v` imprime nada → Python ausente, pular pro fallback 3-B.
 - **MCP `whatsapp-agent`** conectado — necessário pro fallback (passo 3-B), pro modo `--draft` e pra ler conversa específica.
 - **MCP `pipedrive`** conectado — só usado pra qualificar cliente VIP na classificação (passo 4).
 - **Script**: `estou_devendo.py`, dentro da raiz do plugin `comercial` instalado.
@@ -82,19 +82,24 @@ Todas as checagens rodam via a tool `Bash`. O token é sensível: os comandos ab
 
 IMPORTANTE (persistência de env entre chamadas Bash): neste harness, cada chamada da tool `Bash` roda numa sessão nova — variáveis exportadas numa chamada NÃO sobrevivem pra próxima. Portanto, SE o passo 2 teve que exportar `SUPABASE_PAT` via `op read`, o `export` e o comando `python` abaixo têm que ir na MESMA chamada Bash (separados por `&&` ou em linhas seguidas do mesmo comando). SE o passo 2 já achou a env `SET`, basta rodar o comando python sozinho.
 
-Comando (usar `python3`; ver ajuste abaixo se não existir):
+Comando (resolve o binário Python de forma portátil — caminho absoluto do Windows primeiro, PATH como fallback pra VPS/Linux):
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
+PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
+[ -x "$PY" ] || PY=$(command -v python3 || command -v python)
+"$PY" "${CLAUDE_PLUGIN_ROOT}/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
 ```
 
-Exemplo do caso em que precisou carregar o token (tudo numa chamada Bash só):
+Exemplo do caso em que precisou carregar o token (tudo numa chamada Bash só — o `export` e o script na MESMA sessão):
 
 ```bash
-export SUPABASE_PAT=$(op read "op://Agentes Eric/SUPABASE_ACCESS_TOKEN/credential") && python3 "${CLAUDE_PLUGIN_ROOT}/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
+export SUPABASE_PAT=$(op read "op://Agentes Eric/SUPABASE_ACCESS_TOKEN/credential")
+PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
+[ -x "$PY" ] || PY=$(command -v python3 || command -v python)
+"$PY" "${CLAUDE_PLUGIN_ROOT}/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
 ```
 
-Ajuste do binário Python: usar o que o `command -v` do passo Pré-requisitos identificou. SE `python3` não existe (comum no Windows local com Python global), trocar `python3` por `python` no comando acima.
+SE `$PY` acabar vazio (nem caminho absoluto nem PATH) → Python ausente → fallback 3-B.
 
 **Validação do resultado**: o stdout deve ser um objeto JSON parseável com as chaves `total_pendencias`, `mostrando`, `filtro`, `por_categoria`, `chats`. SE parseou e tem essas chaves → SUCESSO, seguir pro passo 4 com o array `chats`.
 
@@ -232,7 +237,8 @@ Onde `{aviso_check}` só aparece quando o draft não passou no `check_message` a
 | Sintoma | Causa | Ação |
 |---|---|---|
 | `unrecognized arguments: --draft` (ou `--urgencia`) | Diretiva de pós-processamento passou pro script | Remover a flag do comando e rodar de novo; aplicar a diretiva no pós-processamento |
-| Exit 2: `SUPABASE_PAT precisa estar definida` | Token ausente no env | Passo 2 (op read); se indisponível → fallback 3-B |
+| Exit 2: `SUPABASE_PAT precisa estar definida` | Token ausente no env | Passo 2 (op read do item `SUPABASE_ACCESS_TOKEN`); se indisponível → fallback 3-B |
+| `python`/`python3` não executa (stub da Store, `command not found`, exit 9009) | Nome pelado do PATH não é um Python real nesta máquina | Usar o bloco `PY=...` do passo 3-A (caminho absoluto `.../Python312/python.exe` primeiro) |
 | Exit 1: `ERRO no SQL` | Management API falhou | 1 retry; se persistir → fallback 3-B |
 | Script não encontrado no path | Plugin não instalado/atualizado | `ls` no path; reportar `/plugin install comercial@expertintegrado`; usar fallback 3-B nesta execução |
 | Chat esperado não aparece com `--categoria=X` | Chat sem categoria atribuída no DB | Comportamento esperado — chats sem categoria só aparecem na listagem geral. Categorizar é fora do escopo desta skill (tool `mcp__whatsapp-agent__categorize_chat`) |
