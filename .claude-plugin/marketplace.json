@@ -14,7 +14,7 @@
       "name": "comercial",
       "source": "./plugins/comercial",
       "description": "Skills comerciais: prospecta-lead, reabordagem, pipe-review, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo, transferir-lead, fup-inteligente, enviar-proposta.",
-      "version": "2.6.1",
+      "version": "2.6.2",
       "category": "productivity",
       "tags": [
         "comercial",
