@@ -1,0 +1,31 @@
+/* Paleta TRACTION — G4 Traction, vibe SaaS/técnico/disruptivo
+ * Validada em: Traction 03/03/2026 (28 slides, [Traction] FINAL.pptx)
+ * Vibe: preto puro + azul vibrante, alto contraste
+ */
+:root {
+  /* Backgrounds */
+  --bg: #FFFFFF;            /* branco puro — slides claros */
+  --bg-dark: #1A1A2E;       /* azul-violeta escuro — slides de transição */
+  --bg-darker: #0A0A1A;     /* quase preto — capa, slides high-impact */
+
+  /* Neutros */
+  --slate-50: #FAFAFA;
+  --slate-100: #F4F4F5;
+  --slate-200: #E4E4E7;
+  --slate-300: #D4D4D8;
+  --slate-400: #A1A1AA;
+  --slate-500: #71717A;
+  --slate-600: #52525B;
+  --slate-700: #3F3F46;
+  --slate-800: #27272A;
+  --slate-900: #18181B;
+
+  /* Accents */
+  --cyan: #4F8DFD;          /* azul vibrante claro — strong em fundo dark */
+  --cyan-soft: #93C5FD;     /* azul ainda mais claro pra decorações */
+  --cyan-deep: #005AFD;     /* azul vibrante medium — strong em fundo light */
+
+  /* Outros */
+  --amber: #FFB800;         /* dourado pra destaques esporádicos */
+  --green: #00D9A6;         /* verde Traction (success/positivo) */
+}

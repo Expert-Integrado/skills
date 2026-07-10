@@ -1,0 +1,565 @@
+<!doctype html>
+<!--
+  Materiais de apoio — Curso 01: Construir Empresa do Zero com IA
+  8 prompts: 4 Diretos + 4 Meta
+  Aula 12 (PRD) tem fluxo de 3 passos com META COMBINADO (contexto + entrevista no mesmo bloco).
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Materiais de apoio — Curso 01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* === PALETA — substituir {{PALETA_ROOT}} pelo :root de css/paleta-{scale|traction|midnight}.css (a MESMA da apresentação) === */
+  {{PALETA_ROOT}}
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg-darker) !important; }
+  html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg-darker); color: var(--slate-900); -webkit-font-smoothing: antialiased; display: flex; align-items: center; justify-content: center; transition: background 0.25s ease; }
+
+  .viewport-bg { position: fixed; inset: 0; z-index: -1; background: var(--bg-darker); transition: background 0.3s ease; pointer-events: none; }
+
+  .stage { position: relative; aspect-ratio: 16 / 9; width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); container-type: inline-size; background: var(--bg); overflow: hidden; }
+  .deck { position: absolute; inset: 0; }
+
+  .slide { position: absolute; inset: 0; display: none; padding: 4cqh 5cqw; flex-direction: column; justify-content: center; background: var(--bg); }
+  .slide.active { display: flex; }
+  .slide.dark { background: var(--bg-dark); color: var(--slate-50); }
+  .slide.darker { background: var(--bg-darker); color: var(--slate-50); }
+
+  h1 { font-size: 6cqw; font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; color: var(--slate-900); }
+  .dark h1, .darker h1 { color: var(--slate-50); }
+  h2 { font-size: 2.9cqw; font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; margin-bottom: 0.6cqh; color: var(--slate-900); }
+  .dark h2, .darker h2 { color: var(--slate-50); }
+  p, li { font-size: 1.5cqw; line-height: 1.5; color: var(--slate-600); font-weight: 400; }
+  .dark p, .dark li, .darker p, .darker li { color: var(--slate-200); }
+  .lead { font-size: 1.35cqw; line-height: 1.35; color: var(--slate-300); font-weight: 400; max-width: 85cqw; margin-bottom: 1cqh; }
+
+  strong { color: var(--cyan-deep); font-weight: 700; }
+  .dark strong, .darker strong { color: var(--cyan); }
+
+  .kicker { font-size: 0.95cqw; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--cyan); margin-bottom: 0.6cqh; display: inline-block; }
+  .meta-badge {
+    display: inline-block;
+    background: rgba(232, 197, 71, 0.12);
+    border: 1px solid var(--cyan-deep);
+    color: var(--cyan); font-weight: 700;
+    padding: 0.25cqw 0.7cqw; border-radius: 0.35cqw;
+    font-size: 0.85cqw; letter-spacing: 0.1em; text-transform: uppercase;
+    margin-left: 0.5cqw;
+  }
+  .meta-badge.direto {
+    background: rgba(74, 155, 127, 0.15);
+    border-color: var(--green); color: var(--green);
+  }
+  .center { align-items: center; text-align: center; }
+
+  /* Capa */
+  .hero { display: flex; flex-direction: column; gap: 1cqh; max-width: 80cqw; }
+  .hero-title { font-size: 6cqw; font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; color: var(--slate-50); margin-bottom: 1.5cqh; }
+  .hero-sub { font-size: 1.9cqw; color: var(--slate-300); line-height: 1.4; max-width: 75cqw; margin-bottom: 3cqh; }
+  .hero-meta { display: flex; gap: 2.5cqw; align-items: center; font-size: 1.3cqw; color: var(--slate-400); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+  .hero-meta span { position: relative; }
+  .hero-meta span:not(:last-child)::after { content: '·'; position: absolute; right: -1.5cqw; color: var(--cyan); }
+
+  /* Prompt block */
+  .prompt-wrap { position: relative; max-width: 90cqw; width: 100%; margin-top: 0.6cqh; }
+  .prompt-label {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.5cqh; gap: 1cqw;
+  }
+  .prompt-label .tag {
+    font-size: 0.9cqw; color: var(--cyan); text-transform: uppercase;
+    letter-spacing: 0.15em; font-weight: 700;
+  }
+  .copy-btn {
+    background: var(--cyan); color: var(--slate-900); border: none;
+    padding: 0.5cqw 1.2cqw; border-radius: 0.5cqw; cursor: pointer;
+    font-family: inherit; font-size: 1cqw; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 0.5cqw;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { background: var(--cyan-soft); }
+  .copy-btn:active { transform: scale(0.97); }
+  .copy-btn.copied { background: var(--green); color: var(--slate-50); }
+  .copy-btn svg { width: 1.1cqw; height: 1.1cqw; }
+
+  pre.prompt {
+    background: var(--slate-900); color: var(--slate-100);
+    padding: 1.3cqw 1.7cqw; border-radius: 0.7cqw;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.88cqw;
+    line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+    border: 1px solid var(--slate-700);
+    max-height: 58cqh; overflow-y: auto;
+  }
+  pre.prompt::-webkit-scrollbar { width: 0.5cqw; }
+  pre.prompt::-webkit-scrollbar-track { background: var(--slate-800); }
+  pre.prompt::-webkit-scrollbar-thumb { background: var(--cyan-deep); border-radius: 0.25cqw; }
+
+  /* Indice */
+  .indice-lista { display: flex; flex-direction: column; gap: 0.6cqh; max-width: 88cqw; }
+  .indice-item { display: flex; gap: 1.2cqw; align-items: baseline; padding: 0.65cqh 0; border-bottom: 1px solid var(--slate-700); }
+  .indice-num { font-size: 1cqw; color: var(--cyan); font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; min-width: 6.5cqw; }
+  .indice-titulo { font-size: 1.45cqw; color: var(--slate-50); font-weight: 600; flex: 1; }
+  .indice-aula { font-size: 0.95cqw; color: var(--slate-400); font-weight: 500; }
+  .indice-tipo {
+    font-size: 0.7cqw; padding: 0.18cqw 0.5cqw;
+    border-radius: 0.3cqw; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700;
+    white-space: nowrap;
+  }
+  .indice-tipo.meta { background: rgba(232, 197, 71, 0.15); color: var(--cyan); border: 1px solid var(--cyan-deep); }
+  .indice-tipo.direto { background: rgba(74, 155, 127, 0.15); color: var(--green); border: 1px solid var(--green); }
+
+  .indice-item.fluxo { background: rgba(232, 197, 71, 0.04); border-left: 2px solid var(--cyan); padding-left: 0.8cqw; }
+
+  /* Footer */
+  .footer { position: absolute; bottom: 2.2cqh; left: 5cqw; right: 5cqw; display: flex; justify-content: space-between; align-items: center; font-size: 0.85cqw; color: var(--slate-400); font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; }
+  .dark .footer, .darker .footer { color: var(--slate-500); }
+  .footer .brand { color: var(--cyan); font-weight: 700; }
+  .footer .nslide { color: var(--slate-500); font-variant-numeric: tabular-nums; }
+  .footer a { color: var(--slate-400); text-decoration: none; transition: color 0.2s; }
+  .footer a:hover { color: var(--cyan); }
+
+  /* Controls */
+  .controls { position: fixed; bottom: 1.5vh; right: 1.5vw; display: flex; gap: 0.4vw; z-index: 100; opacity: 0.4; transition: opacity 0.3s; }
+  .controls:hover { opacity: 1; }
+  .controls button { background: rgba(15,23,42,0.7); color: white; border: 1px solid var(--slate-700); border-radius: 0.4vw; padding: 0.6vw 0.9vw; cursor: pointer; font-size: 0.9vw; font-family: inherit; min-width: 2.5vw; }
+  .controls button:hover { background: var(--cyan); color: var(--slate-900); border-color: var(--cyan); }
+
+  @media print {
+    body { display: block; background: white; }
+    .stage { aspect-ratio: auto; width: 100vw; height: 100vh; page-break-after: always; }
+    .slide { display: flex !important; }
+    .controls { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="viewport-bg" id="vbg"></div>
+
+<div class="stage"><div class="deck" id="deck">
+
+  <!-- 01 — CAPA -->
+  <section class="slide darker active">
+    <div class="hero">
+      <span class="kicker">Material de apoio</span>
+      <h1 class="hero-title">Prompts<br>do <span style="color: var(--cyan)">Curso 01</span></h1>
+      <p class="hero-sub">Todos os prompts-modelo do curso "Como Construir uma Empresa do Zero com IA" — prontos pra copiar e colar.</p>
+      <div class="hero-meta">
+        <span>Eric Luciano</span>
+        <span>8 prompts</span>
+        <span>G4 Educação</span>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">01 / 10</span>
+    </div>
+  </section>
+
+  <!-- 02 — ÍNDICE -->
+  <section class="slide darker">
+    <span class="kicker">Sumário</span>
+    <h2>8 prompts em 2 categorias</h2>
+    <p class="lead">
+      <span class="indice-tipo direto">Direto</span> cola em qualquer sessão IA ·
+      <span class="indice-tipo meta">Meta</span> cola na sessão principal da empresa — ela gera o prompt da ferramenta-alvo OU exporta contexto + tarefa pra outra sessão
+    </p>
+    <div class="indice-lista">
+      <div class="indice-item">
+        <span class="indice-num">Prompt 1</span>
+        <span class="indice-titulo">"IA, me entreviste"</span>
+        <span class="indice-tipo direto">Direto</span>
+        <span class="indice-aula">Aula 3</span>
+      </div>
+      <div class="indice-item">
+        <span class="indice-num">Prompt 2</span>
+        <span class="indice-titulo">Briefing da empresa (inicia sessão principal)</span>
+        <span class="indice-tipo direto">Direto</span>
+        <span class="indice-aula">Aula 4</span>
+      </div>
+      <div class="indice-item">
+        <span class="indice-num">Prompt 3</span>
+        <span class="indice-titulo">5 prompts de imagens da marca</span>
+        <span class="indice-tipo meta">Meta</span>
+        <span class="indice-aula">Aula 9</span>
+      </div>
+      <div class="indice-item">
+        <span class="indice-num">Prompt 4</span>
+        <span class="indice-titulo">Vídeo cinematográfico Gemini Omni</span>
+        <span class="indice-tipo meta">Meta</span>
+        <span class="indice-aula">Aula 10</span>
+      </div>
+      <div class="indice-item">
+        <span class="indice-num">Prompt 5</span>
+        <span class="indice-titulo">Letra + prompt do jingle (Suno)</span>
+        <span class="indice-tipo meta">Meta</span>
+        <span class="indice-aula">Aula 11</span>
+      </div>
+      <div class="indice-item fluxo">
+        <span class="indice-num">Prompt 6</span>
+        <span class="indice-titulo">META combinado: contexto + entrevista do app</span>
+        <span class="indice-tipo meta">Meta</span>
+        <span class="indice-aula">Aula 12 · passo 1</span>
+      </div>
+      <div class="indice-item fluxo">
+        <span class="indice-num">Prompt 7</span>
+        <span class="indice-titulo">Faseamento MVP / Expansão / Futuro</span>
+        <span class="indice-tipo direto">Direto</span>
+        <span class="indice-aula">Aula 12 · passo 2</span>
+      </div>
+      <div class="indice-item fluxo">
+        <span class="indice-num">Prompt 8</span>
+        <span class="indice-titulo">PRD + prompt fundacional Lovable</span>
+        <span class="indice-tipo direto">Direto</span>
+        <span class="indice-aula">Aula 12 · passo 3</span>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">02 / 10</span>
+    </div>
+  </section>
+
+  <!-- 03 — PROMPT 1 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 3 · Arte do Prompt <span class="meta-badge direto">Direto</span></span>
+    <h2>"IA, me entreviste"</h2>
+    <p class="lead">Técnica universal: quando você não sabe o que falta no seu prompt, pede pra IA te entrevistar. Funciona pra briefing, PRD, plano de marketing, contrato — qualquer documento estruturado.</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 1 — Direto · cole em qualquer sessão</span>
+        <button class="copy-btn" data-prompt="p1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p1">Antes de você responder, me faça as perguntas que faltam pra você me dar uma resposta de altíssima qualidade. Uma de cada vez, esperando minha resposta antes de ir pra próxima. No final, consolida tudo e responde.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">03 / 10</span>
+    </div>
+  </section>
+
+  <!-- 04 — PROMPT 2 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 4 · Briefing <span class="meta-badge direto">Direto</span></span>
+    <h2>Briefing da empresa — inicia sessão principal</h2>
+    <p class="lead">Esse é o prompt que <strong>inicia a sessão principal Claude/ChatGPT</strong> que vai durar o curso inteiro. Depois desse briefing, a IA conhece a empresa e gera todos os outros prompts (imagens, vídeo, jingle, etc).</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 2 — Direto · cole numa sessão nova Claude/ChatGPT</span>
+        <button class="copy-btn" data-prompt="p2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p2">Você é consultor sênior de novos negócios. Quero que você me entreviste pra montar o briefing completo de uma empresa que vou criar do zero. Faça as perguntas uma de cada vez, esperando minha resposta antes da próxima, na ordem que fizer mais sentido pra você.
+
+Cobre os assuntos que um consultor de marca precisa pra trabalhar — tipo: o produto/serviço, o ICP (quem é o cliente, dor, contexto), posicionamento e ticket, modelo de monetização, transformação que a empresa entrega no cliente, identidade visual e tom de voz, inspirações de marca, concorrentes diretos. Essa lista é só orientação — se sentir que falta algo importante, pergunta. Se algum item não fizer sentido pro meu caso, pula.
+
+Ao terminar, consolida tudo num briefing executivo de 1 página.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">04 / 10</span>
+    </div>
+  </section>
+
+  <!-- 05 — PROMPT 3 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 9 · Imagens da marca <span class="meta-badge">Meta</span></span>
+    <h2>5 prompts de imagens prontos</h2>
+    <p class="lead">Cole na <strong>sessão principal da empresa</strong>. Ela já conhece o briefing e a identidade visual — vai gerar 5 prompts de imagem prontos pra você copiar e colar no ChatGPT Image ou Gemini.</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 3 — Meta · cole na sessão principal</span>
+        <button class="copy-btn" data-prompt="p3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p3">Com base em tudo que já falamos sobre a empresa (briefing, identidade visual, ICP, posicionamento), crie 5 prompts prontos pra eu gerar imagens-chave da marca no ChatGPT Image ou Gemini:
+
+1. Imagem de hero do site (cena principal que comunica a essência)
+2. Produto ou serviço em uso real
+3. Persona/ICP no momento de uso (com rosto e ambiente coerentes)
+4. Detalhe de identidade visual (textura, embalagem, padrão visual)
+5. Imagem abstrata da marca (sentimento/atmosfera, sem produto)
+
+Pra cada prompt, segue a estrutura: [CENA] [PERSONAGEM/OBJETO] [AMBIENTE] [ILUMINAÇÃO] [ESTILO] [PALETA — com hex codes da marca]. Coloca cada prompt numa caixa de código separada pra eu copiar e colar.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">05 / 10</span>
+    </div>
+  </section>
+
+  <!-- 06 — PROMPT 4 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 10 · Vídeo animado <span class="meta-badge">Meta</span></span>
+    <h2>Vídeo cinematográfico Gemini Omni</h2>
+    <p class="lead">Cole na <strong>sessão principal da empresa</strong>. Ela conhece a marca e a identidade — vai montar um prompt cinematográfico completo pra você colar diretamente no Gemini Omni.</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 4 — Meta · cole na sessão principal</span>
+        <button class="copy-btn" data-prompt="p4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p4">Com base no contexto da empresa que estamos construindo (marca, identidade visual, ICP, transformação que entrega), crie um prompt completo pra eu colar no Gemini Omni e gerar um vídeo cinematográfico curto de até 10 segundos da marca.
+
+Preenche essa estrutura:
+
+[CENA] (substantivo + ação + detalhes visuais que refletem a alma da marca)
+[CÂMERA] (movimento e ângulo que combinam com o tom da marca)
+[ILUMINAÇÃO] (hora do dia e tipo de luz coerente com a identidade)
+[ESTILO] (cinematográfico, anime, documental ou comercial premium — escolhe baseado no posicionamento)
+[DURAÇÃO] até 10s
+[ÁUDIO] (opcional — som ambiente ou trilha; pode pular)
+[NEGATIVA] (o que evitar — ex: sem texto na tela, sem rosto humano falando)
+
+Importante: se eu vou anexar uma foto de referência (rosto ou ambiente), descreve no prompt como esses elementos devem aparecer. Lembra: o Omni respeita o rosto/figurino da foto, mas obedece o prompt no ambiente — então alinha as duas pontas.
+
+Me devolve o prompt pronto em uma caixa de código, em PT-BR ou EN, pra eu copiar e colar no Gemini Omni.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">06 / 10</span>
+    </div>
+  </section>
+
+  <!-- 07 — PROMPT 5 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 11 · Jingle <span class="meta-badge">Meta</span></span>
+    <h2>Letra + prompt do jingle (Suno)</h2>
+    <p class="lead">Cole na <strong>sessão principal da empresa</strong>. Ela conhece o manifesto, tom de voz e a transformação que a empresa entrega — vai gerar a letra emocional + o prompt técnico pro Suno.</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 5 — Meta · cole na sessão principal</span>
+        <button class="copy-btn" data-prompt="p5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p5">Com base no contexto da empresa (marca, manifesto, tom de voz, transformação que entrega no cliente), crie 2 coisas pro jingle da marca:
+
+1. A LETRA do jingle — 4 a 8 versos curtos, melodiosos, que comuniquem a transformação que a empresa entrega. Tom alinhado com o manifesto.
+
+2. O PROMPT pro Suno descrevendo: gênero musical, instrumentos, tom de voz (masculino/feminino/coro), energia (alta/calma/épica), duração desejada e referência de estilo (ex: "estilo Coldplay anos 2000" ou "samba moderno com pop").
+
+Coloca os dois em caixas de código separadas pra eu copiar e colar no Suno.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">07 / 10</span>
+    </div>
+  </section>
+
+  <!-- 08 — PROMPT 6 — META COMBINADO -->
+  <section class="slide darker">
+    <span class="kicker">Aula 12 · PRD passo 1 <span class="meta-badge">Meta combinado</span></span>
+    <h2>Contexto + entrevista do app (numa tacada só)</h2>
+    <p class="lead"><strong>Cole na sessão principal da empresa.</strong> Ela vai gerar UM bloco único contendo: (1) o contexto da empresa em markdown e (2) instrução pra IA da próxima sessão fazer a entrevista do app. Você copia esse bloco inteiro e cola numa sessão NOVA — IA já entra contextualizada e começa a entrevista.</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 6 — Meta · cole na sessão principal</span>
+        <button class="copy-btn" data-prompt="p6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p6">Antes de eu abrir uma sessão nova pra arquitetar o aplicativo da empresa, preciso de um bloco ÚNICO pra colar lá que faça 2 coisas de uma vez: (1) carregue o contexto da empresa e (2) já instrua a IA dessa sessão nova a me entrevistar pra arquitetar o app.
+
+Gera esse bloco em markdown, exatamente nesse formato:
+
+---
+
+# Contexto: [NOME DA EMPRESA]
+
+## Setor e posicionamento
+(1 parágrafo curto)
+
+## ICP — quem é o cliente
+(persona em 2-3 linhas: idade, dor, contexto)
+
+## Transformação que entregamos
+(1 frase)
+
+## Identidade visual
+(cores em hex, tipografia, estilo geral)
+
+## Tom de voz e manifesto
+(1 frase de manifesto + tom)
+
+---
+
+# Minha tarefa agora
+
+Quero criar um aplicativo simples pra gerir essa empresa. Antes de programar nada, me entreviste pra entender o que esse app precisa ser. Faz no máximo 5 perguntas, uma por vez, esperando minha resposta antes da próxima. Cobre o que um arquiteto de produto precisa pra desenhar o MVP certo: quem usa, qual a dor que dói mais, o que o usuário faz do começo ao fim, quais informações precisam estar visíveis, e quais funcionalidades seriam ouro mas não são essenciais agora. Se faltar algo crítico, pergunta; se não fizer sentido pro meu caso, pula.
+
+---
+
+Me devolve esse bloco compacto, no máximo 1 página de conteúdo, pronto pra eu copiar e colar inteiro numa nova sessão sem precisar adicionar mais nada.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">08 / 10</span>
+    </div>
+  </section>
+
+  <!-- 09 — PROMPT 7 — Faseamento -->
+  <section class="slide darker">
+    <span class="kicker">Aula 12 · PRD passo 2 <span class="meta-badge direto">Direto</span></span>
+    <h2>Faseamento — MVP / Expansão / Futuro</h2>
+    <p class="lead">Cola na sessão nova depois que a entrevista terminar. Organiza as features em 3 fases pra não construir tudo de uma vez.</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 7 — Direto · sequência da entrevista</span>
+        <button class="copy-btn" data-prompt="p7">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p7">Com base nas minhas respostas, organiza tudo em 3 fases:
+
+Fase 1 (MVP) — o mínimo pra eu usar de verdade do início ao fim
+Fase 2 (Expansão) — features que agregam valor mas não são essenciais
+Fase 3 (Futuro) — automação, integração, IA
+
+Pra cada feature: nome curto, descrição em 1 frase, em qual fase entra.
+Se algo for confuso pra decidir, me pergunta antes.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">09 / 10</span>
+    </div>
+  </section>
+
+  <!-- 10 — PROMPT 8 — PRD + Lovable -->
+  <section class="slide darker">
+    <span class="kicker">Aula 12 · PRD passo 3 <span class="meta-badge direto">Direto</span></span>
+    <h2>PRD + prompt fundacional pro Lovable</h2>
+    <p class="lead">Saída final em 2 documentos: PRD completo + prompt único pronto pra colar no Lovable e o app inteiro nascer.</p>
+    <div class="prompt-wrap">
+      <div class="prompt-label">
+        <span class="tag">Prompt 8 — Direto · saída em 2 docs</span>
+        <button class="copy-btn" data-prompt="p8">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-text">Copiar</span>
+        </button>
+      </div>
+      <pre class="prompt" id="prompt-p8">Gera agora dois documentos em markdown:
+
+# DOCUMENTO 1 — PRD do [Nome do App]
+
+## Visão geral (1 parágrafo)
+## Quem usa e que dor resolve
+## Identidade visual (cores em hex, tipografia, estilo geral)
+## Fase 1 (MVP) — features e telas
+## Fase 2 (Expansão) — features e telas
+## Fase 3 (Futuro) — features e telas
+## Como sei que tá funcionando (métricas de sucesso)
+
+Pra cada tela: nome, o que aparece, o que o usuário faz ali.
+Pra features de Fase 2 e 3, elas aparecem no menu do MVP com selo "Em breve" — não construir agora, só placeholder.
+
+# DOCUMENTO 2 — Prompt fundacional pro Lovable
+
+Um prompt único, em PT-BR, pronto pra colar no Lovable que crie:
+- O projeto com a identidade visual definida
+- O login (email + Google)
+- O layout base (menu, áreas principais)
+- Todas as telas da Fase 1 funcionando
+- Os placeholders "🚀 Em breve" pras Fases 2 e 3 no menu
+- Banco de dados completo (incluindo tabelas das fases futuras pra não precisar refazer depois)
+
+Linguagem clara, sem floreio. Pode ser longo — é pra criar o app inteiro de uma vez.</pre>
+    </div>
+    <div class="footer">
+      <span class="brand">Materiais &nbsp;·&nbsp; <a href="/">voltar à apresentação</a></span>
+      <span class="nslide">10 / 10</span>
+    </div>
+  </section>
+
+</div></div>
+
+<div class="controls">
+  <button onclick="prev()">←</button>
+  <button onclick="next()">→</button>
+  <button onclick="toggleFullscreen()">⛶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let i = 0;
+
+  function show(n) {
+    if (n < 0 || n >= slides.length) return;
+    slides[i].classList.remove('active');
+    i = n;
+    slides[i].classList.add('active');
+    syncBodyBg();
+  }
+  function next() { show(Math.min(i+1, slides.length-1)); }
+  function prev() { show(Math.max(i-1, 0)); }
+  function syncBodyBg() {
+    const darker = (getComputedStyle(document.documentElement).getPropertyValue('--bg-darker') || '#0E1A2E').trim();
+    document.body.style.background = darker;
+    document.documentElement.style.background = darker;
+    const vbg = document.getElementById('vbg');
+    if (vbg) vbg.style.background = darker;
+  }
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.prompt;
+      const pre = document.getElementById('prompt-' + id);
+      if (!pre) return;
+      try {
+        await navigator.clipboard.writeText(pre.textContent);
+        const txt = btn.querySelector('.btn-text');
+        const orig = txt.textContent;
+        btn.classList.add('copied');
+        txt.textContent = 'Copiado!';
+        setTimeout(() => { btn.classList.remove('copied'); txt.textContent = orig; }, 1800);
+      } catch (err) {
+        console.error('Clipboard error:', err);
+        alert('Erro ao copiar. Copie manualmente.');
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'PRE') return;
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { next(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prev(); e.preventDefault(); }
+    if (e.key === 'Home') { show(0); }
+    if (e.key === 'End') { show(slides.length-1); }
+    if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  });
+
+  let touchStart = 0;
+  document.addEventListener('touchstart', (e) => touchStart = e.touches[0].clientX);
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { if (diff > 0) next(); else prev(); }
+  });
+
+  syncBodyBg();
+</script>
+</body>
+</html>

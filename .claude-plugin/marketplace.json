@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Marketplace de skills profissionais da Expert Integrado para Claude Code, organizadas por departamento.",
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "plugins": [
     {
@@ -22,6 +22,19 @@
         "pipedrive",
         "whatsapp",
         "prospeccao"
+      ]
+    },
+    {
+      "name": "educacional",
+      "source": "./plugins/educacional",
+      "description": "Rota educacional: criar-aula (cursos gravados), aula-mentoria (subir aula da mentoria), divulgar-atualizacao-repo (anuncio de atualizacao no grupo da mentoria), innovation-lab (imersao AI Innovation Lab), mentoria-equipe-seg-16h (mentoria interna). Migrado do marketplace ericluciano em 10/07/2026.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "tags": [
+        "educacional",
+        "mentoria",
+        "aulas",
+        "innovation-lab"
       ]
     },
     {

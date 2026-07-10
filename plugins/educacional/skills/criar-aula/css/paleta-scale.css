@@ -1,0 +1,31 @@
+/* Paleta SCALE — G4 Scale, eventos educacionais corporate
+ * Validada em: Produtividade com IA (26/05/2026)
+ * Vibe: azul petróleo + cyan claro, profissional sem ser pesado
+ */
+:root {
+  /* Backgrounds */
+  --bg: #F8FAFC;            /* slate-50, slides claros (auto-diag, integracoes) */
+  --bg-dark: #0A5F7F;       /* azul petróleo principal — quem-sou, contrato, Penn 1-5, LLM/MCP/Skill */
+  --bg-darker: #074559;     /* azul mais escuro — capa, pirâmide, IA Agêntica, dúvidas */
+
+  /* Neutros */
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+
+  /* Accents — IMPORTANTE: usar --cyan em fundo escuro, --cyan-deep em fundo claro */
+  --cyan: #2DD4FF;          /* cyan claro — strong/highlight em fundo dark/darker */
+  --cyan-soft: #67E8F9;     /* cyan mais suave — decorações sutis */
+  --cyan-deep: #0091D5;     /* cyan médio — strong/highlight em fundo light apenas */
+
+  /* Outros (raramente usado) */
+  --amber: #FFD700;
+  --green: #00C853;
+}

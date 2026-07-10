@@ -1,0 +1,19 @@
+{
+  "name": "educacional",
+  "version": "1.0.0",
+  "description": "Rota educacional da Expert Integrado: producao e distribuicao de educacao — criar-aula (cursos gravados), aula-mentoria (subir aula da mentoria), divulgar-atualizacao-repo (anuncio de atualizacao no grupo da mentoria), innovation-lab (imersao AI Innovation Lab) e mentoria-equipe-seg-16h (mentoria interna de produtividade).",
+  "author": {
+    "name": "Expert Integrado",
+    "email": "operacoes@expertintegrado.com.br",
+    "url": "https://expertintegrado.com.br"
+  },
+  "homepage": "https://github.com/Expert-Integrado/skills",
+  "repository": "https://github.com/Expert-Integrado/skills",
+  "license": "MIT",
+  "keywords": [
+    "educacional",
+    "mentoria",
+    "aulas",
+    "innovation-lab"
+  ]
+}

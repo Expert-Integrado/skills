@@ -1,0 +1,31 @@
+/* Paleta MIDNIGHT EXECUTIVE — eventos premium/executivos
+ * Validada em: Palestra G4 dos 5 Níveis de IA (Brain j3dt9hkwyi5e, deck 26 slides)
+ * Vibe: navy + ice + dourado, luxo/board-room
+ */
+:root {
+  /* Backgrounds */
+  --bg: #F0F4F8;            /* ice levemente azulado — slides claros */
+  --bg-dark: #1B2845;       /* navy profundo */
+  --bg-darker: #0E1A2E;     /* midnight quase preto — capa */
+
+  /* Neutros (mais quentes/dourados que slate) */
+  --slate-50: #F8FAFC;
+  --slate-100: #E8EEF6;
+  --slate-200: #C9D5E5;
+  --slate-300: #A6B6CC;
+  --slate-400: #7888A0;
+  --slate-500: #556578;
+  --slate-600: #3D4A5C;
+  --slate-700: #2A3548;
+  --slate-800: #1A2435;
+  --slate-900: #0E1726;
+
+  /* Accents — dourado em vez de cyan */
+  --cyan: #E8C547;          /* dourado claro — strong em fundo dark/darker */
+  --cyan-soft: #F4DC8F;     /* dourado mais suave */
+  --cyan-deep: #C9A227;     /* dourado profundo — strong em fundo light */
+
+  /* Outros */
+  --amber: #E8C547;         /* alias pro accent (mesma cor) */
+  --green: #4A9B7F;         /* verde acinzentado pra success */
+}

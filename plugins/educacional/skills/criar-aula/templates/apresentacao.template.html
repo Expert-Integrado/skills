@@ -1,0 +1,636 @@
+<!doctype html>
+<!--
+  Apresentacao HTML — Curso 01: Como Construir uma Empresa do Zero com IA
+  Gravacao: estudio G4 — 28/05/2026, 10h-16h
+  Uso: cola pessoal do Eric durante gravacao. Cada bullet aparece com Enter/Space.
+  Paleta: injetada via {{PALETA_ROOT}} — escolher scale | traction | midnight (ver css/ e docs/PALETAS.md)
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Curso 01 — Construir Empresa com IA · Cola Gravação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* === PALETA — substituir {{PALETA_ROOT}} pelo :root de css/paleta-{scale|traction|midnight}.css ===
+     O resto do CSS/JS é paleta-agnóstico: usa var(--bg-darker)/var(--bg-dark) e lê as vars no JS.
+     Qual paleta usar: ver docs/PALETAS.md. */
+  {{PALETA_ROOT}}
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg-darker) !important; }
+  html, body { height: 100%; overflow: hidden; font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg-darker); color: var(--slate-900); -webkit-font-smoothing: antialiased; display: flex; align-items: center; justify-content: center; transition: background 0.25s ease; }
+
+  /* Layer fundo SEMPRE 100vw×100vh — mata letterbox branco */
+  .viewport-bg { position: fixed; inset: 0; z-index: -1; background: var(--bg-darker); transition: background 0.3s ease; pointer-events: none; }
+
+  /* Stage 16:9 fixo */
+  .stage { position: relative; aspect-ratio: 16 / 9; width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); container-type: inline-size; background: var(--bg); overflow: hidden; }
+  .deck { position: absolute; inset: 0; }
+
+  .slide { position: absolute; inset: 0; display: none; padding: 5cqh 6cqw; flex-direction: column; justify-content: center; background: var(--bg); }
+  .slide.active { display: flex; }
+  .slide.dark { background: var(--bg-dark); color: var(--slate-50); }
+  .slide.darker { background: var(--bg-darker); color: var(--slate-50); }
+
+  /* Typography */
+  h1 { font-size: 6cqw; font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; color: var(--slate-900); }
+  .dark h1, .darker h1 { color: var(--slate-50); }
+  h2 { font-size: 4cqw; font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; margin-bottom: 1.5cqh; color: var(--slate-900); }
+  .dark h2, .darker h2 { color: var(--slate-50); }
+  h3 { font-size: 2cqw; font-weight: 700; color: var(--slate-700); margin-bottom: 0.8cqh; }
+  .dark h3, .darker h3 { color: var(--slate-200); }
+  p, li { font-size: 1.6cqw; line-height: 1.55; color: var(--slate-600); font-weight: 400; }
+  .dark p, .dark li, .darker p, .darker li { color: var(--slate-200); }
+  .lead { font-size: 1.9cqw; line-height: 1.4; color: var(--slate-700); font-weight: 400; }
+  .dark .lead, .darker .lead { color: var(--slate-300); }
+
+  strong { color: var(--cyan-deep); font-weight: 700; }
+  .dark strong, .darker strong { color: var(--cyan); }
+
+  .kicker { font-size: 1cqw; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--cyan); margin-bottom: 1.5cqh; display: inline-block; }
+  .center { align-items: center; text-align: center; }
+
+  /* Listas */
+  ul { list-style: none; }
+  ul.bullets li { padding-left: 1.7cqw; position: relative; margin-bottom: 1.2cqh; font-size: 1.7cqw; line-height: 1.5; }
+  ul.bullets li::before { content: ''; position: absolute; left: 0; top: 0.85cqw; width: 0.55cqw; height: 0.55cqw; border-radius: 50%; background: var(--cyan); }
+  ul.bullets li.prompt { padding-left: 0; }
+  ul.bullets li.prompt::before { display: none; }
+  ul.bullets li.prompt .prompt-tag {
+    display: inline-block;
+    background: rgba(232, 197, 71, 0.15);
+    border: 1px solid var(--cyan);
+    border-radius: 0.4cqw;
+    padding: 0.3cqw 0.7cqw;
+    margin-right: 0.6cqw;
+    font-size: 1.2cqw;
+    font-weight: 700;
+    color: var(--cyan);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    user-select: none;
+  }
+  ul.bullets li.prompt .prompt-tag:hover {
+    background: rgba(232, 197, 71, 0.35);
+  }
+  ul.bullets li.prompt .prompt-tag:active {
+    transform: scale(0.96);
+  }
+  ul.bullets li.prompt .prompt-tag.copied {
+    background: var(--green);
+    color: var(--slate-50);
+    border-color: var(--green);
+  }
+
+  /* Capa */
+  .hero { display: flex; flex-direction: column; gap: 1cqh; max-width: 78cqw; }
+  .hero-title { font-size: 6.5cqw; font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; color: var(--slate-50); margin-bottom: 1.5cqh; }
+  .hero-sub { font-size: 2.2cqw; color: var(--slate-300); line-height: 1.4; max-width: 70cqw; margin-bottom: 3cqh; }
+  .hero-meta { display: flex; gap: 2.5cqw; align-items: center; font-size: 1.3cqw; color: var(--slate-400); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+  .hero-meta span { position: relative; }
+  .hero-meta span:not(:last-child)::after { content: '·'; position: absolute; right: -1.5cqw; color: var(--cyan); }
+
+  /* Indice (slide 2) */
+  .indice-modulos { display: flex; flex-direction: column; gap: 1.5cqh; max-width: 75cqw; }
+  .modulo-item { display: flex; gap: 2cqw; align-items: baseline; padding: 1.2cqh 0; border-bottom: 1px solid var(--slate-700); }
+  .modulo-num { font-size: 1.2cqw; color: var(--cyan); font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; min-width: 11cqw; }
+  .modulo-titulo { font-size: 2.1cqw; color: var(--slate-50); font-weight: 700; flex: 1; }
+  .modulo-aulas { font-size: 1.3cqw; color: var(--slate-400); font-weight: 500; }
+
+  /* Footer */
+  .footer { position: absolute; bottom: 2.5cqh; left: 6cqw; right: 6cqw; display: flex; justify-content: space-between; align-items: center; font-size: 0.85cqw; color: var(--slate-400); font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; }
+  .dark .footer, .darker .footer { color: var(--slate-500); }
+  .footer .brand { color: var(--cyan); font-weight: 700; }
+  .footer .nslide { color: var(--slate-500); font-variant-numeric: tabular-nums; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(0.8cqw); transition: opacity 0.4s ease, transform 0.4s ease; }
+  .reveal.shown { opacity: 1; transform: translateY(0); }
+
+  /* Aula 16 — frases especiais */
+  .frase-final { font-size: 2.2cqw; font-style: italic; color: var(--slate-100); line-height: 1.5; max-width: 75cqw; margin-bottom: 2cqh; }
+  .frase-autor { font-size: 1.1cqw; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.18em; font-weight: 700; margin-bottom: 3cqh; }
+  .frase-bora { font-size: 6cqw; color: var(--cyan); font-weight: 900; letter-spacing: -0.03em; text-align: center; margin-top: 2cqh; }
+
+  /* Controls */
+  .controls { position: fixed; bottom: 1.5vh; right: 1.5vw; display: flex; gap: 0.4vw; z-index: 100; opacity: 0.4; transition: opacity 0.3s; }
+  .controls:hover { opacity: 1; }
+  .controls button { background: rgba(15,23,42,0.7); color: white; border: 1px solid var(--slate-700); border-radius: 0.4vw; padding: 0.6vw 0.9vw; cursor: pointer; font-size: 0.9vw; font-family: inherit; min-width: 2.5vw; }
+  .controls button:hover { background: var(--cyan); color: var(--slate-900); border-color: var(--cyan); }
+
+  @media print {
+    body { display: block; background: white; }
+    .stage { aspect-ratio: auto; width: 100vw; height: 100vh; page-break-after: always; }
+    .slide { display: flex !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+    .controls { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="viewport-bg" id="vbg"></div>
+
+<div class="stage"><div class="deck" id="deck">
+
+  <!-- 01 — CAPA -->
+  <section class="slide darker active">
+    <div class="hero">
+      <span class="kicker">G4 Educação</span>
+      <h1 class="hero-title">Como Construir<br>uma Empresa do Zero<br>com <span style="color: var(--cyan)">IA</span></h1>
+      <p class="hero-sub">Curso prático — você sai com a empresa nas mãos em 2 horas, sem código, conversando com IA.</p>
+      <div class="hero-meta">
+        <span>Eric Luciano</span>
+        <span>16 aulas · ~2h</span>
+        <span>G4 Educação</span>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">01 / 18</span>
+    </div>
+  </section>
+
+  <!-- 02 — ÍNDICE -->
+  <section class="slide darker">
+    <span class="kicker">Estrutura do curso</span>
+    <h2>5 módulos · 16 aulas</h2>
+    <div class="indice-modulos">
+      <div class="modulo-item reveal">
+        <span class="modulo-num">Módulo 1</span>
+        <span class="modulo-titulo">Bases</span>
+        <span class="modulo-aulas">Aulas 1–3</span>
+      </div>
+      <div class="modulo-item reveal">
+        <span class="modulo-num">Módulo 2</span>
+        <span class="modulo-titulo">Da ideia ao modelo</span>
+        <span class="modulo-aulas">Aulas 4–5</span>
+      </div>
+      <div class="modulo-item reveal">
+        <span class="modulo-num">Módulo 3</span>
+        <span class="modulo-titulo">Ativos digitais</span>
+        <span class="modulo-aulas">Aulas 6–11</span>
+      </div>
+      <div class="modulo-item reveal">
+        <span class="modulo-num">Módulo 4</span>
+        <span class="modulo-titulo">Aplicativo</span>
+        <span class="modulo-aulas">Aulas 12–14</span>
+      </div>
+      <div class="modulo-item reveal">
+        <span class="modulo-num">Módulo 5</span>
+        <span class="modulo-titulo">Operação e fechamento</span>
+        <span class="modulo-aulas">Aulas 15–16</span>
+      </div>
+    </div>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">02 / 18</span>
+    </div>
+  </section>
+
+  <!-- 03 — AULA 1 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 1 · Módulo 1 — Bases</span>
+    <h2>Promessa e demonstração</h2>
+    <ul class="bullets">
+      <li class="reveal">O que você vai sair construindo</li>
+      <li class="reveal">Demonstração rápida dos ativos prontos</li>
+      <li class="reveal">Cases reais de empresas e produtos construídos com esse método</li>
+      <li class="reveal"><strong>Construção AO VIVO</strong> (não pré-feita como é padrão no G4): vai dar erro às vezes — e resolver na hora é parte da experiência real</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">03 / 18</span>
+    </div>
+  </section>
+
+  <!-- 04 — AULA 2 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 2 · Módulo 1 — Bases</span>
+    <h2>Conceitos fundamentais</h2>
+    <ul class="bullets">
+      <li class="reveal">O que é <strong>Vibe Coding</strong></li>
+      <li class="reveal">O que são ferramentas agênticas</li>
+      <li class="reveal">Como escolher a ferramenta certa pra cada etapa</li>
+      <li class="reveal">Ferramentas gratuitas vs pagas: quando faz diferença</li>
+      <li class="reveal">As ferramentas mudam o tempo todo: <strong>não persiga sempre a mais nova</strong>; foca em dominar as que já te dão resultado</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">04 / 18</span>
+    </div>
+  </section>
+
+  <!-- 05 — AULA 3 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 3 · Módulo 1 — Bases</span>
+    <h2>A Arte do Prompt</h2>
+    <ul class="bullets">
+      <li class="reveal"><strong>Princípio 1</strong>: Conversa, não comando — fale como falaria com um colega esperto</li>
+      <li class="reveal"><strong>Princípio 2</strong>: Contexto vence técnica — voz é 4x mais rápido e 10x mais rico que digitar</li>
+      <li class="reveal"><strong>Princípio 3</strong>: Iteração é regra — primeiro output quase nunca é o final</li>
+      <li class="reveal prompt"><span class="prompt-tag" data-prompt="p1" title="Clique pra copiar o prompt">📋 Prompt</span>Técnica "IA, me entreviste" — peça pra IA fazer as perguntas que faltam (destrava a Aula 4)</li>
+      <li class="reveal">Aviso curto de segurança: três cuidados que o aluno verá em detalhe na Aula 15</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">05 / 18</span>
+    </div>
+  </section>
+
+  <!-- 06 — AULA 4 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 4 · Módulo 2 — Da ideia ao modelo</span>
+    <h2>Briefing e pesquisa profunda</h2>
+    <ul class="bullets">
+      <li class="reveal prompt"><span class="prompt-tag" data-prompt="p2" title="Clique pra copiar o prompt">📋 Prompt</span>Mini-prompt que faz a IA perguntar tudo o que precisa saber (modelo entrevista)</li>
+      <li class="reveal">Pesquisa de mercado com <strong>Deep Research</strong></li>
+      <li class="reveal">Benchmark internacional em poucos minutos</li>
+      <li class="reveal">Como verificar e validar o que a IA traz</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">06 / 18</span>
+    </div>
+  </section>
+
+  <!-- 07 — AULA 5 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 5 · Módulo 2 — Da ideia ao modelo</span>
+    <h2>Nome, marca e manifesto</h2>
+    <ul class="bullets">
+      <li class="reveal">Como pedir nomes que ressoam, usando padrões reais de branding</li>
+      <li class="reveal">Iteração até chegar no nome certo</li>
+      <li class="reveal">Tagline, manifesto e posicionamento</li>
+      <li class="reveal">Como manter consistência de marca em todos os ativos</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">07 / 18</span>
+    </div>
+  </section>
+
+  <!-- 08 — AULA 6 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 6 · Módulo 3 — Ativos digitais</span>
+    <h2>Site institucional</h2>
+    <ul class="bullets">
+      <li class="reveal">Do briefing ao prompt do <strong>Lovable</strong></li>
+      <li class="reveal">Modo planejamento: arquiteto antes de construtor</li>
+      <li class="reveal">Publicação com domínio próprio</li>
+      <li class="reveal">O que fazer quando o site sai diferente do esperado</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">08 / 18</span>
+    </div>
+  </section>
+
+  <!-- 09 — AULA 7 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 7 · Módulo 3 — Ativos digitais</span>
+    <h2>E-book de captura</h2>
+    <ul class="bullets">
+      <li class="reveal">Por que usar duas IAs em sequência</li>
+      <li class="reveal">Rascunho no <strong>ChatGPT</strong>, refinamento no <strong>Claude</strong></li>
+      <li class="reveal">Estrutura de e-book que converte leitor em lead</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">09 / 18</span>
+    </div>
+  </section>
+
+  <!-- 10 — AULA 8 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 8 · Módulo 3 — Ativos digitais</span>
+    <h2>Vídeo para mídias sociais</h2>
+    <ul class="bullets">
+      <li class="reveal">Como gerar avatar de vídeo (<strong>HeyGen</strong>)</li>
+      <li class="reveal">Clone de voz quando vale a pena (<strong>ElevenLabs</strong>)</li>
+      <li class="reveal">Onde usar o vídeo no funil</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">10 / 18</span>
+    </div>
+  </section>
+
+  <!-- 11 — AULA 9 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 9 · Módulo 3 — Ativos digitais</span>
+    <h2>Imagens da marca</h2>
+    <ul class="bullets">
+      <li class="reveal prompt"><span class="prompt-tag" data-prompt="p3" title="Clique pra copiar o meta-prompt">📋 Prompt</span>Meta-prompt: peça pra sessão da empresa criar 5 prompts de imagem prontos pra ChatGPT/Gemini</li>
+      <li class="reveal">Imagens com rosto real</li>
+      <li class="reveal">Como iterar prompt visual até chegar no resultado desejado</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">11 / 18</span>
+    </div>
+  </section>
+
+  <!-- 12 — AULA 10 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 10 · Módulo 3 — Ativos digitais</span>
+    <h2>Vídeo animado da marca</h2>
+    <ul class="bullets">
+      <li class="reveal">Diferença entre vídeo com avatar e vídeo animado</li>
+      <li class="reveal prompt"><span class="prompt-tag" data-prompt="p4" title="Clique pra copiar o meta-prompt">📋 Prompt</span>Meta-prompt: peça pra sessão da empresa montar o prompt pronto pro <strong>Gemini Omni</strong> (lançado mai/2026, substitui Veo)</li>
+      <li class="reveal">Como descrever a cena pra ter o resultado esperado</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">12 / 18</span>
+    </div>
+  </section>
+
+  <!-- 13 — AULA 11 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 11 · Módulo 3 — Ativos digitais</span>
+    <h2>Jingle</h2>
+    <ul class="bullets">
+      <li class="reveal prompt"><span class="prompt-tag" data-prompt="p5" title="Clique pra copiar o meta-prompt">📋 Prompt</span>Meta-prompt: peça pra sessão da empresa criar a letra + prompt pronto pro <strong>Suno</strong></li>
+      <li class="reveal">Geração de música no <strong>Suno</strong></li>
+      <li class="reveal">Onde usar o áudio da marca no marketing</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">13 / 18</span>
+    </div>
+  </section>
+
+  <!-- 14 — AULA 12 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 12 · Módulo 4 — Aplicativo</span>
+    <h2>Documento de requisitos do aplicativo</h2>
+    <ul class="bullets">
+      <li class="reveal">Como levantar a dor real do negócio antes de programar (modelo entrevista)</li>
+      <li class="reveal">Organizando features em fases: <strong>MVP</strong>, <strong>Expansão</strong> e <strong>Futuro</strong></li>
+      <li class="reveal prompt"><span class="prompt-tag" data-prompt="p6" title="Clique pra copiar o META combinado (1º de 3 passos — fluxo completo em /materiais)">📋 Prompt</span>PRD + prompt fundacional do Lovable — fluxo de 3 passos com <strong>META combinado</strong> (contexto + entrevista no mesmo bloco → faseamento → PRD+Lovable)</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">14 / 18</span>
+    </div>
+  </section>
+
+  <!-- 15 — AULA 13 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 13 · Módulo 4 — Aplicativo</span>
+    <h2>Construção da versão inicial</h2>
+    <ul class="bullets">
+      <li class="reveal">Como colar o prompt fundacional no Lovable e ver o app inteiro nascer</li>
+      <li class="reveal">A regra <strong>80/20</strong> do Vibe Coding: primeiros 80% saem com 20% do esforço</li>
+      <li class="reveal">Iteração no Lovable: pediu A, faltou X — pede só o X, não recomeça</li>
+      <li class="reveal">Debug rápido: copia o erro, cola no chat, IA corrige</li>
+      <li class="reveal">Rollback quando algo quebra (Lovable mantém histórico de versões)</li>
+      <li class="reveal">Validar telas + placeholders "Em breve" + o que testar antes de avançar</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">15 / 18</span>
+    </div>
+  </section>
+
+  <!-- 16 — AULA 14 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 14 · Módulo 4 — Aplicativo</span>
+    <h2>Ajustes, otimizações e quando chamar dev</h2>
+    <ul class="bullets">
+      <li class="reveal">Os 2 modos do Lovable: <strong>Plan Mode</strong> (vê o plano antes) e <strong>Build Mode</strong> (executa autônomo)</li>
+      <li class="reveal">Edição visual: clica no elemento, descreve a mudança</li>
+      <li class="reveal">Fila de produção (<strong>Prompt Queue</strong>): empilha até 50 prompts em sequência</li>
+      <li class="reveal">Macetes: domínio próprio, esconder selinho, GitHub sync, Project Knowledge</li>
+      <li class="reveal">Hack do <strong>MCP</strong>: conectar seu app a sistemas externos (Pipedrive, ClickUp)</li>
+      <li class="reveal">Quando Vibe Coding não basta: regra-mãe + 4 sinais + padrão híbrido</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">16 / 18</span>
+    </div>
+  </section>
+
+  <!-- 17 — AULA 15 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 15 · Módulo 5 — Operação e fechamento</span>
+    <h2>Cuidados pra operar com segurança e durabilidade</h2>
+    <ul class="bullets">
+      <li class="reveal"><strong>Segurança em IA</strong>: dados sensíveis em IA pública, prompt injection em agentes, deploy público expondo chaves</li>
+      <li class="reveal">Custos recorrentes da stack (faixa típica <strong>R$500–700/mês</strong>)</li>
+      <li class="reveal">Backup do que você criou (PDF, MP4, GitHub, exports do Lovable)</li>
+      <li class="reveal"><strong>LGPD básica</strong>: quando se aplica e o que fazer</li>
+      <li class="reveal">Onde buscar ajuda: Discord Lovable, comunidades, docs oficiais</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">17 / 18</span>
+    </div>
+  </section>
+
+  <!-- 18 — AULA 16 -->
+  <section class="slide darker">
+    <span class="kicker">Aula 16 · Módulo 5 — Operação e fechamento</span>
+    <h2>Daqui pra onde — sua próxima virada</h2>
+    <ul class="bullets" style="font-size: 1.5cqw;">
+      <li class="reveal">O que você construiu em 2 horas vs o que isso valia antes da IA</li>
+      <li class="reveal">Você não vai ter minha fluência de primeira — vivo isso <strong>12-14h por dia</strong>; é questão de prática, não talento</li>
+      <li class="reveal">Quando travar, a melhor ferramenta pra aprender a usar IA é a <strong>própria IA</strong> — conversa com ela sobre o problema</li>
+      <li class="reveal"><strong>Equipe enxuta + super poderosa</strong>: capacitar quem você tem, multiplicar sem inflar folha</li>
+      <li class="reveal">Norbert Wiener (década de 1950): "um homem que sabe usar a máquina sempre será mais inteligente que ela"</li>
+      <li class="reveal">A frase: "se você não usar IA todos os dias, em um ano seu concorrente vai estar <strong>5 anos</strong> na sua frente"</li>
+      <li class="reveal" style="font-size: 3cqw; color: var(--cyan); font-weight: 900; margin-top: 0.6cqh;">Bora.</li>
+    </ul>
+    <div class="footer">
+      <span class="brand">Curso 01 — Construir Empresa com IA &nbsp;·&nbsp; @ericluciano</span>
+      <span class="nslide">18 / 18</span>
+    </div>
+  </section>
+
+</div></div>
+
+<div class="controls">
+  <button onclick="prev()">←</button>
+  <button onclick="next()">→</button>
+  <button onclick="toggleFullscreen()">⛶</button>
+</div>
+
+<script>
+  // === Prompts copiáveis (badges 📋 clicáveis) ===
+  // p1, p2 → vão pra qualquer sessão (genéricos)
+  // p3, p4, p5 → META-PROMPTS pra colar na SESSÃO PRINCIPAL da empresa (Claude/ChatGPT que já conhece o contexto)
+  // p6 → vai pra SESSÃO NOVA dedicada ao app (PRD + Lovable)
+  const PROMPTS = {
+    p1: `Antes de você responder, me faça as perguntas que faltam pra você me dar uma resposta de altíssima qualidade. Uma de cada vez, esperando minha resposta antes de ir pra próxima. No final, consolida tudo e responde.`,
+
+    p2: `Você é consultor sênior de novos negócios. Quero que você me entreviste pra montar o briefing completo de uma empresa que vou criar do zero. Faça as perguntas uma de cada vez, esperando minha resposta antes da próxima, na ordem que fizer mais sentido pra você.
+
+Cobre os assuntos que um consultor de marca precisa pra trabalhar — tipo: o produto/serviço, o ICP (quem é o cliente, dor, contexto), posicionamento e ticket, modelo de monetização, transformação que a empresa entrega no cliente, identidade visual e tom de voz, inspirações de marca, concorrentes diretos. Essa lista é só orientação — se sentir que falta algo importante, pergunta. Se algum item não fizer sentido pro meu caso, pula.
+
+Ao terminar, consolida tudo num briefing executivo de 1 página.`,
+
+    p3: `Com base em tudo que já falamos sobre a empresa (briefing, identidade visual, ICP, posicionamento), crie 5 prompts prontos pra eu gerar imagens-chave da marca no ChatGPT Image ou Gemini:
+
+1. Imagem de hero do site (cena principal que comunica a essência)
+2. Produto ou serviço em uso real
+3. Persona/ICP no momento de uso (com rosto e ambiente coerentes)
+4. Detalhe de identidade visual (textura, embalagem, padrão visual)
+5. Imagem abstrata da marca (sentimento/atmosfera, sem produto)
+
+Pra cada prompt, segue a estrutura: [CENA] [PERSONAGEM/OBJETO] [AMBIENTE] [ILUMINAÇÃO] [ESTILO] [PALETA — com hex codes da marca]. Coloca cada prompt numa caixa de código separada pra eu copiar e colar.`,
+
+    p4: `Com base no contexto da empresa que estamos construindo (marca, identidade visual, ICP, transformação que entrega), crie um prompt completo pra eu colar no Gemini Omni e gerar um vídeo cinematográfico curto de até 10 segundos da marca.
+
+Preenche essa estrutura:
+
+[CENA] (substantivo + ação + detalhes visuais que refletem a alma da marca)
+[CÂMERA] (movimento e ângulo que combinam com o tom da marca)
+[ILUMINAÇÃO] (hora do dia e tipo de luz coerente com a identidade)
+[ESTILO] (cinematográfico, anime, documental ou comercial premium — escolhe baseado no posicionamento)
+[DURAÇÃO] até 10s
+[ÁUDIO] (opcional — som ambiente ou trilha; pode pular)
+[NEGATIVA] (o que evitar — ex: sem texto na tela, sem rosto humano falando)
+
+Me devolve o prompt pronto em uma caixa de código, em PT-BR ou EN (o Gemini Omni entende os dois), pra eu copiar e colar diretamente no Gemini Omni.`,
+
+    p5: `Com base no contexto da empresa (marca, manifesto, tom de voz, transformação que entrega no cliente), crie 2 coisas pro jingle da marca:
+
+1. A LETRA do jingle — 4 a 8 versos curtos, melodiosos, que comuniquem a transformação que a empresa entrega. Tom alinhado com o manifesto.
+
+2. O PROMPT pro Suno descrevendo: gênero musical, instrumentos, tom de voz (masculino/feminino/coro), energia (alta/calma/épica), duração desejada e referência de estilo (ex: "estilo Coldplay anos 2000" ou "samba moderno com pop").
+
+Coloca os dois em caixas de código separadas pra eu copiar e colar no Suno.`,
+
+    p6: `Antes de eu abrir uma sessão nova pra arquitetar o aplicativo da empresa, preciso de um bloco ÚNICO pra colar lá que faça 2 coisas de uma vez: (1) carregue o contexto da empresa e (2) já instrua a IA dessa sessão nova a me entrevistar pra arquitetar o app.
+
+Gera esse bloco em markdown, exatamente nesse formato:
+
+---
+
+# Contexto: [NOME DA EMPRESA]
+
+## Setor e posicionamento
+(1 parágrafo curto)
+
+## ICP — quem é o cliente
+(persona em 2-3 linhas: idade, dor, contexto)
+
+## Transformação que entregamos
+(1 frase)
+
+## Identidade visual
+(cores em hex, tipografia, estilo geral)
+
+## Tom de voz e manifesto
+(1 frase de manifesto + tom)
+
+---
+
+# Minha tarefa agora
+
+Quero criar um aplicativo simples pra gerir essa empresa. Antes de programar nada, me entreviste pra entender o que esse app precisa ser. Faz no máximo 5 perguntas, uma por vez, esperando minha resposta antes da próxima. Cobre o que um arquiteto de produto precisa pra desenhar o MVP certo: quem usa, qual a dor que dói mais, o que o usuário faz do começo ao fim, quais informações precisam estar visíveis, e quais funcionalidades seriam ouro mas não são essenciais agora. Se faltar algo crítico, pergunta; se não fizer sentido pro meu caso, pula.
+
+---
+
+Me devolve esse bloco compacto, no máximo 1 página de conteúdo, pronto pra eu copiar e colar inteiro numa nova sessão sem precisar adicionar mais nada.`
+  };
+
+  document.querySelectorAll('.prompt-tag[data-prompt]').forEach(tag => {
+    tag.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = tag.dataset.prompt;
+      const txt = PROMPTS[id];
+      if (!txt) return;
+      try {
+        await navigator.clipboard.writeText(txt);
+        const original = tag.textContent;
+        tag.classList.add('copied');
+        tag.textContent = '✓ Copiado!';
+        setTimeout(() => { tag.classList.remove('copied'); tag.textContent = original; }, 1800);
+      } catch (err) {
+        console.error('Clipboard error:', err);
+        alert('Erro ao copiar. Tente abrir /materiais pra copiar.');
+      }
+    });
+  });
+
+  const slides = document.querySelectorAll('.slide');
+  let i = 0;
+  let step = 0;
+
+  function currentReveals() {
+    return slides[i].querySelectorAll('.reveal');
+  }
+  function applyReveals() {
+    const r = currentReveals();
+    r.forEach((el, idx) => {
+      if (idx < step) el.classList.add('shown');
+      else el.classList.remove('shown');
+    });
+  }
+  function syncBodyBg() {
+    // paleta-agnóstico: lê as CSS vars da paleta injetada em :root
+    const s = slides[i];
+    const cs = getComputedStyle(document.documentElement);
+    const darker = (cs.getPropertyValue('--bg-darker') || '#0E1A2E').trim();
+    const dark = (cs.getPropertyValue('--bg-dark') || '#1B2845').trim();
+    let bg = darker;
+    if (s.classList.contains('dark')) bg = dark;
+    else if (s.classList.contains('quem')) bg = dark;
+    const vbg = document.getElementById('vbg');
+    if (vbg) vbg.style.background = bg;
+    document.body.style.background = bg;
+    document.documentElement.style.background = bg;
+  }
+  function show(n) {
+    if (n < 0 || n >= slides.length) return;
+    slides[i].classList.remove('active');
+    i = n;
+    step = 0;
+    slides[i].classList.add('active');
+    applyReveals();
+    syncBodyBg();
+  }
+  function next() {
+    const r = currentReveals();
+    if (step < r.length) { step++; applyReveals(); }
+    else { show(Math.min(i+1, slides.length-1)); }
+  }
+  function prev() {
+    if (step > 0) { step--; applyReveals(); }
+    else {
+      show(Math.max(i-1, 0));
+      const r = currentReveals();
+      step = r.length;
+      applyReveals();
+    }
+  }
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter' || e.key === 'PageDown') { next(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prev(); e.preventDefault(); }
+    if (e.key === 'Home') { show(0); }
+    if (e.key === 'End') { show(slides.length-1); }
+    if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+  });
+
+  let touchStart = 0;
+  document.addEventListener('touchstart', (e) => touchStart = e.touches[0].clientX);
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStart - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { if (diff > 0) next(); else prev(); }
+  });
+
+  applyReveals();
+  syncBodyBg();
+</script>
+</body>
+</html>
