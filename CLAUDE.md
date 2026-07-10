@@ -174,7 +174,8 @@ Desconhecido
 ```
 
 ### Mapeamento contexto Eric → origem:
-- "G4 Tools" / "G4" / "G4 Scale" / "G4 Traction" / "G4 Educacao" → `PUBLI | G4 Tools`
+- "G4 Tools" (parceria paga do Eric com o G4) → `PUBLI | G4 Tools`
+- "G4 Scale" / "High Circle" / qualquer grupo ou mastermind que o Eric PARTICIPA → `INDIC | Direta do Eric`, detalhe = nome do grupo. NAO e PUBLI: e indicacao direta do Eric dentro da rede dele. So "G4 Tools" e PUBLI; "G4 Scale"/"G4 Traction"/"G4 Educacao" sao grupos = INDIC.
 - "indicacao do Eric" / "indicacao minha" → `INDIC | Direta do Eric`
 - "indicacao" (generico) → `INDIC | Geral`
 - "Instagram" → `SS | @ericluciano` ou `SS | @expertintegrado`
