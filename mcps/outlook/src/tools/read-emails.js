@@ -54,13 +54,23 @@ export async function readEmails(params) {
   }
 
   if (data_inicio || data_fim) {
+    // Valida formato antes de converter — Date inválido viraria "Invalid Date"
+    // e o toISOString estouraria com RangeError sem contexto.
+    for (const [nome, valor] of [["data_inicio", data_inicio], ["data_fim", data_fim]]) {
+      if (valor && !/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+        throw new Error(`Parâmetro '${nome}' inválido: '${valor}'. Use o formato YYYY-MM-DD (ex: 2026-07-10).`);
+      }
+    }
+    // Datas locais BRT (UTC-3) convertidas pra UTC — o Graph exige ISO 8601 UTC.
     const inicio = data_inicio
       ? new Date(`${data_inicio}T00:00:00-03:00`).toISOString()
       : new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString();
     const fim = data_fim
       ? new Date(`${data_fim}T23:59:59-03:00`).toISOString()
       : new Date().toISOString();
-    filterParts.push(`receivedDateTime ge datetime('${inicio}') and receivedDateTime le datetime('${fim}')`);
+    // Graph API (OData v4) usa literal ISO 8601 puro no $filter — o wrapper
+    // datetime('...') é sintaxe OData v2/v3 e quebra o parser do Graph.
+    filterParts.push(`receivedDateTime ge ${inicio} and receivedDateTime le ${fim}`);
   }
 
   if (busca) {

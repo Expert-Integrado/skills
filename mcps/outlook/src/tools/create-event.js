@@ -75,13 +75,26 @@ export async function createEvent(params) {
       }))
     : [];
 
-  // Eventos de dia inteiro usam start.date/end.date (sem hora), não dateTime
-  const startField = dia_inteiro
-    ? { date: inicio.split("T")[0] }
-    : { dateTime: inicio, timeZone: fuso_horario };
-  const endField = dia_inteiro
-    ? { date: fim.split("T")[0] }
-    : { dateTime: fim, timeZone: fuso_horario };
+  // Eventos de dia inteiro no Graph: start/end são SEMPRE dateTimeTimeZone
+  // ({ dateTime, timeZone }) — a propriedade `date` não existe no schema e
+  // causava 400 UnableToDeserializePostBody (bug reproduzido 2x em 10/07/2026).
+  // O Graph exige midnight-to-midnight com end EXCLUSIVO (dia seguinte) e
+  // timezone consistente entre start e end.
+  let startField;
+  let endField;
+  if (dia_inteiro) {
+    const startYmd = inicio.split("T")[0];
+    let endYmd = (fim || inicio).split("T")[0];
+    if (endYmd < startYmd) endYmd = startYmd;
+    // end exclusivo: último dia do evento + 1 (evento de 1 dia: 10/07 -> end 11/07T00:00)
+    const [y, m, d] = endYmd.split("-").map(Number);
+    const endExclusive = new Date(Date.UTC(y, m - 1, d + 1)).toISOString().split("T")[0];
+    startField = { dateTime: `${startYmd}T00:00:00`, timeZone: fuso_horario };
+    endField = { dateTime: `${endExclusive}T00:00:00`, timeZone: fuso_horario };
+  } else {
+    startField = { dateTime: inicio, timeZone: fuso_horario };
+    endField = { dateTime: fim, timeZone: fuso_horario };
+  }
 
   const event = {
     subject: titulo,
@@ -114,17 +127,22 @@ export async function createEvent(params) {
       ? ` | Convidados: ${attendees.map((a) => a.emailAddress.address).join(", ")}`
       : "";
 
-  // Eventos de dia inteiro retornam start.date; eventos normais retornam start.dateTime
-  const iniExib = dia_inteiro
-    ? (result.start.date || inicio.split("T")[0])
-    : (result.start.dateTime || inicio).replace("T", " ").substring(0, 16);
-  const fimExib = dia_inteiro
-    ? (result.end.date || fim.split("T")[0])
-    : (result.end.dateTime || fim).replace("T", " ").substring(0, 16);
-
-  const periodoStr = dia_inteiro
-    ? `${iniExib} (dia inteiro)`
-    : `${iniExib} até ${fimExib} (${fuso_horario})`;
+  // O Graph retorna start.dateTime também em evento de dia inteiro (midnight);
+  // exibe só a data no caso all-day (end é exclusivo — mostra o último dia real).
+  let periodoStr;
+  if (dia_inteiro) {
+    const iniYmd = (result.start?.dateTime || inicio).split("T")[0];
+    const endExclYmd = (result.end?.dateTime || fim || inicio).split("T")[0];
+    const [y, m, d] = endExclYmd.split("-").map(Number);
+    const ultimoDia = new Date(Date.UTC(y, m - 1, d - 1)).toISOString().split("T")[0];
+    periodoStr = ultimoDia > iniYmd
+      ? `${iniYmd} a ${ultimoDia} (dia inteiro)`
+      : `${iniYmd} (dia inteiro)`;
+  } else {
+    const iniExib = (result.start.dateTime || inicio).replace("T", " ").substring(0, 16);
+    const fimExib = (result.end.dateTime || fim).replace("T", " ").substring(0, 16);
+    periodoStr = `${iniExib} até ${fimExib} (${fuso_horario})`;
+  }
 
   return `Compromisso criado com sucesso!\n- Título: ${result.subject}\n- Período: ${periodoStr}${convidadosStr}\n- Link: ${link}`;
 }
