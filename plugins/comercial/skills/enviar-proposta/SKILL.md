@@ -21,6 +21,9 @@ Substitui o fluxo antigo de PDFs do grupo "Arquivos e Documentos" (AI-Innovation
 - NUNCA deixar atividade de registro (proposta JÁ enviada) pendente — nasce com `done: true`.
 - NUNCA mover deal de etapa em pipeline que não seja Educacional, SaaS ou Super SDR sem perguntar ao Eric (Prospecção/Parceria não têm etapa "Proposta enviada").
 - NUNCA usar em-dash na mensagem, nem `tu/teu`, nem emoji (regras hard do voice guide).
+- NUNCA citar o valor total cheio na mensagem (R$30.000, R$42.000...) — o total assusta. Só parcela ("12x de R$2.500 sem juros") e, se houver desconto, o off ("R$8.000 off").
+- NUNCA fechar com "fico à disposição" / "qualquer coisa me chama" solto — morte passiva (playbook). Fechamento ativo: próximo passo com dia+hora, ou "me avisa se ficar alguma dúvida pra gente fechar".
+- NUNCA mandar a proposta como mensagem única longa — sempre burst de mensagens curtas (ver Passo 3).
 
 ## SEMPRE
 
@@ -36,22 +39,28 @@ Substitui o fluxo antigo de PDFs do grupo "Arquivos e Documentos" (AI-Innovation
 
 Preços vigentes desde 09/07/2026. Se os decks mudarem, esta tabela precisa acompanhar (fonte de verdade = decks em produção).
 
+**REGRA DE APRESENTAÇÃO DE PREÇO (feedback Eric 10/07/2026): a mensagem NUNCA cita o valor total cheio — ele assusta. Cita a parcela e, quando houver desconto, o valor do desconto ("off"). A pessoa não precisa saber o total; precisa saber a parcela e quanto ganhou de desconto.** Os totais abaixo existem só para conferência interna e para o CRM (valor do deal).
+
 ### 1. MENTORIA (Mentoria Automações Inteligentes)
 - Link: https://automacoesinteligentes.expertintegrado.com.br/investimento
-- Investimento: R$30.000/ano, 12x R$2.500
+- Na mensagem: "12x de R$2.500 sem juros" (NUNCA "R$30.000/ano")
+- Total interno/CRM: R$30.000
 
 ### 2. CONSULTORIA (AI Innovation Lab)
 - Link: https://ailab.expertintegrado.com.br/investimento
-- Presencial (1 dia na empresa): R$20.000
-- Online (2 encontros ao vivo): R$12.000
+- Presencial (1 dia na empresa): R$20.000 | Online (2 encontros ao vivo): R$12.000
+- Não há parcelamento canônico; se o Eric ditar parcelamento na sessão, apresentar como parcela ("Nx de R$Y sem juros"), não como total.
 
 ### 3. COMBO (consultoria + mentoria) — sempre com as duas versões
 No combo, a mensagem leva os TRÊS links: as duas apresentações individuais + a do combo.
 - https://ailab.expertintegrado.com.br/investimento
 - https://automacoesinteligentes.expertintegrado.com.br/investimento
 - https://comboai.expertintegrado.com.br (deck "O Caminho Completo", único lugar com preço de combo)
-- Lab presencial + Mentoria: de R$50.000 por R$42.000 (12x R$3.500, economia de R$8.000)
-- Lab online + Mentoria: de R$42.000 por R$35.400 (12x R$2.950, economia de R$6.600)
+- Na mensagem, formato parcela + off (padrão validado no grupo Arquivos e Documentos):
+  - "Consultoria presencial + Mentoria: 12x R$3.500 (R$8.000 off)"
+  - "Consultoria online + Mentoria: 12x R$2.950 (R$6.600 off)"
+- NUNCA citar os totais (R$50.000/R$42.000/R$35.400) na mensagem; o off diz quanto a pessoa ganhou.
+- Totais internos/CRM: presencial+mentoria R$42.000; online+mentoria R$35.400.
 
 Versões públicas (sem preço, para material pré-proposta): raiz dos dois domínios individuais. Só usar se o Eric pedir material sem preço — e aí NÃO é proposta, não move etapa no CRM.
 
@@ -69,22 +78,25 @@ Precisa de: lead (nome, deal ou telefone) + modalidade (mentoria | consultoria |
 1. `mcp__whatsapp-agent__search` pelo nome/telefone; `read` do chat (últimas ~20 mensagens). Read OK é pré-condição de envio.
 2. `mcp__expert-contacts__get_contact_by_phone` para o dossiê (como o Eric trata a pessoa: Dr., você, primeiro nome).
 
-### Passo 3 — Redigir
-Estrutura de referência (padrão validado com Dr. Borges, 30/06/2026):
-1. Saudação personalizada no tratamento certo (ex.: "Dr. Borges, foi muito bom falar com o senhor agora há pouco.").
-2. Gancho da última interação (call/reunião de ontem, ponto discutido).
-3. 1 a 2 esclarecimentos que quebram objeção conhecida do deal (escopo/agenda, prazo), só se houver contexto real.
-4. Bloco da modalidade: nome do programa, link da apresentação, investimento. No combo: os três links, com uma linha de narrativa (a consultoria destrava agora, a mentoria acompanha o ano inteiro; o deck do combo conta essa história).
-5. Condição de fechamento SE o Eric tiver ditado (prazo, bônus, parcelamento especial).
-6. CTA simples ("Qualquer uma das opções, fico à disposição para acertarmos os detalhes.").
+### Passo 3 — Redigir (BURST conversacional, nunca monolito)
+A proposta sai como SEQUÊNCIA de mensagens curtas (um "Enter" entre cada bloco), como o Eric digita de verdade. Mensagem única longa é fingerprint de IA (mediana real do Eric: 24 chars).
 
-Obrigatório: `get_voice_guide` antes, `check_message` depois. Mensagem única (não fatiar em 3+ mensagens); no máximo texto principal + 1 complemento.
+**Voz:** obrigatório `get_voice_guide` antes de redigir E espelhar o registro da PESSOA: usar o `voice_profile`/`como_chamo` do read do chat e o tom das últimas mensagens dela (formal com "o senhor" vs "vc" casual, gírias que ela usa). A proposta fala na pegada em que a conversa vinha acontecendo.
+
+Sequência (cada item = uma mensagem separada):
+1. **Saudação + gancho**: tratamento certo + referência à última interação. Ex.: "Eric, bom demais nossa conversa de ontem. Pelo que vc descreveu, o AI Innovation Lab é o pontapé certo: [1 frase da dor dele]."
+2. **Link com contexto**: "Estou te enviando aqui a apresentação pra vc ver como funciona:" + link. No combo, CADA programa ganha a própria mensagem: 1 linha de explicação + o link (consultoria = choque inicial; mentoria = constância; combo = condição de fechar os dois juntos). Enviar o link como card com preview (type `link`) quando disponível — ver Passo 5.
+3. **Investimento**: só parcela e off, conforme a tabela canônica. Nunca o total.
+4. **Fechamento ativo (playbook)**: NUNCA "fico à disposição" (morte passiva, proibido pelo playbook educacional). Se existe próximo passo agendado: "Nosso próximo passo: [dia] às [hora]. Qualquer dúvida até lá, me chama aqui." Sem próximo passo: "Me avisa se ficar alguma dúvida pra gente fechar." (e sugerir ao Eric agendar o next step com dia+hora).
+5. Condição de fechamento SE o Eric tiver ditado (prazo, bônus, parcelamento especial) entra como mensagem própria antes do fechamento.
+
+Obrigatório: `check_message` em CADA mensagem do burst antes de apresentar ao Eric. Total do burst: 4 a 7 mensagens (combo fica maior por ter 3 links).
 
 ### Passo 4 — Aprovação
-Apresentar ao Eric: preview da mensagem, modalidade, deal (link), chat de destino (`https://wa.me/{numero}`). Aguardar OK explícito. Ajuste pedido = reeditar e reapresentar.
+Apresentar ao Eric: preview do burst completo (mensagem a mensagem, na ordem), modalidade, deal (link), chat de destino (`https://wa.me/{numero}`). Aguardar OK explícito. Ajuste pedido = reeditar e reapresentar.
 
 ### Passo 5 — Envio
-`mcp__whatsapp-agent__send` no chat confirmado. Falha de envio = reportar erro real, não tentar rota alternativa.
+`mcp__whatsapp-agent__send` no chat confirmado, uma chamada por mensagem do burst, na ordem, com `confirmed: true` após o OK do Eric. Atenção ao rate limit do agente (5 msgs/min por chat): burst de 6+ mensagens = espaçar ou aguardar a janela. Links de apresentação: enviar como card com preview (`type: "link"` com linkUrl/title/description/image dos OG tags do deck) quando a feature estiver disponível no agente; sem ela, link no texto normal. Falha de envio = reportar erro real, não tentar rota alternativa.
 
 ### Passo 6 — Registro no Pipedrive
 1. Atividade CONCLUÍDA (`done: true`, tipo `whatsapp`): subject `Proposta enviada — <modalidade> (<detalhe>)`, note = texto enviado. Tool bloqueada ("disabled in your connector settings") = fallback `pipedrive_write({action: "create_activity", ...})`.
