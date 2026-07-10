@@ -110,7 +110,7 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 |---|---|---|---|---|
 | release-claude-monitor (lab) | C | publica exe no bucket dos alunos + gh release | PENDENTE (gate de uso real) | Criada 07/07 11:07 (lab 3.11.0) a partir do fluxo real validado na v4.8.0 do monitor; golden run = release de verdade — rodar só no próximo release pedido pelo Eric |
 | zoom-brain-digest (operacoes) | A2 | save_note no Brain (soft delete, reversível) | PENDENTE | Criada 07/07 14:40 (operacoes 2.3.0, distribuída PC+2 containers na noite de 07/07); desenhada pra routine na nuvem com o conector claude.ai Zoom for Claude — golden run local esbarra no conector sem auth |
-| divulgar-atualizacao-repo (educacional) | C | push público (GitHub Pages) + anúncio no grupo da mentoria via whatsapp-agent | PENDENTE (gate de uso real) | Criada pelo Eric 10/07; entrou no plugin educacional 1.0.0 (novo, marketplace ericluciano 3.0.0 — junto com criar-aula, aula-mentoria, innovation-lab e mentoria-equipe-seg-16h movidas do lab, que virou 4.0.0); golden run = divulgação de verdade — rodar na próxima atualização de produto que o Eric pedir pra divulgar |
+| divulgar-atualizacao-repo (educacional) | C | push público (GitHub Pages) + anúncio no grupo da mentoria via whatsapp-agent | PENDENTE (gate de uso real) | Criada pelo Eric 10/07; entrou no plugin educacional 1.0.0 (novo — junto com criar-aula, aula-mentoria, innovation-lab e mentoria-equipe-seg-16h movidas do lab, que virou 4.0.0); na mesma madrugada o plugin educacional migrou pro marketplace expertintegrado (este repo, commit 4677fc0) a pedido do Eric; golden run = divulgação de verdade — rodar na próxima atualização de produto que o Eric pedir pra divulgar |
 
 ## Placar
 
