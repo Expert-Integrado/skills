@@ -132,6 +132,15 @@ function text(msg) {
 }
 
 /**
+ * Mask an API key for display: keep the "pk_" prefix and the last 4 chars.
+ * The full key must never be echoed back in chat responses.
+ */
+function maskKey(key) {
+  if (!key) return "(not set)";
+  return `${key.slice(0, 3)}...${key.slice(-4)}`;
+}
+
+/**
  * Full setup — validates key, gets user, discovers workspace, lists everything, saves config.
  */
 async function fullSetup(apiKey, params) {
@@ -224,7 +233,7 @@ async function fullSetup(apiKey, params) {
     // 6. Build response
     let msg =
       `**ClickUp MCP configured successfully!**\n\n` +
-      `**API Key:** \`${apiKey}\`\n` +
+      `**API Key:** \`${maskKey(apiKey)}\` (full key saved to config.json)\n` +
       `**User:** ${user.username} (${user.email})\n` +
       `**User ID:** \`${user.id}\`\n` +
       `**Workspace:** ${workspace.name} (ID: \`${workspace.id}\`)\n`;
@@ -347,7 +356,7 @@ async function stepSave(params) {
 
   return text(
     `**Configuration updated!**\n\n` +
-      `**API Key:** \`${config.api_key}\`\n` +
+      `**API Key:** \`${maskKey(config.api_key)}\`\n` +
       `**Workspace:** ${config.workspace_name || config.workspace_id}\n` +
       `**Default list:** ${config.default_list_name || config.default_list_id || "(not set)"}\n` +
       `**User:** ${config.user_name} (${config.user_email})\n\n` +
@@ -373,7 +382,7 @@ async function stepReconfigure() {
 
   return text(
     `**Current ClickUp MCP Configuration:**\n\n` +
-      `**API Key:** \`${config.api_key}\`\n` +
+      `**API Key:** \`${maskKey(config.api_key)}\`\n` +
       `**Workspace:** ${config.workspace_name || "?"} (ID: \`${config.workspace_id || "?"}\`)\n` +
       `**Default list:** ${config.default_list_name || "?"} (ID: \`${config.default_list_id || "?"}\`)\n` +
       `**User:** ${config.user_name || "?"} (${config.user_email || "?"})\n` +
