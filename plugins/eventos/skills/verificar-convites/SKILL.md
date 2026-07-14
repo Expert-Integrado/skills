@@ -59,6 +59,14 @@ Analisar as últimas mensagens **do convidado** (não as minhas):
 | **sem_resposta** | Não respondeu nada desde o disparo |
 | **em_avaliacao** | Fez pergunta, pediu detalhes, está conversando mas sem decisão final, "acho que dá", "vou tentar", logística pendente — **atualizar status para `em_avaliacao` no MCP e reportar pro Eric responder** |
 
+### Passo 3.7: Antes de cobrar silencioso, conferir que o PDF CHEGOU
+
+Lição 13/07/2026: o disparo pode entregar as mensagens de texto e FALHAR só no PDF (bug de 2 chats/chat fantasma), com a API retornando ok — a pessoa fica "silenciosa" porque nunca recebeu o convite clicável. Antes de classificar `sem_resposta` ou disparar follow-up num lote de silenciosos, auditar no chat de cada um se existe mensagem `message_type=document, from_me=true` desde o disparo. Se NÃO existe: reenviar o PDF (com pedido de desculpa por não ter mandado antes) e zerar a cadência daquela pessoa — ela acabou de receber o convite de verdade.
+
+### Passo 3.8: "Disse que confirmou mas o status não mudou" = suspeitar da página de confirmação
+
+Se o convidado diz que clicou/tentou confirmar e o status no MCP continua `convite_enviado`/`aceitou_convite`, a página de confirmação pode estar quebrada (caso real 13/07/2026: tela branca; corrigida via Lovable, mas o padrão pode voltar). Não insistir pra pessoa "tentar de novo" mais de 1x: confirmar MANUALMENTE — se ela escolheu dia diferente do evento onde está, `add_participante` no evento do dia certo (copiando dados + convidado_por) + `delete_participante` no antigo (exceção à regra de nunca deletar: aqui a pessoa JÁ confirmou por mensagem) e `update_status_convite` → `confirmado`. Reportar o bug pro Eric/time.
+
 ### Passo 4: Distinguir "não respondeu" de "respondeu noutro chat"
 Para os `sem_resposta`, confirmar que a pessoa realmente não respondeu (e não que a resposta veio num chat LID separado — ver atenção LIDs no Passo 2):
 ```
@@ -80,7 +88,9 @@ mcp__expert-integrado__get_evento(evento_id=...)
 
 **VOICE GUIDE É OBRIGATÓRIO (regra do Eric, 03/07/2026):** o convite inicial do disparo é template aprovado, mas TODA conversa de tira-dúvidas/resposta aqui é diálogo real e PRECISA rodar pelo voice guide. Antes de redigir qualquer resposta fora dos templates abaixo, rodar `mcp__whatsapp-agent__get_voice_guide()` e validar o draft com `mcp__whatsapp-agent__check_message(content=...)`. Regras hard que nunca caem: sem travessão (—), sem hype, chat ativo (<5 min) suprime vocativo, registro informal ("massa/show/top", ".." como respiração), nunca tu/teu/tua.
 
-**Autonomia:** FAQ factual (data, local, horário, preço, formato) e agradecimento de confirmação → PODE responder direto (`confirmed=true`). ESCALAR pro Eric antes de responder: acompanhante/transferência de vaga, objeção de negócio, negociação, tom irritado/negativo.
+**Autonomia:** FAQ factual (data, local, horário, preço, formato) e agradecimento de confirmação → PODE responder direto (`confirmed=true`). ESCALAR pro Eric antes de responder: acompanhante PAGO (2ª pessoa da mesma empresa), objeção de negócio, negociação, tom irritado/negativo.
+
+**TRANSFERÊNCIA DE CORTESIA PRA FUNCIONÁRIO — PRÉ-AUTORIZADA (Eric, 13/07/2026):** quando a pessoa recusa POR DATA/LOGÍSTICA mas demonstrou interesse genuíno (queria ir, não consegue estar na cidade, cirurgia etc.), o agente PODE oferecer direto transferir a cortesia pra alguém do time dela: "se quiser mandar alguém do seu time no seu lugar, eu transfiro a cortesia. me passa nome, empresa, cargo, email e whats". NÃO oferecer em: recusa seca/desinteresse, caso pessoal delicado (luto, doença na família), ou quando a pessoa já disse que ninguém iria. Se ela toparem → status `em_avaliacao` (ciclo aberto aguardando dados do funcionário); quando os dados chegarem → cadastrar a pessoa nova (`add_participante` com `convidado_por` do operador), gerar PDF e enviar, e marcar o original como `recusou`.
 
 Templates abaixo: preencher [DATAS], [CIDADE], [LOCAL+ENDEREÇO], [PREÇO], [HORÁRIO] com os fatos do MCP.
 
@@ -98,10 +108,11 @@ Boa demais! Vai ser top te ter lá.
 Só falta um passo: toca no botão do dia que encaixa (29 ou 30) ali dentro do convite em PDF, que aí sua vaga fica garantida de verdade. Me avisa qual dia vc escolheu!
 ```
 
-**RECUSOU (educado, sem disponibilidade):** — template validado: resposta real do Eric em maio/2026; o lead reconvidado aceitou na edição seguinte.
+**RECUSOU (educado, sem disponibilidade):** — base validada em maio/2026; ajustada 13/07/2026: o voice guide passou a marcar "Obrigado por avisar" como ritual de fechamento (violação low) — não usar.
 ```
-Tranquilo, [PrimeiroNome]! Obrigado por avisar. Te deixo na lista da próxima edição e te aviso primeiro quando tiver. Abraço!
+Tranquilo, [PrimeiroNome]! Te deixo na lista da próxima edição e te aviso primeiro quando tiver. Abraço!
 ```
+(Se a recusa for por data/logística com interesse genuíno, considerar a oferta de transferência de cortesia — ver bloco TRANSFERÊNCIA acima.)
 
 **"QUAL DATA?" / "TEM DATA?":**
 ```
@@ -165,7 +176,9 @@ mcp__expert-integrado__update_status_convite(
 )
 ```
 
-Valores válidos de novo_status: pendente_envio, convite_enviado, em_avaliacao, aceitou_convite, confirmado, recusou.
+Valores válidos de novo_status: pendente_envio, convite_enviado, em_avaliacao, aceitou_convite, confirmado, recusou, sem_resposta.
+
+> **`sem_resposta` vs `recusou` (status criado 13/07/2026):** `recusou` = recusa EXPLÍCITA (a pessoa disse não). `sem_resposta` = silêncio após a cadência completa (3 toques: convite + FUP 48h + FUP última chamada). NUNCA marcar recusou por silêncio — silêncio vai pra `sem_resposta`. Nos dois casos o botão/PDF continua vivo: se a pessoa clicar depois, o fluxo de confirmação segue funcionando e vira `confirmado`.
 
 > **REGRA DE FECHAMENTO — aceite verbal NÃO é confirmação (regra do Eric, 03/07/2026):** `confirmado` no MCP = a pessoa CLICOU o botão do dia no PDF (escolheu 29 ou 30, entrou na turma) = fechamento REAL. `aceitou_convite` = ela só DISSE que vai. **O fechamento é o clique, não a palavra.** Então SEMPRE que alguém confirmar/topar:
 > 1. RECHECA no MCP (`list_participantes` do evento, filtra pela pessoa) qual o status REAL dela.
@@ -182,7 +195,9 @@ mcp__expert-integrado__update_status_convite(
 ```
 Reportar pro Eric pra ele decidir o follow-up.
 
-**Sem resposta:** não alterar, apenas reportar.
+**Sem resposta:** enquanto a cadência está viva (ainda faltam toques), não alterar — apenas reportar. **Cadência esgotada (3 toques) e Eric mandou encerrar → `sem_resposta`** (libera a vaga no funil sem virar recusa; botão segue vivo).
+
+> **AUDITORIA OBRIGATÓRIA antes de encerrar em massa (lição 13/07/2026):** antes de marcar um lote como `sem_resposta`, LER o chat de CADA um e conferir que não há inbound desde o convite. A flag "não respondeu" de script de follow-up NÃO basta: no lote de 26 "mudos" da 3ª edição, 2 tinham respondido em chat/momento que o script perdeu — 1 tinha RECUSADO (luto, levou follow-up indevido por cima) e 1 tinha dito "acho que vou dia 30" (era em_avaliacao). Silêncio só é silêncio depois de auditado.
 
 ### Passo 5.5: Registrar desfecho no Pipedrive (regra do Eric, 02/07/2026)
 
@@ -333,6 +348,6 @@ Um agendador externo (cron na VPS, scheduled task, etc.) INVOCA esta skill — a
 
 No modo cron, o fluxo é o mesmo (Passos 1-6) com estas regras extras:
 1. **Varre todos** os `convite_enviado`/`em_avaliacao` do operador e registra desfechos novos (Passos 5 e 5.5) normalmente.
-2. **Monta o lote de follow-up**: sem_resposta com 48h+ desde o envio recebem o template de follow-up (skill convidar-evento). Limite: máx 2 follow-ups por pessoa (o 1º após 48h; o 2º uns 3-4 dias depois). Depois do 2º, a pessoa só sai da fila quando o Eric mandar encerrar (aí registra "Convite sem resposta, encerrado" — Passo 5.5).
+2. **Monta o lote de follow-up**: sem_resposta com 48h+ desde o envio recebem o template de follow-up (skill convidar-evento). Limite: máx 2 follow-ups por pessoa (o 1º após 48h; o 2º "última chamada" uns 3-4 dias depois) = cadência total de 3 toques. Depois do 2º follow-up, a pessoa só sai da fila quando o Eric mandar encerrar — aí: auditoria de inbound (ver Passo 5), status → `sem_resposta` no MCP (NÃO recusou) e registra "Convite sem resposta, encerrado" no Pipedrive (Passo 5.5). Não mandar "só mais uma" depois da última chamada: queima a credibilidade do fechamento de lista.
 3. **NÃO dispara follow-up sozinho.** Envia pro Eric (no canal da instância: Telegram na VPS, chat na sessão local) o RESUMO: novos aceites/recusas registrados + lote de follow-up pronto (nomes + msg). Eric responde "manda" → dispara e registra cada follow-up como atividade no Pipedrive (Passo 5.5). Sem GO, nada sai.
 4. Se não houver nada novo nem lote a propor, reportar em 1 linha ("varredura ok, sem novidades") e encerrar.

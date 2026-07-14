@@ -188,6 +188,8 @@ Template no padrão real do Eric de fechar lista (baixa pressão, sempre com sa�
 Fala [PrimeiroNome], beleza? Tô fechando a lista das turmas de julho. 29 ou 30, qual fica melhor pra você? É só tocar no botão do convite que te mandei. Se não rolar dessa vez, tranquilo, só me avisa que passo a vaga pra frente. Bora?
 ```
 
+**CADÊNCIA COMPLETA (validada na 3ª edição, jul/2026): 3 toques e para.** Convite → FUP 48h → FUP "última chamada" (3-4 dias depois). Quem seguir em silêncio após o 3º toque vai pra `sem_resposta` no MCP (libera a vaga; o botão do PDF segue vivo) — fluxo de encerramento e auditoria na skill `verificar-convites`. Não existe 4º toque: depois de anunciar "tô fechando a lista", insistir de novo desdiz o fechamento.
+
 ## PROTOCOLO DE EXECUÇÃO
 
 ### Passo 0: Coletar parâmetros
@@ -282,7 +284,7 @@ mcp__expert-integrado__update_status_convite(
   novo_status="convite_enviado"
 )
 ```
-Valores válidos: pendente_envio, convite_enviado, em_avaliacao, aceitou_convite, confirmado, recusou.
+Valores válidos: pendente_envio, convite_enviado, em_avaliacao, aceitou_convite, confirmado, recusou, sem_resposta (este último só no encerramento da cadência — ver skill verificar-convites).
 NÃO usar `update_participante` pra status — ele não aceita o campo.
 
 ### Passo 5.5: Registrar atividade no Pipedrive (NA HORA DO ENVIO)
