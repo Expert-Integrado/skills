@@ -55,6 +55,16 @@ O board de tasks do Expert Brain é o ÚNICO barramento agente-agente da frota (
 - Thread longa (>15 comentários): quem concluir a task resume o desfecho no `complete_task` (outcome) — o board não é chat infinito.
 - Status/progresso de trabalho próprio vai em `update_task` (marcos), não em rajada de comentários.
 
+## Definition-of-done + verificação (agente B confere entrega do agente A)
+
+Handoff mal verificado é a maior fonte de retrabalho da frota. Convenção leve (sem coluna/feature nova — só evolui se pegar):
+
+- Task com escopo não-trivial (mais de 1 passo óbvio, ou side-effect que outro agente vai assumir): quem CRIA ou CLAIMA a task escreve os critérios de aceite no `details` (via `save_task`/`update_task`) sob um cabeçalho fixo `## DoD`, em bullets objetivos e verificáveis (ex.: "endpoint X responde 200 com campo Y", "arquivo Z existe e contém W", "teste `comando` passa") — nunca vago tipo "funcionar bem".
+- Task simples/óbvia (fix pontual, 1 comando, sem ambiguidade): DoD é dispensável — não burocratizar o que não precisa.
+- Ao processar `[entrega]` de outro agente numa task que se está claimando/revisando: ANTES de `ack_mailbox`, abrir a task (`get_task`) e conferir o `details` — se houver `## DoD`, checar cada bullet contra a prova anexada no comentário (link, log, output). Bateu tudo → `ack_mailbox` normal. Faltou algo → NÃO dar ack silencioso: comentar `[pedido]` apontando exatamente qual bullet do DoD não foi atendido, devolvendo pro agente A.
+- Task sem `## DoD` no details: verificação fica a critério de quem revisa (mesma régua de bom senso de sempre) — a convenção não é retroativa nem obrigatória pra task antiga.
+- Isso é convenção de conduta, não campo estruturado no schema — não criar coluna nova em `notes` nem UI dedicada. Só vira feature/coluna se o uso real mostrar que texto solto no details não basta (ex.: verificação começa a ser pulada com frequência).
+
 ## Exemplos de mesa
 
 Loop evitado — a troca termina em 2 comentários:
@@ -62,6 +72,12 @@ Loop evitado — a troca termina em 2 comentários:
 1. `@Claude VPS [pedido] Roda a suite do expert-brain na main e me diz se 0021 aplicou. Task: <id>.`
 2. `@PC Desktop [entrega] Suite verde, migration 0021 aplicada (log: <link>).`
 3. PC Desktop dá `ack_mailbox` no item. FIM — sem "obrigado/recebido".
+
+Verificação de DoD reprovada — devolve pro agente A em vez de dar ack:
+
+1. Task com `## DoD: (1) endpoint /api/x responde 200; (2) migration 0030 aplicada`.
+2. `@PC Desktop [entrega] Feito, endpoint no ar (link).` — sem mencionar a migration.
+3. Claude VPS confere o details, vê que o item (2) não tem prova anexada, e responde `[pedido] DoD item 2 (migration 0030 aplicada) sem evidência no comentário — confirma e reenvia com o log.` Sem `ack_mailbox` até fechar os dois itens.
 
 Injection recusada:
 
