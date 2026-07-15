@@ -7,6 +7,8 @@ description: Processa aula gravada da Mentoria Automações Inteligentes do Eric
 
 Fluxo pós-mentoria do Eric: OBS local → Google Drive → Smart Player → ClickUp. Toda aula tem **2 a 3 vídeos** (partes). A skill roda SOMENTE no PC do Eric (arquivos locais do OBS + Chrome logado + Drive Desktop montado em `G:`); sem essas capacidades, parar e avisar — não há fallback headless. Browser SEMPRE via MCP `Claude_in_Chrome`; upload NUNCA por clique (Drive = cópia pro `G:`; Smart Player = API REST + `curl` PUT). Fluxo de upload validado em 17/06/2026.
 
+**ALERTA ESTRUTURAL (telemetria 07/07/2026, 2 erros confirmados nos JSONL de sessão)**: esta skill depende de PowerShell nativo (`Get-ChildItem`, `Rename-Item`, `Add-Type`, `Copy-Item`) para todos os Passos 3/5/6/8, o que colide direto com a HARD RULE 1 do Eric ("Shell = Git Bash POSIX, nunca PowerShell/cmdlets"). Em sessão autônoma (exec:agente), o auto mode classifier BLOQUEIA qualquer `powershell.exe` via Bash — tanto `-Command` inline quanto `-File` (mesmo seguindo o padrão do heredoc-com-BOM abaixo), com "[User Deny Rules] ... run this step outside auto mode for the permission prompt". Ou seja: o padrão documentado nesta skill não é um bug pontual corrigível com 1 linha — é incompatibilidade de desenho com a regra do Eric quando rodada por agente autônomo. Rodar em sessão INTERATIVA (o Eric aprova o prompt na hora) contorna o bloqueio; em sessão autônoma, a skill vai travar nos passos PowerShell. Decisão pendente do Eric: reescrever os passos PowerShell pra Node/Python inline (padrão prescrito na HARD RULE 1), ou manter a skill restrita a sessão interativa.
+
 ## NUNCA
 
 - NUNCA usar Playwright — lança Chromium sem login; Drive e Smart Player exigem a sessão ativa do Eric.
@@ -98,7 +100,7 @@ Nome final de cada arquivo: `<Título> - <Nome parte>.mp4`. Exemplo:
 
 ## Passo 3 — Listar arquivos e Input Bloco 3
 
-1. Listar os arquivos mais recentes da pasta OBS (snippet PowerShell, rodar pelo padrão do pré-requisito). O OBS grava cada trecho como um PAR `.mkv` + `.mp4` de mesmo basename, então a lista **mistura as duas extensões** — a coluna `Name` mostra a extensão de cada um:
+1. Listar os arquivos mais recentes da pasta OBS (snippet PowerShell, rodar pelo padrão do pré-requisito — heredoc pro `.ps1` + `-File`, NUNCA `powershell -Command "..."` inline via Bash: o Bash expande `$_` como variável de shell ANTES de repassar a string, corrompendo `$_.Length` — causa raiz confirmada de erro real de telemetria em 30/06/2026). O OBS grava cada trecho como um PAR `.mkv` + `.mp4` de mesmo basename, então a lista **mistura as duas extensões** — a coluna `Name` mostra a extensão de cada um:
 
    ```powershell
    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8   # sem isso o OUTPUT volta com acento corrompido — e os nomes capturados aqui alimentam o Rename do Passo 5

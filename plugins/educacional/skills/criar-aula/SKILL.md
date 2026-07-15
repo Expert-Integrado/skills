@@ -229,6 +229,8 @@ A partir da `Ementa.md` consolidada, usando os templates de `templates/` desta s
    - `grep -cE 'class="meta-badge' materiais/index.html` → T = nº de badges Direto/Meta (um por slide de prompt).
    - Critério: T == N (todo bloco de prompt tem seu badge). T < N = FALHA (algum prompt sem tag).
 
+**Se precisar visualizar o HTML antes do deploy (ex.: conferir layout com o Eric)**: NUNCA abrir via `file://` em tool de browser (Playwright/Chrome MCP bloqueiam o protocolo `file:` por segurança — erro `Access to "file:" protocol is blocked`, visto em telemetria). Servir localmente: `python -m http.server` na pasta `03_Assets/slides-html` e navegar em `http://127.0.0.1:<porta>` via Playwright, ou `cmd //c start chrome "<arquivo>"` pra abrir no Chrome nativo do Eric.
+
 ### 8. Deploy Vercel + Cloudflare + SSL (100% automático)
 
 SE destino = teste/rascunho (briefing) → PULAR este passo inteiro e ir pro Passo 9.
