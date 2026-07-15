@@ -85,6 +85,7 @@ Faça UMA rodada de `AskUserQuestion` SÓ pros itens que faltarem no pedido. **S
 "$PY" "$SKILL/scripts/transcribe.py" "$SRC" transcript.json
 ```
 Gera `transcript.json` (ElevenLabs Scribe, `words[]` com `start`/`end`/`type`) e extrai o áudio cru (`<base>-audio.mp3`).
+⚠️ `language_code=por` é fixo no `transcribe.py` — gravação em outro idioma exige ajustar o script antes.
 
 **Validação:** `transcript.json` existe e tem `words[]` não-vazio (o script imprime `OK -> transcript.json (<Ns>, <N> tokens)`). **Se falhar** com `ERRO STT HTTP <code>`: checar a chave (Pré-requisitos) e o HTTP code; `401` = chave inválida/ausente. **Nota:** o Scribe às vezes erra termos técnicos e números — é o STT, não o áudio. NÃO corrigir o vídeo por isso.
 

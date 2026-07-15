@@ -42,13 +42,20 @@ Transforma uma gravação crua (uma pessoa falando pra câmera, com erros, retak
 
 ## Pré-requisitos
 - **Node 22 ou superior + FFmpeg + HyperFrames** instalados (dá pra checar com `npx hyperframes doctor`).
-- **Chave da ElevenLabs** configurada num arquivo `elevenlabs.env` (usada pra transcrever). Não precisa abrir nem editar a chave — só precisa existir.
+- **Chave da ElevenLabs** configurada (usada pra transcrever) — o script procura NESTA ordem: env var `ELEVENLABS_API_KEY`, `C:\MCPs\elevenlabs.env`, `~/.config/elevenlabs.env` ou `~/elevenlabs.env`. Não precisa abrir nem editar a chave — só precisa existir.
 - A **fonte Space Grotesk** que acompanha a skill (a skill copia pro projeto sozinha).
 - Playwright só é necessário se quiser extrair a identidade automaticamente de uma landing page.
+
+## Quando usar esta skill vs outras
+- Só cortar silêncio/respiro, sem motion → skill `cortar-respiros`.
+- Só gerar legenda (.srt), sem editar o vídeo → skill `gerar-srt`.
+- Edição completa (corte de erros + motion graphics + múltiplos formatos) → esta skill.
 
 ## Dicas e observações
 - O vídeo gravado é sempre a base — a fala é a da pessoa real, não uma voz sintética.
 - A transcrição às vezes erra termos técnicos (ex.: "MCP", "Claude") e números. Isso é só o transcritor; o áudio do vídeo está correto e não deve ser "corrigido" por causa disso.
+- A transcrição roda em português fixo (`language_code=por`) — não serve pra gravação em outro idioma sem ajuste no script.
+- Usa ElevenLabs Scribe (pago) em vez do Whisper local (grátis, usado pela skill `gerar-srt`) porque aqui a transcrição vira a régua de corte e sincronismo do motion — a precisão/diarização extra compensa o custo.
 - O ponto que mais costuma sair errado é deixar respiro/silêncio sobrando nas emendas — os cortes são feitos bem apertados, colados na fala, de propósito.
 - Os cards de seção servem também pra disfarçar os cortes entre takes, então as trocas de assunto ficam suaves.
 - Para gerar vários formatos (16:9, 9:16, 1:1), o vídeo-base é o mesmo; só muda o posicionamento dos gráficos em cada proporção.

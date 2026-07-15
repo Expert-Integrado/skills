@@ -44,7 +44,7 @@ CORRECTIONS = [
 # Obs: "ia" NÃO entra aqui — é também o verbo ("ele ia fazer"); deixar pro Whisper/revisão.
 
 # Termos que dependem de contexto — NÃO corrigir automático, só sinalizar.
-REVIEW_TERMS = ["markdown", "markitdown", "mark it down", "fable", "opus", "anthropic",
+REVIEW_TERMS = ["markdown", "markitdown", "fable", "opus", "anthropic",
                 "expert integrado", "nano banana", "kling"]
 
 
@@ -81,7 +81,7 @@ def apply_corrections(srt):
 
 def flag_review(text):
     low = text.lower()
-    found = [t for t in REVIEW_TERMS if t in low]
+    found = [t for t in REVIEW_TERMS if re.search(r"\b" + re.escape(t) + r"\b", low)]
     return found
 
 

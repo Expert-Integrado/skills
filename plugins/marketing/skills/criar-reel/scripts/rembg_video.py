@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Remove o fundo de um video falado (sem chroma) usando rembg (u2net_human_seg).
+"""Remove o fundo de um video falado (sem chroma) usando rembg (default: isnet-general-use).
 
 Saida: sequencia de PNGs com alpha em <out_dir>/fg-out/f%05d.png, prontos pro
 compose (overlay da sequencia sobre o B-roll). O audio segue no video original.

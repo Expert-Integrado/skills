@@ -188,6 +188,14 @@ Regras da mensagem (é o texto que o vendedor envia ao lead):
 - Curta e direta: 3-5 parágrafos no máximo. Zero emoji.
 - Terminar com pergunta aberta.
 
+**Exemplos de mensagem finalizada** (calibrar tom e tamanho — adaptar ao lead, nunca copiar literal):
+
+- **MORNO — motivo "Adiou contratação" há 45 dias, chegou a Apresentação:**
+  > Fulano, faz um tempinho que a gente conversou sobre o Super SDR pra {empresa}. Sei que na época vc decidiu adiar. Mudamos as condições de entrada desde então e acho que agora faz mais sentido pro seu momento. Topa eu te mandar um resumo do que mudou?
+
+- **FRIO — motivo "Parou de responder", 2 interações, funil Prospecção:**
+  > Fulano, tentei falar com vc lá atrás sobre automatizar o atendimento da {empresa} e não rolou de continuar a conversa. Ainda faz sentido pra vc entender como isso funcionaria? Se não for prioridade agora, sem problema, só me avisa.
+
 ### Passo 6 — Validar o primeiro lead com o usuário
 
 Montar a nota HTML completa (template abaixo) do PRIMEIRO lead e mostrar ao usuário ANTES de criar qualquer atividade.
