@@ -15,6 +15,14 @@ O reel morre em 48h; o post acumula pra sempre. Todo reel que performar (acima d
 - NUNCA violar a Camada 0 do protocolo (`docs/protocolo-conteudo.md` do repo do blog): fontes = o próprio reel + posts publicados + conhecimento público. Nada de Brain/CRM/transcrição interna.
 - NUNCA hero com gpt-image-1 — se o frame do reel não servir de hero, gerar com `gerar-hero-blog` (gpt-image-2).
 
+## SEMPRE
+
+- SEMPRE acentuação correta do português em todo texto externo (título, corpo do post, legenda, mensagem).
+- SEMPRE seguir o pipeline normal do blog até o fim: draft -> `agente-revisor-blog` (triagem 3 cores) -> aprovação -> `agente-publisher-blog`. Nunca pular etapa mesmo com pressa.
+- SEMPRE incluir o embed do reel (`VideoEmbed`) na posição correta: depois da resposta direta, antes do aprofundamento.
+- SEMPRE, ao fechar o ciclo, sugerir ao Eric/social a UTM completa na bio/caption do reel (`?utm_source=instagram&utm_medium=reel&utm_campaign=reel-expandido`) — a sugestão é obrigatória mesmo que a execução seja dele.
+- SEMPRE respeitar a Camada 0 do protocolo (`docs/protocolo-conteudo.md`): fontes só o próprio reel + posts publicados + conhecimento público, nunca Brain/CRM/transcrição interna.
+
 ## Fluxo
 
 1. **Input**: link do reel. Baixar o vídeo (yt-dlp funciona pra Instagram público; se falhar, pedir o arquivo ao Eric).
