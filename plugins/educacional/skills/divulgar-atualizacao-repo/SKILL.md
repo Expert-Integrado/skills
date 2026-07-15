@@ -20,13 +20,30 @@ pagina publica atualizada -> anuncio no grupo.
   Eric segue o voice guide: zero emoji, sem em-dash, burst curto.
 - Nunca enviar o comentario do Eric sem get_voice_guide + check_message no texto final.
   Warning de msg-monolito = quebrar em burst de 2 antes de enviar.
-- Nunca mandar em outro grupo: o destino e o grupo da mentoria (abaixo). Conferir o
-  nome na resposta do send.
+- Nunca mandar em grupo fora da lista de destinos (abaixo). Grupo adicional SO com
+  pedido explicito do Eric na conversa. Conferir o nome na resposta do send.
+- Nunca usar jargao de git na mensagem pro aluno (feedback do Eric, 15/07/2026):
+  proibido "git pull", "clone", "redeploy", "reconecte o MCP". O aluno nao sabe o que
+  e isso e a instrucao vira ruido — a interface dele com o repo e o Claude.
+
+## SEMPRE
+
+- Instrucao de atualizacao em linguagem leiga, numa destas 2 formas: (1) "abre a pasta
+  do [produto] no Claude e pede: atualiza o agente com as novidades do repositorio";
+  (2) "manda esse link pro Claude e pede pra ele atualizar: <URL do repo>" (pra quem
+  nao tem mais a pasta). Pos-passo tambem leigo: "fecha e abre o Claude pra ferramenta
+  nova aparecer" (nunca "reconecte o MCP").
+- Conferir o campo `to` na RESPOSTA de cada send (nome do grupo devolvido) antes de
+  mandar a proxima mensagem.
+- check_message no comentario do Eric ANTES de enviar; score < 7 = regenerar.
 
 ## Destino
 
-- Grupo: "Mentoria Automacoes Inteligentes" — chat_id `120363142835610477-group`,
-  instance `pessoal`, via MCP whatsapp-agent (tool `send`, agent_name = maquina).
+- Default: grupo "Mentoria Automacoes Inteligentes" — chat_id
+  `120363142835610477-group`, instance `pessoal`, via MCP whatsapp-agent (tool `send`).
+- Adicional (SO quando Eric pedir, ex: "manda nos dois grupos"): grupo "Equipe Expert
+  Integrado" — chat_id `120363040387087923-group`, instance `pessoal`. Pra equipe pode
+  ir a MESMA mensagem do aluno (precedente 15/07/2026).
 
 ## Fluxo
 
@@ -56,8 +73,9 @@ Estrutura do padrao:
 - 3 a 5 bullets com emoji tematico, cada um com *titulo em negrito* + 1 frase de
   beneficio na linguagem do aluno (nada de nome de coluna/commit).
 - Link da pagina: `📄 Página de como funciona + onboarding atualizados: <URL Pages>`
-- Fechamento: como atualizar a instancia (ex: git pull + deploy das functions /
-  rodar a skill /setup de novo).
+- Fechamento: como atualizar, SEMPRE na formula leiga do bloco SEMPRE (pedir pro
+  Claude atualizar pelo repositorio / mandar o link do repo pro Claude). Instalacao
+  nova: "rode a skill /setup, ela conversa com voce do inicio ao fim".
 
 ### 5. Comentario do Eric (mensagens 2-3 — voz dele)
 - `get_voice_guide` + redigir no registro dele (casual, "vcs", direto, sem hype).
