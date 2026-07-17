@@ -1,0 +1,24 @@
+{
+  "name": "produto",
+  "version": "1.0.0",
+  "description": "Skills de gestao de produto da Expert Integrado: abrir-chamado-supersdr (abre chamado/backlog do SuperSDR no ClickUp a partir de bug, feature, melhoria, integracao ou pesquisa, com templates e aviso no Zoom Team Chat) e criar-task-produto (cria task de produto no ClickUp — bug, feature, spike ou spike-CRM — com campos e templates padronizados).",
+  "author": {
+    "name": "Expert Integrado",
+    "email": "operacoes@expertintegrado.com.br",
+    "url": "https://expertintegrado.com.br"
+  },
+  "homepage": "https://github.com/Expert-Integrado/skills",
+  "repository": "https://github.com/Expert-Integrado/skills",
+  "license": "MIT",
+  "keywords": [
+    "produto",
+    "clickup",
+    "scrum",
+    "backlog",
+    "supersdr",
+    "bug",
+    "feature",
+    "spike",
+    "task"
+  ]
+}

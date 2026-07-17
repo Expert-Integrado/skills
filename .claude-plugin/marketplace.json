@@ -27,14 +27,19 @@
     {
       "name": "educacional",
       "source": "./plugins/educacional",
-      "description": "Rota educacional: criar-aula (cursos gravados), aula-mentoria (subir aula da mentoria), divulgar-atualizacao-repo (anuncio de atualizacao no grupo da mentoria), innovation-lab (imersao AI Innovation Lab), mentoria-equipe-seg-16h (mentoria interna). Migrado do marketplace ericluciano em 10/07/2026.",
-      "version": "1.0.0",
+      "description": "Rota educacional: criar-aula (cursos gravados), aula-mentoria (subir aula da mentoria), divulgar-atualizacao-repo (anuncio de atualizacao no grupo da mentoria), innovation-lab (imersao AI Innovation Lab), mentoria-equipe-seg-16h (mentoria interna), acompanhamento-mentoria (acompanhamento de alunos), cs-educacional-expert (customer success educacional), diagnostico-mentoria (diagnostico e plano de acao) e mentoria-whatsapp-conteudo (conteudo de WhatsApp da mentoria). Migrado do marketplace ericluciano em 10/07/2026.",
+      "version": "1.1.0",
       "category": "productivity",
       "tags": [
         "educacional",
         "mentoria",
         "aulas",
-        "innovation-lab"
+        "innovation-lab",
+        "acompanhamento",
+        "customer-success",
+        "diagnostico",
+        "whatsapp",
+        "conteudo"
       ]
     },
     {
@@ -72,8 +77,8 @@
     {
       "name": "operacoes",
       "source": "./plugins/operacoes",
-      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages), mailbox-agentes (protocolo de conversa entre agentes no board do Brain), triagem-candidatos (triagem de candidatos na Inhire).",
-      "version": "2.6.0",
+      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages), mailbox-agentes (protocolo de conversa entre agentes no board do Brain), triagem-candidatos (triagem de candidatos na Inhire), report-semanal (relatorio semanal de operacoes), formatar-whatsapp (formatacao de mensagens no padrao WhatsApp).",
+      "version": "2.7.0",
       "category": "productivity",
       "tags": [
         "operacoes",
@@ -84,7 +89,29 @@
         "mailbox",
         "agentes",
         "recrutamento",
-        "triagem"
+        "triagem",
+        "report",
+        "relatorio",
+        "whatsapp",
+        "formatacao"
+      ]
+    },
+    {
+      "name": "produto",
+      "source": "./plugins/produto",
+      "description": "Skills de gestao de produto: abrir-chamado-supersdr (abre chamado/backlog do SuperSDR no ClickUp — bug, feature, melhoria, integracao ou pesquisa — com aviso no Zoom Team Chat), criar-task-produto (cria task de produto no ClickUp — bug, feature, spike ou spike-CRM — com campos e templates padronizados).",
+      "version": "1.0.0",
+      "category": "productivity",
+      "tags": [
+        "produto",
+        "clickup",
+        "scrum",
+        "backlog",
+        "supersdr",
+        "bug",
+        "feature",
+        "spike",
+        "task"
       ]
     }
   ]

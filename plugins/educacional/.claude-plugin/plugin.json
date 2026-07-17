@@ -1,7 +1,7 @@
 {
   "name": "educacional",
-  "version": "1.0.1",
-  "description": "Rota educacional da Expert Integrado: producao e distribuicao de educacao — criar-aula (cursos gravados), aula-mentoria (subir aula da mentoria), divulgar-atualizacao-repo (anuncio de atualizacao no grupo da mentoria), innovation-lab (imersao AI Innovation Lab) e mentoria-equipe-seg-16h (mentoria interna de produtividade).",
+  "version": "1.1.0",
+  "description": "Rota educacional da Expert Integrado: producao e distribuicao de educacao — criar-aula (cursos gravados), aula-mentoria (subir aula da mentoria), divulgar-atualizacao-repo (anuncio de atualizacao no grupo da mentoria), innovation-lab (imersao AI Innovation Lab), mentoria-equipe-seg-16h (mentoria interna de produtividade), acompanhamento-mentoria (acompanhamento de alunos da mentoria), cs-educacional-expert (customer success educacional), diagnostico-mentoria (diagnostico e plano de acao para mentorados) e mentoria-whatsapp-conteudo (conteudo de WhatsApp da mentoria).",
   "author": {
     "name": "Expert Integrado",
     "email": "operacoes@expertintegrado.com.br",
@@ -14,6 +14,11 @@
     "educacional",
     "mentoria",
     "aulas",
-    "innovation-lab"
+    "innovation-lab",
+    "acompanhamento",
+    "customer-success",
+    "diagnostico",
+    "whatsapp",
+    "conteudo"
   ]
 }
