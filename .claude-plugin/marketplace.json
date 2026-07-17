@@ -72,8 +72,8 @@
     {
       "name": "operacoes",
       "source": "./plugins/operacoes",
-      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages), mailbox-agentes (protocolo de conversa entre agentes no board do Brain).",
-      "version": "2.5.0",
+      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages), mailbox-agentes (protocolo de conversa entre agentes no board do Brain), triagem-candidatos (triagem de candidatos na Inhire).",
+      "version": "2.6.0",
       "category": "productivity",
       "tags": [
         "operacoes",
@@ -82,7 +82,9 @@
         "zoom",
         "brain",
         "mailbox",
-        "agentes"
+        "agentes",
+        "recrutamento",
+        "triagem"
       ]
     }
   ]
