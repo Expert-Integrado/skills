@@ -46,7 +46,7 @@
       "name": "eventos",
       "source": "./plugins/eventos",
       "description": "Skills de gestao de eventos: convidar-evento, verificar-convites, notificacao-webinario.",
-      "version": "2.5.3",
+      "version": "2.5.4",
       "category": "productivity",
       "tags": [
         "eventos",

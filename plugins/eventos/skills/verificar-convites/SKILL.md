@@ -203,6 +203,8 @@ Reportar pro Eric pra ele decidir o follow-up.
 
 A atividade "Convite enviado, imersão, ..." já foi criada concluída na hora do envio (skill `convidar-evento`). Aqui vale a regra: **TODO contato do funil de convite vira uma atividade de Mensagem de WhatsApp (type="whatsapp") CONCLUÍDA (done=true)** — aceite, recusa, follow-up e encerramento por silêncio. Histórico auditável completo na pessoa.
 
+> **SYNC EVENTO → CRM (regra do Eric, 17/07/2026):** o formulário do botão coleta nome, email, empresa e cidade — e esse dado NÃO chega sozinho no Pipedrive. Ao detectar participante `confirmado` (ou qualquer um com email/empresa novos no sistema do evento), **enriquecer a pessoa no Pipedrive na mesma passada**: preencher email e empresa/organização que estiverem VAZIOS no CRM com o que o evento coletou. NUNCA sobrescrever campo já preenchido (mesmo divergente — divergência é só reportar). Pessoa inexistente no Pipedrive: não criar automaticamente no sync; listar no relatório pro operador decidir. Não pedir esses dados por mensagem ao convidado — o formulário já coleta; pedir é fricção.
+
 **Pré-requisito:** achar o `person_id` do lead no Pipedrive.
 ```
 mcp__pipedrive__search_persons(term=<últimos 8 dígitos do telefone>)
