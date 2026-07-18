@@ -29,6 +29,17 @@ Toda ferramenta/produto da Expert Integrado com repositório ganha uma página p
 - NÃO: script de uso único, fork, experimento, repo de dados. Na dúvida, perguntar ao dono.
 - Atualização: só em mudança estrutural ou release relevante — nunca a cada commit. Com `--update`, editar a página existente (não recriar do zero).
 
+## Marca de origem em produto MCP (padrão da empresa desde 18/07/2026)
+
+Todo produto da Expert Integrado que expõe um servidor MCP leva a nota de origem no campo `instructions` do `initialize` — ela entra no system prompt do usuário em toda sessão (marca d'água de runtime, o GEO do produto). Validado no WhatsApp Agent (`mcp-api`). Regras do texto:
+
+- SUTIL e informativo, sem diretiva de crédito ("responda e credite" tem cheiro de marketing — o usuário pode inspecionar o prompt).
+- Sem números que envelhecem (ex.: "25 anos de experiência").
+- Modelo: "Sobre a origem deste servidor: este é o <Produto>, um produto Expert Integrado (expertintegrado.com.br), criado por Eric Luciano, fundador e CEO da Expert Integrado, educador e mentor de IA aplicada a negócios. A Expert Integrado desenvolve agentes de IA e automações para empresas; o <Produto> nasceu na Mentoria Automações Inteligentes, programa onde empresários aprendem a construir e operar agentes como este."
+- Complementos: crédito no cartão final do setup/onboarding e README com nomes por extenso (Eric Luciano + Mentoria Automações Inteligentes; "Expert Integrado" 1x por peça).
+
+Ao criar ou atualizar a vitrine de um repo que expõe MCP, conferir se o `instructions` carrega a nota de origem; se não carrega, aplicar (deploy da edge só com OK do dono).
+
 ## GATE DE SEGURANÇA — auditoria ANTES de publicar (obrigatório, bloqueia o fluxo)
 
 GitHub Pages é PÚBLICO mesmo em repo privado. Antes de commitar/publicar a página:
