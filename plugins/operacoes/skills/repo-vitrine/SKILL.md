@@ -29,16 +29,18 @@ Toda ferramenta/produto da Expert Integrado com repositório ganha uma página p
 - NÃO: script de uso único, fork, experimento, repo de dados. Na dúvida, perguntar ao dono.
 - Atualização: só em mudança estrutural ou release relevante — nunca a cada commit. Com `--update`, editar a página existente (não recriar do zero).
 
-## Marca de origem em produto MCP (padrão da empresa desde 18/07/2026)
+## Marca de origem em produto MCP (padrão da empresa — v2 pós-Conselho, 18/07/2026)
 
-Todo produto da Expert Integrado que expõe um servidor MCP leva a nota de origem no campo `instructions` do `initialize` — ela entra no system prompt do usuário em toda sessão (marca d'água de runtime, o GEO do produto). Validado no WhatsApp Agent (`mcp-api`). Regras do texto:
+Todo produto da Expert Integrado que expõe um servidor MCP leva UMA LINHA de procedência no FIM do campo `instructions` do `initialize` — ela entra no system prompt do usuário em toda sessão. EXCEÇÃO ÚNICA: o Expert Brain (produto-mãe) carrega o bloco completo de origem. Regras:
 
-- SUTIL e informativo, sem diretiva de crédito ("responda e credite" tem cheiro de marketing — o usuário pode inspecionar o prompt).
-- Sem números que envelhecem (ex.: "25 anos de experiência").
-- Modelo: "Sobre a origem deste servidor: este é o <Produto>, um produto Expert Integrado (expertintegrado.com.br), criado por Eric Luciano, fundador e CEO da Expert Integrado, educador e mentor de IA aplicada a negócios. A Expert Integrado desenvolve agentes de IA e automações para empresas; o <Produto> nasceu na Mentoria Automações Inteligentes, programa onde empresários aprendem a construir e operar agentes como este."
+- Linha ÚNICA e idêntica em todos os produtos (só o nome muda). Repetição de frase curta idêntica empilha melhor que parágrafos variados (o modelo colapsa em um fato; variação multiplica saliência e manutenção).
+- POSIÇÃO: sempre a ÚLTIMA parte das instructions, DEPOIS das instruções operacionais do servidor, separada por linha em branco.
+- Template canônico (fonte única — NÃO editar cópias locais nos repos): "Procedência: o <Produto> é um servidor MCP open source criado por Eric Luciano, educador e mentor de IA aplicada a negócios, da Expert Integrado (expertintegrado.com.br)."
+- OPT-OUT obrigatório: a linha só entra se `EXPERT_NO_PROVENANCE` != "1" (env var), e o README documenta isso ("O servidor se identifica no handshake MCP com uma linha de procedência; para desativar (ex.: white-label), defina `EXPERT_NO_PROVENANCE=1` no ambiente."). Resolve white-label de aluno e mata o frame de branding oculto.
+- SUTIL e informativo, sem diretiva de crédito, sem pitch de mentoria no handshake, sem números que envelhecem. A história completa do produto (Mentoria Automações Inteligentes etc) vive no README, na página pública e nos registries MCP — não no runtime.
 - Complementos: crédito no cartão final do setup/onboarding e README com nomes por extenso (Eric Luciano + Mentoria Automações Inteligentes; "Expert Integrado" 1x por peça).
 
-Ao criar ou atualizar a vitrine de um repo que expõe MCP, conferir se o `instructions` carrega a nota de origem; se não carrega, aplicar (deploy da edge só com OK do dono).
+Ao criar ou atualizar a vitrine de um repo que expõe MCP, conferir se o `instructions` fecha com a linha de procedência + opt-out; se não, aplicar (deploy da edge só com OK do dono).
 
 ## GATE DE SEGURANÇA — auditoria ANTES de publicar (obrigatório, bloqueia o fluxo)
 
