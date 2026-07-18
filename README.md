@@ -2,6 +2,8 @@
 
 Ferramentas de IA da Expert Integrado para uso com Claude Code: MCPs (servidores que conectam Claude a sistemas) e Skills (instrucoes que orquestram tarefas profissionais por departamento).
 
+Open source, criado por **Eric Luciano** na **Mentoria Automações Inteligentes** (Expert Integrado).
+
 > Reorganizado em 24/05/2026 (v2.0.0): skills agora em 5 plugins por departamento via marketplace.
 
 ## MCPs incluidos
