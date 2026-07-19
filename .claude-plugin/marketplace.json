@@ -13,7 +13,7 @@
     {
       "name": "comercial",
       "source": "./plugins/comercial",
-      "description": "Skills comerciais: prospecta-lead, reabordagem, pipe-review, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo, transferir-lead, fup-inteligente, enviar-proposta.",
+      "description": "Skills comerciais: prospecta-lead, reabordagem, pipe-review, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo, transferir-lead, fup-inteligente, enviar-proposta, blog-comercial, calendly-agendar, calendly-link.",
       "version": "2.6.2",
       "category": "productivity",
       "tags": [
@@ -78,7 +78,7 @@
       "name": "operacoes",
       "source": "./plugins/operacoes",
       "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages), mailbox-agentes (protocolo de conversa entre agentes no board do Brain), triagem-candidatos (triagem de candidatos na Inhire), report-semanal (relatorio semanal de operacoes), formatar-whatsapp (formatacao de mensagens no padrao WhatsApp).",
-      "version": "2.7.0",
+      "version": "2.7.1",
       "category": "productivity",
       "tags": [
         "operacoes",
