@@ -116,8 +116,19 @@ Regras do run: executor segue SÓ o texto da skill; desvio = achado; defeito ach
 | release-produto (lab) | C | publica release (bucket/GH release/deploy) do produto alvo | PENDENTE (gate de uso real) | Criada 12/07 (lab 4.3.0, decisão: skill única de release, manifesto no repo do produto); golden run = próximo release pedido pelo Eric |
 | cadencia-outbound (lab) | C | envia toques de WhatsApp a leads reais + atividades Pipedrive | PENDENTE (gate de uso real) | Criada 11/07 (lab 4.1.0); golden run = ciclo real da campanha outbound com D0 disparado |
 | registrar-contato (lab) | A2 | escreve no vault expert-contacts (merge/dedupe reversível) | PENDENTE | Criada 11/07 (lab 4.2.0); golden run barato: registrar 1 contato real e conferir timeline |
+| repo-vitrine (operacoes) | C | push público + GitHub Pages | PENDENTE (gate de uso real) | Criada 09/07 (operacoes 2.4.0), nunca registrada aqui — corrigido na auditoria de 19/07; já teve usos reais (política de marca v2 em 8b8ffed) mas sem golden run formal |
+| acompanhamento-mentoria (educacional) | A1 | gera resumo local a partir de transcrição | PENDENTE | Criada 17/07 (educacional 1.1.0); golden run barato com transcrição real |
+| cs-educacional-expert (educacional) | B | pode mandar mensagem a aluno / mexer em plataforma | PENDENTE (alvo de teste) | Criada 17/07 (educacional 1.1.0) |
+| diagnostico-mentoria (educacional) | A1 | gera pacote de diagnóstico local | PENDENTE | Criada 17/07 (educacional 1.1.0) |
+| mentoria-whatsapp-conteudo (educacional) | B | conteúdo pro grupo da mentoria (envio gated) | PENDENTE (alvo de teste) | Criada 17/07 (educacional 1.1.0) |
+| formatar-whatsapp (operacoes) | A1 | transformação de texto local | PENDENTE | Criada 17/07 (operacoes 2.7.0); golden run barato |
+| report-semanal (operacoes) | A1 | gera relatório local | PENDENTE | Criada 17/07 (operacoes 2.7.0); golden run barato |
+| triagem-candidatos (operacoes) | C | e-mail a candidato + WhatsApp ChatGuru + move etapa na Inhire | PENDENTE (gate de uso real) | Criada 17/07 (operacoes 2.7.0, commit a2354ed); golden run = próxima vaga real, parar no gate de envio |
+| abrir-chamado-supersdr (produto) | B | cria chamado no ClickUp + aviso no Zoom | PENDENTE (alvo de teste) | Criada 17/07 (produto 1.0.0); golden run com chamado de teste deletável |
+| criar-task-produto (produto) | B | cria task no ClickUp | PENDENTE (alvo de teste) | Criada 17/07 (produto 1.0.0); golden run com task de teste deletável |
+| esteira-skill (operacoes) | A2 | orquestra (side-effects ficam nas regras dela: push/deploy gated) | PENDENTE | Criada 19/07 (operacoes 2.8.0) na auditoria que achou o mesmo padrão de furo 3 semanas seguidas; golden run = próxima skill nova nascer por ela |
 
 ## Placar
 
-- Únicas: 60 (52 do fechamento + 8 chegadas pós-fechamento; estou-devendo v1 do whatsapp-agent REMOVIDA 07/07, conselho root aposentada 07/07)
+- Únicas: 71 (52 do fechamento + 19 chegadas pós-fechamento; estou-devendo v1 do whatsapp-agent REMOVIDA 07/07, conselho root aposentada 07/07; auditoria 19/07 registrou 11 que estavam fora da FILA)
 - Processadas: 57 (47 FEITO + 9 PARCIAL + 1 N/A deprecated) · Defeitos reais corrigidos: 144 · Onda 1: CONCLUÍDA · Ondas 2-3 (side-effect/custo com alvo de teste): em sequência · Onda 4 (goal 07/07 liberou deploy/publicação; disparo em massa segue na regra do piloto): 0 — onda 4 esgotada; disparos reais aguardam campanha/evento do Eric

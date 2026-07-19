@@ -1,7 +1,7 @@
 {
   "name": "operacoes",
-  "version": "2.7.1",
-  "description": "Skills de operacoes internas Expert Integrado: limpeza de inbox, onboarding de colaboradores, digestao diaria de reunioes Zoom para o Expert Brain, vitrine visual de repositorios (GitHub Pages), protocolo de conversa entre agentes no board do Brain (mailbox), triagem de candidatos na Inhire, report-semanal (relatorio semanal de operacoes) e formatar-whatsapp (formatacao de mensagens no padrao WhatsApp).",
+  "version": "2.8.0",
+  "description": "Skills de operacoes internas Expert Integrado: limpeza de inbox, onboarding de colaboradores, digestao diaria de reunioes Zoom para o Expert Brain, vitrine visual de repositorios (GitHub Pages), protocolo de conversa entre agentes no board do Brain (mailbox), triagem de candidatos na Inhire, report-semanal (relatorio semanal de operacoes) e formatar-whatsapp (formatacao de mensagens no padrao WhatsApp), esteira-skill (criacao, validacao e publicacao de skills proprias com paridade entre instancias e catalogo).",
   "author": {
     "name": "Eric Luciano Ferreira",
     "email": "operacoes@expertintegrado.com.br",

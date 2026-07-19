@@ -77,8 +77,8 @@
     {
       "name": "operacoes",
       "source": "./plugins/operacoes",
-      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages), mailbox-agentes (protocolo de conversa entre agentes no board do Brain), triagem-candidatos (triagem de candidatos na Inhire), report-semanal (relatorio semanal de operacoes), formatar-whatsapp (formatacao de mensagens no padrao WhatsApp).",
-      "version": "2.7.1",
+      "description": "Skills de operacoes internas: email-cleaner, onboard, zoom-brain-digest, repo-vitrine (pagina visual padrao dos repos no GitHub Pages), mailbox-agentes (protocolo de conversa entre agentes no board do Brain), triagem-candidatos (triagem de candidatos na Inhire), report-semanal (relatorio semanal de operacoes), formatar-whatsapp (formatacao de mensagens no padrao WhatsApp), esteira-skill (esteira de criacao, validacao e publicacao de skills).",
+      "version": "2.8.0",
       "category": "productivity",
       "tags": [
         "operacoes",
@@ -93,7 +93,9 @@
         "report",
         "relatorio",
         "whatsapp",
-        "formatacao"
+        "formatacao",
+        "esteira",
+        "skills"
       ]
     },
     {
