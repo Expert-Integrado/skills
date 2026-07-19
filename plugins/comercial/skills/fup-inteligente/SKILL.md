@@ -19,6 +19,8 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 - NUNCA fazer follow-up de deal cuja atividade pendente tem data futura (ainda não venceu) — pular o deal.
 - NUNCA sobrescrever campo preenchido no Pipedrive (exceto pedido explícito do Eric).
 - NUNCA copiar o script do Livro de Objeções na íntegra para a mensagem — script é para call; mensagem é adaptação para WhatsApp (ver "Como aplicar a quebra").
+- NUNCA ancorar o prazo/urgência de uma proposta em data de evento da Expert Integrado (imersão, lançamento, live, etc.) — violação hard confirmada no FUP do Fabrício Miranda (16/07/2026, prazo ancorado na imersão 29-30/07 contra a política). Prazo válido é SÓ: (a) validade tabelada da própria proposta (~5 dias), (b) bônus real de fechamento rápido, (c) custo de inação real do prospect, ou (d) evento crítico do PRÓPRIO prospect — nunca evento do Eric/EI. Ver "4.1 OBRIGATÓRIO — Regra de prazo e urgência" abaixo.
+- NUNCA criar urgência artificial ("últimas vagas", "só até hoje" sem condição real) — Política Comercial §10 e Playbook de Vendas §10.2 exigem que toda escassez/urgência citada seja verdadeira e verificável.
 
 ## SEMPRE
 
@@ -31,6 +33,7 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 - SEMPRE deixar deal perdido com exatamente 1 pendente = a retomada futura.
 - SEMPRE incluir a linha "Objeção quebrada" na `note` da atividade quando o Livro de Objeções foi usado.
 - SEMPRE incluir o link `https://wa.me/{numero}` na apresentação do lead.
+- SEMPRE ler `playbook/Politica_Comercial_Super_SDR.md` §3 e §10 (+ `playbook/Playbook_Vendas_Super_SDR.md` §10.1-10.4) antes de redigir mensagem para deal em Proposta enviada, Em negociação ou Formalização — OBRIGATÓRIO, não condicional (ver "4.1" no Passo 4).
 
 ## Pré-requisitos
 
@@ -38,7 +41,7 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 - **Como resolver `<skill-dir>` (a pasta desta skill) — NÃO adivinhar, NÃO hardcodar:** `<skill-dir>` = o diretório do próprio `SKILL.md` que está sendo lido nesta execução (mesmo padrão da skill pipe-review). Derivar do path real deste arquivo — todo `Read` de `playbook/...` abaixo é relativo a `<skill-dir>` (ex.: `<skill-dir>/playbook/Livro_Objecoes_Super_SDR.md`). Via marketplace no PC do Eric o path costuma ser algo como `C:\Users\Eric Luciano\.claude\plugins\marketplaces\expertintegrado\plugins\comercial\skills\fup-inteligente`, mas isso é só EXEMPLO ilustrativo — NUNCA assumir esse caminho; o layout varia por máquina (PC, notebook, VPS, Telegram) e por instalação (cache vs marketplace). Sempre derivar do path deste SKILL.md.
 - Pasta `playbook/` desta skill (versionada no repo — funciona em PC, notebook, VPS e Telegram sem OneDrive/internet). Ler com `Read` usando o caminho relativo a `<skill-dir>` resolvido acima.
 - **Em EXECUÇÃO desta skill: ler `playbook/` como está.** NUNCA rodar sync nem verificar se está "atualizada" — a cópia versionada no repo É a canônica para execução, em qualquer máquina. Nenhum passo desta skill dispara sincronização.
-- Manutenção (FORA do fluxo de execução, só quando o Eric pedir explicitamente para atualizar o playbook): fonte original em `${WORKSPACE_DIR:-$HOME/OneDrive/Workspace}/Processo Comercial/Playbooks/Documentos MD/` (só existe no PC do Eric); rodar `scripts/sync-playbook.ps1` e commitar no repo `skills`. As demais máquinas recebem via `git pull`/plugin update.
+- Manutenção (FORA do fluxo de execução, só quando o Eric pedir explicitamente para atualizar o playbook): fonte única e canônica em `G:\Meu Drive\claude-workspace\Workspace\Processo Comercial\Playbooks\Documentos MD\` (Google Drive, só existe no PC/notebook do Eric via Drive for Desktop — migrado do OneDrive em 05/07/2026). **`OneDrive\Workspace\...` está APOSENTADO como fonte: é arquivo morto, edição lá não propaga.** Rodar `scripts/sync-playbook.ps1` e commitar no repo `skills`. As demais máquinas (VPS, Telegram) recebem via `git pull`/plugin update — nunca acessam o Google Drive diretamente.
 - **Premissa de data/hora — `HOJE`:** no início da sessão, obter a data atual em America/Sao_Paulo via Bash: `TZ='BRT3' date +%Y-%m-%d` (POSIX BRT3, nao IANA: o Git Bash do Windows nao tem tzdata e TZ=America/Sao_Paulo devolve UTC silenciosamente — CORRECAO-DE-FATO do golden run 06/07/2026; BRT3 = UTC-3 fixo, Brasil sem horario de verao desde 2019, funciona em Windows e Linux). O valor retornado é `HOJE` e é usado em toda a triagem do Passo 2 (comparar data das atividades pendentes contra `HOJE` para classificar vencida/hoje/futura) e no cálculo de datas do próximo follow-up e da retomada. NUNCA presumir a data de contexto/memória — sempre ler do `date`.
 - Interface de aprovação: em sessão Telegram, usar botões inline conforme templates. Fora do Telegram (terminal), apresentar o mesmo template e aguardar resposta de texto explícita ("envia" / "altera ..."). O guardrail é o mesmo: sem aprovação explícita = sem envio.
 
@@ -50,7 +53,7 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 | `playbook/Livro_Objecoes_Super_SDR.md` | Antecipar/responder objeções em mensagem |
 | `playbook/Livro_Objecoes_Contexto_Agente.md` | Objeções específicas para contexto de agente IA |
 | `playbook/Manual_Duvidas_Tecnicas_Super_SDR.md` | Dúvidas técnicas do produto durante a conversa |
-| `playbook/Politica_Comercial_Super_SDR.md` | Política comercial (descontos, condições, exceções) |
+| `playbook/Politica_Comercial_Super_SDR.md` | Política comercial (descontos, condições, exceções); §3 e §10 são de leitura OBRIGATÓRIA em Proposta enviada/Em negociação/Formalização — ver "4.1" no Passo 4 |
 
 ### IDs fixos
 
@@ -157,6 +160,23 @@ Com o contexto (Pipedrive + WhatsApp), definir:
 - **Tipo de atividade** (whatsapp, call, reunião, task) — regra default: SE o contato tem WhatsApp ativo (histórico no Passo 3) → `whatsapp`; SENÃO → o canal do último contato registrado no Pipedrive. Eric muda na aprovação se quiser.
 - **Texto da mensagem** (se for WhatsApp) — critérios abaixo
 - **Data do próximo follow-up** (tabela "Critérios de data" abaixo)
+
+### 4.1 OBRIGATÓRIO — Regra de prazo e urgência (Proposta enviada / Em negociação / Formalização)
+
+**SE a etapa do deal é Proposta enviada, Em negociação ou Formalização (qualquer funil) → ler `playbook/Politica_Comercial_Super_SDR.md` §3 e §10 + `playbook/Playbook_Vendas_Super_SDR.md` §10.1-10.4 ANTES de definir prazo ou redigir qualquer frase de urgência.** Não é condicional a "se parecer relevante" — é leitura obrigatória sempre que a etapa bater. Gatilho real (16/07/2026): FUP do Fabrício Miranda ancorou o prazo da condição na data da imersão (29-30/07) — violação direta da política, corrigida aqui.
+
+Regras hard (fonte = Política Comercial + Playbook de Vendas, citadas literalmente):
+
+1. **Toda proposta tem validade de ~5 dias corridos a partir do envio** (Playbook de Vendas §10.3 "Proposta com Validade"; mesma regra repetida em §12.1 "Incluir validade de 5 dias" e §13.3 "validade de 5 dias"). O prazo do FUP de "Proposta enviada" É essa validade — nunca outra referência.
+2. **PROIBIDO ancorar prazo/urgência em evento da Expert Integrado** (imersão, lançamento, live, mentoria). Prazo/urgência só pode vir de UMA destas 4 fontes reais:
+   - (a) validade tabelada da própria proposta (~5 dias, item 1 acima);
+   - (b) bônus real de fechamento rápido — Política §3: fechar em até 24h após a demo = 1 mês extra grátis + parcelamento da implementação junto (autonomia do closer, seção 9.1 da Política);
+   - (c) custo de inação real do prospect — Playbook §10.1 ("cada semana de atraso são R$[IMPACTO] em oportunidades perdidas"), só com número real levantado no discovery, nunca estimativa genérica;
+   - (d) evento crítico do PRÓPRIO prospect — Playbook §10.4 (ex: meta/prazo que ELE mencionou), nunca evento do Eric/EI.
+3. **PROIBIDO urgência artificial** — Política §10 ("Criar urgência artificial... Oferecemos bônus real, não pressão") e Playbook §10.2 (escassez de capacidade só se for verdadeira). Frases como "últimas vagas"/"só até hoje" sem condição real por trás são bloqueadas.
+4. **Teste antes de incluir qualquer frase de prazo/urgência na mensagem:** "esse prazo é real e eu consigo justificar de qual das 4 fontes acima ele vem?" — se a resposta for "não" ou "é só pra pressionar", reescrever sem a urgência.
+
+**Educacional/Mentoria (pipeline 6):** os números tabelados acima (~5 dias, 24h/1 mês extra) são específicos da Política Comercial Super SDR/SaaS — ainda **NÃO existe Política Comercial própria do Educacional** (item [B] da task-mãe, pendente). Até ela existir: aplicar SÓ o princípio geral (regras 2 e 3 acima — nunca ancorar em evento da EI, nunca urgência artificial) para deals do funil Educacional; NÃO usar os números do Super SDR (5 dias / 24h / 1 mês extra) como se fossem regra do Educacional — se precisar de um prazo concreto num deal Educacional, perguntar ao Eric em vez de inventar.
 
 **Antes de redigir: consultar o Livro de Objeções conforme a tabela "Fluxo de uso por etapa"** (seção "Quebra de Objeções"). Obrigatório sempre que houver objeção no histórico.
 
@@ -582,6 +602,7 @@ Ordem importa: se marcar perdido primeiro e a criação da retomada falhar, o de
 - **Deal já lost mas sem atividade futura:** listar todos ao Eric no sweep, com motivo de perda, e propor criação retroativa da retomada (fluxo Lead Perdido do Passo 1 em diante).
 - **Deal perdido sem `lost_reason` preenchido:** perguntar ao Eric o motivo antes de criar a retomada (sem motivo não mapeia cadência).
 - **Deal perdido com motivo fora da lista canônica:** mapear para "Desqualificado" (+180d) como fallback conservador e sinalizar ao Eric pra revisar.
+- **Prazo/urgência de proposta sem fonte real na mão (ex: quer usar data de evento da EI como prazo):** NÃO usar o evento. Aplicar a regra "4.1" — validade tabelada (~5 dias), bônus real de fechamento rápido, custo de inação real ou evento crítico do PRÓPRIO prospect. Se nenhuma das 4 se aplica, a mensagem NÃO leva prazo/urgência nenhuma (melhor sem urgência do que urgência falsa).
 
 ## Validação final (checklist por sessão de follow-up)
 
@@ -593,6 +614,7 @@ Ordem importa: se marcar perdido primeiro e a criação da retomada falhar, o de
 - [ ] Nenhuma atividade criada com `due_time` vazio ou "00:00"
 - [ ] Todo deal marcado lost nesta sessão tem retomada futura criada ANTES do `update_deal status: lost`, com responsável escolhido pelo Eric
 - [ ] Deals lost órfãos encontrados no sweep foram listados ao Eric
+- [ ] Toda mensagem de deal em Proposta enviada/Em negociação/Formalização teve o prazo/urgência checado contra a regra "4.1" (sem âncora em evento da EI, sem urgência artificial, fonte real identificada)
 
 ## Erros comuns e recovery
 
@@ -616,9 +638,10 @@ Esta seção NÃO faz parte da execução normal da skill — nenhum passo acima
 
 ---
 
-*Skill v2.1 — Atualizada em 03/07/2026.*
+*Skill v2.2 — Atualizada em 19/07/2026.*
 
 **Changelog:**
+- v2.2 (19/07/2026): task Brain `i7dsv1qyecox` item [A] — gatilho: FUP do Fabrício Miranda (16/07/2026) ancorou prazo de proposta na data da imersão 29-30/07, violando a política. (1) Passo 4.1 novo, OBRIGATÓRIO (não condicional): antes de definir prazo/urgência em deal de Proposta enviada/Em negociação/Formalização, ler Política Comercial §3+§10 e Playbook de Vendas §10.1-10.4 — regras hard embutidas (validade ~5 dias, proibido ancorar em evento da EI, urgência só de fonte real, teste de 4 fontes válidas); placeholder explícito para Educacional (sem Política própria ainda — item [B] da task-mãe). (2) NUNCA/SEMPRE, edge case e checklist de validação atualizados com a mesma regra. (3) Fonte única do playbook: `scripts/sync-playbook.ps1` e o texto de manutenção nos Pré-requisitos apontavam pro OneDrive (`$HOME/OneDrive/Workspace`), que virou arquivo morto em 05/07/2026 — atualizado para `G:\Meu Drive\claude-workspace\Workspace\...` (Google Drive, canônico); os 5 arquivos do playbook já estavam com conteúdo idêntico entre repo/OneDrive/GDrive na auditoria desta versão (só line-ending divergia em 1 arquivo), então não houve conteúdo a resgatar — o problema era só o caminho-fonte do script apontar pro lugar morto.
 - v2.1 (03/07/2026): passe de executabilidade (10 ambiguidades do teste Sonnet), SEM mudança de comportamento: (1) roteamento explícito de "roda o fup" sem funil (todos os funis em sequência na mesma invocação, sem estado persistido, recomeça do Educacional); (2) regra de normalização do telefone Pipedrive → parâmetro `chat`/`to` (só dígitos, prefixo 55, fallback por nome); (3) critérios objetivos de redação + exemplo de mensagem para etapa sem objeção; (4) tabela de origem dos placeholders do template (Empresa = linha `Empresa:` do get_deal_summary); (5) caminho único para "Outro vendedor" (nome literal em `user_id`, MCP resolve); (6) regra "ciclo por DEAL" para múltiplas vencidas (1 mensagem consolidada); (7) playbook/ lido como está em execução — sync é manutenção, nunca roda no fluxo; (8) cálculo determinístico da data (menor valor do intervalo, fim de semana → segunda, feriado não verificado); (9) origem de person_id/org_id via `get_deal` (`contato_id`/`empresa_id`) nos dois caminhos do Lead Perdido + get_deal no allowed-tools; (10) seção Subagente marcada como fora da execução direta.
 - v2.0 (02/07/2026): reescrita no padrão Sonnet-executável — tools MCP nomeadas com parâmetros literais, árvores de decisão SE/SENÃO, blocos NUNCA/SEMPRE, checklist de validação final e tabela de erros/recovery. Correções de fato: removida referência a `mcp__pipedrive__list_users` (tool não existe no MCP); documentado o enum estrito de `lost_reason` do `update_deal` ("Ferramenta incompatível / Desqualificado" é valor único da API); motivos canônicos apontados para a seção 5.3 do playbook (não seção 8); documentado que `pipedrive_write` NÃO cobre `update_activity`/`update_deal`; recovery de "Usuário não encontrado" via `sync_all` (Kesia fora do snapshot atual do config). Comportamento, templates, cadências, IDs e voz preservados de v1.2.
 - v1.2 (12/06/2026): + Protocolo de Registro Anti-Vencida (concluir vencida → registro create→update done verificado → pendente futura → invariante "1 pendente futura por deal"). Causa: Bug #6 do pipedrive-mcp. + Passo 6.5 no fluxo LOST (concluir pendentes antigas antes de marcar perdido). + edge case "registro retroativo".

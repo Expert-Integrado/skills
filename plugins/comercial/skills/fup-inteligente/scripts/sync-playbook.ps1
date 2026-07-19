@@ -3,18 +3,24 @@
 # pra dentro do repo da skill fup-inteligente (consumido em runtime em qualquer maquina).
 #
 # Rodar ANTES de commit/push quando o Eric tiver editado algum playbook.
-# Em PC/notebook do Eric, esse script tem acesso ao OneDrive.
+# Em PC/notebook do Eric, esse script tem acesso ao Google Drive (Drive for Desktop).
 # Em VPS/outras maquinas, a pasta playbook/ ja vem versionada via git pull.
+#
+# HISTORICO: ate 19/07/2026 este script apontava pro OneDrive
+# (C:\Users\Eric Luciano\OneDrive\Workspace\...), que virou arquivo morto em
+# 05/07/2026 (migracao pro Google Drive) — edicao la NAO propaga mais.
+# Corrigido junto da task Brain i7dsv1qyecox item [A].
 
 $ErrorActionPreference = "Stop"
 
-$SourceDir = "C:\Users\Eric Luciano\OneDrive\Workspace\Processo Comercial\Playbooks\Documentos MD"
+$SourceDir = "G:\Meu Drive\claude-workspace\Workspace\Processo Comercial\Playbooks\Documentos MD"
 $DestDir   = Join-Path $PSScriptRoot "..\playbook"
 $DestDir   = (Resolve-Path $DestDir).Path
 
 if (-not (Test-Path $SourceDir)) {
     Write-Host "FONTE nao encontrada: $SourceDir" -ForegroundColor Red
-    Write-Host "Este script so funciona em maquinas com acesso ao OneDrive do Eric." -ForegroundColor Yellow
+    Write-Host "Este script so funciona em maquinas com Google Drive (Drive for Desktop) do Eric." -ForegroundColor Yellow
+    Write-Host "NAO usar o OneDrive como fallback — OneDrive\Workspace e arquivo morto desde 05/07/2026." -ForegroundColor Yellow
     exit 1
 }
 
