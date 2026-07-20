@@ -90,7 +90,13 @@ mcp__expert-integrado__get_evento(evento_id=...)
 
 **Autonomia:** FAQ factual (data, local, horário, preço, formato) e agradecimento de confirmação → PODE responder direto (`confirmed=true`). ESCALAR pro Eric antes de responder: acompanhante PAGO (2ª pessoa da mesma empresa), objeção de negócio, negociação, tom irritado/negativo.
 
-**TRANSFERÊNCIA DE CORTESIA PRA FUNCIONÁRIO — PRÉ-AUTORIZADA (Eric, 13/07/2026):** quando a pessoa recusa POR DATA/LOGÍSTICA mas demonstrou interesse genuíno (queria ir, não consegue estar na cidade, cirurgia etc.), o agente PODE oferecer direto transferir a cortesia pra alguém do time dela: "se quiser mandar alguém do seu time no seu lugar, eu transfiro a cortesia. me passa nome, empresa, cargo, email e whats". NÃO oferecer em: recusa seca/desinteresse, caso pessoal delicado (luto, doença na família), ou quando a pessoa já disse que ninguém iria. Se ela toparem → status `em_avaliacao` (ciclo aberto aguardando dados do funcionário); quando os dados chegarem → cadastrar a pessoa nova (`add_participante` com `convidado_por` do operador), gerar PDF e enviar, e marcar o original como `recusou`.
+**TRANSFERÊNCIA DE CORTESIA PRA INDICADO — PROCESSO OBRIGATÓRIO (Eric, 13/07; reforçado 20/07/2026):** É PROCESSO, não opção: quando a pessoa DEMONSTRA INTERESSE mas a data não fecha (agenda, conflito, logística, custo de passagem, "quero a próxima edição", cirurgia etc.), o agente SEMPRE oferece transferir a cortesia pra alguém indicado por ela ANTES de fechar como `recusou` — nunca fechar essa recusa sem ter feito a oferta: "antes de eu liberar sua vaga, quer passar essa cortesia pra alguém do seu time ou alguém que ia aproveitar bem a imersão? me manda nome, empresa, cargo, email e whats que eu deixo no nome da pessoa".
+QUEM NÃO RECEBE A OFERTA (critério do Eric, 20/07/2026):
+- `sem_resposta` (nunca respondeu) → segue a régua de follow-up normal, sem oferta de transferência;
+- recusa por DESINTERESSE no tipo de conteúdo ("não é pra mim", "não curto o tema", recusa seca sem justificativa de data) → fechamento direto, sem oferta;
+- caso pessoal delicado (luto, doença na família) ou quando a pessoa já disse que ninguém iria.
+Se topar → status `em_avaliacao` (ciclo aberto aguardando dados do indicado); quando os dados chegarem → cadastrar a pessoa nova (`add_participante` com `convidado_por` do operador), gerar PDF e enviar, e marcar o original como `recusou`.
+> **Por que virou obrigatório (20/07/2026):** o template de fechamento/follow-up dizia só "me avisa que passo a vaga pra frente" (o ERIC realoca) e nunca perguntava se a PRÓPRIA pessoa queria indicar alguém. Resultado: vagas fechadas como recusa sem aproveitar a indicação quente de quem confia no Eric. A pergunta da transferência vem ANTES do template de fechamento abaixo.
 
 Templates abaixo: preencher [DATAS], [CIDADE], [LOCAL+ENDEREÇO], [PREÇO], [HORÁRIO] com os fatos do MCP.
 
@@ -109,10 +115,10 @@ Só falta um passo: toca no botão do dia que encaixa (29 ou 30) ali dentro do c
 ```
 
 **RECUSOU (educado, sem disponibilidade):** — base validada em maio/2026; ajustada 13/07/2026: o voice guide passou a marcar "Obrigado por avisar" como ritual de fechamento (violação low) — não usar.
+PASSO 1 OBRIGATÓRIO (salvo exceções do bloco TRANSFERÊNCIA acima): oferecer passar a cortesia pra um indicado. Só DEPOIS que a pessoa declinar a indicação (ou nas exceções) usar o template de fechamento abaixo:
 ```
 Tranquilo, [PrimeiroNome]! Te deixo na lista da próxima edição e te aviso primeiro quando tiver. Abraço!
 ```
-(Se a recusa for por data/logística com interesse genuíno, considerar a oferta de transferência de cortesia — ver bloco TRANSFERÊNCIA acima.)
 
 **"QUAL DATA?" / "TEM DATA?":**
 ```
