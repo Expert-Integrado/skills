@@ -342,6 +342,7 @@ Ao varrer respostas, pra cada conversa decidir se o ciclo está aberto ou fechad
 6. **Não alterar status_presenca se já estava como `confirmado` via botão** sem reação do usuário — apenas reportar
 7. **Acentuação correta** em qualquer texto que for mostrado ao Eric
 8. **Consistência de fechamento dentro do lote** — se 9 de 10 leads do mesmo grupo (ex: recusados) receberam mensagem de fechamento, o 10º também recebe. Não criar exceção sem motivo claro
+9. **Pendência ligada a CONVIDADO nunca vira tarefa no board do evento (regra Eric, 19/07/2026)** — acompanhante a definir, substituto, sócio sem nome, dado de cadastro faltando etc. ficam registrados NO PARTICIPANTE (`update_participante` com a pendência nas observações, + status de convite adequado). O board de tarefas (`add_tarefa`) é exclusivo de produção/logística do evento (fornecedores, materiais, comunicação, agenda)
 
 
 ## MODO CRON — follow-up recorrente (a skill é a capacidade; o cron é só o gatilho)
