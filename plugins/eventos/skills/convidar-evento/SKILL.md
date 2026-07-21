@@ -37,7 +37,7 @@ A skill serve aos DOIS convidadores. Primeiro passo: identificar quem está oper
 | Filtro | `convidado_por_user_id = 5f1aa31e-e159-4638-9699-38a77c0f51cf` | `convidado_por_user_id = a11ad1a5-b40e-4541-8ca5-4df70cab1b07` |
 | Disparo | Automatizado via MCP `whatsapp-agent` (número pessoal do Eric, `instance="pessoal"`) | **MANUAL**: a skill monta o KIT (mensagens prontas + PDF de cada um) e o Niverton copia/cola e envia do WhatsApp DELE. NÃO existe whatsapp-agent pro número do Niverton. |
 | Copies | Copy A/B/C (voz do Eric, abaixo) | Copy A-N/B-N/C-N (voz do Niverton citando o Eric, abaixo) |
-| Pipedrive (Passo 5.5) | Sim, atividade concluída | Não criar via skill (Niverton registra no CRM dele) |
+| Pipedrive (Passo 5.5) | Sim, atividade concluída | Sim, atividade concluída com `user_id="Niverton Menezes"` — criada SÓ depois que ele confirmar o envio (junto com o Passo 5) |
 | Pós-envio | `update_status_convite` automático | Marcar `convite_enviado` SÓ depois que o Niverton confirmar que mandou |
 
 Um operador NUNCA dispara os convites do outro. Os arquivos locais (INDICE-ENVIO, segmentacao.json, pdfs/) vivem no PC do Eric; no ambiente do Niverton, usar direto o MCP (list_participantes + gerar_convite_pdf, que retorna URL pública, sem depender de disco).
@@ -275,7 +275,7 @@ Nada de `send`. Pra cada participante do lote, montar um bloco pronto pra copiar
 1. `gerar_convite_pdf(participante_id)` → guardar a `url`
 2. Entregar ao Niverton, por pessoa: telefone + Msg 1 (copy -N do segmento) + Msg 2 + link do PDF (ele baixa e anexa) + Msg 4
 3. Ele envia do WhatsApp dele, na ordem, com o PDF como mensagem separada sem legenda
-4. Depois que ele CONFIRMAR o envio: rodar o Passo 5 (`update_status_convite`) — nunca antes
+4. Depois que ele CONFIRMAR o envio: rodar o Passo 5 (`update_status_convite`) E o Passo 5.5 (atividade concluída no Pipedrive com `user_id="Niverton Menezes"`) — nunca antes. (Decisão do Eric, 21/07/2026: antes disso os envios do Niverton não geravam atividade e ficavam invisíveis no CRM.)
 
 ### Passo 5: Atualizar status no MCP
 ```
@@ -287,9 +287,9 @@ mcp__expert-integrado__update_status_convite(
 Valores válidos: pendente_envio, convite_enviado, em_avaliacao, aceitou_convite, confirmado, recusou, sem_resposta (este último só no encerramento da cadência — ver skill verificar-convites).
 NÃO usar `update_participante` pra status — ele não aceita o campo.
 
-### Passo 5.5: Registrar atividade no Pipedrive (NA HORA DO ENVIO)
+### Passo 5.5: Registrar atividade no Pipedrive (NA HORA DO ENVIO — vale pros DOIS operadores)
 
-Pra cada convite enviado com sucesso, criar atividade **concluída** no Pipedrive registrando o disparo. Vale como histórico auditável e cobre os silenciosos.
+Pra cada convite enviado com sucesso, criar atividade **concluída** no Pipedrive registrando o disparo. Vale como histórico auditável e cobre os silenciosos. **Responsável da atividade = quem enviou:** `user_id="Eric Luciano"` no fluxo automatizado; `user_id="Niverton Menezes"` no kit manual (criada SÓ após a confirmação de envio dele — Passo 4-N, item 4). Um operador nunca registra atividade no nome do outro.
 
 ```
 mcp__pipedrive__search_persons(term=<últimos 8 dígitos do telefone>)
@@ -308,13 +308,15 @@ mcp__pipedrive__create_activity(
   type="whatsapp",
   due_date="<YYYY-MM-DD do envio>",   # sem due_time. NUNCA passar "" ou "00:00"
   person_id=<id>,
-  user_id="Eric Luciano",
+  user_id="<operador: Eric Luciano | Niverton Menezes>",
   note="Contexto: <segmento, de onde veio, quem trouxe>",
   done=true
 )
 ```
 
-**Quando NÃO criar atividade aqui:** se o convite foi disparado por outro convidador. Manter atividade só para `convidado_por = "Eric Luciano"`.
+**Pessoa nova no fluxo do Niverton:** raro (os convidados dele em geral já são leads dele no CRM). Se precisar criar, `owner_id="Niverton Menezes"` e confirmar a "Origem do Contato" com o operador antes de preencher — o default "INDIC | Direta do Eric" é do fluxo do Eric.
+
+**Regra atualizada (Eric, 21/07/2026):** a versão anterior mandava criar atividade só para `convidado_por = "Eric Luciano"` — isso deixava os envios do Niverton sem rastro no Pipedrive. Agora TODO envio registra atividade, no nome de quem enviou.
 
 **OBRIGATÓRIO mesmo em lote via script:** se o disparo for automatizado (script processando N pessoas), o registro no Pipedrive faz parte do loop de CADA pessoa: enviou as 4 msgs, registra na hora. NÃO deixar "pra depois". (Incidente 02/07/2026: os scripts de lote pularam este passo e 35 atividades tiveram que ser criadas retroativamente em backfill.)
 
