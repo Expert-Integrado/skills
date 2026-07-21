@@ -22,18 +22,31 @@ Skill para ler respostas no WhatsApp dos convidados de um evento e atualizar sta
 - MCP `whatsapp-agent` conectado (read/inbox/search — leitura das conversas).
 - MCP `pipedrive` conectado (registro de desfecho do Passo 5.5).
 
+## OPERADOR — cada um varre SÓ os próprios leads (regra do Eric, 21/07/2026)
+
+Mesma separação da skill `convidar-evento`: a varredura é DO OPERADOR e cobre exclusivamente os participantes com o `convidado_por_user_id` DELE. **A varredura do Eric NUNCA atualiza status, responde ou registra Pipedrive de lead do Niverton — e vice-versa.** Quem cuida dos leads do Niverton é o Niverton, rodando a própria varredura.
+
+| | ERIC | NIVERTON |
+|---|---|---|
+| Filtro | `convidado_por_user_id = 5f1aa31e-e159-4638-9699-38a77c0f51cf` | `convidado_por_user_id = a11ad1a5-b40e-4541-8ca5-4df70cab1b07` |
+| Leitura de conversa (Passos 2 e 4) | Automática via `whatsapp-agent` | **MANUAL**: não existe whatsapp-agent pro número dele — ele traz as respostas; a skill classifica, atualiza status e registra |
+| Confirmações via botão do PDF | Detectadas no MCP (status `confirmado`) | Detectadas no MCP igual — o botão funciona pra qualquer convidado |
+| Pipedrive (Passo 5.5) | `user_id="Eric Luciano"` | `user_id="Niverton Menezes"` |
+| Modo cron | Sim (VPS do Eric) | Não — varredura manual dele |
+
 ## PROTOCOLO DE EXECUÇÃO
 
 ### Passo 0: Coletar parâmetros
 - **evento_id** do MCP expert-integrado
-- Quem verificar: default = todos com `convite_enviado` E `convidado_por = "Eric Luciano"`
-- Eric pode pedir pra verificar um subconjunto específico
+- **Operador da varredura** (Eric ou Niverton — perguntar se não for óbvio pelo ambiente)
+- Quem verificar: default = todos os participantes do OPERADOR (filtro por `convidado_por_user_id`, tabela acima)
+- O operador pode pedir pra verificar um subconjunto específico
 
 ### Passo 1: Listar participantes a verificar
 ```
 mcp__expert-integrado__list_participantes(evento_id=...)
 ```
-Filtrar pelo `convidado_por` desejado (ex: "Eric Luciano") e re-verificar TODOS os status, não só `convite_enviado`/`em_avaliacao`. Já houve caso de status errado (`recusou` que na verdade era `aceitou_convite`) — o skill precisa varrer tudo pra detectar inconsistências.
+Filtrar pelo `convidado_por_user_id` do OPERADOR (UUIDs na tabela de Operador acima; o campo texto `convidado_por` é só exibição) e re-verificar TODOS os status, não só `convite_enviado`/`em_avaliacao`. Já houve caso de status errado (`recusou` que na verdade era `aceitou_convite`) — o skill precisa varrer tudo pra detectar inconsistências.
 
 **ATENÇÃO:** `status_presenca = "confirmado"` é o DEFAULT de cadastro do sistema — todo participante nasce assim. NÃO é sinal de auto-confirmação. Confirmação real por botão aparece no `status` do convite (`confirmado`), não no `status_presenca`.
 
@@ -218,13 +231,14 @@ mcp__pipedrive__search_persons(term=<últimos 8 dígitos do telefone>)
 mcp__pipedrive__create_person(
   name=<nome>,
   phone=<telefone 55XXXXXXXXXXX, só dígitos>,
-  owner_id="Eric Luciano"
+  owner_id="<operador: Eric Luciano | Niverton Menezes>"
 )
 # depois, 1x na vida (NUNCA sobrescrever se já tiver valor):
 mcp__pipedrive__update_person(
   person_id=<id>,
   custom_fields='{"Origem do Contato": "INDIC | Direta do Eric"}'
 )
+# "Origem do Contato" acima é do fluxo do ERIC. Na varredura do Niverton, confirmar a origem com ele antes de preencher.
 ```
 
 **ACEITOU/CONFIRMOU — 2 atividades:**
@@ -234,7 +248,7 @@ mcp__pipedrive__create_activity(
   subject="Aceitou o convite da imersão",
   type="whatsapp",            # nome visível: Mensagem de WhatsApp
   due_date="<YYYY-MM-DD de hoje>",   # sem due_time
-  person_id=<id>, user_id="Eric Luciano",
+  person_id=<id>, user_id="<operador: Eric Luciano | Niverton Menezes>",
   note="Confirmou presença via botão do PDF/mensagem. Última msg dele: \"<texto literal, se houver>\".",
   done=true
 )
@@ -243,7 +257,7 @@ mcp__pipedrive__create_activity(
   subject="Imersão Empresa Inteligente, Empresário Livre",
   type="apresentacao",        # key da API; nome visível: Reunião Geral. NÃO usar "reuniao_geral"
   due_date="<YYYY-MM-DD do dia escolhido>",
-  person_id=<id>, user_id="Eric Luciano",
+  person_id=<id>, user_id="<operador: Eric Luciano | Niverton Menezes>",
   note="Confirmado na imersão (3ª edição). <contexto adicional se houver>"
 )
 ```
@@ -254,7 +268,7 @@ mcp__pipedrive__create_activity(
   subject="Recusou o convite da imersão",
   type="whatsapp",
   due_date="<YYYY-MM-DD de hoje>",
-  person_id=<id>, user_id="Eric Luciano",
+  person_id=<id>, user_id="<operador: Eric Luciano | Niverton Menezes>",
   note="Motivo: <citação literal>. Tom: <positivo/neutro/negativo>. Próxima ação sugerida: <reabordar próxima edição / follow-up 30d / arquivar>.",
   done=true
 )
@@ -266,7 +280,7 @@ mcp__pipedrive__create_activity(
   subject="Follow-up do convite da imersão",
   type="whatsapp",
   due_date="<YYYY-MM-DD do follow-up>",
-  person_id=<id>, user_id="Eric Luciano",
+  person_id=<id>, user_id="<operador: Eric Luciano | Niverton Menezes>",
   note="<qual follow-up: 48h / fechamento de lista / etc. Resumo da mensagem enviada>",
   done=true
 )
@@ -278,7 +292,7 @@ mcp__pipedrive__create_activity(
   subject="Em avaliação: convite da imersão",
   type="whatsapp",
   due_date="<YYYY-MM-DD de hoje>",
-  person_id=<id>, user_id="Eric Luciano",
+  person_id=<id>, user_id="<operador: Eric Luciano | Niverton Menezes>",
   note="Pergunta/objeção: <texto literal>. Aguardando resposta do Eric.",
   done=true
 )
@@ -290,7 +304,7 @@ mcp__pipedrive__create_activity(
   subject="Convite da imersão sem resposta, encerrado",
   type="whatsapp",
   due_date="<YYYY-MM-DD do encerramento>",
-  person_id=<id>, user_id="Eric Luciano",
+  person_id=<id>, user_id="<operador: Eric Luciano | Niverton Menezes>",
   note="Sem resposta após <N> follow-ups. Encerrado por decisão do Eric em <data>. Sugerida reabordagem na próxima edição.",
   done=true
 )
@@ -298,7 +312,7 @@ mcp__pipedrive__create_activity(
 
 **Regra geral:** atividade whatsapp concluída = touchpoint auditável (um por contato real). A "Reunião Geral" (type apresentacao) só existe no aceite e fica PENDENTE até o dia do evento. Não criar notas avulsas pra desfecho — o contexto vai no `note` da atividade.
 
-**Quando NÃO registrar:** se `convidado_por != "Eric Luciano"` (outro convidador é dono do touchpoint).
+**Quando NÃO registrar:** se o participante NÃO é do operador da varredura (`convidado_por_user_id` do outro). O outro convidador é dono do touchpoint e registra na varredura DELE, com o `user_id` dele — nunca registrar em nome do outro. (Regra do Eric, 21/07/2026: cada um cuida dos seus leads.)
 
 ### Passo 6: Relatório pro Eric
 
