@@ -34,10 +34,11 @@ Recebe um tema (empresa fictícia), inventa TUDO que faltar (nome, números, cop
 
 > **Persistência entre chamadas Bash (LEIA — vale pra TODA a skill):** a tool Bash NÃO preserva variáveis de shell entre chamadas (só o diretório de trabalho persiste). Logo: (1) no passo 0 crie o `WORK` UMA vez e ANOTE o caminho impresso; (2) no INÍCIO de toda chamada Bash seguinte, e no topo do `video.sh`, cole o **preâmbulo** abaixo — re-setando `WORK` com o caminho literal anotado e re-resolvendo as credenciais que aquela chamada usa. NUNCA gravar o valor resolvido de um secret em arquivo (regra de segurança do Eric): sempre re-resolver via `op read`/env em cada chamada.
 
-- **Passo 0 — criar o workdir UMA vez e guardar o caminho:**
+- **Passo 0 — criar o workdir UMA vez e guardar o caminho (no Windows, JÁ em forma Windows):**
   ```bash
-  WORK=$(mktemp -d); mkdir -p "$WORK/site"; echo "WORK=$WORK"   # ANOTE o caminho impresso
+  WORK=$(mktemp -d); command -v cygpath >/dev/null && WORK=$(cygpath -m "$WORK"); mkdir -p "$WORK/site"; echo "WORK=$WORK"   # ANOTE o caminho impresso
   ```
+  O `cygpath -m` é obrigatório no Windows/Git Bash (validado no teste de 23/07/2026): as tools Write/Edit NÃO aceitam o path POSIX do mktemp (`/tmp/tmp.xxx` → erro ENOTDIR "mkdir 'G:'"), e `@arquivo` embutido em curl `--data`/`--data-binary` não é convertido pelo MSYS. Com o WORK já em forma Windows (`C:/Users/...`), shell, node, Write/Edit e curl funcionam todos com o mesmo path.
 - **Preâmbulo — colar no início de CADA chamada Bash e no topo do `video.sh`** (numa chamada que só use uma credencial, colar só a linha dela + a linha do `WORK`):
   ```bash
   WORK=/caminho/impresso/no/passo/0            # SUBSTITUIR pelo valor literal anotado no passo 0
@@ -365,6 +366,7 @@ https://{slug}.vercel.app
 - **curl/API sem credencial (ex.: 401 silencioso) numa chamada Bash** → a variável do secret não persiste entre chamadas Bash; faltou colar o preâmbulo dos Pré-requisitos no início daquela chamada (ou o `WORK` literal). Re-resolver via `op read`/env, nunca gravar o secret em arquivo.
 - **Passo 5 fica `PENDING` pra sempre** → o `video.sh` não gravou sentinela; conferir que ele tem o `trap ... EXIT` do passo 2 e o `WORK` literal correto no topo. O teto de 15min do `for` do passo 2d sempre grava `video.fail` ao estourar.
 - **`PHOTO_INVALID_DIMENSIONS` no Telegram** → print fullPage alto demais; refazer com viewport fixo ou redimensionar.
+- **Write/Edit falha com ENOTDIR / "mkdir 'G:'" no Windows** → o `WORK` está em forma POSIX (`/tmp/...`); converter com `cygpath -m` (o passo 0 já faz isso — conferir se foi pulado) e usar a forma Windows em TODA chamada Write/Edit e em todo `@arquivo` de curl.
 - **Mesma chamada falhou 2x com o mesmo erro** → parar (circuit breaker), reportar diagnóstico; nunca a 3ª tentativa idêntica.
 
 ## Nota de validação
