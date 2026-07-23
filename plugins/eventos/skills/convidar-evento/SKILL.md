@@ -16,6 +16,17 @@ Skill para disparar convites via WhatsApp para eventos do Eric, puxando dados do
 - Status inicial: `pendente_envio` → após disparo: `convite_enviado`
 - **Ritmo: máx ~30 disparos/dia por número** (anti-spam + capacidade do Eric de responder). Confirmar o tamanho do lote com o Eric.
 
+## CONVITE DE INDICADO = VAI PRO INDICADOR ENCAMINHAR (regra do Eric, 22/07/2026)
+
+**Por padrão, o Eric NÃO manda o convite direto pro convidado indicado.** Quando alguém que o Eric chamou (o "indicador") passa contatos pra convidar, o fluxo é:
+1. Gerar o PDF de cada indicado (`gerar_convite_pdf`) e cadastrar normalmente no evento (dono Eric, `convidado_por` = o indicador, status → `convite_enviado`, `observacoes` = "Indicação de <indicador>").
+2. **Enviar o(s) PDF(s) pro INDICADOR repassar** — não disparar as 4 mensagens frias direto pro indicado. Mensagem curta ao indicador junto do PDF, tipo: "Segue o convite do/da <nome> em PDF. Pode encaminhar pra ele/ela, o botão dentro do convite confirma a vaga direto. Se tiver mais alguém, é só me passar."
+3. Se forem vários indicados de uma vez, mandar todos os PDFs pro indicador de uma vez.
+
+**Por quê:** preserva a curadoria e a relação na mão de quem indicou; evita mensagem fria do Eric caindo pra um estranho (o indicado converte pela relação com o indicador, não com o Eric).
+
+**Exceção — envio DIRETO é OK quando:** o indicado JÁ teve contato/call direto com o Eric (ex: Rodrigo, call na semana passada), ou o Eric mandar explicitamente "manda direto pra ele". Aí segue o fluxo normal de 4 mensagens (Copy C, com gancho de origem citando quem indicou).
+
 ## FONTE DA VERDADE = NUVEM (a skill NÃO depende de arquivo local)
 
 Roda de QUALQUER máquina/instância. Tudo vem do MCP na hora:
