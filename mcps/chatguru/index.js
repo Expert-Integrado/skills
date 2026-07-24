@@ -380,6 +380,39 @@ async function openBrowserWithSession() {
   const storageState = JSON.parse(await readFile(SESSION_PATH, "utf-8"));
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ storageState, permissions: ["notifications"] });
+  // ponytail: remove qualquer banner/overlay que intercepte cliques (ex.: banner
+  // "sem crédito" / incidente de reconexão do ChatGuru). Roda em toda navegação.
+  await context.addInitScript(() => {
+    const KILL = [
+      "#reconnection_banner_app",
+      ".reconnection-incident-backdrop",
+    ];
+    const nuke = () => {
+      for (const sel of KILL) {
+        document.querySelectorAll(sel).forEach((el) => el.remove());
+      }
+      document.documentElement.style.overflow = "";
+      if (document.body) {
+        document.body.style.overflow = "";
+        document.body.style.pointerEvents = "";
+      }
+    };
+    const start = () => {
+      nuke();
+      try {
+        new MutationObserver(nuke).observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+      } catch (e) {}
+      setInterval(nuke, 500);
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", start);
+    } else {
+      start();
+    }
+  });
   const page = await context.newPage();
   return { browser, context, page };
 }
@@ -505,7 +538,7 @@ server.tool(
   {
     chat_number: z.string().describe("Número do telefone para buscar (ex: 5511996647492, +55 11 96647-492, 96647492). Aceita formatos variados — a busca tenta múltiplas variantes automaticamente."),
     device: z.string().optional().default("Expert Integrado").describe("Nome do aparelho/dispositivo no ChatGuru (padrão: 'Expert Integrado'). Use string vazia para não filtrar."),
-    archived: z.boolean().optional().default(true).describe("Incluir chats arquivados/fechados na busca (padrão: true)."),
+    archived: z.boolean().optional().default(true).describe("Se true, quando não encontrar entre os não arquivados, tenta também os arquivados/fechados (padrão: true)."),
   },
   async ({ chat_number, device, archived }) => {
     const session = await openBrowserWithSession();
@@ -522,18 +555,20 @@ server.tool(
         return { content: [{ type: "text", text: `Sessão expirada. Execute \`CHATGURU_SERVER=${SERVER} node login.js\` para renovar.` }] };
       }
 
-      // Selecionar aparelho
+      // Selecionar aparelho (mantém o filtro do número conectado — evita achar
+      // o mesmo número em OUTRO aparelho, que tem conversa diferente)
       if (device) {
         await selectDevice(page, device);
       }
 
-      // Ativar filtro de arquivados
-      if (archived) {
+      // Busca em dois estados: primeiro NÃO arquivados (padrão), depois arquivados.
+      // O checkbox "arquivados" do ChatGuru é EXCLUSIVO (mostra só arquivados),
+      // então ligá-lo de cara esconde contatos não arquivados. Cobrimos os dois.
+      let result = await searchChatByPhone(page, chat_number);
+      if (!result && archived) {
         await enableArchivedFilter(page);
+        result = await searchChatByPhone(page, chat_number);
       }
-
-      // Buscar chat tentando múltiplos formatos
-      const result = await searchChatByPhone(page, chat_number);
       await browser.close();
 
       if (result) {
@@ -561,7 +596,7 @@ server.tool(
       name: z.string().optional().describe("Nome do contato (apenas para referência no resultado)."),
     })).describe("Lista de contatos para buscar. Máximo 50 por chamada."),
     device: z.string().optional().default("Expert Integrado").describe("Nome do aparelho/dispositivo no ChatGuru (padrão: 'Expert Integrado')."),
-    archived: z.boolean().optional().default(true).describe("Incluir chats arquivados/fechados na busca (padrão: true)."),
+    archived: z.boolean().optional().default(true).describe("Se true, quando não encontrar entre os não arquivados, tenta também os arquivados/fechados (padrão: true)."),
   },
   async ({ contacts, device, archived }) => {
     if (contacts.length > 50) {
@@ -584,12 +619,17 @@ server.tool(
         return { content: [{ type: "text", text: `Sessão expirada. Execute \`CHATGURU_SERVER=${SERVER} node login.js\` para renovar.` }] };
       }
 
-      // Configurar filtros uma única vez
+      // Seleciona aparelho uma vez (o filtro de arquivados é por contato, abaixo)
       if (device) await selectDevice(page, device);
-      if (archived) await enableArchivedFilter(page);
 
       for (const contact of contacts) {
-        const result = await searchChatByPhone(page, contact.phone);
+        // Busca em dois estados: não arquivados primeiro, depois arquivados
+        // (o reload no fim do loop reseta o checkbox p/ OFF a cada contato).
+        let result = await searchChatByPhone(page, contact.phone);
+        if (!result && archived) {
+          await enableArchivedFilter(page);
+          result = await searchChatByPhone(page, contact.phone);
+        }
 
         if (result) {
           results.push({
@@ -612,11 +652,11 @@ server.tool(
           });
         }
 
-        // Navegar de volta para a lista e reconfigurar filtros
+        // Navegar de volta para a lista e reselecionar aparelho (o reload zera
+        // o checkbox de arquivados — reativado por contato quando necessário).
         await page.goto(panelUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
         await sleep(3000);
         if (device) await selectDevice(page, device);
-        if (archived) await enableArchivedFilter(page);
       }
 
       await browser.close();
