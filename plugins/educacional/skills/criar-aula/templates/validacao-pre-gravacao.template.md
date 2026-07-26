@@ -22,7 +22,7 @@ Aguardando resposta da Maria. Quando vier:
 | 3 prompts do PRD (Aula 12) | Rodar do início ao fim em 1 case | Validar fluxo entrevista → faseamento → PRD+prompt Lovable |
 
 ### 1.3 Foto do Norbert Wiener (Aula 16)
-Você já tem em PPT de palestras antigas. Quando abrir o PC, busca o PPT (provavelmente em `OneDrive\Workspace\Educacional\01_Palestras\Apresentacoes\` ou similar) e extrai a foto pro `03_Assets/exemplos/wiener.jpg`. Eu aviso se quiser que eu busque no PC depois.
+Você já tem em PPT de palestras antigas. Quando abrir o PC, busca o PPT (provavelmente em `G:\Meu Drive\claude-workspace\Workspace\Educacional\01_Palestras\Apresentacoes\` ou similar) e extrai a foto pro `03_Assets/exemplos/wiener.jpg`. Eu aviso se quiser que eu busque no PC depois.
 
 ---
 

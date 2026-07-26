@@ -97,7 +97,7 @@ SCRIPT="$(find "$HOME" -type f -name disparar_toque.py -path '*notificacao-webin
 - SE ainda assim `$SCRIPT` vazio → reportar "disparar_toque.py nao encontrado no filesystem" e parar.
 - SE achou → daqui pra frente usar a variavel `$SCRIPT` (path absoluto ja resolvido) em TODAS as chamadas ao Python. Nao usar `SKILL_DIR` nem path relativo.
 
-> Nota: o path da `claude-sync` (de onde o script carrega a engine `whatsapp-api-fup-batch.py` e le o token do Pipedrive) se resolve sozinho desde 07/07/2026: env var `CLAUDE_SYNC_DIR` → autodeteccao (`G:/Meu Drive/claude-workspace/Workspace/claude-sync` primeiro, depois o legado do OneDrive). Em maquina com claude-sync fora dos 2 paths (VPS/headless): exportar `CLAUDE_SYNC_DIR` antes de rodar. Este passo resolve apenas a localizacao do PROPRIO `disparar_toque.py`.
+> Nota: o path da `claude-sync` (de onde o script carrega a engine `whatsapp-api-fup-batch.py` e le o token do Pipedrive) se resolve sozinho desde 07/07/2026: env var `CLAUDE_SYNC_DIR` → autodeteccao (`G:/Meu Drive/claude-workspace/Workspace/claude-sync`). Em maquina com claude-sync fora desse path (VPS/headless): exportar `CLAUDE_SYNC_DIR` antes de rodar. Este passo resolve apenas a localizacao do PROPRIO `disparar_toque.py`.
 
 ### Passo 3 — PREVIEW do toque (obrigatorio, nao dispara)
 

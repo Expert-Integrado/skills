@@ -40,7 +40,6 @@ Uma skill, uma pasta por cliente, várias fases ao longo do dia. Acompanha a ime
 **Caminho do Workspace (resolver dinâmico — nunca hard-codear).** Testar os candidatos NESTA ordem e usar o PRIMEIRO em que `<candidato>/Educacional` existe como diretório (checar com `[ -d "<candidato>/Educacional" ]`):
 1. `$WORKSPACE_DIR` — se a env var estiver setada.
 2. `G:/Meu Drive/claude-workspace/Workspace` — Google Drive, destino da migração de 05/07/2026 (default atual do PC).
-3. `$HOME/OneDrive/Workspace` — legado (arquivo morto pós-migração, só leitura); usar apenas se 1 e 2 falharem.
 
 SE nenhum candidato tiver a pasta `Educacional` → reportar ao Eric ("não localizei o Workspace") e PARAR (não criar árvore de pastas nova às cegas). O `<WORKSPACE>` resolvido é o candidato aprovado; usar ele em todos os paths daqui pra frente. Caminho canônico do Lab: `<WORKSPACE>/Educacional/02_Produtos/AI_Innovation_Lab/Edicoes_Customizadas/<Cliente>/`. Playbook interno em `<WORKSPACE>/Educacional/02_Produtos/AI_Innovation_Lab/Arquivos MD/Playbook_Interno.md`. Base de evidência: `Edicoes_Customizadas/Suno/` (deck/condução) e `Edicoes_Customizadas/Play55/` (dossiê/munição/cards/relatório — ciclo completo rodado 15-20/06/2026).
 
