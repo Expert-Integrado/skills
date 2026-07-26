@@ -465,7 +465,7 @@ Toda execução retorna:
 - Skill `prospecta-lead` (lead frio sem histórico) — `plugins/comercial/skills/prospecta-lead/`
 - Enum de origem (seção 2) e segmentos (seção 5) — **embutidos nesta skill nas Referências A e B** (espelho literal de `C:/MCPs/expert-mcps/CLAUDE.md`); consultar o arquivo externo só pra reconferir se suspeitar de mudança. Pipelines/etapas (seção 3) estão na tabela do passo 4; tipos de atividade (seção 4) estão inline nos passos 6 e 7.
 - Voice Guide v1.4 do Eric — Brain nota `yasak98uo4z4`
-- Diretriz CRM — `${WORKSPACE_DIR:-$HOME/OneDrive/Workspace}/Processo Comercial/Campanha de retomada de leads/Diretriz_Preenchimento_CRM.md` (só existe no PC/notebook; conteúdo operacional já está embutido nesta skill)
+- Diretriz CRM — `${WORKSPACE_DIR:-G:/Meu Drive/claude-workspace/Workspace}/Processo Comercial/Campanha de retomada de leads/Diretriz_Preenchimento_CRM.md` (só existe no PC/notebook; conteúdo operacional já está embutido nesta skill)
 - Brain nota `lhu4g220l66h` — desambiguação WhatsApp vs ChatGuru (este caso usa whatsapp-agent pessoal porque o destinatário é funcionário, não cliente externo)
 
 ## Versão

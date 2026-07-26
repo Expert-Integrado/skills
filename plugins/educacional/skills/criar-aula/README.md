@@ -29,9 +29,9 @@ criar-aula/
 
 Esta skill foi extraída do **Curso 01 G4 — Como Construir uma Empresa do Zero com IA** (27/05/2026, 16 aulas, 21 decisões salvas no Brain). Os arquivos canônicos que serviram de referência viva:
 
-- `OneDrive/Workspace/Educacional/04_Cursos_G4_Gravados/01_Como_Construir_Empresa_com_IA/03_Assets/slides-html/apresentacao.html`
-- `OneDrive/Workspace/Educacional/04_Cursos_G4_Gravados/01_Como_Construir_Empresa_com_IA/03_Assets/slides-html/materiais/index.html`
-- `OneDrive/Workspace/Educacional/04_Cursos_G4_Gravados/01_Como_Construir_Empresa_com_IA/01_Ementa/Ementa.md`
+- `G:/Meu Drive/claude-workspace/Workspace/Educacional/04_Cursos_G4_Gravados/01_Como_Construir_Empresa_com_IA/03_Assets/slides-html/apresentacao.html`
+- `G:/Meu Drive/claude-workspace/Workspace/Educacional/04_Cursos_G4_Gravados/01_Como_Construir_Empresa_com_IA/03_Assets/slides-html/materiais/index.html`
+- `G:/Meu Drive/claude-workspace/Workspace/Educacional/04_Cursos_G4_Gravados/01_Como_Construir_Empresa_com_IA/01_Ementa/Ementa.md`
 
 Deploy ativo: https://g4-construir-empresa-com-ia.ericluciano.com.br
 

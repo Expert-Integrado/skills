@@ -18,7 +18,7 @@ USO:
     import sys
     from importlib.util import spec_from_file_location, module_from_spec
     spec = spec_from_file_location('eng',
-        r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync/scripts/whatsapp-central-prospeccao-batch.py')
+        r'G:/Meu Drive/claude-workspace/Workspace/claude-sync/scripts/whatsapp-central-prospeccao-batch.py')
     eng = module_from_spec(spec); spec.loader.exec_module(eng)
 
     LEADS = [
@@ -63,10 +63,9 @@ except Exception:
 import os
 
 SYNC = os.environ.get('CLAUDE_SYNC_DIR') or next(
-    (p for p in (r'G:/Meu Drive/claude-workspace/Workspace/claude-sync',
-                 r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync')
+    (p for p in (r'G:/Meu Drive/claude-workspace/Workspace/claude-sync',)
      if os.path.exists(f'{p}/claude_desktop_config.json')),
-    r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync')
+    r'G:/Meu Drive/claude-workspace/Workspace/claude-sync')
 
 def _load_creds():
     pd_cfg = json.load(open(f"{SYNC}/claude_desktop_config.json", encoding="utf-8"))

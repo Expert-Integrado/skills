@@ -25,10 +25,9 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 from importlib.util import spec_from_file_location, module_from_spec
 
 SYNC = os.environ.get('CLAUDE_SYNC_DIR') or next(
-    (p for p in (r'G:/Meu Drive/claude-workspace/Workspace/claude-sync',
-                 r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync')
+    (p for p in (r'G:/Meu Drive/claude-workspace/Workspace/claude-sync',)
      if os.path.exists(f'{p}/claude_desktop_config.json')),
-    r'C:/Users/Eric Luciano/OneDrive/Workspace/claude-sync')
+    r'G:/Meu Drive/claude-workspace/Workspace/claude-sync')
 spec = spec_from_file_location('eng', f'{SYNC}/scripts/whatsapp-api-fup-batch.py')
 eng = module_from_spec(spec); spec.loader.exec_module(eng)
 PD_TOKEN = json.load(open(f'{SYNC}/claude_desktop_config.json'))['mcpServers']['pipedrive']['env']['PIPEDRIVE_API_KEY']

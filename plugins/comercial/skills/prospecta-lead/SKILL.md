@@ -44,9 +44,9 @@ Skill atomica: processa UM lead por vez. Pesquisa o perfil publico, cadastra pes
   - SE `WebSearch` nao existe → pular Passo 2, classificar identidade como `nao-confirmada`, preencher SO com dados do input.
   - SE `Bash` nao existe → pular Passo 0; no Passo 8 OMITIR `due_time`; no Passo 10 retornar `"tempo_execucao_s": null`.
 - **Diretriz de Preenchimento do CRM** (fonte canonica campo-a-campo; a tabela de campos desta skill e o resumo operacional dela):
-  - **Resolver o WORKSPACE_DIR primeiro** (Bash, 1x): `echo "${WORKSPACE_DIR:-$HOME/OneDrive/Workspace}"` — guardar o caminho resolvido.
+  - **Resolver o WORKSPACE_DIR primeiro** (Bash, 1x): `echo "${WORKSPACE_DIR:-/g/Meu Drive/claude-workspace/Workspace}"` — guardar o caminho resolvido.
   - Path da Diretriz: `<WORKSPACE_DIR resolvido>/Processo Comercial/Campanha de retomada de leads/Diretriz_Preenchimento_CRM.md`
-  - No PC do Eric o resolvido costuma ser: `C:\Users\Eric Luciano\OneDrive\Workspace\Processo Comercial\Campanha de retomada de leads\Diretriz_Preenchimento_CRM.md`
+  - No PC do Eric o resolvido costuma ser: `G:\Meu Drive\claude-workspace\Workspace\Processo Comercial\Campanha de retomada de leads\Diretriz_Preenchimento_CRM.md`
   - SE o diretorio resolvido NAO existe (headless/VPS, ou `Bash` indisponivel pra resolver) → NAO tentar outro caminho: usar SO fontes web (Passo 2) + as tabelas de campos embutidas nesta skill (que espelham a Diretriz), e registrar em `atencao_manual`: `"Diretriz_Preenchimento_CRM.md nao acessivel — segui tabelas embutidas"`.
 
 ## INPUT (1 lead)
