@@ -215,6 +215,21 @@ ERRO COMUM: Aceitar o adiamento sem questionar o custo da inação. Responder co
 
 DICA: Criar urgência não é pressão — é matemática. Quando o prospect vê o número real do custo de esperar, a decisão de adiar deixa de ser neutra.
 
+### Sinal de Diagnóstico — a Palavra Que o Prospect Usa pro Produto
+
+Antes de aplicar o script acima, ouça QUAL palavra o prospect usou pra nomear o que está recusando. Quando ele diz "curso", "aula", "treinamento" ou "capacitação" pra se referir à mentoria, ele não recusou a oferta que foi feita — recusou aula gravada pra assistir. O enquadramento falhou, e tratar preço ou custo de inação nesse cenário desperdiça a objeção.
+
+CASO REAL (27/07/2026, Marcelo Freitas — Freitas Pinturas, repintura de fachada de condomínio): recusou por áudio três dias depois de uma call em que sentou com a esposa pra ela ouvir a apresentação, ficou de mandar o CNPJ pra gerar o link de pagamento e disse que contato de síndico é "ouro na minha atividade". A recusa veio sem motivo declarado e com uma única pista: "a gente não vai fazer o CURSO nesse momento". Na mesma call ele havia dito "eu não tenho conhecimento técnico de nada, absolutamente" — pra quem lê "curso", a conta é imediata: não vou dar conta de fazer.
+
+• Enquadramento certo soa assim na boca do prospect: "implementação", "projeto", "vamos montar junto".
+• Enquadramento falhado soa assim: "curso", "aula", "treinamento", "vou ter que estudar".
+• Correção: assuma o erro em vez de acusar o prospect. "Se ficou parecendo que era pra você assistir aula, eu me expliquei mal; o que a gente faz é construir junto com você."
+• Só depois de corrigir a leitura, pergunte o que pesou. Não escolha a objeção no lugar dele.
+
+PREVENÇÃO: se o prospect não repetiu de volta o formato do programa durante a call, o enquadramento não pegou. Fazer ele dizer o que entendeu antes de mandar preço é mais barato que descobrir na recusa.
+
+CORRELATO: recusa sem motivo declarado, dias depois, em decisão de casal ou societária, costuma esconder veto do outro decisor. A palavra que o prospect usa é o que sobra de evidência quando o motivo não vem.
+
 
 # Objeção 4 — "Preciso Falar com Sócio/Time"
 
