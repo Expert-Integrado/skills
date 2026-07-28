@@ -21,7 +21,9 @@ Uso:
 Flags:
   --clips N         total de B-rolls (default: ceil(duracao / 5))
   --clips-kling N   quantos B-rolls saem no Kling (pago). Default: 0 (tudo do banco)
-  --engine          avatar_iv (default, lip-sync Avatar V) | avatar_video (~4x mais barato)
+  --engine          avatar_v (default -- chave real que elevenlabs_heygen.py/heygen_video.py
+                    mandam pro HeyGen) | avatar_video (alternativa ~4x mais barata, nao usada
+                    pelos scripts de producao atuais)
   --modo            api (default) | plano
   --imagens         api (paga, default) | assinatura (gratis, feita na UI)
   --cambio          R$/US$ (default 5.10)
@@ -32,9 +34,12 @@ import os
 import sys
 
 # taxas REAIS conhecidas (ver references/custos.md; fonte: CSV de uso HeyGen do Eric 14/06/2026)
+# "avatar_v" = chave que elevenlabs_heygen.py/heygen_video.py mandam de verdade pro HeyGen
+# (engine.type = "avatar_v"). "avatar_video" e uma alternativa mais barata que nenhum script
+# de producao usa hoje -- mantida so pra simulacao comparativa.
 HEYGEN = {
-    ("avatar_iv", "api"):      {"cr_s": 0.062, "usd_cr": 1.00},
-    ("avatar_iv", "plano"):    {"cr_s": 0.022, "usd_cr": 0.145},
+    ("avatar_v", "api"):       {"cr_s": 0.062, "usd_cr": 1.00},
+    ("avatar_v", "plano"):     {"cr_s": 0.022, "usd_cr": 0.145},
     ("avatar_video", "api"):   {"cr_s": 0.017, "usd_cr": 1.00},
     ("avatar_video", "plano"): {"cr_s": 0.006, "usd_cr": 0.145},  # extrapolado
 }
@@ -51,7 +56,7 @@ def main():
     ap.add_argument("--segundos", type=float)
     ap.add_argument("--clips", type=int)
     ap.add_argument("--clips-kling", type=int, default=0)
-    ap.add_argument("--engine", default="avatar_iv", choices=["avatar_iv", "avatar_video"])
+    ap.add_argument("--engine", default="avatar_v", choices=["avatar_v", "avatar_video"])
     ap.add_argument("--modo", default="api", choices=["api", "plano"])
     ap.add_argument("--imagens", default="api", choices=["api", "assinatura"])
     ap.add_argument("--cambio", type=float, default=5.10)

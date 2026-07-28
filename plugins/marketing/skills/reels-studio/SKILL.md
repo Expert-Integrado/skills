@@ -1,6 +1,6 @@
 ---
 name: reels-studio
-description: "Estúdio de reels: monta um reels vertical (9:16) do zero — um avatar HeyGen apresenta o roteiro e o vídeo é coberto por b-roll de imagens OpenAI (gpt-image-2) com movimento de câmera via ffmpeg, música de fundo e export. Use quando pedirem explicitamente o estúdio: 'estúdio de reels', 'estúdio de edição de reels', 'estúdio de vídeo', 'abre o estúdio de reels', 'editor de reels'. (Para 'criar vídeo / criar reels' genérico ou um pacote de conteúdo, use orquestrar-conteudo ou demonstracao-agente, não esta.) Na PRIMEIRA vez roda o ONBOARDING (chaves de API, avatar e elenco do b-roll)."
+description: "Estúdio de reels: monta um reels vertical (9:16) do zero — um avatar HeyGen apresenta o roteiro e o vídeo é coberto por b-roll de imagens OpenAI (gpt-image-2) com movimento de câmera via ffmpeg, música de fundo e export. Use quando pedirem explicitamente o estúdio: 'estúdio de reels', 'estúdio de edição de reels', 'estúdio de vídeo', 'abre o estúdio de reels', 'editor de reels'. (Para 'criar vídeo / criar reels' genérico ou um pacote de conteúdo, use orquestrar-conteudo ou demonstracao-agente, não esta. Para o reel padrão de produção com avatar HeyGen do Eric e pipeline completo, use criar-reel.) Na PRIMEIRA vez roda o ONBOARDING (chaves de API, avatar e elenco do b-roll)."
 allowed-tools: Bash, Read, Write, Edit
 ---
 

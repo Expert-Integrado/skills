@@ -14,13 +14,13 @@ via `scripts/simular_custo.py`). A v3 é mais barata que a v2: a fala sai do **E
 ## HeyGen — lip-sync (créditos por segundo de avatar; CSV do Eric 14/06/2026)
 | Engine | Modo | créditos/seg | US$/crédito |
 |---|---|---|---|
-| `avatar_iv` (Avatar V, **default**) | API | 0,062 | ~1,00 |
-| `avatar_iv` | plano | 0,022 | ~0,145 |
-| `avatar_video` (padrão, ~4x + barato) | API | 0,017 | ~1,00 |
+| `avatar_v` (Avatar V, **default** — chave que `elevenlabs_heygen.py`/`heygen_video.py` mandam de verdade) | API | 0,062 | ~1,00 |
+| `avatar_v` | plano | 0,022 | ~0,145 |
+| `avatar_video` (alternativa mais barata, ~4x — não usada pelos scripts atuais) | API | 0,017 | ~1,00 |
 | `avatar_video` | plano | ~0,006 *(extrapolado)* | ~0,145 |
-- A v3 manda `audio_asset_id` pro Avatar V (lip-sync) → o HeyGen contabiliza como `avatar_iv`.
+- A v3 manda `audio_asset_id` pro Avatar V (lip-sync) → o HeyGen contabiliza como `avatar_v`.
 - `avatar_video` é a alavanca de custo se a qualidade do lip-sync permitir.
-- Plano Creator US$29/200 créditos ≈ 143 min de `avatar_iv` — vira a favor do plano a partir
+- Plano Creator US$29/200 créditos ≈ 143 min de `avatar_v` — vira a favor do plano a partir
   de ~8 min de avatar/mês.
 
 ## ElevenLabs (fala) — a economia que justifica a v3

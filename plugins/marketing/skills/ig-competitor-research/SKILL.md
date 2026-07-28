@@ -215,6 +215,9 @@ Jogar o HTML de volta no chat ja "treina" o contexto no top content do nicho —
 - Apify: ~US$ 0,10–0,15 por run (cabe no free tier de US$ 5/mes). Whisper roda local = gratis.
 - Unico custo real e a assinatura do Claude.
 
+## Aviso
+Scraping via ator Apify de terceiros pode violar os Termos de Uso do Instagram. Usar por conta e risco; preferir perfis/dados publicos e evitar uso abusivo (volume alto, dados sensiveis).
+
 ## Exemplo
 ```
 Eric: roda o IG competitor research nesses perfis: @perfil1 @perfil2 @perfil3

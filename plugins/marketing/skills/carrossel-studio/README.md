@@ -4,17 +4,14 @@ Skill de criação de **carrosséis de Instagram prontos pra postar**. Você des
 
 ## Como instalar
 
-Copie a pasta `carrossel-studio/` para dentro de `~/.claude/skills/` (Mac/Linux) ou `%USERPROFILE%\.claude\skills\` (Windows):
+Instale via plugin, no Claude Code:
 
 ```
-.claude/skills/carrossel-studio/
-├── SKILL.md
-├── assets/
-│   ├── editor-carrossel.html   # o editor visual (template)
-│   └── montar.py               # injeta o projeto no editor
-├── references/                 # base de conhecimento da skill
-└── README.md
+/plugin marketplace add Expert-Integrado/skills
+/plugin install marketing@expertintegrado
 ```
+
+Isso traz o `carrossel-studio` (e as demais skills do plugin `marketing`) prontos pra usar.
 
 Abra o Claude Code e mande, por exemplo:
 > "cria um carrossel sobre os 3 erros mais comuns ao começar com IA"

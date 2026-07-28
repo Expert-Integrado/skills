@@ -3,8 +3,6 @@
 Skill de Claude Code que descobre o que está viralizando no Instagram do seu nicho e gera um
 relatório HTML com os posts de maior performance: hook, formato, transcrição e por que viralizou.
 
-Catálogo: https://skills.ericluciano.com.br (categoria "Lab pessoal").
-
 ---
 
 ## 1. Pré-requisitos (instala uma vez)
@@ -26,10 +24,10 @@ Catálogo: https://skills.ericluciano.com.br (categoria "Lab pessoal").
    (no Windows: `C:\Users\SEU_USUARIO\.claude\skills\ig-competitor-research\`).
 3. Reinicia o Claude Code.
 
-**Opção B — via plugin (se você tiver acesso ao repo `ericlucianoferreira/skills`):**
+**Opção B — via plugin:**
 ```
-/plugin marketplace add ericlucianoferreira/skills
-/plugin install lab@ericluciano
+/plugin marketplace add Expert-Integrado/skills
+/plugin install marketing@expertintegrado
 ```
 
 ## 3. Usar

@@ -7,7 +7,6 @@ config/cta.mp4
 # saidas
 saida/
 *.mp4
-!config/cta.exemplo.mp4
 
 # temporarios
 __pycache__/

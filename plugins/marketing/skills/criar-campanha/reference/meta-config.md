@@ -1,5 +1,9 @@
 # Meta Ads — config, sequência de publicação e upload de mídia
 
+> ⚠️ **Valores do ambiente do Eric — confirme antes de usar.** IDs, App ID e conta abaixo foram
+> capturados numa sessão específica; numa máquina/conta diferente, rode as tools `ads_get_*` pra
+> confirmar antes de publicar qualquer coisa.
+
 MCP oficial do Meta Marketing API (servidor `b2aeb035-...`). **Tudo que ele cria nasce PAUSADO** —
 nada entra em entrega até o João dar play no Gerenciador.
 
@@ -12,7 +16,7 @@ nada entra em entrega até o João dar play no Gerenciador.
 | Conta Instagram | (descobrir) | `ads_get_ig_accounts` → `instagram_user_id` |
 | Pixel/Dataset (p/ conversão) | (descobrir) | `ads_get_datasets` |
 | App ID | `2266676070529845` (GRAPH API LOVABLE) | — (só p/ upload Graph API) |
-| Token Graph API | `.env.meta` (expirava **09/06/2026** → provavelmente vencido) | renovar se for usar upload |
+| Token Graph API | `.env.meta` — **token conhecido está VENCIDO**, não usar sem renovar | ver "Upload de mídia" abaixo |
 | Moeda / mín. diário | BRL / ler `min_daily_budget_cents` | `ads_get_ad_accounts` |
 
 > O **MCP tem auth própria** (não usa o `.env.meta`) — `ads_create_*` funcionam mesmo com o token do
@@ -87,7 +91,9 @@ curl -s -F "source=@criativos/video.mp4" \
 ```
 Carregue `META_TOKEN` do `.env.meta`. Vídeo demora a processar — aguarde ficar `ready` antes de criar
 o criativo. **Se o token estiver vencido**, peça ao João pra renovar (Gerenciador de Negócios → token
-de sistema) antes de prosseguir.
+de sistema) antes de prosseguir. **Se o arquivo `.env.meta` não existir**, não invente token nem
+tente adivinhar valor: pergunte ao João onde está o token ou peça pra ele gerar um novo (Gerenciador
+de Negócios → tokens de sistema) e informar. Sem token válido, use a Via B ou C abaixo.
 
 ### Via B — imagem por URL pública
 Se a imagem já estiver hospedada (Cloudinary, biblioteca etc.), passe `image_url` direto no
