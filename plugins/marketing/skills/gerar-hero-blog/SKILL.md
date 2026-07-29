@@ -1,6 +1,6 @@
 ---
 name: gerar-hero-blog
-description: Gera imagem hero pra post(s) do blog expertintegrado.com.br/blog via OpenAI gpt-image-2 (NUNCA gpt-image-1), no estilo editorial azul da marca, converte pra WebP (~60KB) e atualiza heroImage+heroAlt no frontmatter MDX. TRIGGER quando Eric pedir "gera o hero do post X", "cria a imagem de capa", "hero pro blog", ou quando o pipeline de producao de conteudo precisar da imagem de capa de um post. NAO disparar pra: escrever/editar o texto do post (isso e a skill agente-draft-blog); gerar imagem de OG social (o PostLayout usa og/[slug].png dedicada, nao o hero); gerar imagem que nao seja capa de post do blog Expert.
+description: 'Gera imagem hero pra post(s) do blog expertintegrado.com.br/blog via OpenAI gpt-image-2 (NUNCA gpt-image-1), no estilo editorial azul da marca, converte pra WebP (~60KB) e atualiza heroImage+heroAlt no frontmatter MDX. TRIGGER quando Eric pedir "gera o hero do post X", "cria a imagem de capa", "hero pro blog", ou quando o pipeline de producao de conteudo precisar da imagem de capa de um post. NAO disparar pra: escrever/editar o texto do post (isso e a skill agente-draft-blog); gerar imagem de OG social (o PostLayout usa og/[slug].png dedicada, nao o hero); gerar imagem que nao seja capa de post do blog Expert.'
 allowed-tools: Bash, Read, Edit
 ---
 

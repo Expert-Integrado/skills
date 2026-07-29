@@ -1,6 +1,6 @@
 ---
 name: whatsapp-campanha-api-fup
-description: Use quando o usuario pedir campanha de follow-up/reabordagem/retomada em MASSA via WhatsApp API Oficial (template aprovado) do ChatGuru no canal corporativo Expert Integrado. Gatilhos PT-BR: "campanha de follow-up", "campanha de retomada", "campanha de reabordagem em massa", "disparar template oficial", "follow-up em massa via API oficial", "campanha API oficial", "disparar template ChatGuru", ou quando fornecer lista/CSV de deals do Pipedrive etiquetados CAMP RETOM (ou similar) pra disparo em lote. NAO usar para mensagem individual, link wa.me, ou disparo pelo WhatsApp pessoal (whatsapp-agent) — esses sao outros modos.
+description: 'Use quando o usuario pedir campanha de follow-up/reabordagem/retomada em MASSA via WhatsApp API Oficial (template aprovado) do ChatGuru no canal corporativo Expert Integrado. Gatilhos PT-BR: "campanha de follow-up", "campanha de retomada", "campanha de reabordagem em massa", "disparar template oficial", "follow-up em massa via API oficial", "campanha API oficial", "disparar template ChatGuru", ou quando fornecer lista/CSV de deals do Pipedrive etiquetados CAMP RETOM (ou similar) pra disparo em lote. NAO usar para mensagem individual, link wa.me, ou disparo pelo WhatsApp pessoal (whatsapp-agent) — esses sao outros modos.'
 allowed-tools: Bash, Read, Write, Edit, Glob, Grep, mcp__pipedrive__get_deal_summary, mcp__pipedrive__list_deal_notes, mcp__pipedrive__get_deal_flow, mcp__pipedrive__list_deals, mcp__pipedrive__search_deals
 ---
 

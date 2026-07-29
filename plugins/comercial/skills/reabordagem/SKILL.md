@@ -1,6 +1,6 @@
 ---
 name: reabordagem
-description: Use quando o usuario pedir para reabordar leads, reativar leads frios/perdidos, criar campanha de reativacao/reengajamento, processar uma lista de deals do Pipedrive para reabordagem, ou mencionar reabordagem/reativacao/recuperacao de leads. Tambem ativa em "rodar campanha de reabordagem", "reaquecer base", "voltar a falar com leads antigos". NAO usar para: follow-up de deals ativos em negociacao (fup-inteligente), prospeccao de leads novos (prospecta-lead), disparo direto de mensagens por WhatsApp/ChatGuru (whatsapp-campanha-*) — esta skill NAO envia mensagem, ela cria ATIVIDADE no Pipedrive com mensagem pronta pro vendedor enviar.
+description: 'Use quando o usuario pedir para reabordar leads, reativar leads frios/perdidos, criar campanha de reativacao/reengajamento, processar uma lista de deals do Pipedrive para reabordagem, ou mencionar reabordagem/reativacao/recuperacao de leads. Tambem ativa em "rodar campanha de reabordagem", "reaquecer base", "voltar a falar com leads antigos". NAO usar para: follow-up de deals ativos em negociacao (fup-inteligente), prospeccao de leads novos (prospecta-lead), disparo direto de mensagens por WhatsApp/ChatGuru (whatsapp-campanha-*) — esta skill NAO envia mensagem, ela cria ATIVIDADE no Pipedrive com mensagem pronta pro vendedor enviar.'
 allowed-tools: Read, Bash, Write, Task, mcp__pipedrive__list_deals, mcp__pipedrive__search_deals, mcp__pipedrive__get_deal_summary, mcp__pipedrive__create_activity, mcp__pipedrive__pipedrive_write, mcp__pipedrive__sync_all
 ---
 

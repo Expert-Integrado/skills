@@ -1,6 +1,6 @@
 ---
 name: onboard
-description: Onboarding inicial da memoria do Claude para um colaborador NOVO da Expert Integrado (primeira configuracao do zero). Cria CLAUDE.md, rules e memory com info da empresa e preferencias do colaborador. TRIGGER quando o usuario pedir "fazer onboard", "onboarding de colaborador novo", "setup inicial do meu Claude", "configurar minha memoria pela primeira vez", "sou novo na Expert e quero configurar o Claude". NAO usar para editar/atualizar memoria ja existente (ex: "atualiza minha memoria com X") nem para a configuracao pessoal do Eric — para isso, editar os arquivos direto.
+description: 'Onboarding inicial da memoria do Claude para um colaborador NOVO da Expert Integrado (primeira configuracao do zero). Cria CLAUDE.md, rules e memory com info da empresa e preferencias do colaborador. TRIGGER quando o usuario pedir "fazer onboard", "onboarding de colaborador novo", "setup inicial do meu Claude", "configurar minha memoria pela primeira vez", "sou novo na Expert e quero configurar o Claude". NAO usar para editar/atualizar memoria ja existente (ex: "atualiza minha memoria com X") nem para a configuracao pessoal do Eric — para isso, editar os arquivos direto.'
 allowed-tools: Read, Write, Glob, Bash, AskUserQuestion
 ---
 
