@@ -40,10 +40,10 @@ Protocolo de segurança canônico: `${BLOG_DIR}/docs/protocolo-conteudo.md` (4 c
 
 Ferramentas: `git`, `curl`, um Python (detectar com `command -v`). MCP `mcp__expert-brain__save_note`. Playwright é opcional (fallback visual do Passo 3; se não houver ambiente de browser, usar só `curl`).
 
-Resolver o Python uma vez (não há `python`/`python3` no PATH do PC — usar o interpretador documentado como fallback):
+Resolver o Python uma vez. No PC do Eric `python` e `python3` resolvem pelo PATH, mas são interpretadores DIFERENTES (`python` = 3.12.10, ambiente validado; `python3` = 3.14.3 do WindowsApps) — por isso tentar `python` primeiro, com o absoluto como último fallback:
 
 ```bash
-PY=$(command -v python3 || command -v python || echo "C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe")
+PY=$(command -v python || command -v python3 || echo "C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe")
 ```
 
 ## Input esperado

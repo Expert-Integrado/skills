@@ -101,7 +101,7 @@ Regras do contrato:
 
 ## PRE-REQUISITOS
 
-1. **Python 3.9+** (precisa de `zoneinfo`): detectar com `command -v python3 || command -v python`. Guardar o que existir como `PYBIN` (ex `python3`); e ele que vai no comando Bash do passo 4. Se nenhum existir → reportar ao usuario e parar.
+1. **Python 3.9+** (precisa de `zoneinfo`): detectar com `command -v python || command -v python3`. Guardar o que existir como `PYBIN` (ex `python3`); e ele que vai no comando Bash do passo 4. Se nenhum existir → reportar ao usuario e parar.
 2. **Onde voce esta rodando (confirmar o ambiente antes de assumir o path):** esta skill roda nos **PCs do Eric (Windows)** — a engine acha as credenciais sozinha no path canonico de `claude-sync` (ver "IMPORTANTE" no CONTRATO DA ENGINE). Como confirmar, sem adivinhar: rodar `ls "G:/Meu Drive/claude-workspace/Workspace/claude-sync/scripts/whatsapp-central-prospeccao-batch.py"` (path canonico desde 05/07/2026).
    - SE algum dos paths achar o arquivo → ambiente OK, seguir (usar ESSE path como `{WORKSPACE_DIR}/claude-sync` daqui em diante).
    - SE NENHUM achar → voce NAO esta num PC do Eric (pode ser notebook com outro usuario/VPS). Em maquina com claude-sync em path proprio: exportar `CLAUDE_SYNC_DIR` (engine) + `WORKSPACE_DIR` (runner) e seguir. Sem claude-sync nenhum → PARAR e reportar ao usuario. NAO tentar workaround de path.

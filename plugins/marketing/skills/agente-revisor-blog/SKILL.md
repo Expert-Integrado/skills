@@ -34,7 +34,7 @@ Faz auditoria de 4 dimensões pontuadas num draft MDX (frontmatter + body) do bl
   - Referenciado por slug/arquivo → ler com `Read` em `<BLOG_DIR>/src/content/blog/<slug>.mdx`, onde `BLOG_DIR="${BLOG_DIR:-C:/repos/expertintegrado-blog}"` (repo Astro do blog no PC do Eric; em headless, apontar `BLOG_DIR` pro clone local).
 - **Referência de voz e GEO (fonte da verdade):** `voz-e-geo.md` (voz Eric Luciano v1.4, estrutura GEO 2026, pilares, tipos, armadilhas MDX), publicado dentro DESTA skill em `reference/voz-e-geo.md` (mesmo diretório desta SKILL.md). Ler com `Read` se precisar dirimir dúvida de voz/GEO; os red flags operacionais abaixo já estão inline nesta skill.
 - **Protocolo de segurança (fonte da verdade):** `<BLOG_DIR>/docs/protocolo-conteudo.md` — Dimensão 5 implementa as Camadas 1 (scanner) + 2 (triagem 3 cores) desse protocolo. Ler só se precisar de contexto; o gate operacional já está inline no Passo 6.
-- **Scanner de segurança (Camada 1):** `<BLOG_DIR>/scripts/check-sensivel.py`. Interpretador Python: detectar com `command -v python3 || command -v python` (o script é stdlib puro — qualquer Python 3 serve, inclusive o 3.14 da Store que hoje está no PATH do PC do Eric); fallback documentado `/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe` (ou env `PYTHON_BIN`).
+- **Scanner de segurança (Camada 1):** `<BLOG_DIR>/scripts/check-sensivel.py`. Interpretador Python: detectar com `command -v python || command -v python3` (o script é stdlib puro — qualquer Python 3 serve, inclusive o 3.14 da Store que hoje está no PATH do PC do Eric); fallback documentado `/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe` (ou env `PYTHON_BIN`).
 - **Tools:** `Read` (ler o MDX e as referências), `Glob`/`Grep` (checar se slugs de `related` existem em `src/content/blog/`), `Bash` (rodar o scanner de segurança). Nenhuma tool MCP, nenhum deploy, nenhuma escrita no post.
 
 ## Passos
@@ -110,7 +110,7 @@ Camadas 1+2 do protocolo de segurança de conteúdo (`docs/protocolo-conteudo.md
 
 ```bash
 cd "${BLOG_DIR:-C:/repos/expertintegrado-blog}"
-PY="${PYTHON_BIN:-$(command -v python3 || command -v python)}"
+PY="${PYTHON_BIN:-$(command -v python || command -v python3)}"
 [ -z "$PY" ] && PY="/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
 "$PY" scripts/check-sensivel.py <slug>
 ```

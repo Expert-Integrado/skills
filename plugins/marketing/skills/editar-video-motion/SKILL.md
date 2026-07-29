@@ -37,7 +37,7 @@ Transforma uma gravação crua (alguém falando pra câmera, com erros e retakes
 
 ### 2. Python 3.12+ (`$PY`)
 ```bash
-PY=$(command -v python3 || command -v python)
+PY=$(command -v python || command -v python3)
 "$PY" --version   # DEVE imprimir "Python 3.1x" (3.12+)
 ```
 - **Se `"$PY" --version` NÃO imprimir "Python 3.1x"** (vier vazio, der erro, ou abrir a Microsoft Store — no PC do Eric o `python3` do PATH costuma ser o stub da Store), **OU se `$PY` vier vazio**, use como fallback final o caminho absoluto do Python 3.12 do PC Windows do Eric: `PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"` — SEMPRE entre aspas (tem espaço no caminho). Confirme que o arquivo existe: `[ -f "$PY" ] && echo OK || echo AUSENTE`. **Se nem esse caminho existir** (outro PC / sem Python 3.12) → **PARAR e reportar** que falta Python 3.12 — instalar Python é side-effect que exige OK do Eric, não instalar sozinho. Nos comandos abaixo, `"$PY"` = esse interpretador confirmado.

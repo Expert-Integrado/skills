@@ -25,14 +25,14 @@ Produz um arquivo `.srt` pronto pra importar no CapCut, com os termos técnicos 
 
 ## Pré-requisitos
 - `openai-whisper` instalado e `ffmpeg` no PATH (já estão na máquina do Eric). O `ffprobe` (usado no Caminho A pra medir a duração do vídeo e decidir background) vem junto com o `ffmpeg`.
-- Python pra rodar os scripts. Detectar e resolver o binário no MESMO comando Bash (o estado do shell NÃO persiste entre chamadas): `PY=$(command -v python3 || command -v python || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"`. No PC do Eric o Python não está no PATH (ver CLAUDE.md) — por isso o fallback pro binário 3.12 documentado; em Linux/VPS a detecção resolve sozinha. Os comandos abaixo já embutem essa linha.
+- Python pra rodar os scripts. Detectar e resolver o binário no MESMO comando Bash (o estado do shell NÃO persiste entre chamadas): `PY=$(command -v python || command -v python3 || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"`. No PC do Eric o Python não está no PATH (ver CLAUDE.md) — por isso o fallback pro binário 3.12 documentado; em Linux/VPS a detecção resolve sozinha. Os comandos abaixo já embutem essa linha.
 - Scripts e referência ficam DENTRO da pasta desta skill: `scripts/gerar_srt.py` (vídeo), `scripts/srt_from_text.py` (print) e `references/correcoes-comuns.md`. Esses nomes são relativos à pasta da skill — resolva o caminho ABSOLUTO dela no Preparo abaixo ANTES de qualquer comando. O cwd do Bash NÃO é garantido nessa pasta (e reseta entre chamadas), então nunca chame `scripts/...` / `references/...` "cru": sempre com o caminho absoluto que o Preparo imprime.
 
 ## Preparo — resolver o diretório da skill (rodar 1x, no início)
 `CLAUDE_PLUGIN_ROOT` é a env var que o Claude Code exporta apontando pra raiz do plugin `marketing` (a pasta que contém `.claude-plugin/plugin.json`), dentro da qual esta skill fica em `skills/gerar-srt`. NÃO chute `~/.claude/...`: o hash de versão varia e o path quebra. Rode este bloco (Bash) — ele resolve o Python (`PY`) e o diretório da skill, e valida que os scripts existem:
 
 ```bash
-PY=$(command -v python3 || command -v python || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
+PY=$(command -v python || command -v python3 || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
 SKILL_DIR="${CLAUDE_PLUGIN_ROOT}/skills/gerar-srt"
 [ -f "$SKILL_DIR/scripts/gerar_srt.py" ] || SKILL_DIR="$(dirname "$(dirname "$(find "$HOME" -type f -name gerar_srt.py -path '*gerar-srt*' 2>/dev/null | head -n1)")")"
 SKILL_DIR_WIN="$(cygpath -m "$SKILL_DIR" 2>/dev/null || echo "$SKILL_DIR")"
@@ -54,7 +54,7 @@ test -f "$SKILL_DIR/scripts/gerar_srt.py" && echo "scripts: OK" || echo "scripts
 
 1. **Rodar o Whisper + correções automáticas:**
    ```bash
-   PY=$(command -v python3 || command -v python || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
+   PY=$(command -v python || command -v python3 || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
    SKILL_DIR="${CLAUDE_PLUGIN_ROOT}/skills/gerar-srt"; [ -f "$SKILL_DIR/scripts/gerar_srt.py" ] || SKILL_DIR="$(dirname "$(dirname "$(find "$HOME" -type f -name gerar_srt.py -path '*gerar-srt*' 2>/dev/null | head -n1)")")"
    "$PY" "$SKILL_DIR/scripts/gerar_srt.py" "<caminho-do-video>.mp4"
    ```
@@ -85,7 +85,7 @@ test -f "$SKILL_DIR/scripts/gerar_srt.py" && echo "scripts: OK" || echo "scripts
      3. Usar esse número no `--duration` e AVISAR o Eric que é estimativa: o script distribui o tempo proporcional ao tamanho de cada linha, então o sync fino sai no CapCut.
 3. **Gerar o SRT com tempo estimado:**
    ```bash
-   PY=$(command -v python3 || command -v python || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
+   PY=$(command -v python || command -v python3 || true); [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
    SKILL_DIR="${CLAUDE_PLUGIN_ROOT}/skills/gerar-srt"; [ -f "$SKILL_DIR/scripts/srt_from_text.py" ] || SKILL_DIR="$(dirname "$(dirname "$(find "$HOME" -type f -name gerar_srt.py -path '*gerar-srt*' 2>/dev/null | head -n1)")")"
    "$PY" "$SKILL_DIR/scripts/srt_from_text.py" "C:/tmp/gerar-srt-segmentos.txt" --duration <segundos>
    ```

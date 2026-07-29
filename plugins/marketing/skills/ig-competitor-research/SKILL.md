@@ -55,7 +55,7 @@ O script aceita `APIFY_TOKEN` OU `APIFY_API_TOKEN`. Resolver nesta ordem, parand
     "$HOME/AppData/Local/Programs/Python/Python312/python.exe"; do
     [ -n "$cand" ] && "$cand" -c "import whisper, requests" >/dev/null 2>&1 && PY="$cand" && break
   done
-  [ -n "$PY" ] || { PY="$(command -v python3 || command -v python || echo "$HOME/AppData/Local/Programs/Python/Python312/python.exe")"; "$PY" -m pip install -U openai-whisper requests; }
+  [ -n "$PY" ] || { PY="$(command -v python || command -v python3 || echo "$HOME/AppData/Local/Programs/Python/Python312/python.exe")"; "$PY" -m pip install -U openai-whisper requests; }
   command -v ffmpeg >/dev/null 2>&1 || echo "instale ffmpeg e coloque no PATH"
   ```
   Se `ffmpeg` ou `whisper` faltarem e nao der pra instalar agora, rodar com `--no-transcribe` (so metadados + capa; sem transcricao dos Reels).
@@ -157,7 +157,7 @@ RETORNE APENAS um objeto JSON valido, sem nenhum texto antes ou depois, exatamen
 2. Rodar (resolvendo `SKILL_DIR` e `$PY` na mesma chamada — script por caminho absoluto, `<RUN_DIR>` e o valor guardado do Passo 1):
    ```bash
    SKILL_DIR="<caminho absoluto da pasta deste SKILL.md>"
-   PY="$(command -v python3 || command -v python || echo "$HOME/AppData/Local/Programs/Python/Python312/python.exe")"
+   PY="$(command -v python || command -v python3 || echo "$HOME/AppData/Local/Programs/Python/Python312/python.exe")"
    "$PY" "$SKILL_DIR/scripts/build_report.py" "<RUN_DIR>"
    ```
    O script faz o merge do `analysis.json` por `shortcode`, gera `<RUN_DIR>/report.html` (dark-theme, imagens embutidas em base64, transcricao copiavel) e tenta abrir no navegador.

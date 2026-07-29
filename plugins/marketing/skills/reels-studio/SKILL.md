@@ -31,7 +31,7 @@ Ambiente. `SKILL_DIR` = a pasta que contém ESTE `SKILL.md` (a mesma que lista `
 SKILL_DIR="/caminho/absoluto/desta/skill/reels-studio"   # o diretório onde está ESTE SKILL.md
 ls "$SKILL_DIR/scripts/config.py" || echo "SKILL_DIR errado: aponte pra pasta que contém scripts/ e config/"
 cd "$SKILL_DIR"
-PY="$(command -v python3 || command -v python)"
+PY="$(command -v python || command -v python3)"
 # fallback do PC do Eric (não há python no PATH):
 [ -z "$PY" ] && PY="/c/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
 command -v ffmpeg  >/dev/null || echo "FALTA ffmpeg — instale antes de montar/animar"

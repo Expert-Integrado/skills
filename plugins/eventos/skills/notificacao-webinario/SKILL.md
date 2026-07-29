@@ -34,7 +34,7 @@ Dispara os 7 toques de WhatsApp de um webinario-lancamento (do lembrete de vespe
 
 - **MCP/tools:** `CronCreate` (agendamento), `Bash` (rodar o script Python), `Read` (conferir CSV/logs).
 - **Script:** `scripts/disparar_toque.py` na pasta desta skill (path absoluto resolvido em runtime no Passo 2 → variavel `$SCRIPT`; o executor NAO adivinha a pasta de instalacao). Ele carrega a engine `whatsapp-api-fup-batch.py` do `claude-sync/scripts/` (mesma do plugin comercial) e le PIPEDRIVE_API_KEY + credenciais ChatGuru do cache local.
-- **Python:** detectar com `command -v python3 || command -v python`. Rodar com `-X utf8` (o script forca UTF-8 no stdout).
+- **Python:** detectar com `command -v python || command -v python3`. Rodar com `-X utf8` (o script forca UTF-8 no stdout).
 - **Insumos que o Eric precisa fornecer** (perguntar UMA vez, so os que faltarem):
   - CSV export de inscritos do Calendly (path completo). Fonte de verdade do publico.
   - Nome/Detalhe da origem do evento no Pipedrive (ex: `O Imposto Invisivel do Empresario`). Filtro CRM.
@@ -79,7 +79,7 @@ Regras de decisao:
 O script fica em `scripts/disparar_toque.py` DENTRO da pasta desta skill. O executor NAO adivinha esse path: descobre em runtime com `find`. Rodar exatamente:
 
 ```bash
-PY="$(command -v python3 || command -v python)"
+PY="$(command -v python || command -v python3)"
 SCRIPT="$(find "$HOME" -type f -name disparar_toque.py -path '*notificacao-webinario*' 2>/dev/null | head -n1)"
 ```
 

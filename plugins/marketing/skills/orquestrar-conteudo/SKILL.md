@@ -64,7 +64,7 @@ Produz conteúdo completo (copy + design) orquestrando um time de subagentes nat
 - **Workspace do job**: `CONTEUDO_DIR="${CONTEUDO_DIR:-C:/tmp/conteudo}"` → job em `$CONTEUDO_DIR/<slug>/` (ou subpasta `handoffs/<slug>/` do projeto). ATENÇÃO: o pipeline `instagram` via Workflow EXIGE o default `C:/tmp/conteudo/<slug>` — o script do gate crava esse path. Copie TODAS as fotos/assets pra lá antes de começar.
 - **Saída dos PNGs**: `WORKSPACE_DIR="${WORKSPACE_DIR:-G:/Meu Drive/claude-workspace/Workspace}"` → `$WORKSPACE_DIR/temp/<slug>/`. O Workspace migrou pro Google Drive em 05/07/2026 — `~/OneDrive/Workspace` é ARQUIVO MORTO, nunca escrever lá (o gate atual já usa o default novo via `outBase`).
 - **Banco de fotos do Eric**: `ERIC_FOTOS_DIR="${ERIC_FOTOS_DIR:-$HOME/OneDrive/Imagens/Perfil profissional}"` (sincroniza via OneDrive; mesma fonte da skill `tweet-print`).
-- **Python + Playwright** (só pro export do carrossel): detectar com `PY=$(command -v python3 || command -v python)`; SE vazio no Windows → `PY="$LOCALAPPDATA/Programs/Python/Python312/python.exe"`.
+- **Python + Playwright** (só pro export do carrossel): detectar com `PY=$(command -v python || command -v python3)`; SE vazio no Windows → `PY="$LOCALAPPDATA/Programs/Python/Python312/python.exe"`.
 
 ## Papéis e orquestração
 
@@ -263,7 +263,7 @@ O ciclo produção→revisão→export roda pelo Workflow `assets/pipeline-insta
 Servidor HTTP e script Python **obrigatoriamente no mesmo Bash call** — o Bash tool não persiste processos entre chamadas. `<porta>` = porta livre (o gate usa 8911; escolha outra, ex. 8912). `N` = número de slides.
 
 ```bash
-PY=$(command -v python3 || command -v python || echo "$LOCALAPPDATA/Programs/Python/Python312/python.exe")
+PY=$(command -v python || command -v python3 || echo "$LOCALAPPDATA/Programs/Python/Python312/python.exe")
 cd "${CONTEUDO_DIR:-C:/tmp/conteudo}/<slug>" && "$PY" -m http.server <porta> --bind 127.0.0.1 &
 SERVER_PID=$!
 sleep 2

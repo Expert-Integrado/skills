@@ -14,7 +14,7 @@
       "name": "comercial",
       "source": "./plugins/comercial",
       "description": "Skills comerciais: prospecta-lead, reabordagem, pipe-review, whatsapp-campanha-api-fup, whatsapp-campanha-central-prospeccao, estou-devendo, transferir-lead, fup-inteligente, enviar-proposta, blog-comercial, calendly-agendar, calendly-link.",
-      "version": "2.6.4",
+      "version": "2.6.5",
       "category": "productivity",
       "tags": [
         "comercial",
@@ -46,7 +46,7 @@
       "name": "eventos",
       "source": "./plugins/eventos",
       "description": "Skills de gestao de eventos: convidar-evento, verificar-convites, notificacao-webinario.",
-      "version": "2.5.10",
+      "version": "2.5.11",
       "category": "productivity",
       "tags": [
         "eventos",
@@ -58,7 +58,7 @@
       "name": "marketing",
       "source": "./plugins/marketing",
       "description": "Skills de marketing, conteudo e trafego: orquestrar-conteudo, agente-draft-blog, agente-revisor-blog, agente-publisher-blog, gerar-hero-blog, demonstracao-agente, criar-reel, reels-studio, video, editar-video-motion, cortar-respiros, gerar-srt, carrossel-studio, imagem, criar-script, criar-campanha, relatorio-ads, criar-webinario, ig-competitor-research, pauta-semanal, tweet-print, blog-para-linkedin, reel-para-post. (criar-post-blog removido 07/07/2026, substituido pelo pipeline de blog; referencia voz-e-geo.md migrada pra agente-revisor-blog. B-roll do criar-reel migrado de Kling pra Higgsfield em 28/07/2026.)",
-      "version": "2.16.0",
+      "version": "2.16.1",
       "category": "productivity",
       "tags": [
         "marketing",

@@ -86,7 +86,7 @@ Comando (resolve o binário Python de forma portátil — caminho absoluto do Wi
 
 ```bash
 PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
-[ -x "$PY" ] || PY=$(command -v python3 || command -v python)
+[ -x "$PY" ] || PY=$(command -v python || command -v python3)
 "$PY" "${CLAUDE_PLUGIN_ROOT}/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
 ```
 
@@ -95,7 +95,7 @@ Exemplo do caso em que precisou carregar o token (tudo numa chamada Bash só —
 ```bash
 export SUPABASE_PAT=$(op read "op://Agentes Eric/SUPABASE_ACCESS_TOKEN/credential")
 PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
-[ -x "$PY" ] || PY=$(command -v python3 || command -v python)
+[ -x "$PY" ] || PY=$(command -v python || command -v python3)
 "$PY" "${CLAUDE_PLUGIN_ROOT}/skills/estou-devendo/scripts/estou_devendo.py" $ARGUMENTS
 ```
 

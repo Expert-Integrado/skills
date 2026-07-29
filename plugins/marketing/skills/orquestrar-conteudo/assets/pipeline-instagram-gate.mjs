@@ -20,8 +20,10 @@ const ws = `${A.conteudoDir || 'C:/tmp/conteudo'}/${slug}`
 // Saida dos PNGs: Workspace migrou pro Google Drive em 05/07/2026 (OneDrive/Workspace = arquivo morto)
 const outBase = A.outDir || 'G:/Meu Drive/claude-workspace/Workspace/temp'
 const PORT = A.port || 8911
-// Deteccao de python no bash gerado (PC nao tem python no PATH do Git Bash)
-const PYLINE = `PY="$(command -v python3 || command -v python || echo "C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe")"`
+// Deteccao de python no bash gerado. No PC do Eric os dois estao no PATH mas sao
+// interpretadores diferentes (python=3.12.10 validado, python3=3.14.3 WindowsApps):
+// tentar `python` primeiro; `python3` cobre Linux/VPS.
+const PYLINE = `PY="$(command -v python || command -v python3 || echo "C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe")"`
 if (!slug || !brief) return { status:'erro', message:'args invalido: faltou slug/briefingPath', args_recebido: args }
 
 const COPY_SCHEMA = { type:'object', required:['status','caption','hashtags','slides'], properties:{

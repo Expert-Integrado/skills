@@ -34,7 +34,7 @@ Você é diretor de arte + redator sênior. Pega uma ideia (ou texto cru) e devo
   - `references/03-voz-e-tom.md` — como calibrar a voz da copy.
   - `references/04-frameworks.md` — tipos de carrossel e estruturas narrativas.
   - `references/05-formato-projeto.md` — o JSON do projeto e como injetar no editor (LEIA antes do passo 8).
-- Python 3 (só para o passo 8, e só se houver foto ou se quiser injeção confiável). Detecte com `command -v python3 || command -v python`. Se faltar, use o fallback de injeção manual (passo 8, opção B).
+- Python 3 (só para o passo 8, e só se houver foto ou se quiser injeção confiável). Detecte com `command -v python || command -v python3`. Se faltar, use o fallback de injeção manual (passo 8, opção B).
 - Um navegador (a pessoa abre o HTML e exporta os PNGs). A geração das fontes bonitas usa Google Fonts na 1ª vez; offline cai pro sistema — não é bloqueante para você.
 - Nenhuma chave de API, conta paga ou serviço externo.
 
@@ -141,7 +141,7 @@ Antes das opções, defina dois valores literais que as opções usam:
    SKILL_DIR="${CLAUDE_PLUGIN_ROOT}/skills/carrossel-studio"
    [ -f "$SKILL_DIR/assets/montar.py" ] || SKILL_DIR="$(dirname "$(dirname "$(find "$HOME" -type f -name montar.py -path '*carrossel-studio*' 2>/dev/null | head -n1)")")"
    SKILL_DIR_WIN="$(cygpath -m "$SKILL_DIR" 2>/dev/null || echo "$SKILL_DIR")"
-   PY="$(command -v python3 || command -v python)"
+   PY="$(command -v python || command -v python3)"
    WORK="$(mktemp -d)"
    WORK_WIN="$(cygpath -m "$WORK" 2>/dev/null || echo "$WORK")"
    mkdir -p "$HOME/Downloads"
@@ -220,7 +220,7 @@ Como a foto entra no JSON: campo `foto` no slide (caminho de arquivo OU dataURL)
 ## Erros comuns e recovery
 - **Tipografia quebrada / fonte errada no navegador** → `kit` fora da lista. Corrija para o nome EXATO em `references/02-sistema-visual.md` e regere o HTML.
 - **Foto não aparece no HTML** → foi entregue por caminho de arquivo via injeção manual (Opção B). Refaça pela Opção A (`montar.py`), que embute como dataURL. Se `montar.py` avisou "foto nao encontrada", o caminho está errado — causa nº 1 no Windows: campo `foto` com a forma POSIX `/tmp/...` (use a forma Windows `<WORK_WIN>/...`; o Git Bash não converte paths DENTRO do JSON). Corrija e rode de novo — o aviso NÃO derruba o script (exit 0), então confira o output sempre.
-- **Python ausente** (`command -v python3 || command -v python` vazio) → use a Opção B (injeção manual), MAS só se não houver foto. Com foto, instale/detecte Python ou avise a pessoa pra subir a foto pelo botão do editor.
+- **Python ausente** (`command -v python || command -v python3` vazio) → use a Opção B (injeção manual), MAS só se não houver foto. Com foto, instale/detecte Python ou avise a pessoa pra subir a foto pelo botão do editor.
 - **HTML abre com o exemplo padrão (não com a copy)** → `window.CARROSSEL` não foi injetado ou o JSON é inválido. Valide o JSON e reinjete (Opção A regera; Opção B: confira que a linha entrou ANTES da tag `<script>`).
 - **Slide com texto estourando** → o editor encolhe a fonte pra caber, mas não conte com isso pra enfiar parágrafo. Encurte a copy (frase curta, uma ideia).
 - **Pediram algo fora de escopo (reels, logo, foto por IA, plano de marketing)** → faça o carrossel e aponte o recurso certo; não tente resolver aqui.

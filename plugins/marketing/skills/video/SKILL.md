@@ -46,7 +46,7 @@ Gera um vídeo com o avatar do Eric no HeyGen falando um script, usando voz clon
 ```bash
 WORK=$(mktemp -d)                       # workdir temporário portável (nunca /tmp fixo)
 command -v curl >/dev/null || { echo "curl ausente — abortar"; exit 1; }
-PY="$(command -v python3 || command -v python)"   # parser JSON
+PY="$(command -v python || command -v python3)"   # parser JSON
 # PC do Eric não tem python no PATH → fallback documentado:
 [ -z "$PY" ] && PY="C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe"
 ```

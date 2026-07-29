@@ -34,7 +34,7 @@ Dispara campanha de follow-up em lote pelo aparelho da **API Oficial** do ChatGu
 
 ## Pre-requisitos
 
-- **Python 3**: detectar com `command -v python3 || command -v python` (nunca assumir caminho fixo de binario).
+- **Python 3**: detectar com `command -v python || command -v python3` (nunca assumir caminho fixo de binario).
 - **Workspace**: `WORKSPACE_DIR="${WORKSPACE_DIR:-G:/Meu Drive/claude-workspace/Workspace}"` (Google Drive — default dos PCs do Eric desde 05/07/2026; em headless, exportar a env var). ATENCAO: `~/OneDrive/Workspace` e ARQUIVO MORTO — nao escrever la; a copia legada do claude-sync que mora la so serve de fallback de leitura.
 - **Engine (single source of truth executavel)**: `$WORKSPACE_DIR/claude-sync/scripts/whatsapp-api-fup-batch.py`.
   - O arquivo `whatsapp-api-fup-batch.py` ao lado deste SKILL.md e apenas ESPELHO de leitura pra referencia/versionamento.
@@ -56,7 +56,7 @@ Dispara campanha de follow-up em lote pelo aparelho da **API Oficial** do ChatGu
          os.path.join(os.environ.get('XDG_DATA_HOME', os.path.expanduser('~/.local/share')), 'disparos'))
   CAMP_DIR = f'{base}/disparo-<nome-da-campanha>'   # ex.: C:/tmp/disparo-retom-abr26 no PC
   ```
-- **Como executar os blocos Python desta skill (costura Bash ↔ Python)**: os trechos de codigo dos Passos 1 e 6 NAO sao REPL nem comandos soltos. O modo esperado e: (1) gravar UM arquivo runner por rodada com a tool Write (ex.: `{CAMP_DIR}/round1.py`) juntando, na ordem: definicao de `CAMP_DIR` → dedup (Passo 1) → import da engine (Passo 6) → `LEADS` → chamada `run_batch(...)`; (2) executar via Bash: `PY=$(command -v python3 || command -v python); "$PY" -X utf8 "{CAMP_DIR}/round1.py"`. `python -X utf8 -c "..."` fica SO pra one-liners de inspecao. O runner NUNCA contem secrets (a engine carrega as credenciais sozinha do JSON local); pode conter deal_id/phone/miolo — fica em `CAMP_DIR`, fora de qualquer repo.
+- **Como executar os blocos Python desta skill (costura Bash ↔ Python)**: os trechos de codigo dos Passos 1 e 6 NAO sao REPL nem comandos soltos. O modo esperado e: (1) gravar UM arquivo runner por rodada com a tool Write (ex.: `{CAMP_DIR}/round1.py`) juntando, na ordem: definicao de `CAMP_DIR` → dedup (Passo 1) → import da engine (Passo 6) → `LEADS` → chamada `run_batch(...)`; (2) executar via Bash: `PY=$(command -v python || command -v python3); "$PY" -X utf8 "{CAMP_DIR}/round1.py"`. `python -X utf8 -c "..."` fica SO pra one-liners de inspecao. O runner NUNCA contem secrets (a engine carrega as credenciais sozinha do JSON local); pode conter deal_id/phone/miolo — fica em `CAMP_DIR`, fora de qualquer repo.
 - **MCP Pipedrive** ativo (so leitura: `get_deal_summary`, `list_deal_notes`, `get_deal_flow`, `list_deals`/`search_deals`). Escrita no Pipedrive (`create_activity`, `update_deal_fields`) esta bloqueada por hook no Claude Desktop — a engine ja escreve via REST direta (`urllib.request`).
 - **Encoding no Windows**: scripts proprios devem ter `sys.stdout.reconfigure(encoding='utf-8', errors='replace')` no topo; one-liners de inspecao usam `python -X utf8 -c "..."` (senao nomes com emoji, ex. `Juliana prado💜`, crasham o stdout cp1252 e truncam a listagem). NAO usar curl no Git Bash pra chamadas com acento (cp1252 quebra) — usar Python `urllib.parse.urlencode` (UTF-8).
 

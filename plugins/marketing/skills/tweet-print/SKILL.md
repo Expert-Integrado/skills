@@ -26,9 +26,9 @@ Transforma uma frase / piada / insight em imagem PNG estilo "tweet print" (foto 
 ## Pre-requisitos
 
 - **Shell:** Git Bash POSIX.
-- **Interpretador Python:** detectar (nao chumbar caminho). No PC do Eric nao ha `python`/`python3` no PATH, so o binario absoluto; em Linux/VPS ha `python3`:
+- **Interpretador Python:** detectar (nao chumbar caminho). No PC do Eric os DOIS resolvem pelo PATH, mas sao interpretadores diferentes: `python` = 3.12.10 (ambiente validado, tem Playwright) e `python3` = 3.14.3 do WindowsApps. Por isso a deteccao aqui tenta `python` PRIMEIRO; em Linux/VPS, onde so ha `python3`, o fallback cobre:
   ```bash
-  PY="$(command -v python3 || command -v python || echo 'C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe')"
+  PY="$(command -v python || command -v python3 || echo 'C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe')"
   ```
 - **Pasta da skill:** onde vivem `generate.py` e `requirements.txt`. Default do PC via env var:
   ```bash
@@ -171,7 +171,7 @@ Circuit breaker: se a MESMA chamada falhar 2x com o mesmo erro, parar e reportar
 Pedido: "faz um tweet print tema escuro pra story: 'A IA nao vai te substituir. Quem usa IA vai.'" (autor Eric, sem foto).
 
 ```bash
-PY="$(command -v python3 || command -v python || echo 'C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe')"
+PY="$(command -v python || command -v python3 || echo 'C:/Users/Eric Luciano/AppData/Local/Programs/Python/Python312/python.exe')"
 cd "${TWEET_PRINT_SKILL_DIR:-C:/repos/expertintegrado-skills/plugins/marketing/skills/tweet-print}"
 OUT="$(mktemp -d)"
 "$PY" generate.py \

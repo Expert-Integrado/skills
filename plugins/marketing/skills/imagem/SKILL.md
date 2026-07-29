@@ -49,7 +49,7 @@ Gera/edita imagens do Eric ou da marca. Backend primário = OpenAI gpt-image-2 (
   # testar se o $PYTHON default roda um interpretador. Roda → é o ambiente do PC, seguir com os defaults.
   # Não roda (headless/Linux/container/outro user, onde o path Windows não existe) → resolver por command -v + workdir POSIX.
   if ! "$PYTHON" -c "import sys" >/dev/null 2>&1; then
-    PYTHON="$(command -v python3 || command -v python)"   # só cai aqui quando o default falhou; no PC NÃO usar (pega o stub WindowsApps — ver Erros comuns)
+    PYTHON="$(command -v python || command -v python3)"   # só cai aqui quando o default falhou; no PC NÃO usar (pega o stub WindowsApps — ver Erros comuns)
     WORK="${IMG_WORK:-$(mktemp -d)}"; mkdir -p "$WORK"
     [ -n "$PYTHON" ] && "$PYTHON" -c "import sys" >/dev/null 2>&1 \
       || echo "Python ausente/inválido — instalar Python 3.12+ com openai (ver Pré-requisitos) e reexportar PYTHON"

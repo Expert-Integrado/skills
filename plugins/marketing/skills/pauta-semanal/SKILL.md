@@ -68,7 +68,7 @@ Transforma a pesquisa de concorrentes da semana em **5 pautas de conteúdo pront
    - **`MODO=agendado`** → **não pergunte**: aborte e envie no canal `PAUTA_CANAL` a mensagem "Pauta da semana não gerada: `APIFY_TOKEN` ausente no ambiente do cron — configure o token e a rotina volta a rodar na próxima segunda." Depois encerre sem gerar pautas.
 4. Detecte o interpretador Python 3 e guarde em `PY` (usado nos Passos 2 e 5). Rode:
    ```bash
-   PY="$(command -v python3 || command -v python || command -v py)"
+   PY="$(command -v python || command -v python3 || command -v py)"
    # Se nada no PATH: no Windows o launcher `py` sabe o caminho absoluto do interpretador
    [ -z "$PY" ] && PY="$(py -3 -c 'import sys; print(sys.executable)' 2>/dev/null)"
    # Validar por CAPACIDADE, não só por -x: o stub do WindowsApps (…/WindowsApps/python3) é executável
