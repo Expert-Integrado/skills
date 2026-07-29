@@ -22,6 +22,7 @@ Recebe um tema (empresa fictícia), inventa TUDO que faltar (nome, números, cop
 
 ## SEMPRE
 - SEMPRE disparar o vídeo (ElevenLabs + HeyGen) ANTES de qualquer outra etapa, em background (`run_in_background: true`).
+- SEMPRE ter plano B de voz: ElevenLabs fora (401 de cobrança, quota, chave) NÃO cancela o vídeo — cai pro `voice.type=text` com a voz clonada do Eric dentro da HeyGen (passo 2/a2). Palestra não espera fatura.
 - SEMPRE 4 imagens `1536x1024` (3:2) com a foto ref do Eric e `Preserve his exact face and identity` no prompt.
 - SEMPRE paleta com UMA cor de destaque escolhida PRO TEMA (nunca o mesmo CSS de toda demo) e copy específica (números, autoridade real do Eric) — nunca genérica.
 - SEMPRE acentuação correta do português em TODO texto da landing (é texto externo).
@@ -120,21 +121,42 @@ curl -s -X POST "https://api.elevenlabs.io/v1/text-to-speech/HSqIMKW3FHpkAcy8JJL
   --data @"$WORK/tts.json" \
   -o "$WORK/fala.mp3"
 ```
-Validar: `$WORK/fala.mp3` > 20KB e NÃO começa com `{` (se começar com `{`, é JSON de erro — key/quota; gravar em `$WORK/video.fail` e sair != 0). Checar o 1º byte: `[ "$(head -c1 "$WORK/fala.mp3")" = "{" ] && { echo "ElevenLabs erro: $(cat "$WORK/fala.mp3")" > "$WORK/video.fail"; exit 1; }`.
-
-b) **Upload do asset no HeyGen** — binário puro, NÃO multipart. Capturar `data.id` em `ASSET_ID` com `node` (usar `node`, não `jq` — `jq` pode não existir; `node` é pré-requisito). A variável persiste porque tudo isto roda dentro do mesmo `video.sh`:
+Validar: `$WORK/fala.mp3` > 20KB e NÃO começa com `{` (se começar com `{`, é JSON de erro — chave, quota ou **cobrança**). **NÃO abortar a demo aqui:** desde 28/07/2026 a conta ElevenLabs já devolveu `401 payment_issue` ("failed or incomplete payment") com a chave perfeitamente válida — o TTS é o elo mais frágil do pipeline. Falhou, marca `TTS_OK=0` e cai pro **plano B de voz** (item a2):
 ```bash
-ASSET_ID=$(curl -s -X POST "https://upload.heygen.com/v1/asset" \
-  -H "x-api-key: $HEYGEN_API_KEY" -H "Content-Type: audio/mpeg" \
-  --data-binary @"$WORK/fala.mp3" \
-  | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const j=JSON.parse(d);process.stdout.write((j.data&&j.data.id)||"")})')
-[ -z "$ASSET_ID" ] && { echo "HeyGen upload sem data.id" > "$WORK/video.fail"; exit 1; }
+TTS_OK=1
+if [ ! -s "$WORK/fala.mp3" ] || [ "$(head -c1 "$WORK/fala.mp3")" = "{" ] || [ "$(wc -c < "$WORK/fala.mp3")" -lt 20480 ]; then
+  TTS_OK=0
+  echo "ElevenLabs indisponivel, caindo pro plano B (voz da HeyGen): $(head -c 300 "$WORK/fala.mp3" 2>/dev/null)" >> "$WORK/video.log"
+fi
 ```
 
-c) **Gerar o vídeo** — avatar "Eric 2026" + voice `type=audio` + `input_text` OBRIGATÓRIO (mesmo com áudio pronto, a API exige). Montar o corpo com `node` (injeta `$ASSET_ID` e a fala escapada de `$WORK/fala.txt`) e capturar `data.video_id`. **A recuperação de avatar (abaixo) tem que estar EMBUTIDA aqui no `video.sh`:** o script roda detached (`run_in_background`), então não dá pra, depois de lançado, listar avatares e reaplicar à mão — ou a lógica está escrita no script, ou não acontece. Por isso o guarda de `VIDEO_ID` vazio já resolve o avatar e regera, tudo dentro do script:
+a2) **Plano B de voz — HeyGen faz voz E vídeo, sem ElevenLabs** (validado 28/07/2026 rodando do container da VPS: render de 70s, MP4 real baixado e conferido). Só executa quando `TTS_OK=0`. Voz clonada do Eric dentro da própria HeyGen: `Eric 2026` (português), id `65bd22126b004a29b0409db9a4be8485`. Resolver por nome antes de usar, porque id de voz também muda:
+```bash
+HEYGEN_VOICE_ID="65bd22126b004a29b0409db9a4be8485"
+if [ "$TTS_OK" = 0 ]; then
+  VOK=$(curl -s "https://api.heygen.com/v2/voices" -H "x-api-key: $HEYGEN_API_KEY" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{let j={};try{j=JSON.parse(d)}catch(e){};const vs=(j.data&&j.data.voices)||[];const er=vs.filter(v=>/eric/i.test(v.name||""));const y=er.find(v=>/2026/.test(v.name||""))||er.find(v=>/portug/i.test(v.language||""))||er[0];process.stdout.write(y?y.voice_id:"")})')
+  [ -n "$VOK" ] && HEYGEN_VOICE_ID="$VOK"
+  [ -z "$HEYGEN_VOICE_ID" ] && { echo "sem TTS e sem voz Eric na HeyGen" > "$WORK/video.fail"; exit 1; }
+fi
+```
+Trade-off (por isso o padrão continua sendo o ElevenLabs, não inverter a ordem): o caminho `voice.type=text` cobra mais crédito por minuto que o `audio_asset_id`, e o timbre é de OUTRO clone — parecido, não idêntico ao dos Reels.
+
+b) **Upload do asset no HeyGen** — binário puro, NÃO multipart. Capturar `data.id` em `ASSET_ID` com `node` (usar `node`, não `jq` — `jq` pode não existir; `node` é pré-requisito). A variável persiste porque tudo isto roda dentro do mesmo `video.sh`. **Todo o passo b só roda no caminho normal (`TTS_OK=1`)** — no plano B não existe áudio pra subir, e `ASSET_ID` fica vazio de propósito (é o que o passo c usa pra decidir o formato do corpo):
+```bash
+ASSET_ID=""
+if [ "$TTS_OK" = 1 ]; then
+  ASSET_ID=$(curl -s -X POST "https://upload.heygen.com/v1/asset" \
+    -H "x-api-key: $HEYGEN_API_KEY" -H "Content-Type: audio/mpeg" \
+    --data-binary @"$WORK/fala.mp3" \
+    | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const j=JSON.parse(d);process.stdout.write((j.data&&j.data.id)||"")})')
+  [ -z "$ASSET_ID" ] && { echo "HeyGen upload sem data.id" > "$WORK/video.fail"; exit 1; }
+fi
+```
+
+c) **Gerar o vídeo** — avatar "Eric 2026". Dois formatos de `voice`, escolhidos pelo `ASSET_ID` estar vazio ou não: com áudio pronto é `type=audio` + `audio_asset_id` + `input_text` OBRIGATÓRIO (mesmo tendo o áudio, a API exige); no plano B é `type=text` + `input_text` + `voice_id` (a HeyGen sintetiza a fala). O `gen_body` abaixo já cobre os dois — o resto do passo (resolução de avatar, poll) é idêntico nos dois caminhos. Montar o corpo com `node` (injeta `$ASSET_ID` e a fala escapada de `$WORK/fala.txt`) e capturar `data.video_id`. **A recuperação de avatar (abaixo) tem que estar EMBUTIDA aqui no `video.sh`:** o script roda detached (`run_in_background`), então não dá pra, depois de lançado, listar avatares e reaplicar à mão — ou a lógica está escrita no script, ou não acontece. Por isso o guarda de `VIDEO_ID` vazio já resolve o avatar e regera, tudo dentro do script:
 ```bash
 AVATAR_ID="bd4f2d9e3ed342a2999b2f585dacc567"
-gen_body(){ node -e 'const fs=require("fs");const t=fs.readFileSync(process.argv[1],"utf8").trim();const a=process.argv[2];const av=process.argv[3];process.stdout.write(JSON.stringify({video_inputs:[{character:{type:"avatar",avatar_id:av},voice:{type:"audio",audio_asset_id:a,input_text:t},background:{type:"color",value:"#101010"}}],dimension:{width:1280,height:720}}))' "$WORK/fala.txt" "$ASSET_ID" "$1"; }
+gen_body(){ node -e 'const fs=require("fs");const t=fs.readFileSync(process.argv[1],"utf8").trim();const a=process.argv[2];const av=process.argv[3];const vid=process.argv[4];const voice=a?{type:"audio",audio_asset_id:a,input_text:t}:{type:"text",input_text:t,voice_id:vid,speed:1.0};process.stdout.write(JSON.stringify({video_inputs:[{character:{type:"avatar",avatar_id:av},voice:voice,background:{type:"color",value:"#101010"}}],dimension:{width:1280,height:720}}))' "$WORK/fala.txt" "$ASSET_ID" "$1" "$HEYGEN_VOICE_ID"; }
 generate(){ curl -s -X POST "https://api.heygen.com/v2/video/generate" -H "x-api-key: $HEYGEN_API_KEY" -H "Content-Type: application/json" --data @"$WORK/gen.json" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{const j=JSON.parse(d);process.stdout.write((j.data&&j.data.video_id)||"")})'; }
 gen_body "$AVATAR_ID" > "$WORK/gen.json"; VIDEO_ID=$(generate)
 if [ -z "$VIDEO_ID" ]; then          # avatar pode ter mudado — resolver pelo avatar_name, DENTRO do script
