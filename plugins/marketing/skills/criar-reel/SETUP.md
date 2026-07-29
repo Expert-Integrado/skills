@@ -34,14 +34,31 @@ Crie um arquivo por serviço na pasta de credenciais (formato `CHAVE=valor`, uma
 | `elevenlabs.env` | `ELEVENLABS_API_KEY=...` | elevenlabs.io → Profile → API Keys |
 | `heygen.env` | `HEYGEN_API_KEY=...` | app.heygen.com → Settings → API (precisa de saldo de API, que é separado da assinatura do site) |
 | `openai.env` | `OPENAI_API_KEY=...` | platform.openai.com → API Keys |
-| `kling.env` | `KLING_ACCESS_KEY=...` e `KLING_SECRET_KEY=...` | klingai.com → API (saldo separado da assinatura) |
+
+O **Higgsfield** (B-roll) NÃO usa `.env` — é binário + login OAuth. Instalar assim (o
+`npm i -g @higgsfield/cli` **quebra no Windows**: o postinstall usa `tar` e o Git Bash trata
+`C:` como host remoto, fazendo o npm dar rollback):
+
+```bash
+cd /c/tmp
+curl -sSL --ssl-no-revoke -o hf.tar.gz "https://github.com/higgsfield-ai/cli/releases/download/v1.1.20/hf_1.1.20_windows_amd64.tar.gz"
+tar -xzf hf.tar.gz            # caminho RELATIVO, sem "C:" no argumento
+mv hf.exe /c/MCPs/hf.exe      # ou outra pasta + env HF_EXE
+/c/MCPs/hf.exe auth login     # abre o navegador: o USUÁRIO clica em Authorize
+/c/MCPs/hf.exe workspace list # pegue o id e rode: workspace set <id>
+/c/MCPs/hf.exe account status # confirma e-mail, plano e créditos
+```
+
+O `workspace set` é **obrigatório** — sem ele todo comando responde "No workspace selected".
+Detalhes, modelos e preços: `references/higgsfield-cli.md`.
 
 Pré-requisitos de conta (confirme com o usuário ANTES de testar):
 - **ElevenLabs:** plano com Instant/Professional Voice Cloning e a voz do usuário JÁ clonada
   (Professional/PVC dá o melhor resultado). Sem voz clonada, a skill não faz sentido.
 - **HeyGen:** um avatar do usuário criado (Avatar IV/V — "digital twin"). Custo de referência:
   US$ 4/min de vídeo 1080p gerado via API.
-- **Kling:** chaves de API ativas. Custo de referência: ~US$ 0,42/clipe de 5s (std).
+- **Higgsfield:** assinatura ativa (Starter = 200 créditos/mês). B-roll de 4s em 480p custa
+  ~1,2 crédito. A franquia é da CONTA, então máquinas diferentes dividem o mesmo saldo.
 
 ## Fase 3 — Personalização (IDs e voz)
 
@@ -81,16 +98,19 @@ Execute em ordem, mostrando o resultado de cada um:
    (fundo verde chapado) e re-rode o `verificar_voz.py` no vídeo.
 3. **OpenAI (~US$ 0,02):** `python scripts/openai_image.py --prompt "teste" --quality low
    --out teste.png` e confira a imagem.
-4. **Kling (~US$ 0,42 — pergunte antes):** 1 clipe de teste com `scripts/kling_i2v.py` num
-   manifesto de 1 item (formato em `references/kling-api.md`).
+4. **Higgsfield (~1,2 crédito da franquia — pergunte antes):** 1 clipe de teste com
+   `scripts/higgsfield_i2v.py` num manifesto de 1 item (formato em
+   `references/higgsfield-cli.md`). Confira com `ffprobe` que saiu **h264 com ~4s** — se vier
+   PNG/imagem, o `find_url` está pegando a URL de entrada (ver o runbook).
 5. **FFmpeg/WebP:** `ffmpeg -y -i teste.png -q:v 80 teste.webp` deve funcionar.
 
 ## Fase 5 — Fechamento
 
 - [ ] Confirme que o SKILL.md ficou coerente com as escolhas do usuário (voz, etapa 9, paths).
 - [ ] Apague os arquivos de teste gerados.
-- [ ] Diga ao usuário o custo estimado por vídeo (~US$ 9/min) e os saldos que ele precisa
-  manter (HeyGen API e Kling são pré-pagos separados da assinatura dos sites).
+- [ ] Diga ao usuário o custo estimado por vídeo (~US$ 4,40/min) e o que ele precisa manter:
+  saldo de API do HeyGen (pré-pago, separado da assinatura do site) e a franquia mensal do
+  Higgsfield (200 créditos, renova dia 10, compartilhada entre as máquinas da mesma conta).
 - [ ] Sugira o primeiro uso: *"cria um reel sobre [tema que o usuário domina]"*.
 
 ## Avisos que você deve repassar
@@ -99,5 +119,8 @@ Execute em ordem, mostrando o resultado de cada um:
   recusado não gasta, mas vídeo gerado e descartado gasta.
 - O ElevenLabs às vezes troca a voz no meio do áudio — é exatamente isso que o checkpoint
   do `elevenlabs_heygen.py` pega ANTES de gastar crédito do HeyGen. Não remova.
-- O Kling barra imagens com figura humana "nua" (mesmo robôs estilizados) — as figuras dos
-  frames devem estar sempre vestidas (já está nas referências visuais).
+- A moderação dos geradores de vídeo barra imagens com figura humana "nua" (mesmo robôs
+  estilizados) — as figuras dos frames devem estar sempre vestidas (já está nas referências
+  visuais).
+- O login do Higgsfield é OAuth pelo navegador: **quem instala não consegue completar sozinho**,
+  o usuário tem que clicar em Authorize. E o `workspace set` é obrigatório depois do login.

@@ -7,9 +7,11 @@ sempre `9:16`, como mandam as etapas 5, 8 e 9 da SKILL. Canva AI é proibido. HT
 Paleta: **fundo escuro carvão + brilho âmbar/coral**, render 3D cinematográfico, god rays volumétricos,
 alto contraste, premium high-tech, ultra-detalhado. Esse look amarra B-roll + thumb numa identidade só.
 
-## Frames-base para o Kling (image-to-video)
-- 1 frame por clipe de 5s. Total de clipes = duração do vídeo ÷ 5 (arredondar pra cima).
-- Cada frame é o **quadro inicial** da cena (o Kling adiciona o movimento depois).
+## Frames-base para o image-to-video (Higgsfield)
+- 1 frame por clipe. Total de clipes = duração do vídeo ÷ 5 (arredondar pra cima); o clipe
+  gerado sai com 4s (duração aceita pelo `seedance1_5`) e o compose acomoda.
+- Cada frame é o **quadro inicial** da cena (o gerador adiciona o movimento depois) — vai no
+  `--start-image`.
 - **SEM TEXTO nos frames** (o texto entra na edição). Sempre incluir no prompt:
   `no text, no words, no logos`. E evitar logos de marca reais (renderizam torto).
 - Representar marcas/conceitos de forma **abstrata** (ex: pagamento = rede de nós brilhando;
@@ -18,7 +20,7 @@ alto contraste, premium high-tech, ultra-detalhado. Esse look amarra B-roll + th
 - Sufixo de estilo recomendado no prompt:
   `Style: cinematic 3D render, dark charcoal studio background, warm amber and coral glow, volumetric god rays, high contrast, premium high-tech mood, ultra-detailed, sharp focus, no text, no words, no logos, vertical 9:16 with clean negative space at the top.`
 
-## Negative prompt padrão (B-roll, usado no manifesto do Kling)
+## Negative prompt padrão (B-roll, usado no prompt do manifesto)
 ```
 text, letters, words, captions, watermark, logo, brand name, distorted face, deformed hands, extra fingers, low quality, blurry, jittery motion, flicker, oversaturated, cartoon
 ```

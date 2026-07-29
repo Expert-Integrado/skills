@@ -38,7 +38,7 @@ Tudo salvo dentro de uma pasta única do Reel (em `Downloads`), nada solto:
 3. **Fala do avatar** — gera o áudio no ElevenLabs (voz clonada do Eric) e faz só o lip-sync no HeyGen (o avatar do Eric mexendo a boca no áudio). É aqui que a v3 economiza.
 4. **Legenda da tela (SRT)** — transcreve o vídeo e corrige os termos técnicos.
 5. **Fundos (B-rolls)** — primeiro reaproveita o **banco de B-rolls** já existente (~219 clipes prontos); só gera novo no que faltar.
-6. **B-rolls novos** — pros poucos trechos sem clipe no banco, gera imagem (GPT Image 2) e anima (Kling).
+6. **B-rolls novos** — pros poucos trechos sem clipe no banco, gera imagem (GPT Image 2) e anima (Higgsfield).
 7. **Composição final** — junta tudo: B-roll no fundo, Eric recortado por cima e a legenda amarela.
 8. **Thumb** — gera a capa do Reel.
 9. **Página do CTA** — publica o material prometido na Biblioteca e devolve o link público.
@@ -48,8 +48,8 @@ Tudo salvo dentro de uma pasta única do Reel (em `Downloads`), nada solto:
 - **ElevenLabs** — gera a fala (voz clonada do Eric). É a etapa que barateia a v3.
 - **HeyGen** — faz o lip-sync: o avatar do Eric falando o áudio do ElevenLabs.
 - **GPT Image 2 (OpenAI)** — gera as imagens base dos B-rolls, a thumb e a capa da página de CTA.
-- **Kling** — anima as imagens e vira os vídeos de fundo (B-rolls). É a opção principal.
-- **Higgsfield** — alternativa de animação, usada só como fallback se o Kling falhar ou ficar sem saldo.
+- **Higgsfield** — anima as imagens e vira os vídeos de fundo (B-rolls). É a opção principal, e usa a franquia mensal da assinatura (não é pré-pago).
+- **Kling** — animava os B-rolls até 07/2026; hoje está fora do fluxo (os pacotes pré-pagos venceram). Os scripts ficam no repo como caminho legado.
 - **Banco de B-rolls** — catálogo de ~219 clipes prontos reutilizáveis; consultado antes de gerar qualquer coisa nova, pra economizar.
 - **Biblioteca (biblioteca.ericluciano.com.br)** — onde a página do CTA é publicada e os leads são capturados. (Notion serve de fallback.)
 - **Whisper** — transcreve o áudio pra gerar a legenda da tela.
@@ -61,18 +61,19 @@ Tudo salvo dentro de uma pasta única do Reel (em `Downloads`), nada solto:
   - `elevenlabs.env` — chave do ElevenLabs (conta com a voz do Eric já clonada).
   - `heygen.env` — chave do HeyGen (com o avatar do Eric criado; **o saldo de API é separado da assinatura do site**).
   - `openai.env` — chave da OpenAI (GPT Image 2).
-  - `kling.env` — chaves do Kling (**saldo também separado da assinatura**).
   - `biblioteca.env` — login de admin da Biblioteca (pra publicar a página de CTA).
+- **Higgsfield**: não usa `.env`. É o binário `hf.exe` (em `C:\MCPs\`) com login feito uma vez pelo navegador. O passo a passo está no `SETUP.md`.
 - **Voz e avatar já configurados** dentro da skill (qual voz do ElevenLabs e qual avatar do HeyGen usar). Isso é feito uma vez, na instalação — o passo a passo está no `SETUP.md`, e o Claude faz pra você.
 
 > Observação: os valores das chaves NÃO ficam neste repositório. Você só precisa saber QUAIS chaves existem e que elas moram nos arquivos `.env` acima.
 
 ## Dicas e observações
 
-- **Custo por Reel (~1 min): cerca de US$ 9.** Aproximadamente US$ 4 de fala (ElevenLabs + HeyGen), US$ 4,60 de B-rolls (Kling, ~11 clipes) e ~US$ 0,50 de imagens. O fluxo antigo custava US$ 10-11 só na fala — a v3 corta isso pela metade.
-- **HeyGen e Kling são pré-pagos e separados** da assinatura dos sites. Mantenha saldo. Vídeo gerado e descartado gasta crédito; submit recusado não gasta.
+- **Custo por Reel (~1 min): cerca de US$ 4,40** (~R$ 22): quase tudo é a fala (ElevenLabs + HeyGen lip-sync) e ~US$ 0,80 de imagens. Os B-rolls não entram no caixa — vêm do banco (grátis) ou da franquia mensal do Higgsfield. O fluxo antigo custava US$ 10-11 só na fala.
+- **O saldo de API do HeyGen é separado** da assinatura do site — mantenha crédito. Vídeo gerado e descartado gasta; submit recusado não gasta.
+- **O Higgsfield tem franquia de 200 créditos/mês** (renova dia 10) e cada B-roll de 4s custa ~1,2 crédito, ou seja ~166 clipes/mês. **Essa franquia é compartilhada entre o PC e o notebook do Eric** — se as duas máquinas gerarem no mesmo dia, o saldo cai em dobro.
 - **O ElevenLabs às vezes troca a voz no meio do áudio.** A skill tem uma verificação automática que pega isso ANTES de gastar crédito do HeyGen — por isso ela gera a fala em blocos curtos.
-- **Reaproveitar o banco de B-rolls derruba muito o custo.** Na maioria dos Reels dá pra não gerar quase nada de Kling novo.
+- **Reaproveitar o banco de B-rolls derruba muito o custo.** Na maioria dos Reels dá pra não gerar quase nenhum clipe novo.
 - **Pauta aberta gasta crédito.** Quando você pede "acha um tema", ela propõe e espera aprovação antes de produzir.
 - **Modo manual** (você manda um vídeo gravado): ela recorta o fundo por IA e usa a fala real do Eric, pulando o avatar.
 - **Sempre confira o vídeo final antes de postar.** A skill checa frames automaticamente, mas é IA gerando conteúdo — vale uma olhada humana.

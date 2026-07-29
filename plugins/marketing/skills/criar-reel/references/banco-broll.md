@@ -1,6 +1,7 @@
 # 🎞️ Banco de B-rolls (remoto, reutilizável)
 
-Catálogo público de **~219 B-rolls** já gerados (Kling), pra **reciclar em vez de gerar no Kling toda vez**.
+Catálogo público de **~219 B-rolls** já gerados (no Kling, quando ele era o titular), pra
+**reciclar em vez de gerar clipe novo toda vez**.
 Todos no mesmo estilo: **fundo escuro carvão + brilho âmbar, abstrato high-tech, 9:16, ~5s, sem áudio.**
 
 - **Catálogo:** `bank.json` público (raw GitHub) — a skill lê via `scripts/broll_bank.py`.
@@ -28,5 +29,5 @@ python scripts/broll_bank.py --get crm-03 tag-08 ai-slop-09 --out <reel>   # vir
 ## Regra de reuso
 1. `--list` → mapear cada trecho da fala a uma categoria → escolher 1 `id` (alternar, sem repetir seguido).
 2. `--get ... --out <reel>` baixa na ordem como `clip-01..NN.mp4`.
-3. **Só gerar no Kling o que o banco não cobre** (etapa 5 só pros gaps).
+3. **Só gerar no Higgsfield o que o banco não cobre** (etapa 5 só pros gaps).
 4. Clips novos gerados → subir no Release + acrescentar no `bank.json` (pra crescerem o banco).
