@@ -41,6 +41,32 @@ def frontmatter(body):
     m = re.match(r'^---\n(.*?)\n---\n', body, re.S)
     return m.group(1) if m else None
 
+def yaml_errors(fm):
+    """Frontmatter tem que PARSEAR como YAML e entregar name+description string.
+    Se o parser aborta, o runtime descarta o frontmatter inteiro sem avisar."""
+    try:
+        import yaml
+    except ImportError:
+        return []  # sem pyyaml: nao bloqueia o commit, os checks de regex seguem
+    try:
+        data = yaml.safe_load(fm)
+    except yaml.YAMLError as e:
+        mark = getattr(e, 'problem_mark', None)
+        where = f' (linha {mark.line + 1}, coluna {mark.column + 1})' if mark else ''
+        dica = ''
+        if re.search(r'^description:[ \t]*[^\'"|>\s]', fm, re.M) and re.search(r':[ \t]', fm):
+            dica = ". Provavel causa: ': ' dentro da description sem aspas. Envolver em aspas simples e dobrar as internas"
+        return [f'frontmatter YAML nao parseia{where}: {getattr(e, "problem", e)}{dica}'
+                + ' >>> o runtime descarta name/description/allowed-tools EM SILENCIO']
+    if not isinstance(data, dict):
+        return ['frontmatter YAML nao virou mapping (name/description nao chegam no runtime)']
+    out = []
+    for campo in ('name', 'description'):
+        val = data.get(campo)
+        if not isinstance(val, str) or not val.strip():
+            out.append(f'frontmatter: `{campo}` sumiu no parse do YAML (valor: {val!r})')
+    return out
+
 def check(f, staged):
     errs, warns = [], []
     skill = f.replace(chr(92), '/').rstrip('/').split('/')[-2]
@@ -60,6 +86,11 @@ def check(f, staged):
             errs.append('frontmatter sem name:')
         if not re.search(r'^description:', fm, re.M):
             errs.append('frontmatter sem description:')
+        # PARSE de verdade, nao so regex de linha: um ": " dentro de um escalar
+        # sem aspas (ex. "NAO disparar pra: escrever...") aborta o YAML e o runtime
+        # descarta name+description+allowed-tools EM SILENCIO — a skill some da
+        # listagem e nunca dispara sozinha. Regressao de 29/07/2026 (11 skills).
+        errs.extend(yaml_errors(fm))
     if len(re.findall(r'^\s*```', new, re.M)) % 2 != 0:
         errs.append('numero impar de fences ``` em inicio de linha (arquivo truncado?)')
     if not re.search(r'^## NUNCA', new, re.M):
