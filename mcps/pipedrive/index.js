@@ -489,6 +489,13 @@ function resolvePersonCustomFields(fields) {
   return { body, errors };
 }
 
+// A API v1 devolve person_id/user_id/org_id como objeto expandido ({...,value:ID}) em
+// GET /deals/{id}, e como número puro nas listagens. Normaliza para o ID sempre.
+function unwrapId(v) {
+  if (v && typeof v === "object") return v.value ?? v.id ?? null;
+  return v ?? null;
+}
+
 // Traduz campos personalizados de um deal para nomes legíveis
 function translateDealFields(deal) {
   const result = {
@@ -499,12 +506,13 @@ function translateDealFields(deal) {
     status: deal.status,
     etapa: STAGE_MAP[deal.stage_id] || deal.stage_id,
     pipeline: PIPELINE_MAP[deal.pipeline_id] || deal.pipeline_id,
+    pipeline_id: unwrapId(deal.pipeline_id),
     contato: deal.person_name,
-    contato_id: deal.person_id,
+    contato_id: unwrapId(deal.person_id),
     empresa: deal.org_name,
-    empresa_id: deal.org_id,
+    empresa_id: unwrapId(deal.org_id),
     responsavel: deal.owner_name,
-    responsavel_id: deal.user_id,
+    responsavel_id: unwrapId(deal.user_id),
     criado_em: deal.add_time,
     atualizado_em: deal.update_time,
     previsao_fechamento: deal.expected_close_date,
@@ -532,6 +540,53 @@ function translateDealFields(deal) {
   return result;
 }
 
+// Traduz um contato: campos personalizados com nome legível e sem os ~40 contadores
+// da API que só poluem a leitura. Espelha translateDealFields.
+function translatePersonFields(person) {
+  const result = {
+    id: person.id,
+    nome: person.name,
+    telefones: (person.phone || []).filter((p) => p.value).map((p) => p.value),
+    emails: (person.email || []).filter((e) => e.value).map((e) => e.value),
+    empresa: person.org_name || person.org_id?.name || null,
+    empresa_id: unwrapId(person.org_id),
+    cargo: person.job_title || null,
+    responsavel: person.owner_name,
+    responsavel_id: unwrapId(person.owner_id),
+    criado_em: person.add_time,
+    atualizado_em: person.update_time,
+    deals_abertos: person.open_deals_count,
+    deals_ganhos: person.won_deals_count,
+    deals_perdidos: person.lost_deals_count,
+    atividades_pendentes: person.undone_activities_count,
+    ativo: person.active_flag,
+  };
+  for (const [apiKey, fieldName] of Object.entries(PERSON_KEY_TO_NAME)) {
+    const rawValue = person[apiKey];
+    if (rawValue === null || rawValue === undefined || rawValue === "") continue;
+    const optionsMap = PERSON_KEY_TO_OPTIONS[apiKey];
+    if (optionsMap) {
+      if (String(rawValue).includes(",")) {
+        result[fieldName] = String(rawValue).split(",").map((id) => optionsMap[id.trim()] || id).join(", ");
+      } else {
+        result[fieldName] = optionsMap[rawValue] || rawValue;
+      }
+    } else if (typeof rawValue === "object" && rawValue !== null) {
+      result[fieldName] = rawValue.name || JSON.stringify(rawValue);
+    } else {
+      result[fieldName] = rawValue;
+    }
+  }
+  // Campo personalizado presente no payload mas ausente do mapa = config defasado.
+  const desconhecidos = Object.keys(person).filter(
+    (k) => /^[a-f0-9]{40}$/.test(k) && !PERSON_KEY_TO_NAME[k] && person[k] !== null && person[k] !== ""
+  );
+  if (desconhecidos.length > 0) {
+    result._campos_nao_mapeados = `${desconhecidos.length} campo(s) personalizado(s) sem nome no cache — rode sync_all para atualizar.`;
+  }
+  return result;
+}
+
 const server = new McpServer({
   name: "pipedrive-mcp",
   version: "6.0.0",
@@ -539,9 +594,38 @@ const server = new McpServer({
 
 // ─── REFRESH DE DADOS VIA API (usa config.js como fallback se API falhar) ───
 
+// Recarrega os nomes/opções de campos personalizados da API. Sem isso, campo criado no
+// Pipedrive depois do último sync_all aparece como hash de 40 chars na leitura.
+// Preserva description/section do config.js (a API não tem esses metadados).
+async function refreshCustomFieldsFromAPI() {
+  const carregar = async (endpoint, alvo) => {
+    const data = await pipedriveRequest(endpoint);
+    const custom = (data.data || []).filter((f) => /^[a-f0-9]{40}$/.test(f.key));
+    if (custom.length === 0) return null;
+    const mapping = {};
+    for (const field of custom) {
+      const entry = { key: field.key, type: field.field_type };
+      if ((field.field_type === "enum" || field.field_type === "set") && field.options) {
+        entry.options = {};
+        for (const opt of field.options) entry.options[opt.label] = opt.id;
+      }
+      const prev = alvo[field.name];
+      if (prev?.description) entry.description = prev.description;
+      if (prev?.section) entry.section = prev.section;
+      mapping[field.name] = entry;
+    }
+    return mapping;
+  };
+  const dealMapping = await carregar("/dealFields?limit=500", DEAL_CUSTOM_FIELDS);
+  if (dealMapping) { DEAL_CUSTOM_FIELDS = dealMapping; rebuildReverseMaps(); }
+  const personMapping = await carregar("/personFields?limit=500", PERSON_CUSTOM_FIELDS);
+  if (personMapping) { PERSON_CUSTOM_FIELDS = personMapping; rebuildPersonReverseMaps(); }
+}
+
 try {
   await loadStagePipelineCache();
   await ensureActivityTypesLoaded();
+  await refreshCustomFieldsFromAPI();
   const userData = await pipedriveRequest("/users?limit=500");
   ACTIVE_USERS = (userData.data || []).filter(u => u.active_flag).map(u => ({ id: u.id, name: u.name }));
   const me = await pipedriveRequest("/users/me");
@@ -1505,11 +1589,46 @@ server.tool(
 
 server.tool(
   "get_person",
-  "Retorna detalhes completos de um contato pelo ID.",
-  { person_id: z.number().describe("ID do contato") },
-  async ({ person_id }) => {
+  "Retorna dados e campos personalizados de um contato (Origem do Contato, detalhes etc) com nomes legíveis.",
+  {
+    person_id: z.number().describe("ID do contato"),
+    raw: z.boolean().optional().default(false).describe("Se true, devolve o payload cru da API (hashes e contadores). Só para debug."),
+  },
+  async ({ person_id, raw }) => {
     const data = await pipedriveRequest(`/persons/${person_id}`);
-    return { content: [{ type: "text", text: JSON.stringify(data.data, null, 2) }] };
+    const out = raw ? data.data : translatePersonFields(data.data);
+    return { content: [{ type: "text", text: JSON.stringify(out, null, 2) }] };
+  }
+);
+
+server.tool(
+  "list_pipelines",
+  "Lista todos os pipelines (funis) com suas etapas na ordem correta. Use para descobrir IDs de pipeline/etapa antes de criar ou mover deals.",
+  {
+    pipeline_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID de um pipeline específico. Se omitido, lista todos."),
+  },
+  async ({ pipeline_id }) => {
+    let filtroId;
+    if (pipeline_id !== undefined) {
+      try {
+        filtroId = resolvePipeline(pipeline_id);
+      } catch (e) {
+        return { content: [{ type: "text", text: e.message }] };
+      }
+    }
+    const ids = Object.keys(PIPELINE_MAP).map(Number).filter((id) => filtroId === undefined || id === filtroId);
+    if (ids.length === 0) {
+      return { content: [{ type: "text", text: "Nenhum pipeline no cache. Rode sync_all para popular." }] };
+    }
+    const linhas = ids.map((id) => {
+      const etapas = STAGES_DATA
+        .filter((s) => s.pipeline_id === id)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((s) => `  ${s.id}: ${s.name}`);
+      const corpo = etapas.length > 0 ? etapas.join("\n") : "  (sem etapas no cache)";
+      return `${PIPELINE_MAP[id]} (pipeline_id ${id})\n${corpo}`;
+    });
+    return { content: [{ type: "text", text: linhas.join("\n\n") }] };
   }
 );
 
