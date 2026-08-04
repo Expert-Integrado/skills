@@ -21,6 +21,9 @@ Pega insumos (transcrições, vídeos, pesquisas, palestras anteriores) e devolv
 - NUNCA deixar `Ementa.md`/`Ementa.docx` divergirem do `apresentacao.html` oficial — depois do feedback do Eric, o HTML manda (ver seção "Fonte da verdade"). O docx vai pra cliente (Maria) — tem que refletir exatamente o que foi gravado.
 - NUNCA publicar HTML que viole os 8 anti-patterns (ver seção "Anti-patterns embutidos") — validar ANTES do deploy; se algum check falhar, abortar deploy e mostrar qual arquivo + linha tem o problema.
 - NUNCA usar `which` — detecção de CLI é `command -v` (POSIX).
+- NUNCA mandar o aluno anotar em papel — "folha na mão", "anote", "papel e caneta" e variações são PROIBIDOS em slide, prompt, exercício e roteiro (Eric, 04/08/2026: "eu nunca mando ninguém anotar nada no papel, eu sempre mando as pessoas conversarem com a IA"). Registro é sempre CONVERSANDO com a IA. Antes do deploy: `grep -inE 'folha|anote|papel e caneta' apresentacao.html` → esperado 0.
+- NUNCA colocar data nem duração na capa de aula interna (mentoria/programa contínuo do Eric) — o link é permanente e a plateia entra a qualquer momento; data/duração envelhecem o material. Capa = kicker (programa · tipo do encontro) + título + subtítulo + nome, e SÓ.
+- NUNCA agrupar os prompts copiáveis como bloco de "material" no final do deck de AULA INTERNA — cada slide de prompt entra IMEDIATAMENTE após o slide da etapa que o usa (validado na aula "O Mapa da Sua Primeira Hora", 04/08/2026: prompts no final "não faz sentido"). Kicker contextual: "<Etapa> · Prompt N de M". Frase/mensagem de fechamento é SEMPRE o último slide do deck.
 
 ## SEMPRE
 
@@ -32,6 +35,7 @@ Pega insumos (transcrições, vídeos, pesquisas, palestras anteriores) e devolv
 - SEMPRE nomear a ferramenta exata (Lovable, HeyGen, Suno, etc) — nunca "ferramenta de IA" genérico.
 - SEMPRE executar deploy Vercel, criação de DNS Cloudflare e renomeio de pastas SEM pedir confirmação — decisão Eric (27/05/2026); a skill assume que os tokens 1Password estão disponíveis e que reorganizar pasta é OK (não deleta nada, só move pra `_arquivo/`). Única exceção: destino teste/rascunho (ver NUNCA).
 - SEMPRE `--ssl-no-revoke` em curl HTTPS (obrigatório no Windows do Eric — sem a flag o curl Schannel falha com exit 35; em Linux/macOS a flag é aceita e ignorada). CORREÇÃO-DE-FATO: os comandos curl do original omitiam a flag, contra a regra canônica do CLAUDE.md global; adicionada em todos os curl desta skill.
+- SEMPRE que o destino for AULA INTERNA (Mentoria Automações Inteligentes ou outro programa contínuo do Eric): **URL ÚNICA** — os prompts entram como slides DENTRO de `apresentacao.html` (com botão de copiar, fonte única no `<pre id="prompt-pN">` de cada slide), posicionados logo após o slide da etapa que os usa; NÃO gerar `materiais/index.html` e a rota `/materiais` NÃO deve existir (validar 404). Ordem narrativa: motivação (problema + conta em dinheiro) no início; execução/pessoas perto do fim; fechamento como último slide. Regras de Eric, 04/08/2026 (memories `feedback_aula_url_unica_material_embutido` e `feedback_aula_capa_padrao_prompts_inline`; referência viva: pasta da aula "Mapa da Primeira Hora"). O layout com `/materiais` separado fica RESTRITO a curso multi-aula pra cliente externo (padrão G4/Maria) — e mesmo nesse caso, confirmar com o Eric antes.
 
 ## Pré-requisitos (checar TODOS no início; se faltar algo obrigatório, abortar com mensagem clara)
 
@@ -201,7 +205,7 @@ Loop de refino: apresentar o rascunho → Eric ajusta ("tira aula 7", "muda tít
 A partir da `Ementa.md` consolidada, usando os templates de `templates/` desta skill:
 - `Ementa.docx` (via pandoc: `"$PANDOC" 01_Ementa/Ementa.md -o 04_Entregaveis/Ementa.docx`; equivalente empacotado: `scripts/pandoc-docx.sh <pasta>`) → `04_Entregaveis/`
 - `apresentacao.html` (slides 16:9 — **paleta escolhida no briefing**; ver seção "Paletas" + `docs/PALETAS.md`) → `03_Assets/slides-html/`
-- `materiais/index.html` (prompts copiáveis com botão Copiar; regras em `docs/PADRAO-MATERIAIS.md`) → `03_Assets/slides-html/materiais/`
+- `materiais/index.html` (prompts copiáveis com botão Copiar; regras em `docs/PADRAO-MATERIAIS.md`) → `03_Assets/slides-html/materiais/` — **SÓ para curso multi-aula de cliente externo (padrão G4)**. AULA INTERNA não gera este arquivo: os prompts entram como slides do próprio `apresentacao.html`, cada um logo após o slide da etapa que o usa (ver SEMPRE de 04/08/2026)
 - `index.html` (cópia da apresentação pra Vercel root)
 - `Kit_Gravacao.md` (rascunho — Eric completa com frases verbatim depois)
 - `setup-preparatorio.md` (checklist)
@@ -210,7 +214,7 @@ A partir da `Ementa.md` consolidada, usando os templates de `templates/` desta s
 - `CLAUDE.md` (regras locais)
 - `vercel.json` (cleanUrls — copiar de `templates/vercel.json`)
 
-**Validar HTML antes do deploy** — rodar os greps abaixo a partir de `<pasta>/03_Assets/slides-html/`; QUALQUER falha → abortar deploy e mostrar arquivo + linha. Checks 1-4 rodam em `apresentacao.html` (o `index.html` é cópia byte-a-byte — mesmo resultado); check 5 roda em `materiais/index.html`. Usar `grep -nE` (regex estendida + nº de linha):
+**Validar HTML antes do deploy** — rodar os greps abaixo a partir de `<pasta>/03_Assets/slides-html/`; QUALQUER falha → abortar deploy e mostrar arquivo + linha. Checks 1-4 rodam em `apresentacao.html` (o `index.html` é cópia byte-a-byte — mesmo resultado); check 5 roda em `materiais/index.html` quando ele existir (curso externo) — em AULA INTERNA roda no próprio `apresentacao.html` (prompts embutidos). Check 6 (aula interna, sempre): `grep -inE 'folha|anote|papel e caneta' apresentacao.html` → esperado ZERO (regra nunca-papel) e `grep -cE 'class="meta-badge' apresentacao.html` == nº de blocos `id="prompt-p"`. Usar `grep -nE` (regex estendida + nº de linha):
 
 1. **Sem `position: relative` em `.slide.*`** (anti-pattern 1.1 — override encolhe o slide):
    - `grep -niE 'position:\s*relative' apresentacao.html`
@@ -262,7 +266,7 @@ npx vercel certs issue "<slug>.ericluciano.com.br" --scope contato-5574s-project
 # 8.5 Validar HTTPS
 sleep 15
 curl -s --ssl-no-revoke -o /dev/null -w "%{http_code}" "https://<slug>.ericluciano.com.br"   # raiz — esperar 200
-curl -s --ssl-no-revoke -o /dev/null -w "%{http_code}" "https://<slug>.ericluciano.com.br/materiais?v=$(date +%s)"   # rota /materiais — esperar 200 (checklist exige acessível; mesmo padrão --ssl-no-revoke + cache-bust)
+curl -s --ssl-no-revoke -o /dev/null -w "%{http_code}" "https://<slug>.ericluciano.com.br/materiais?v=$(date +%s)"   # rota /materiais — CURSO EXTERNO: esperar 200; AULA INTERNA (URL única, prompts embutidos): esperar 404 (a rota NÃO deve existir)
 ```
 
 Validação: capturar URL + deploy id do 8.1, record_id do 8.3, e HTTP 200 nas DUAS rotas (raiz + `/materiais`) do 8.5. Falhas → seção "Erros comuns e recovery".
@@ -374,7 +378,8 @@ Scripts corrigidos no golden run de 06/07/2026: `slug.sh` não depende mais de `
 - [ ] `Ementa.md` aprovada pelo Eric + `Ementa.docx` gerado em `04_Entregaveis/`
 - [ ] `apresentacao.html` + `materiais/index.html` com a paleta escolhida aplicada nos DOIS
 - [ ] 5 checks de anti-pattern passaram nos 2 HTMLs
-- [ ] SE destino real: HTTPS 200 em `https://<slug>.ericluciano.com.br` + `/materiais` acessível
+- [ ] SE destino real: HTTPS 200 em `https://<slug>.ericluciano.com.br`; `/materiais` 200 SE curso externo, 404 SE aula interna (URL única)
+- [ ] SE aula interna: capa sem data/duração; prompts como slides logo após a etapa que os usa; fechamento é o último slide; grep folha/anote/papel = 0
 - [ ] SE destino teste/rascunho: NENHUM deploy/DNS executado
 - [ ] `SESSAO.md` com entry desta execução (mesmo em erro)
 - [ ] SE Brain na sessão: nota `kind=decision` salva + edges com curso anterior (se houver)
@@ -410,6 +415,6 @@ Eric: "Cria aula nova sobre Vibe Coding com base nos insumos que tô jogando ago
 
 ## Status
 
-- **Nasceu:** 27/05/2026 · **Versão:** 0.4.1 (golden run 06/07/2026: slug.sh sem iconv, deploy.sh com --ssl-no-revoke, pandoc-docx.sh portável, templates SESSAO/HANDOFF sem OneDrive morto, briefing pré-respondido sem AskUserQuestion, Brain note pulada em destino teste; 0.3.0 reescrita no padrão Sonnet-executável em 05/07/2026)
+- **Nasceu:** 27/05/2026 · **Versão:** 0.5.0 (04/08/2026, regras de aula interna da revisão "Mapa da Primeira Hora": URL única com prompts embutidos na sequência da aula, capa sem data/duração, nunca-papel/sempre-IA, fechamento como último slide, checks e checklist condicionais interna vs curso externo; 0.4.1 golden run 06/07/2026: slug.sh sem iconv, deploy.sh com --ssl-no-revoke, pandoc-docx.sh portável, templates SESSAO/HANDOFF sem OneDrive morto, briefing pré-respondido sem AskUserQuestion, Brain note pulada em destino teste)
 - **Base de evidência:** 2 cursos G4 montados manualmente seguindo este padrão — Construir Empresa (`g4-construir-empresa-com-ia`) e Automatizar Rotina (`g4-automatizar-rotina-com-ia`), ambos com deploy ativo + docx entregue. Golden run de 06/07/2026 executou o ramo TESTE ponta-a-ponta num curso novo (4 aulas, pacote completo, 5 checks anti-pattern verdes, docx via pandoc) — o ramo DEPLOY segue validado só pelos 2 cursos manuais.
 - **Pronto pra graduar:** após rodar ponta-a-ponta com DEPLOY em 1 curso novo de verdade + 0 bugs reportados
