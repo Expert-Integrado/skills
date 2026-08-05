@@ -86,6 +86,7 @@ Recebe um tema (empresa fictícia), inventa TUDO que faltar (nome, números, cop
 
 ### 1. Definir a empresa (segundos, sem chamadas externas)
 - Inventar: nome, `slug` (kebab-case, sem acento — vira projeto Vercel e subdomínio), promessa, 3-4 números de impacto, 3 passos de "como funciona", copy do formulário.
+  - **O `slug` NÃO é o endereço final.** Ele é só o candidato: o passo 6 confirma se o alias está livre e pode acrescentar um sufixo. Nunca montar URL a partir do slug — ver "Regra de ouro da URL" no passo 6.
 - **Escrever a fala do vídeo** e salvá-la com a tool Write em `$WORK/fala.txt` (UTF-8). Gravar pela tool Write, NÃO por `echo`/`-d` no shell — isso evita o problema de escaping de aspas/quebras/acentos (o passo 2 lê esse arquivo). Formato: apresentação curta da empresa fictícia, em 1ª pessoa, na voz do Eric.
   - **Tamanho (definição verificável de "curta"):** 3 a 5 frases, ~70 a 110 palavras (~25-40s de fala). Mais que isso só alonga o render do HeyGen sem ganho.
   - **"Na voz do Eric" — checklist objetivo (a skill NÃO tem tool de voz; validar a fala contra ISTO antes de mandar pro TTS):**
@@ -292,7 +293,20 @@ Base teórica: Nielsen (10 heurísticas), Krug (Don't Make Me Think), Norman (af
 **Gate:** 0-1 FAIL = corrigir se for barato e deployar. 2+ FAILs = corrigir ANTES do deploy, sem exceção. Registrar o veredito numa linha (ex.: `UX REVIEW: 8/10 PASS. FAILs: 4 e 8, corrigidos`) pra citar na entrega.
 
 ### 6. Deploy Vercel (escopo resolvido em runtime — NUNCA cravar)
-- Renomear a pasta pro slug (o nome da pasta vira o nome do projeto): `mv "$WORK/site" "$WORK/{slug}"`.
+
+> **REGRA DE OURO DA URL (incidente 04/08/2026 — ler antes de deployar):** o endereço que você anuncia vem SEMPRE do que a Vercel respondeu, NUNCA de `{slug}` interpolado. O alias limpo `{slug}.vercel.app` é global e único: se outro projeto (de outra conta, inclusive uma conta sua) já o tem, o seu deploy ganha um alias com sufixo (ex.: `postos-pombal-eight.vercel.app`) e o endereço limpo continua servindo o site do outro. Foi o que aconteceu quando claude-code e OpenClaw rodaram esta skill com o mesmo briefing: dois projetos `postos-pombal` em contas diferentes, e os dois anunciaram a MESMA URL, que pertencia a um só. O grep do nome da empresa NÃO protege disso — os dois sites eram da mesma empresa fictícia e passaram na verificação. Use `$PROD_URL` (resolvido abaixo) em toda verificação, no screenshot e na entrega.
+
+- **Garantir slug livre ANTES de deployar** (mantém o endereço limpo e evita disputa de alias):
+```bash
+SLUG="{slug}"
+if [ "$(curl -s -o /dev/null -w "%{http_code}" --ssl-no-revoke "https://$SLUG.vercel.app")" = "200" ]; then
+  SLUG="$SLUG-$(node -e 'process.stdout.write(Math.random().toString(36).slice(2,6))')"
+  echo "alias {slug}.vercel.app ja ocupado -> usando $SLUG"
+fi
+echo "SLUG=$SLUG"
+```
+  Daqui pra frente use `$SLUG` (não `{slug}`) em pasta, projeto, domínio e endpoints.
+- Renomear a pasta pro slug (o nome da pasta vira o nome do projeto): `mv "$WORK/site" "$WORK/$SLUG"`.
 - **Resolver o TEAM do token em runtime** — o escopo do `Token_Vercel_Produto_Claude_Eric` MUDA (validado 07/07/2026: o slug `expert-integrados-projects` cravado aqui deixou de existir pro token, que hoje só acessa `contato-5574s-projects`; o deploy morria com "The specified scope does not exist"). E em modo não-interativo a CLI EXIGE `--scope` explícito (sem ele: `action_required: missing_scope`, exit 1 sem deployar). Sempre:
 ```bash
 read -r TEAM_ID TEAM_SLUG <<< "$(curl -s --ssl-no-revoke "https://api.vercel.com/v2/teams" \
@@ -303,59 +317,71 @@ read -r TEAM_ID TEAM_SLUG <<< "$(curl -s --ssl-no-revoke "https://api.vercel.com
 - CLI: `npx --yes vercel@latest` (a CLI não fica instalada nas máquinas; o `npm i --prefix "$WORK/cli"` + `.bin/vercel` falhava com exit 127 no Git Bash — npx validado em produção 07/07/2026).
 - Deploy (limpar env de projeto herdado; `--scope` com o slug resolvido acima):
 ```bash
-cd "$WORK/{slug}" && env -u VERCEL_ORG_ID -u VERCEL_PROJECT_ID \
+cd "$WORK/$SLUG" && env -u VERCEL_ORG_ID -u VERCEL_PROJECT_ID \
   npx --yes vercel@latest deploy --prod --yes --token "$VTOK" --scope "$TEAM_SLUG"
 ```
 - **Desabilitar SSO** (o projeto nasce com `ssoProtection` e pede login Vercel) — `teamId` = o `$TEAM_ID` resolvido acima:
 ```bash
-curl -s -X PATCH "https://api.vercel.com/v9/projects/{slug}?teamId=$TEAM_ID" \
+curl -s -X PATCH "https://api.vercel.com/v9/projects/$SLUG?teamId=$TEAM_ID" \
   -H "Authorization: Bearer $VTOK" -H "Content-Type: application/json" -d '{"ssoProtection":null}'
 ```
-- **Verificar CONTEÚDO** (não só 200):
+- **Resolver `$PROD_URL` — o endereço REAL do projeto** (é isto que se anuncia; nunca o slug interpolado). Pega o menor domínio `*.vercel.app` que a Vercel confirmou como sendo DESTE projeto:
 ```bash
-curl -s "https://{slug}.vercel.app" | grep -c "{nome da empresa}"          # tem que ser > 0
-curl -sI "https://{slug}.vercel.app/hero.png" | grep -i "content-type: image"
+PROD_URL=$(curl -s --ssl-no-revoke "https://api.vercel.com/v9/projects/$SLUG/domains?teamId=$TEAM_ID" \
+  -H "Authorization: Bearer $VTOK" \
+  | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{
+      const ds=(JSON.parse(d).domains||[]).filter(x=>/\.vercel\.app$/.test(x.name)&&x.verified!==false).map(x=>x.name).sort((a,b)=>a.length-b.length);
+      process.stdout.write(ds[0]?"https://"+ds[0]:"")})')
+[ -z "$PROD_URL" ] && { echo "nao resolvi PROD_URL — NAO anunciar nada, reportar ao Eric"; }
+echo "PROD_URL=$PROD_URL"
 ```
-- SE grep = 0 ou content-type errado → o alias pode ser de outro projeto/build antigo. Repetir o deploy 1x; persistiu → reportar com o diagnóstico e parar.
-- **Entregar o link `.vercel.app` JÁ** — mandar AGORA a mensagem 1 (template do passo 8, SEM a linha do domínio próprio), sem esperar o domínio próprio.
+  SE `$PROD_URL` sair vazio → **não anunciar URL nenhuma** (é o caso em que se anuncia link de outro projeto). Reportar e parar.
+- **Verificar CONTEÚDO** (não só 200) — sempre contra `$PROD_URL`:
+```bash
+curl -s --ssl-no-revoke "$PROD_URL" | grep -c "{nome da empresa}"          # tem que ser > 0
+curl -sI --ssl-no-revoke "$PROD_URL/hero.png" | grep -i "content-type: image"
+```
+- SE grep = 0 ou content-type errado → build antigo ou deploy que não subiu. Repetir o deploy 1x; persistiu → reportar com o diagnóstico e parar.
+- **Entregar o link JÁ** — mandar AGORA a mensagem 1 (template do passo 8, com `$PROD_URL`, SEM a linha do domínio próprio), sem esperar o domínio próprio.
 
-### 7. Domínio próprio `{slug}.ericluciano.com.br`
+### 7. Domínio próprio `$SLUG.ericluciano.com.br`
 a) **Anexar no Vercel** (`$TEAM_ID` = o resolvido no passo 6 — nunca cravar teamId):
 ```bash
-curl -s -X POST "https://api.vercel.com/v10/projects/{slug}/domains?teamId=$TEAM_ID" \
+curl -s -X POST "https://api.vercel.com/v10/projects/$SLUG/domains?teamId=$TEAM_ID" \
   -H "Authorization: Bearer $VTOK" -H "Content-Type: application/json" \
-  -d '{"name":"{slug}.ericluciano.com.br"}'
+  -d "{\"name\":\"$SLUG.ericluciano.com.br\"}"
 ```
+  SE a resposta trouxer erro de domínio já em uso (`domain_already_in_use` / `conflict`) → esse subdomínio está noutro projeto (provavelmente outra execução desta skill). **NÃO insistir e NÃO anunciar esse domínio**: seguir só com o `$PROD_URL` do passo 6 e avisar numa linha. Sem isso o domínio fica `verified:false` servindo o site de outro projeto.
 b) CNAME no Cloudflare (zona `ericluciano.com.br`, id `48ff0f4bd2bf17da3f66e4d739b98e2f`):
 ```bash
 curl -s -X POST "https://api.cloudflare.com/client/v4/zones/48ff0f4bd2bf17da3f66e4d739b98e2f/dns_records" \
   -H "Authorization: Bearer $CF_TOKEN" -H "Content-Type: application/json" \
-  -d '{"type":"CNAME","name":"{slug}","content":"cname.vercel-dns.com","proxied":false}'
+  -d "{\"type\":\"CNAME\",\"name\":\"$SLUG\",\"content\":\"cname.vercel-dns.com\",\"proxied\":false}"
 ```
-c) Como a zona já existe noutra conta Vercel, o domínio vem `verified:false` pedindo TXT: ler `verification[].value` em `GET https://api.vercel.com/v9/projects/{slug}/domains/{slug}.ericluciano.com.br?teamId=...` → criar TXT `_vercel` na zona (mesmo endpoint do CNAME, `{"type":"TXT","name":"_vercel","content":"{value}"}`) → `POST .../domains/{fqdn}/verify?teamId=...`.
+c) Como a zona já existe noutra conta Vercel, o domínio vem `verified:false` pedindo TXT: ler `verification[].value` em `GET https://api.vercel.com/v9/projects/$SLUG/domains/$SLUG.ericluciano.com.br?teamId=...` → criar TXT `_vercel` na zona (mesmo endpoint do CNAME, `{"type":"TXT","name":"_vercel","content":"{value}"}`) → `POST .../domains/{fqdn}/verify?teamId=...`.
 d) SSL leva minutos. Loop explícito — **40 tentativas de 15s = teto de ~10min** (mesma cadência do poll do passo 2d). Sucesso = HTTP 200 E grep do nome da empresa > 0:
 ```bash
 OK=0
 for i in $(seq 1 40); do                       # 40 x 15s = ~10min
-  CODE=$(curl -s -o "$WORK/dom.html" -w "%{http_code}" "https://{slug}.ericluciano.com.br")
+  CODE=$(curl -s -o "$WORK/dom.html" -w "%{http_code}" --ssl-no-revoke "https://$SLUG.ericluciano.com.br")
   if [ "$CODE" = "200" ] && grep -q "{nome da empresa}" "$WORK/dom.html"; then OK=1; break; fi
   sleep 15
 done
 echo "OK=$OK"
 ```
-(curl HTTPS no Windows/Schannel leva `--ssl-no-revoke`, ver Pré-requisitos.) SE `OK=1` → mandar a **mensagem 2** — curta e separada, ex.: `Domínio próprio no ar: https://{slug}.ericluciano.com.br`. SE o loop esgotar (`OK=0`, ~10min sem 200+grep) → NÃO mandar a mensagem 2 e avisar que o domínio ainda propaga (o `.vercel.app` da mensagem 1 já está no ar). Não estender o loop além das 40 tentativas.
+(curl HTTPS no Windows/Schannel leva `--ssl-no-revoke`, ver Pré-requisitos.) SE `OK=1` → mandar a **mensagem 2** — curta e separada, ex.: `Domínio próprio no ar: https://$SLUG.ericluciano.com.br`. SE o loop esgotar (`OK=0`, ~10min sem 200+grep) → NÃO mandar a mensagem 2 e avisar que o domínio ainda propaga (o `.vercel.app` da mensagem 1 já está no ar). Não estender o loop além das 40 tentativas.
 
 ### 8. QA + entrega
 - **Screenshot** com Playwright (node), viewport fixo — NÃO `fullPage` (print alto demais estoura `PHOTO_INVALID_DIMENSIONS` no Telegram; se precisar, redimensionar):
 ```bash
 node -e 'const{chromium}=require("playwright");(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1280,height:800}});await p.goto(process.argv[1],{waitUntil:"networkidle"});await p.screenshot({path:process.argv[2]});await b.close();})()' \
-  "https://{slug}.vercel.app" "$WORK/print.png"
+  "$PROD_URL" "$WORK/print.png"
 ```
   SE Playwright não estiver disponível → pular o print e entregar só as URLs.
-- **Entrega — mensagem 1 (logo após o passo 6, sem esperar o domínio):** SE o pedido veio por Telegram → `mcp__plugin_telegram_telegram__reply` no chat_id de origem com o print em `files` e o texto (SEM a linha do domínio próprio):
+- **Entrega — mensagem 1 (logo após o passo 6, sem esperar o domínio):** SE o pedido veio por Telegram → `mcp__plugin_telegram_telegram__reply` no chat_id de origem com o print em `files` e o texto (SEM a linha do domínio próprio). O link é o `$PROD_URL` resolvido no passo 6 — **nunca** `{slug}.vercel.app` montado à mão:
 ```
 {Nome da empresa} no ar:
-https://{slug}.vercel.app
+$PROD_URL
 ```
   SENÃO → mesma URL + path do print no chat. A **mensagem 2** (domínio próprio) sai depois, separada, pelo passo 7d — nunca juntar as duas na mesma mensagem.
 - **Limpar:** `rm -rf "$WORK"`.
@@ -368,8 +394,9 @@ https://{slug}.vercel.app
 - [ ] Carrossel 3:2 sem corte, setas + dots + autoplay; jogo temático com touch, dourado +5 / errado -3 / combo x2-x3 / ranking.
 - [ ] UX Review (passo 5.5) executado com no máximo 1 FAIL antes do deploy, veredito registrado.
 - [ ] Acentuação correta em todo o texto da landing.
-- [ ] `.vercel.app` verificado por CONTEÚDO (grep > 0), SSO desabilitado.
-- [ ] Link `.vercel.app` entregue primeiro; domínio próprio só após 200 + grep.
+- [ ] `$PROD_URL` resolvido pela API (domínio do PRÓPRIO projeto) e verificado por CONTEÚDO (grep > 0), SSO desabilitado.
+- [ ] Nenhuma URL anunciada foi montada a partir do slug — toda URL entregue veio de `$PROD_URL` ou do domínio verificado no passo 7.
+- [ ] Link entregue primeiro; domínio próprio só após 200 + grep (e não anunciado se deu conflito de domínio).
 - [ ] Print enviado (viewport, não fullPage) e `WORK` limpo.
 
 ## Erros comuns e recovery
@@ -377,7 +404,8 @@ https://{slug}.vercel.app
 - **"The specified scope does not exist" no deploy** → o slug de time cravado não vale mais pro token; resolver o team em runtime (`GET /v2/teams`, passo 6) e usar o slug retornado no `--scope`.
 - **CLI sai com `action_required: missing_scope` (exit != 0, nada deployado)** → modo não-interativo exige `--scope` explícito; passar o `$TEAM_SLUG` resolvido.
 - **Página pede login Vercel** → `ssoProtection` ativo; rodar o PATCH do passo 6.
-- **Domínio `verified:false`** → esperado (zona noutra conta Vercel); seguir o fluxo TXT `_vercel` do passo 7c.
+- **Domínio `verified:false`** → esperado (zona noutra conta Vercel); seguir o fluxo TXT `_vercel` do passo 7c. MAS se ele não verificar nunca, checar se o subdomínio não está anexado a outro projeto (passo 7a) — aí o certo é não anunciá-lo.
+- **Dois agentes rodaram a mesma demo e devolveram a MESMA URL** (incidente 04/08/2026) → slug determinístico + contas Vercel diferentes: cada um criou seu projeto homônimo, o alias limpo ficou com quem deployou primeiro e o outro recebeu sufixo (`-eight`), mas ambos anunciaram o endereço limpo. Diagnóstico: `GET /v9/projects/{slug}/domains?teamId=` em cada conta mostra de quem é cada alias; comparar o `<title>`/sha256 do HTML das duas URLs confirma que são sites distintos. Prevenção já embutida: guarda de slug livre + `$PROD_URL` (passo 6). **Não confie no grep do nome da empresa pra detectar isso** — se as duas demos são da mesma empresa fictícia, o grep passa nas duas.
 - **curl exit 35 (Windows)** → faltou `--ssl-no-revoke`.
 - **curl exit 26 com stdout vazio no `-F` (Windows/Git Bash)** → path POSIX embutido no `@` de um `-F`/`--data-binary` (o MSYS só converte paths que são argumentos inteiros, não strings com `@` embutido). Converter antes: `cygpath -m "$WORK/arquivo"` e usar o resultado no `-F`.
 - **HeyGen upload 4xx** → provavelmente multipart; refazer com `--data-binary` + `Content-Type: audio/mpeg`.
