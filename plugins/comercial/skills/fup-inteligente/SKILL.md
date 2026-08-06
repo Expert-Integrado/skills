@@ -16,8 +16,10 @@ O funil **Eventos (14)** entra na frente de todos quando está ativo, tem regras
 - NUNCA abordar lead do funil Eventos ANTES de o evento acontecer (Eric, 05/08/2026) — todo mundo é abordado só no pós-evento. Evento com data futura = funil inteiro fora da rodada.
 - NUNCA mover etapa/desfecho de oportunidade de evento em UM só dos dois sistemas — app de eventos e Pipedrive andam juntos, com releitura dos dois (Protocolo de Dupla Escrita, Passo 7.5).
 - NUNCA marcar ganho no funil Eventos — é passo manual do Eric depois de conferir o cartão (`Regras_Funil_Eventos.md`, "Fechamento da venda"). A skill apresenta e para.
-- NUNCA usar `mcp__pipedrive__update_deal` para gravar `Migrou para condição de evento` — esse motivo não está no enum fixo de 8 valores do MCP. Usar `mcp__pipedrive__bulk_update_deals` (aceita string livre). Os 8 motivos padrão continuam saindo pelo `update_deal` normalmente.
-- NUNCA tratar no-show como perda — quem confirmou e faltou é abordado igual (Eric, 05/08/2026).
+- NUNCA usar `mcp__pipedrive__update_deal` para gravar `Migrou para condição de evento` nem `Outro` — nenhum dos dois está no enum fixo de 8 valores do MCP. Usar `mcp__pipedrive__bulk_update_deals` (aceita string livre). Os 8 motivos padrão continuam saindo pelo `update_deal` normalmente.
+- NUNCA gravar `Outro` como motivo de perda sem criar a nota de descrição no negócio — `Outro` sozinho não diz nada, e não existe campo nativo de descrição de perda no Pipedrive (E.4d).
+- NUNCA escrever "não compareceu" na descrição sem conferir a presença real de CADA um — no mesmo lote convivem no-show, quem cancelou antes e quem foi ao evento. Descrição genérica em quem compareceu é registro falso (incidente 06/08/2026).
+- NUNCA tratar no-show como perda ANTES de abordar — quem confirmou e faltou é abordado igual (Eric, 05/08/2026). A perda só entra depois, se a abordagem não converter (E.4c).
 - NUNCA criar oportunidade de evento — ela nasce na confirmação de presença, no fluxo de convite. Esta skill só trabalha o que já existe.
 - NUNCA prender a atividade de retomada pós-perda do funil Eventos ao deal — no funil Eventos ela é vinculada só à PESSOA (Eric, 05/08/2026).
 - NUNCA passar `due_time: ""` ou `"00:00"` — Pipedrive marca a atividade como vencida à meia-noite. Atividade sem horário definido = OMITIR `due_time`.
@@ -171,19 +173,59 @@ Nenhuma delas é executada sozinha: todas passam pela aprovação do Eric (Passo
 
 **(b) Foi ao evento e não comprou** — oportunidade de Evento perdida, com um dos **motivos padrão** (abaixo); o negócio do Educacional **continua aberto** (o perpétuo volta a ser o canal). SE não existe negócio no Educacional → sinalizar ao Eric, não criar por conta própria.
 
-**(c) Confirmou e não apareceu (no-show)** — deal parado em **Confirmado** depois do evento. **NÃO é perda** (Eric, 05/08/2026): quem confirmou e faltou é abordado do mesmo jeito, porque a confirmação já demonstrou interesse. O deal entra no follow-up normal a partir de Confirmado (cadência em E.3) e anda para Contato realizado quando a conversa acontece. Se um dia morrer, morre por motivo padrão, pelo que travou de verdade.
+**(c) Confirmou e não apareceu (no-show)** — deal parado em **Confirmado** depois do evento. **Não vira perda automática** (Eric, 05/08/2026): quem confirmou e faltou é abordado do mesmo jeito, porque a confirmação já demonstrou interesse. O deal entra no follow-up normal a partir de Confirmado (cadência em E.3) e anda para Contato realizado quando a conversa acontece.
 
-**Motivo de perda neste funil = os MESMOS dos outros funis** (Eric, 05/08/2026). O funil de Eventos não tem motivo próprio: "não compareceu" e "não aproveitou a condição" **não são motivos** — o primeiro descreve presença, não desfecho comercial, e o segundo só repete o óbvio de estar neste funil. A única entrada específica de evento é `Migrou para condição de evento`, e ela é usada no negócio do **Educacional** (item a), não no de Eventos.
+**Encerramento do lote de no-show, depois de abordado** (Eric, 06/08/2026): quando a edição já passou, a abordagem saiu e ficou claro que o lote não compra nesta rodada, o Eric fecha os cards em bloco — "são pessoas que eu vou ter que chamar de novo". Nesse encerramento:
 
-**Como gravar:** `mcp__pipedrive__update_deal` serve para os 8 motivos do enum do MCP. Para `Migrou para condição de evento` ele NÃO serve (o motivo não está no enum) — usar:
+- Motivo = **`Outro`**, com a descrição da presença real em nota (E.4d).
+- A atividade que sobra é **convidar para a próxima edição**, na PESSOA, sem `deal_id` (E.5).
+- Continua valendo a ordem: retomada criada ANTES da perda.
+- Continua sendo decisão do Eric, nunca da skill. A skill apresenta o lote e para.
+
+**Motivos de perda neste funil = os da lista padrão da empresa** (Eric, 05/08/2026). O funil de Eventos não tem motivo próprio de negócio: "não aproveitou a condição" não é motivo, só repete o óbvio de estar neste funil. "Não compareceu" também não é motivo — é **descrição**, e vive na nota, não no campo (E.4d).
+
+Duas entradas específicas de evento, e cada uma vai num lugar diferente:
+
+| Motivo | Onde se usa |
+|---|---|
+| `Migrou para condição de evento` | no negócio do **Educacional**, quando comprou na condição (item a) |
+| `Outro` (id 418) | no negócio de **Eventos**, no encerramento do lote de no-show (item c) — sempre com a nota de descrição |
+
+**Como gravar:** `mcp__pipedrive__update_deal` serve para os 8 motivos do enum fixo do MCP. Para `Migrou para condição de evento` e para `Outro` ele NÃO serve (nenhum dos dois está no enum) — usar:
 
 ```
 mcp__pipedrive__bulk_update_deals({
-  operations: [{ deal_id: <id do deal do EDUCACIONAL>, status: "lost", lost_reason: "Migrou para condição de evento" }]
+  operations: [{ deal_id: <id>, status: "lost", lost_reason: "Outro" }]
 })
 ```
 
 Lote de 1-5 executa direto; 6+ exige `confirmacao_lote: true` depois do preview aprovado pelo Eric.
+
+### E.4d Descrição da perda — vai em NOTA, não em campo
+
+Descoberto em 06/08/2026 lendo a API: dos 106 campos de negócio, os únicos ligados a perda são `lost_reason` (id 12475) e `lost_time` (id 12473). **Não existe campo nativo de descrição ou comentário de perda no Pipedrive.** Então:
+
+1. `lost_reason` recebe o motivo da lista (`Outro`, no caso do lote de no-show).
+2. A descrição vai em **nota no negócio** (`mcp__pipedrive__create_note`), com o motivo em negrito no topo:
+
+```
+<b>MOTIVO DA PERDA: Outro</b><br>
+<b>Descrição:</b> <a presença real DESTA pessoa><br><br>
+<contexto, o que travou, o que a retomada precisa saber>
+```
+
+**A nota aceita HTML de verdade** — passar `<b>` e `<br>` crus. Passar `&lt;b&gt;` grava a entidade e a tag aparece como texto na tela (errado na primeira tentativa em 06/08, corrigido com `update_note`).
+
+**A descrição é por pessoa, nunca um texto único para o lote.** No lote de 06/08, dos 7 cards: 5 eram no-show, 1 tinha cancelado antes do evento e 1 tinha COMPARECIDO e não comprado. Escrever "não compareceu" nos 7 seria registro falso em 2 deles. Conferir a atividade de presença de cada card (`Não compareceu` / `Cancelou antes do evento` / `Presente`) antes de redigir.
+
+**Se o motivo pedido pelo Eric não existir na lista:** o campo é `varchar_options` e aceita texto livre, então gravar direto passa e suja o relatório com valor fora da lista. O certo é criar a opção antes, preservando as existentes com seus ids — foi assim que `Outro` (id 418) entrou em 06/08/2026:
+
+```
+PUT /v1/dealFields/12475
+body: { options: [ ...todas as opções atuais com id e label..., { label: "<nova>" } ] }
+```
+
+Depois reler o campo e conferir que nenhuma opção antiga desapareceu. Detalhe em `pipedrive-lost-reason-enum-mcp-desalinhado.md`.
 
 **Armadilha do campo (lida da API em 05/08/2026):** `lost_reason` é `varchar_options` — aceita texto livre e grava fora da lista sem erro. As strings do enum do MCP não batem com 3 das opções reais (`Adiou contratação` × `Adiou a contratação`, `Não é o que buscava` × `Não é o que estava buscando`, `Ferramenta incompatível / Desqualificado` × `Lead desqualificado (descrever detalhes)`). Enquanto o MCP não for alinhado, os dois caminhos gravam o rótulo do MCP — não "corrigir" a string por conta própria no meio de um follow-up, isso é conserto de campo, não de deal.
 
@@ -817,9 +859,11 @@ Itens extras quando o funil Eventos rodou:
 - [ ] Nenhum deal de edição futura foi tocado
 - [ ] Toda mudança de etapa/desfecho fechou o Passo 7.5 com **releitura dos dois lados** batendo
 - [ ] Nenhum ganho foi marcado pela skill (nem no app, nem no Pipedrive)
-- [ ] Motivo de perda saiu da lista padrão da empresa (o funil Eventos não tem motivo próprio); `Migrou para condição de evento` gravado via `bulk_update_deals` e no deal do Educacional
+- [ ] Motivo de perda saiu da lista real do campo (conferida na API, não do enum do MCP); `Migrou para condição de evento` e `Outro` gravados via `bulk_update_deals`
+- [ ] Todo deal perdido com motivo `Outro` tem nota de descrição no negócio, com HTML cru e a presença REAL daquela pessoa (E.4d)
+- [ ] Nenhuma descrição de perda afirmou "não compareceu" sem conferir a atividade de presença daquele card
 - [ ] Retomada pós-perda criada com `person_id` e SEM `deal_id`
-- [ ] Nenhum no-show foi tratado como perda, e nenhuma mensagem falou com quem faltou como se ele tivesse ido
+- [ ] Nenhum no-show foi perdido ANTES de ser abordado, e nenhuma mensagem falou com quem faltou como se ele tivesse ido
 - [ ] Divergências app ↔ Pipedrive listadas ao Eric, não corrigidas em silêncio
 - [ ] Atividades concluídas pela invariante foram listadas ao Eric, deal a deal
 
@@ -849,9 +893,10 @@ Esta seção NÃO faz parte da execução normal da skill — nenhum passo acima
 
 ---
 
-*Skill v2.3.1 — Atualizada em 05/08/2026.*
+*Skill v2.4 — Atualizada em 06/08/2026.*
 
 **Changelog:**
+- v2.4 (06/08/2026, primeira rodada real do funil Eventos executada de ponta a ponta): a v2.3.1 dizia que o funil não tem motivo próprio e que no-show não é perda. Rodando de verdade, o Eric definiu o encerramento do lote e apareceram três coisas que o documento não previa. (1) **Encerramento do lote de no-show** (E.4c): depois de abordado e sem conversão, o Eric fecha os cards em bloco com motivo **`Outro`**, e a atividade que sobra é convidar para a próxima edição, na PESSOA. Não contradiz a v2.3.1 — no-show continua não sendo perda automática, a perda é o passo seguinte, depois da abordagem. (2) **`Outro` não existia no campo** e foi criada (id 418) via `PUT /v1/dealFields/12475` preservando as 11 opções antigas com seus ids; nova seção E.4d documenta o procedimento e a conferência obrigatória. (3) **Não existe campo nativo de descrição de perda** — varri os 106 campos de negócio, só há `lost_reason` e `lost_time`. A descrição vai em nota no negócio, com HTML cru (`<b>`, `<br>`; entidade escapada aparece como texto) e **por pessoa, nunca genérica**: no lote de 7 conviviam 5 no-show, 1 que cancelou antes e 1 que compareceu — "não compareceu" nos 7 seria registro falso em 2. `Outro` também não passa no enum do `update_deal`, só por `bulk_update_deals`.
 - v2.3.1 (05/08/2026, mesma sessão da v2.3): o Eric corrigiu duas regras assim que leu a v2.3, e o documento de regras foi corrigido junto (§6.2.1, §6.3 e checklist do vendedor). (1) **O funil Eventos não tem motivo de perda próprio** — vale a lista padrão da empresa. "Não compareceu" descreve presença, não desfecho comercial; "não aproveitou a condição" só repete o óbvio de estar no funil. Nenhuma opção nova é criada no Pipedrive. (2) **No-show NÃO é perda**: quem confirmou e faltou é abordado igual, porque a confirmação já demonstrou interesse — o deal segue no fluxo normal a partir de Confirmado (que agora tem cadência de 1-2 dias e mensagem de reengajamento) e anda para Contato realizado quando a conversa acontece. A v2.3 mandava perder em lote, o oposto. (3) A data-limite da reunião pós-sinal é decisão recorrente de cada edição, definida na hora — a skill pergunta, e isso não é pendência a fechar. (4) `Regras_Funil_Eventos.md` **não vai para o repo** (público, com cliente nominal): fica em `.gitignore`, com fallback documentado de leitura.
 - v2.3 (05/08/2026): **funil Eventos (pipeline 14) entra na skill como PRIORIDADE 1 condicional**, a pedido do Eric. (1) Nova seção "Funil Eventos (14)" com teste de ativação (E.1 — só roda se houver evento JÁ REALIZADO com oportunidade aberta; sem isso é pulado em silêncio), mapa etapa↔stage↔`status` do app (E.2), cadência própria das 6 etapas (E.3), os desfechos do documento de regras (E.4) e retomada vinculada à pessoa (E.5). (2) Passo 7.5 novo — **Protocolo de Dupla Escrita**: toda mudança de etapa/desfecho escreve no app de eventos E no Pipedrive e **relê os dois** antes de reportar; divergência não se corrige em silêncio, e 2 tentativas iguais param o ciclo. A sincronização automática existe (trigger de ida + webhook de volta, provada em produção em 05/08/2026) e mesmo assim não dispensa a releitura. (3) Decisões do Eric nesta data: sweep filtra pelo **vendedor da vez** ("cada um roda com seu usuário", default Eric); **ninguém é abordado antes do evento**; invariante de atividade é a **mesma** dos outros funis (com obrigação nova de listar ao Eric o que foi concluído, porque este funil tem tarefas de automação); retomada pós-perda **vinculada só à PESSOA**, sem `deal_id`. (4) Correção de fato descoberta na auditoria: o `lost_reason` do `mcp__pipedrive__update_deal` é um enum FIXO de 8 valores no código do MCP e não inclui `Migrou para condição de evento` — para esse motivo o caminho é `bulk_update_deals` (string livre). Lido da API em 05/08: o campo é `varchar_options`, aceita texto livre e por isso já grava rótulos fora da lista real em silêncio. (5) Ganho no funil Eventos é passo MANUAL do Eric: a skill apresenta e para.
 - v2.2 (19/07/2026): task Brain `i7dsv1qyecox` item [A] — gatilho: FUP do Fabrício Miranda (16/07/2026) ancorou prazo de proposta na data da imersão 29-30/07, violando a política. (1) Passo 4.1 novo, OBRIGATÓRIO (não condicional): antes de definir prazo/urgência em deal de Proposta enviada/Em negociação/Formalização, ler Política Comercial §3+§10 e Playbook de Vendas §10.1-10.4 — regras hard embutidas (validade ~5 dias, proibido ancorar em evento da EI, urgência só de fonte real, teste de 4 fontes válidas); placeholder explícito para Educacional (sem Política própria ainda — item [B] da task-mãe). (2) NUNCA/SEMPRE, edge case e checklist de validação atualizados com a mesma regra. (3) Fonte única do playbook: `scripts/sync-playbook.ps1` e o texto de manutenção nos Pré-requisitos apontavam pro OneDrive (`$HOME/OneDrive/Workspace`), que virou arquivo morto em 05/07/2026 — atualizado para `G:\Meu Drive\claude-workspace\Workspace\...` (Google Drive, canônico); os 5 arquivos do playbook já estavam com conteúdo idêntico entre repo/OneDrive/GDrive na auditoria desta versão (só line-ending divergia em 1 arquivo), então não houve conteúdo a resgatar — o problema era só o caminho-fonte do script apontar pro lugar morto.
