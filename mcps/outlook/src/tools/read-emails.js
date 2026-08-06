@@ -142,15 +142,16 @@ export async function readEmails(params) {
       .filter(Boolean);
     const ccStr = cc.length > 0 ? `\n   CC: ${cc.join(", ")}` : "";
 
-    // Indicador de anexos
-    const anexoStr = msg.hasAttachments ? `\n   Anexos: sim (use o ID ${msg.id} para baixar)` : "";
+    // ID sempre exposto para uso em marcar_email, mover_email, encaminhar_email, baixar_anexo
+    const idStr = `\n   ID: ${msg.id}`;
+    const anexoStr = msg.hasAttachments ? `\n   Anexos: sim` : "";
 
     // Usa corpo completo (text/plain via stripHtml) com limite de 2000 chars
     const bodyContent = msg.body?.content
       ? stripHtml(msg.body.content).substring(0, 2000)
       : msg.bodyPreview?.substring(0, 200) || "";
 
-    return `${i + 1}. [${lido}] ${msg.subject || "(sem assunto)"}\n   De: ${de}${paraStr}${ccStr}\n   Data: ${data}${anexoStr}\n   ${bodyContent}`;
+    return `${i + 1}. [${lido}] ${msg.subject || "(sem assunto)"}\n   De: ${de}${paraStr}${ccStr}\n   Data: ${data}${idStr}${anexoStr}\n   ${bodyContent}`;
   });
 
   const titulo = `E-mails (${pasta}) — ${emails.length} encontrado(s):\n${"─".repeat(50)}\n`;
