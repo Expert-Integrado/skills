@@ -55,7 +55,7 @@ Preços vigentes desde 09/07/2026. Se os decks mudarem, esta tabela precisa acom
 No combo, a mensagem leva os TRÊS links: as duas apresentações individuais + a do combo.
 - https://ailab.expertintegrado.com.br/investimento
 - https://automacoesinteligentes.expertintegrado.com.br/investimento
-- https://comboai.expertintegrado.com.br (deck "O Caminho Completo", único lugar com preço de combo)
+- https://comboai.expertintegrado.com.br/investimento (deck "O Caminho Completo", único lugar com preço de combo — desde 06/08/2026 o combo segue o padrão dos outros: raiz = versão pública SEM preço, `/investimento` = versão com preço. Proposta usa SEMPRE `/investimento`; a raiz é o que vai no hub mapeamento e em material aberto)
 - Na mensagem, formato parcela + off (padrão validado no grupo Arquivos e Documentos):
   - "Consultoria presencial + Mentoria: 12x R$3.500 (R$8.000 off)"
   - "Consultoria online + Mentoria: 12x R$2.950 (R$6.600 off)"
