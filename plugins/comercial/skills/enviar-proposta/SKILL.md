@@ -58,8 +58,9 @@ No combo, a mensagem leva os TRÊS links: as duas apresentações individuais + 
 - https://comboai.expertintegrado.com.br/investimento (deck "O Caminho Completo", único lugar com preço de combo — desde 06/08/2026 o combo segue o padrão dos outros: raiz = versão pública SEM preço, `/investimento` = versão com preço. Proposta usa SEMPRE `/investimento`; a raiz é o que vai no hub mapeamento e em material aberto)
 - Na mensagem, formato parcela + off (padrão validado no grupo Arquivos e Documentos):
   - "Consultoria presencial + Mentoria: 12x R$3.500 (R$8.000 off)"
-  - "Consultoria online + Mentoria: 12x R$2.950 (R$6.600 off)"
-- NUNCA citar os totais (R$50.000/R$42.000/R$35.400) na mensagem; o off diz quanto a pessoa ganhou.
+  - "Consultoria online + Mentoria: 12x R$2.950 (R$6.500 off)"
+- Offs vigentes desde 06/08/2026 (Eric): R$8.000 e R$6.500 — são os mesmos números impressos nos selos do deck, arredondados. A conta exata na âncora dá R$7.964 e R$6.564 (âncora da mentoria = R$29.964, não R$30.000). Usar SEMPRE 8.000/6.500 na mensagem pra não divergir da peça.
+- NUNCA citar os totais (âncora R$49.964/R$41.964, final R$42.000/R$35.400) na mensagem; o off diz quanto a pessoa ganhou.
 - Totais internos/CRM: presencial+mentoria R$42.000; online+mentoria R$35.400.
 
 Versões públicas (sem preço, para material pré-proposta): raiz dos dois domínios individuais. Só usar se o Eric pedir material sem preço — e aí NÃO é proposta, não move etapa no CRM.
