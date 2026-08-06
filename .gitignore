@@ -14,3 +14,7 @@ mcps/clickup/src/
 mcps/clickup/tools/tools
 __pycache__/
 *.pyc
+
+# Pendente decisao do Eric (05/08/2026): doc interno com nome de cliente,
+# repo e PUBLICO. Copia local serve a skill fup-inteligente sem publicar.
+plugins/comercial/skills/fup-inteligente/playbook/Regras_Funil_Eventos.md

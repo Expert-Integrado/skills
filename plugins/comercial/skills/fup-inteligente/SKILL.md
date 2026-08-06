@@ -1,16 +1,24 @@
 ---
 name: fup-inteligente
-description: Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direita para a esquerda (etapa mais avançada primeiro). Lê contexto Pipedrive + WhatsApp pessoal, sugere mensagem com voz Eric, envia após aprovação, registra atividade e agenda próximo follow-up. Quando deal vira Perdido, SEMPRE cria atividade de retomada futura conforme playbook. TRIGGER quando o usuário pedir "follow-up", "fup do pipe", "roda o fup", "vamos rodar o funil X", "deal Y foi perdido", "marca como perdido" ou similar. NÃO usar para criar lead/deal novo (usar prospecta-lead), dashboard de higiene do pipe (pipe-review), reabordagem de base fria em massa (reabordagem), transferir lead entre vendedores (transferir-lead) nem para listar pendências de WhatsApp (estou-devendo).
-allowed-tools: mcp__pipedrive__list_deals, mcp__pipedrive__get_deal, mcp__pipedrive__get_deal_summary, mcp__pipedrive__list_deal_activities, mcp__pipedrive__create_activity, mcp__pipedrive__update_activity, mcp__pipedrive__update_deal, mcp__pipedrive__pipedrive_write, mcp__pipedrive__sync_all, mcp__whatsapp-agent__read, mcp__whatsapp-agent__send, mcp__whatsapp-agent__check_message, mcp__whatsapp-agent__get_voice_guide, Read
+description: Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direita para a esquerda (etapa mais avançada primeiro). O funil Eventos (14) é a PRIORIDADE 1 quando há evento já realizado com oportunidade aberta, e exige escrita nos DOIS sistemas (app de eventos + Pipedrive). Lê contexto Pipedrive + WhatsApp pessoal, sugere mensagem com voz Eric, envia após aprovação, registra atividade e agenda próximo follow-up. Quando deal vira Perdido, SEMPRE cria atividade de retomada futura conforme playbook. TRIGGER quando o usuário pedir "follow-up", "fup do pipe", "roda o fup", "vamos rodar o funil X", "roda o funil de eventos", "deal Y foi perdido", "marca como perdido" ou similar. NÃO usar para criar lead/deal novo (usar prospecta-lead), criar oportunidade de evento na confirmação de presença (isso é do fluxo de convite), dashboard de higiene do pipe (pipe-review), reabordagem de base fria em massa (reabordagem), transferir lead entre vendedores (transferir-lead) nem para listar pendências de WhatsApp (estou-devendo).
+allowed-tools: mcp__pipedrive__list_deals, mcp__pipedrive__list_pipelines, mcp__pipedrive__get_deal, mcp__pipedrive__get_deal_summary, mcp__pipedrive__list_deal_activities, mcp__pipedrive__create_activity, mcp__pipedrive__update_activity, mcp__pipedrive__update_deal, mcp__pipedrive__bulk_update_deals, mcp__pipedrive__pipedrive_write, mcp__pipedrive__sync_all, mcp__expert-integrado__list_eventos, mcp__expert-integrado__list_vendas, mcp__expert-integrado__get_venda, mcp__expert-integrado__move_venda_status, mcp__whatsapp-agent__read, mcp__whatsapp-agent__send, mcp__whatsapp-agent__check_message, mcp__whatsapp-agent__get_voice_guide, Read, Bash
 ---
 
 # fup-inteligente — Follow-up de Funis Pipedrive
 
 Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direita para a esquerda (etapa mais avançada primeiro). Para cada deal: triagem (só quem tem atividade vencida/de hoje/ausente), coleta de contexto (Pipedrive + WhatsApp pessoal), consulta ao Livro de Objeções, mensagem na voz do Eric, aprovação explícita, envio via whatsapp-agent, registro no Pipedrive pelo Protocolo Anti-Vencida e agendamento do próximo follow-up. Deal marcado como Perdido SEMPRE sai com atividade de retomada futura (cadência 30/90/180 dias por motivo).
 
+O funil **Eventos (14)** entra na frente de todos quando está ativo, tem regras próprias de desfecho e é o ÚNICO que existe em dois sistemas ao mesmo tempo — ver a seção "Funil Eventos (14)".
+
 ## NUNCA
 
 - NUNCA enviar mensagem WhatsApp sem aprovação explícita do Eric (botão **Enviar** no Telegram ou resposta de texto explícita fora dele). Sem aprovação = sem envio.
+- NUNCA abordar lead do funil Eventos ANTES de o evento acontecer (Eric, 05/08/2026) — todo mundo é abordado só no pós-evento. Evento com data futura = funil inteiro fora da rodada.
+- NUNCA mover etapa/desfecho de oportunidade de evento em UM só dos dois sistemas — app de eventos e Pipedrive andam juntos, com releitura dos dois (Protocolo de Dupla Escrita, Passo 7.5).
+- NUNCA marcar ganho no funil Eventos — é passo manual do Eric depois de conferir o cartão (`Regras_Funil_Eventos.md`, "Fechamento da venda"). A skill apresenta e para.
+- NUNCA usar `mcp__pipedrive__update_deal` para gravar motivo de perda do funil Eventos — o enum do MCP tem só 8 valores fixos e nenhum deles serve. Usar `mcp__pipedrive__bulk_update_deals` (aceita string livre).
+- NUNCA criar oportunidade de evento — ela nasce na confirmação de presença, no fluxo de convite. Esta skill só trabalha o que já existe.
+- NUNCA prender a atividade de retomada pós-perda do funil Eventos ao deal — no funil Eventos ela é vinculada só à PESSOA (Eric, 05/08/2026).
 - NUNCA passar `due_time: ""` ou `"00:00"` — Pipedrive marca a atividade como vencida à meia-noite. Atividade sem horário definido = OMITIR `due_time`.
 - NUNCA deixar atividade de REGISTRO (evento que JÁ aconteceu) pendente — registro nasce concluído e é verificado (Passo 7).
 - NUNCA criar a próxima atividade PENDENTE com data passada ou de hoje — `due_date` sempre >= amanhã (próximo dia útil).
@@ -24,7 +32,8 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 
 ## SEMPRE
 
-- SEMPRE só deals do Eric no sweep: `user_id: 17987703`.
+- SEMPRE só deals do VENDEDOR DA VEZ no sweep (Eric, 05/08/2026: "cada um roda com seu usuário"). O vendedor da vez é: (a) o nome que o pedido citar ("roda o fup do Niverton") → resolver na tabela "Vendedores"; (b) SENÃO, o dono da sessão — nas máquinas do Eric isso é **Eric Luciano, `user_id: 17987703`**, que é o default de toda invocação aqui. Deals de outro dono aparecem só no resumo do fim, sem mensagem: quem envia é o WhatsApp de quem roda, então mandar por deal alheio troca o dono da conversa e o crédito da comissão.
+- SEMPRE que o funil da vez for o Eventos (14): ler `playbook/Regras_Funil_Eventos.md` ANTES de tocar qualquer deal — é a política do funil, equivalente à Política Comercial nos outros.
 - SEMPRE acentuação correta do português em todo texto externo (mensagem WhatsApp, nota Pipedrive, apresentação no Telegram).
 - SEMPRE consultar o Livro de Objeções antes de redigir a mensagem quando a etapa exigir (tabela "Fluxo de uso por etapa").
 - SEMPRE passar a mensagem por `mcp__whatsapp-agent__check_message` antes de apresentar ao Eric; se houver violações, corrigir antes de mostrar.
@@ -37,7 +46,7 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 
 ## Pré-requisitos
 
-- MCPs conectados: `pipedrive` e `whatsapp-agent`. Se uma tool `create_*` ou `update_deal_fields` retornar "This tool has been disabled in your connector settings", usar o fallback `mcp__pipedrive__pipedrive_write({ action, params })` — mesma lógica, nome neutro. Actions suportadas pelo proxy: `create_activity`, `create_deal`, `create_person`, `create_organization`, `add_product_to_deal`, `update_deal_fields`, `create_note`. O proxy NÃO cobre `update_activity` nem `update_deal` — essas só existem como tool direta.
+- MCPs conectados: `pipedrive` e `whatsapp-agent`. **`expert-integrado` (app de eventos) é obrigatório SÓ para o funil Eventos** — se ele não estiver conectado, o funil Eventos NÃO roda (metade da escrita ficaria de fora): reportar ao Eric e seguir para o Educacional. Se uma tool `create_*` ou `update_deal_fields` retornar "This tool has been disabled in your connector settings", usar o fallback `mcp__pipedrive__pipedrive_write({ action, params })` — mesma lógica, nome neutro. Actions suportadas pelo proxy: `create_activity`, `create_deal`, `create_person`, `create_organization`, `add_product_to_deal`, `update_deal_fields`, `create_note`. O proxy NÃO cobre `update_activity` nem `update_deal` — essas só existem como tool direta.
 - **Como resolver `<skill-dir>` (a pasta desta skill) — NÃO adivinhar, NÃO hardcodar:** `<skill-dir>` = o diretório do próprio `SKILL.md` que está sendo lido nesta execução (mesmo padrão da skill pipe-review). Derivar do path real deste arquivo — todo `Read` de `playbook/...` abaixo é relativo a `<skill-dir>` (ex.: `<skill-dir>/playbook/Livro_Objecoes_Super_SDR.md`). Via marketplace no PC do Eric o path costuma ser algo como `C:\Users\Eric Luciano\.claude\plugins\marketplaces\expertintegrado\plugins\comercial\skills\fup-inteligente`, mas isso é só EXEMPLO ilustrativo — NUNCA assumir esse caminho; o layout varia por máquina (PC, notebook, VPS, Telegram) e por instalação (cache vs marketplace). Sempre derivar do path deste SKILL.md.
 - Pasta `playbook/` desta skill (versionada no repo — funciona em PC, notebook, VPS e Telegram sem OneDrive/internet). Ler com `Read` usando o caminho relativo a `<skill-dir>` resolvido acima.
 - **Em EXECUÇÃO desta skill: ler `playbook/` como está.** NUNCA rodar sync nem verificar se está "atualizada" — a cópia versionada no repo É a canônica para execução, em qualquer máquina. Nenhum passo desta skill dispara sincronização.
@@ -54,6 +63,7 @@ Follow-up sistemático de deals abertos no Pipedrive, um funil por vez, da direi
 | `playbook/Livro_Objecoes_Contexto_Agente.md` | Objeções específicas para contexto de agente IA |
 | `playbook/Manual_Duvidas_Tecnicas_Super_SDR.md` | Dúvidas técnicas do produto durante a conversa |
 | `playbook/Politica_Comercial_Super_SDR.md` | Política comercial (descontos, condições, exceções); §3 e §10 são de leitura OBRIGATÓRIA em Proposta enviada/Em negociação/Formalização — ver "4.1" no Passo 4 |
+| `Regras_Funil_Eventos.md` (resolução de caminho em "Funil Eventos (14)") | **OBRIGATÓRIO sempre que o funil da vez for o Eventos (14)**: quando a oportunidade nasce, unidade = empresa, quem não gera oportunidade, convivência com o Educacional, desfechos (§6), dono e comissão (§7), o que "Pagou sinal" garante (§8), regras de campo e origem (§10), espelhamento entre os dois sistemas (§11) |
 
 ### IDs fixos
 
@@ -71,24 +81,110 @@ Atenção: a resolução usa a lista de usuários do `config.js` do MCP (snapsho
 
 **Ordem de prioridade dos funis:**
 
-1. Educacional (pipeline 6)
-2. Super SDR (pipeline 2)
-3. SaaS (pipeline 1)
-4. Prospecção (pipeline 7)
-5. Parcerias (pipeline 10) — pular por enquanto
+1. **Eventos (pipeline 14) — CONDICIONAL, e quando ativo vem antes de todos** (ver "Funil Eventos (14)" para o teste de ativação). O funil de eventos só existe enquanto há edição em jogo: se não houver evento já realizado com oportunidade aberta, ele é pulado em silêncio e a rodada começa no Educacional.
+2. Educacional (pipeline 6)
+3. Super SDR (pipeline 2)
+4. SaaS (pipeline 1)
+5. Prospecção (pipeline 7)
+6. Parcerias (pipeline 10) — pular por enquanto
 
 **Ordem dentro do funil — direita para a esquerda (etapa mais avançada primeiro):**
 
-| Educacional (6) | Super SDR (2) | SaaS (1) | Prospecção (7) |
-|---|---|---|---|
-| 82 — Formalização | 81 — Formalização | 83 — Formalização | 79 — Reunião agendada |
-| 56 — Em negociação | 14 — Em negociação | 21 — Em negociação | 116 — Qualificado |
-| 55 — Proposta enviada | 12 — Proposta enviada | 20 — Proposta enviada | 68 — Pré-Qualificado |
-| 60 — Apresentação realizada | 10 — Demo realizada | 61 — Apresentação realizada | 66 — Conexão iniciada/Em qualificação |
-| 54 — Apresentação agendada | 9 — Demo agendada | 19 — Apresentação agendada | 65 — Tentando contato |
-| 115 — Aguardando agendamento | 90 — Aguardando agendamento | 117 — Aguardando agendamento | 64 — Lead Mapeado |
-| 53 — Contato realizado | 8 — Contato realizado | 17 — Contato realizado | |
-| 52 — Sem contato | 7 — Sem contato | 16 — Sem contato | |
+| Eventos (14) | Educacional (6) | Super SDR (2) | SaaS (1) | Prospecção (7) |
+|---|---|---|---|---|
+| 121 — Formalização | 82 — Formalização | 81 — Formalização | 83 — Formalização | 79 — Reunião agendada |
+| 122 — Pagou sinal | 56 — Em negociação | 14 — Em negociação | 21 — Em negociação | 116 — Qualificado |
+| 120 — Negociações Iniciadas | 55 — Proposta enviada | 12 — Proposta enviada | 20 — Proposta enviada | 68 — Pré-Qualificado |
+| 123 — Contato realizado | 60 — Apresentação realizada | 10 — Demo realizada | 61 — Apresentação realizada | 66 — Conexão iniciada/Em qualificação |
+| 119 — Participou | 54 — Apresentação agendada | 9 — Demo agendada | 19 — Apresentação agendada | 65 — Tentando contato |
+| 118 — Confirmado | 115 — Aguardando agendamento | 90 — Aguardando agendamento | 117 — Aguardando agendamento | 64 — Lead Mapeado |
+| | 53 — Contato realizado | 8 — Contato realizado | 17 — Contato realizado | |
+| | 52 — Sem contato | 7 — Sem contato | 16 — Sem contato | |
+
+Atenção ao funil Eventos: as 6 etapas entram na rodada, incluindo **Confirmado**. Mas como a abordagem é só pós-evento, quem ficou em Confirmado depois do evento é **no-show**, não lead a mensagear — ver a regra de desfecho na seção do funil.
+
+## Funil Eventos (14) — regras próprias
+
+> Política do funil: **Regras de Funil — Eventos** (leitura OBRIGATÓRIA antes de tocar qualquer deal deste funil). Esta seção é o recorte operacional; em qualquer divergência, o documento manda.
+>
+> **Onde ler, nesta ordem:** (1) `<skill-dir>/playbook/Regras_Funil_Eventos.md`; (2) SE não existir e a máquina tiver o Google Drive do Eric (PC/notebook): `G:\Meu Drive\claude-workspace\Workspace\Processo Comercial\Playbooks\Documentos MD\Regras_Funil_Eventos.md`; (3) SE nenhum dos dois existir → avisar o Eric que está rodando só com o recorte desta seção e seguir. O documento contém nome de cliente e por isso a publicação da cópia versionada depende de decisão dele.
+
+### E.1 Teste de ativação — o funil roda ou não?
+
+O funil de eventos não é permanente: ele existe enquanto há edição em jogo. Rodar este teste ANTES de tudo, em toda invocação genérica ("roda o fup"):
+
+1. `mcp__expert-integrado__list_eventos()` → separar os eventos cuja `data` é **anterior a HOJE** (edição já realizada). Edição com data futura não entra: ninguém é abordado antes do evento. Os eventos se repetem com o MESMO nome a cada edição — identificar pela `data`/`id`, nunca pelo nome.
+2. Para cada edição já realizada: `mcp__expert-integrado__list_vendas({ evento_id, status_crm: "aberto" })`. O conjunto de `pipedrive_deal_id` desses cards é a lista de deals **elegíveis** — é o único jeito de saber de que edição cada deal é (o Pipedrive não guarda a data do evento).
+3. `mcp__pipedrive__list_deals({ status: "open", pipeline_id: 14, buscar_todos: true })` → filtro defensivo por `pipeline: "Eventos"` (mesmo bug do Passo 1) + filtro do vendedor da vez + interseção com a lista elegível do item 2.
+4. **SE sobrou pelo menos 1 deal** → o funil Eventos roda PRIMEIRO, antes do Educacional.
+5. **SE sobrou zero** → pular o funil em silêncio (sem relatório, sem aviso) e começar a rodada no Educacional. "Sem evento rodando" é o estado normal na maior parte do ano.
+
+Deal aberto no pipeline 14 que **não casa com nenhum card** (não está em edição nenhuma) NÃO entra na rodada às cegas: vai para a lista de divergências do Passo 1 e o Eric decide. Deal órfão pode ser de edição antiga, de card deletado ou de merge malfeito — trabalhar sem saber a edição é chutar a cadência.
+
+SE o Eric NOMEOU o funil ("roda o funil de eventos") → rodar mesmo assim, e SE não houver deal aberto reportar "sem oportunidade aberta no funil Eventos" e encerrar.
+
+### E.2 Os dois sistemas são um só funil
+
+Toda oportunidade de evento vive nos dois lados, ligada pelo `pipedrive_deal_id` gravado no card do app. Mapa 1:1, mesmos nomes:
+
+| Etapa (app de eventos) | Stage (Pipedrive) |
+|---|---|
+| `confirmado` | 118 — Confirmado |
+| `participou` | 119 — Participou |
+| `contato_realizado` | 123 — Contato realizado |
+| `negociacoes_iniciadas` | 120 — Negociações Iniciadas |
+| `pagou_sinal` | 122 — Pagou sinal |
+| `formalizacao` | 121 — Formalização |
+
+Desfecho: `status_crm` do app (`aberto`/`ganho`/`perdido`) ↔ `status` do Pipedrive (`open`/`won`/`lost`).
+
+**Quem manda em conflito** (§11 do documento): Pipedrive manda no desfecho e na comissão; o app manda na operação (presença, ingresso, transferência) e na **origem** — nunca sobrescrever origem a partir do Pipedrive, é curadoria feita à mão. Na etapa, vale a alteração mais recente.
+
+**Existe sincronização automática nos dois sentidos** (trigger de banco na ida, webhook na volta, provada em produção em 05/08/2026). Ela **não dispensa** a dupla escrita do Passo 7.5: sync provado não é sync verificado, e esta skill só reporta o que releu.
+
+### E.3 Cadência do funil Eventos
+
+Substitui a tabela "Critérios de Data" quando o funil da vez é o Eventos:
+
+| Etapa | Prazo do próximo toque | Observação |
+|---|---|---|
+| Formalização | 1 dia | Fechamento em curso; ganho é manual do Eric |
+| Pagou sinal | data-limite da reunião DAQUELA edição | Não é contador de dias: é data de calendário (normalmente a sexta ou a segunda seguinte ao evento), definida na abertura da edição. SE a data-limite não estiver definida → perguntar ao Eric, não inventar |
+| Negociações Iniciadas | 1-2 dias | Objeção ativa — Livro de Objeções OBRIGATÓRIO |
+| Contato realizado | 2-3 dias | Já conversando, ainda sem interesse declarado |
+| Participou | 1 dia | Card parado aqui = lista não trabalhada (§12 do documento: mover é obrigatório) |
+| Confirmado (pós-evento) | não gera toque | É no-show: ver E.4 |
+
+Mesmas regras determinísticas dos outros funis: menor valor do intervalo como default, fim de semana move para segunda, feriado não é verificado.
+
+### E.4 Desfechos — as 3 situações do documento (§6)
+
+Nenhuma delas é executada sozinha: todas passam pela aprovação do Eric (Passo 5), como qualquer outra ação da skill.
+
+**(a) Comprou na condição de evento** — vale quando chega em **Formalização**, não quando paga o sinal.
+- Oportunidade de Evento → **ganho é passo MANUAL do Eric**. A skill apresenta o cartão e para. Não chamar `move_venda_status` com `status_crm: "ganho"` nem `update_deal` com `status: "won"`.
+- Negócio do Educacional → perder com motivo `Migrou para condição de evento`.
+- Esse motivo **não conta como perda e NÃO gera atividade de retomada** — é a única exceção à regra "todo perdido tem retomada".
+
+**(b) Foi ao evento e não comprou** — oportunidade de Evento perdida; o negócio do Educacional **continua aberto** (o perpétuo volta a ser o canal). SE não existe negócio no Educacional → sinalizar ao Eric, não criar por conta própria.
+
+**(c) Confirmou e não apareceu (no-show)** — deal parado em **Confirmado** depois do evento. Oportunidade de Evento perdida e a pessoa volta para a base. Não mandar mensagem de follow-up: a ação é a perda, apresentada ao Eric em lote (no-show é ~1/4 dos confirmados por edição — apresentar a lista inteira de uma vez, não um por um).
+
+**Como gravar o motivo de perda neste funil:** `mcp__pipedrive__update_deal` NÃO serve — seu `lost_reason` é um enum fixo de 8 valores que não inclui nenhum motivo de evento. Usar:
+
+```
+mcp__pipedrive__bulk_update_deals({
+  operations: [{ deal_id: <id>, status: "lost", lost_reason: "<motivo>" }]
+})
+```
+
+Lote de 1-5 executa direto; 6+ exige `confirmacao_lote: true` depois do preview aprovado pelo Eric. Motivos válidos hoje no campo (lidos da API em 05/08/2026): os 8 padrão + `Migrou para condição de evento`. Os motivos "não compareceu" e "não aproveitou a condição" citados no documento **ainda não existem como opção** — o campo é `varchar_options` e aceita texto livre, mas gravar fora da lista suja o relatório (já há `Adiou contratação` convivendo com `Adiou a contratação`). Enquanto as opções não forem criadas: **perguntar ao Eric qual motivo usar**, não escolher sozinho.
+
+### E.5 Retomada pós-perda neste funil
+
+Mesma cadência dos outros funis (motivo → 30/90/180 dias), com **uma diferença hard**: a atividade de retomada é vinculada **só à PESSOA, nunca ao negócio** (Eric, 05/08/2026). Na prática, no Passo 4 do fluxo "Lead Perdido": passar `person_id`, **OMITIR `deal_id`**.
+
+Consequência na invariante: deal perdido do funil Eventos fecha com **zero** atividade pendente no deal (a retomada não está pendurada nele). Não recriar nada para "corrigir" isso.
 
 ## Passos
 
@@ -96,21 +192,27 @@ Atenção: a resolução usa a lista de usuários do `config.js` do MCP (snapsho
 
 **Qual funil rodar (decisão determinística, sem estado persistido):**
 
-- SE o Eric NOMEOU o funil no pedido ("roda o funil Educacional", "fup do Super SDR") → rodar SÓ esse funil e encerrar na Validação final.
-- SENÃO (pedido genérico: "roda o fup", "follow-up", "fup do pipe") → rodar TODOS os funis na ordem de prioridade acima, NA MESMA invocação, um por vez: Educacional → Super SDR → SaaS → Prospecção. Parcerias (10) é SEMPRE pulado. Só passar ao funil seguinte quando o atual terminar (todos os deals triados/apresentados).
-- NÃO existe "onde parei da última vez": toda invocação genérica recomeça do funil 1 (Educacional). Isso é intencional e idempotente — a triagem (Passo 2) pula deals com pendente futura, então deals já tratados em rodadas anteriores são pulados automaticamente.
+- SE o Eric NOMEOU o funil no pedido ("roda o funil Educacional", "fup do Super SDR", "roda o funil de eventos") → rodar SÓ esse funil e encerrar na Validação final.
+- SENÃO (pedido genérico: "roda o fup", "follow-up", "fup do pipe") → rodar o **teste de ativação do funil Eventos (E.1)** e então rodar os funis na ordem de prioridade, NA MESMA invocação, um por vez: [Eventos, se ativo] → Educacional → Super SDR → SaaS → Prospecção. Parcerias (10) é SEMPRE pulado. Só passar ao funil seguinte quando o atual terminar (todos os deals triados/apresentados).
+- NÃO existe "onde parei da última vez": toda invocação genérica recomeça do funil 1 (Eventos se ativo, senão Educacional). Isso é intencional e idempotente — a triagem (Passo 2) pula deals com pendente futura, então deals já tratados em rodadas anteriores são pulados automaticamente.
 
 Para o funil da vez:
 
 ```
-mcp__pipedrive__list_deals({ status: "open", pipeline_id: <ID do funil>, user_id: 17987703, buscar_todos: true })
+mcp__pipedrive__list_deals({ status: "open", pipeline_id: <ID do funil>, user_id: <vendedor da vez>, buscar_todos: true })
 ```
 
 **Filtro defensivo OBRIGATÓRIO:** o parâmetro `pipeline_id` do MCP pode VAZAR deals de outros funis (reproduzido em 06/07/2026: `pipeline_id: 6` devolveu deals de TODOS os pipelines misturados). Antes de ordenar, DESCARTAR todo deal cujo campo `pipeline` do retorno seja diferente do nome do funil da vez (ex: manter só `pipeline: "Educacional"`). Nunca confiar só no parâmetro do filtro.
 
-Ordenar os deals restantes pela ordem de etapas da tabela (mais avançada primeiro). SE o funil não tem deals abertos do Eric → invocação genérica: passar ao próximo funil da ordem; funil nomeado: reportar "sem deals abertos" e encerrar na Validação final.
+Ordenar os deals restantes pela ordem de etapas da tabela (mais avançada primeiro). SE o funil não tem deals abertos do vendedor da vez → invocação genérica: passar ao próximo funil da ordem; funil nomeado: reportar "sem deals abertos" e encerrar na Validação final.
 
 Durante o sweep, anotar também deals com `status: lost` sem atividade pendente futura (auditoria passiva — ver "Lead Perdido", situação 2).
+
+**Só no funil Eventos, três acréscimos ao sweep:**
+
+1. O sweep já foi feito no teste de ativação (E.1) — reaproveitar aquele resultado, não repetir as chamadas.
+2. Comparar etapa do card × etapa do deal, par a par. **Divergência não se corrige em silêncio**: listar ao Eric no fim do funil (quem manda é a alteração mais recente, e "mais recente" é leitura humana, não palpite da skill). Entram na mesma lista: card aberto sem `pipedrive_deal_id` e deal sem card correspondente.
+3. Separar os deals parados em **Confirmado** (118): não são follow-up, são no-show (E.4c). Eles saem do fluxo deal-a-deal e vão para uma apresentação única em lote no fim do funil.
 
 ### 2. Triagem por deal — precisa de follow-up AGORA?
 
@@ -130,6 +232,14 @@ mcp__pipedrive__get_deal_summary({ deal_id })
 ```
 
 Retorna deal completo (campos personalizados, valor, etapa), pessoa vinculada (telefone), atividades (feitas + pendentes + atrasadas), notas e histórico de movimentação.
+
+**App de eventos (SÓ no funil Eventos) — 1 chamada:**
+
+```
+mcp__expert-integrado__get_venda({ venda_id: "<id do card casado no Passo 1>" })
+```
+
+Traz o card completo: etapa e desfecho do lado do app, contato principal + **contatos adicionais** (a unidade do funil é a EMPRESA — pode haver sócio/convidado no mesmo card), comentários e campos personalizados. O campo `observacoes` costuma trazer o dossiê do lead escrito antes do evento (quem é, histórico, dores, abordagem sugerida) — é o melhor contexto disponível neste funil, ler antes de redigir.
 
 **WhatsApp pessoal:**
 
@@ -177,6 +287,8 @@ Regras hard (fonte = Política Comercial + Playbook de Vendas, citadas literalme
 4. **Teste antes de incluir qualquer frase de prazo/urgência na mensagem:** "esse prazo é real e eu consigo justificar de qual das 4 fontes acima ele vem?" — se a resposta for "não" ou "é só pra pressionar", reescrever sem a urgência.
 
 **Educacional/Mentoria (pipeline 6):** os números tabelados acima (~5 dias, 24h/1 mês extra) são específicos da Política Comercial Super SDR/SaaS — ainda **NÃO existe Política Comercial própria do Educacional** (item [B] da task-mãe, pendente). Até ela existir: aplicar SÓ o princípio geral (regras 2 e 3 acima — nunca ancorar em evento da EI, nunca urgência artificial) para deals do funil Educacional; NÃO usar os números do Super SDR (5 dias / 24h / 1 mês extra) como se fossem regra do Educacional — se precisar de um prazo concreto num deal Educacional, perguntar ao Eric em vez de inventar.
+
+**Funil Eventos (14) — como a regra 4.1 se aplica:** vale para as etapas Negociações Iniciadas, Pagou sinal e Formalização. Aqui a **condição de evento tem prazo real e tabelado**, então ele É uma fonte legítima (categoria (a)): a data-limite da reunião pós-sinal daquela edição, definida na abertura do evento. Isso não é "ancorar em evento da EI" — é a validade da própria condição negociada, do mesmo tipo que a validade de 5 dias do Super SDR. As proibições continuam de pé: nada de "últimas vagas", nada de prazo inventado, e SE a data-limite da edição não estiver definida, perguntar ao Eric em vez de estimar. Os números do Super SDR (5 dias, bônus de 24h) NÃO valem aqui.
 
 **Antes de redigir: consultar o Livro de Objeções conforme a tabela "Fluxo de uso por etapa"** (seção "Quebra de Objeções"). Obrigatório sempre que houver objeção no histórico.
 
@@ -232,6 +344,15 @@ Apresentar com este template (sempre igual):
 | `{data ou "sem"}` | `Previsão:` (SE "N/A" → "sem") |
 | `{numero_telefone}` | telefone normalizado no Passo 3 (só dígitos, com 55) |
 | `{resumo 2-3 linhas}` | síntese do Passo 3 (atividades + notas + WhatsApp) |
+
+**No funil Eventos, acrescentar duas linhas ao template** (logo abaixo de **Funil:**):
+
+```
+**Card no app:** {etapa no app} — {"espelhado" ou "DIVERGENTE do Pipedrive: app={x} / pipe={y}"}
+**Edição:** {nome do evento} — {data do evento}
+```
+
+E o resto segue igual. SE houver contatos adicionais no card, citá-los no **Contexto:** (é a mesma empresa, não outro lead).
 
 **Regras de formatação:**
 - Link Pipedrive SEMPRE dentro de `<>` (suprime preview/link embedding no Telegram)
@@ -343,6 +464,46 @@ Deve retornar **EXATAMENTE 1 atividade, com data futura**.
 
 **Invariante do funil: 1 deal aberto = exatamente 1 atividade pendente, sempre futura.** Deal aberto com 0 pendentes é deal órfão; com 2+ é deal duplicado; com pendente vencida é registro mal feito.
 
+A invariante vale igual no funil Eventos (Eric, 05/08/2026), com **uma obrigação extra de transparência**: deals de Formalização deste funil carregam tarefas criadas por automação do Pipedrive (ex: "Confirmar pagamento", "Assinatura do Contrato", "Preencher dados da Organização", às vezes duplicadas). A invariante conclui essas tarefas — então **listar ao Eric, por deal, exatamente quais atividades foram concluídas** ("concluí 6 pendentes vencidas: ..."). Concluir é a regra; concluir calado, não.
+
+### 7.5 Protocolo de Dupla Escrita (SÓ funil Eventos — OBRIGATÓRIO)
+
+> **Regra de ouro:** oportunidade de evento existe nos dois sistemas. Escrever em um só deixa os lados divergentes, e divergência de etapa/desfecho é o que quebra o relatório e a comissão.
+
+Vale para toda mudança de **etapa** ou de **desfecho** de um deal do funil Eventos. Ordem fixa:
+
+**7.5a — Escrever no app** (é onde a regra de negócio vive e onde o gatilho de ida nasce):
+
+```
+mcp__expert-integrado__move_venda_status({
+  venda_id: "<id do card>",
+  status: "<etapa nova>",
+  status_crm: "<aberto|perdido>"
+})
+```
+
+- `status_crm: "ganho"` NUNCA sai daqui — ganho é manual do Eric (E.4a).
+- SE o card ainda não tem o negócio vinculado, passar `pipedrive_deal_id: <id>` na mesma chamada — o app não aceita desfecho sem elo.
+
+**7.5b — Escrever no Pipedrive**, mesmo que a sincronização automática já tenha propagado (escrita idempotente: se já está igual, não muda nada):
+
+```
+mcp__pipedrive__update_deal({ deal_id: <id>, stage_id: <stage novo> })
+```
+
+Para perda, usar `bulk_update_deals` (o motivo não passa no enum do `update_deal` — ver E.4).
+
+**7.5c — RELER os dois lados e comparar** (esta é a prova; sem ela não se reporta nada):
+
+```
+mcp__expert-integrado__get_venda({ venda_id })
+mcp__pipedrive__get_deal({ deal_id })
+```
+
+- SE os dois batem → seguir.
+- SE divergem → **repetir a escrita do lado que ficou para trás e reler de novo**. Duas tentativas no mesmo lado com o mesmo resultado = PARAR (circuit breaker), reportar a divergência ao Eric com os dois valores e NÃO seguir para o próximo deal como se tivesse dado certo.
+- `success: true` do Pipedrive não é prova de escrita: existe automação na conta que reverte alteração segundos depois. A prova é a releitura.
+
 ### 8. Próximo deal
 
 Seguir para o próximo deal na ordem de prioridade. Apresentar com o mesmo template + botões.
@@ -374,6 +535,17 @@ A skill SEMPRE consulta o Livro de Objeções para gerar mensagens — não só 
 | Formalização | Consultar SE travou em ponto técnico/contratual |
 | Lead perdido (lost) | **OBRIGATÓRIO** — ver "Lead Perdido" (motivo de perda mapeia direto para objeção a quebrar) |
 
+Etapas do funil Eventos (14):
+
+| Etapa do deal | Quando consultar |
+|---|---|
+| Confirmado (pós-evento) | Não consultar — é no-show, não há conversa de venda |
+| Participou | Consultar SE houve objeção na conversa do dia do evento |
+| Contato realizado | Consultar SE apareceu hesitação; ainda não há interesse declarado |
+| Negociações Iniciadas | **OBRIGATÓRIO** — negociação é objeção ativa |
+| Pagou sinal | **OBRIGATÓRIO** — o sinal reserva a condição, não fecha a venda: quem trava aqui está com objeção real e o dinheiro é devolvido se desistir |
+| Formalização | Consultar SE travou em ponto técnico/contratual |
+
 **Como identificar a objeção a quebrar (ordem de prioridade):**
 
 1. **WhatsApp** (fonte primária) — frase literal do lead na última conversa. Ex: "ficou caro", "preciso falar com meu sócio", "vou avaliar".
@@ -403,6 +575,8 @@ Objeção: "preciso falar com o sócio" (demo realizada, sem retorno)
 
 ## Critérios de Data do Próximo Follow-up
 
+> Funil Eventos (14): usar a tabela **E.3**, não esta.
+
 | Etapa | Prazo |
 |---|---|
 | Sem contato / Contato realizado | 1-2 dias |
@@ -424,7 +598,14 @@ Sempre sugerir a data ao Eric na aprovação. Ele ajusta se quiser.
 
 ## Lead Perdido — Atividade de Retomada OBRIGATÓRIA
 
-**Regra geral:** todo deal marcado como Perdido (status `lost`) precisa ter atividade futura de retomada no Pipedrive. **Sem exceção.** Lead perdido sem retomada = lead zumbi no CRM.
+**Regra geral:** todo deal marcado como Perdido (status `lost`) precisa ter atividade futura de retomada no Pipedrive. Lead perdido sem retomada = lead zumbi no CRM.
+
+**Duas diferenças no funil Eventos (14)** — o resto do fluxo abaixo é idêntico:
+
+1. A atividade de retomada é vinculada **só à PESSOA**: passar `person_id`, **OMITIR `deal_id`** no Passo 4 (Eric, 05/08/2026). Logo, o deal perdido fecha com zero pendentes — é o esperado, não recriar nada.
+2. **Única perda que NÃO gera retomada:** motivo `Migrou para condição de evento` no negócio do Educacional (E.4a). Não é perda de verdade — é a mesma venda registrada no funil certo.
+
+Além disso, a mudança de desfecho passa pelo Protocolo de Dupla Escrita (Passo 7.5): o card do app também vai a `status_crm: "perdido"`.
 
 Detecção do evento "lead perdido" — 2 situações:
 1. **Detecção ativa** durante o follow-up: Eric responde pedindo para marcar como perdido (ex: "marca como perdido — não respondeu mais", "esse aqui já era").
@@ -515,6 +696,7 @@ mcp__pipedrive__create_activity({
 ```
 
 - `type: "whatsapp"` = canal padrão da cadência (Playbook 16.10–16.12).
+- **Funil Eventos: OMITIR `deal_id`** (a retomada é da pessoa, não do negócio) — e com isso `force: true` deixa de ser necessário, porque sem `deal_id` não há guardrail de pendente por deal.
 - `force: true` é necessário aqui: o deal ainda pode ter pendentes antigas (serão concluídas no Passo 6.5) e o guardrail do MCP bloquearia a criação.
 - **NUNCA passar `due_time`** — retomada não tem horário específico (o vendedor escolhe no dia).
 - Validar: o retorno deve conter o ID da atividade criada. SE falhar → NÃO seguir para o Passo 7 (não marcar lost sem retomada criada).
@@ -579,6 +761,8 @@ Só DEPOIS de a retomada existir E as pendentes antigas estarem concluídas:
 mcp__pipedrive__update_deal({ deal_id: <DEAL_ID>, status: "lost", lost_reason: "<motivo>" })
 ```
 
+**Funil Eventos:** não usar `update_deal` aqui — o motivo do funil de eventos não passa no enum. Usar `bulk_update_deals` conforme E.4, e antes disso levar o card do app a `perdido` (Passo 7.5).
+
 `lost_reason` no MCP é enum estrito — usar EXATAMENTE um destes valores: "Parou de responder", "Fora do orçamento", "Adiou contratação", "Mudança de prioridade", "Contratou outra empresa", "Internalizou", "Não é o que buscava", "Ferramenta incompatível / Desqualificado". (Os motivos "Ferramenta incompatível" e "Desqualificado" do playbook correspondem ao MESMO valor combinado da API: `"Ferramenta incompatível / Desqualificado"` — ambos são Cadência 8 / +180d.)
 
 Ordem importa: se marcar perdido primeiro e a criação da retomada falhar, o deal vira zumbi sem retomada.
@@ -602,11 +786,15 @@ Ordem importa: se marcar perdido primeiro e a criação da retomada falhar, o de
 - **Deal já lost mas sem atividade futura:** listar todos ao Eric no sweep, com motivo de perda, e propor criação retroativa da retomada (fluxo Lead Perdido do Passo 1 em diante).
 - **Deal perdido sem `lost_reason` preenchido:** perguntar ao Eric o motivo antes de criar a retomada (sem motivo não mapeia cadência).
 - **Deal perdido com motivo fora da lista canônica:** mapear para "Desqualificado" (+180d) como fallback conservador e sinalizar ao Eric pra revisar.
+- **Mesma empresa com deal aberto no Educacional E no Eventos:** é INTENCIONAL (§5 do documento de regras), não duplicata. Não fundir, não fechar um por causa do outro. Só o desfecho em Formalização do Eventos fecha o do Educacional (E.4a). Consequência a respeitar no relatório: não somar Educacional + Eventos.
+- **Card do app sem `pipedrive_deal_id` (ou deal sem card):** não improvisar o elo. Entra na lista de divergências apresentada ao Eric no fim do funil.
+- **Deal do funil Eventos de uma edição que ainda não aconteceu:** fora da rodada, sempre. Ninguém é abordado antes do evento.
+- **Empresa que já é cliente/mentorado apareceu como oportunidade de evento:** pelo documento (§4) ela nem deveria ter virado oportunidade. Não mandar mensagem de venda — sinalizar ao Eric para revisão do cadastro.
 - **Prazo/urgência de proposta sem fonte real na mão (ex: quer usar data de evento da EI como prazo):** NÃO usar o evento. Aplicar a regra "4.1" — validade tabelada (~5 dias), bônus real de fechamento rápido, custo de inação real ou evento crítico do PRÓPRIO prospect. Se nenhuma das 4 se aplica, a mensagem NÃO leva prazo/urgência nenhuma (melhor sem urgência do que urgência falsa).
 
 ## Validação final (checklist por sessão de follow-up)
 
-- [ ] Todos os deals apresentados eram do Eric (user_id 17987703) e do funil da vez
+- [ ] Todos os deals apresentados eram do vendedor da vez (default Eric, user_id 17987703) e do funil da vez
 - [ ] Nenhuma mensagem foi enviada sem aprovação explícita
 - [ ] Toda mensagem enviada passou por `check_message` sem violações pendentes
 - [ ] Todo deal tocado fecha a invariante: `list_deal_activities(deal_id, done: "0")` = exatamente 1 pendente futura
@@ -615,6 +803,18 @@ Ordem importa: se marcar perdido primeiro e a criação da retomada falhar, o de
 - [ ] Todo deal marcado lost nesta sessão tem retomada futura criada ANTES do `update_deal status: lost`, com responsável escolhido pelo Eric
 - [ ] Deals lost órfãos encontrados no sweep foram listados ao Eric
 - [ ] Toda mensagem de deal em Proposta enviada/Em negociação/Formalização teve o prazo/urgência checado contra a regra "4.1" (sem âncora em evento da EI, sem urgência artificial, fonte real identificada)
+
+Itens extras quando o funil Eventos rodou:
+
+- [ ] `playbook/Regras_Funil_Eventos.md` foi lido antes do primeiro deal do funil
+- [ ] Nenhum deal de edição futura foi tocado
+- [ ] Toda mudança de etapa/desfecho fechou o Passo 7.5 com **releitura dos dois lados** batendo
+- [ ] Nenhum ganho foi marcado pela skill (nem no app, nem no Pipedrive)
+- [ ] Motivo de perda gravado via `bulk_update_deals` e dentro da lista aprovada pelo Eric
+- [ ] Retomada pós-perda criada com `person_id` e SEM `deal_id`
+- [ ] No-shows (parados em Confirmado) apresentados em lote único, não deal a deal
+- [ ] Divergências app ↔ Pipedrive listadas ao Eric, não corrigidas em silêncio
+- [ ] Atividades concluídas pela invariante foram listadas ao Eric, deal a deal
 
 ## Erros comuns e recovery
 
@@ -627,6 +827,10 @@ Ordem importa: se marcar perdido primeiro e a criação da retomada falhar, o de
 | `update_deal` recusa o `lost_reason` | Valor fora do enum estrito do MCP | Usar EXATAMENTE um dos 8 valores da API (ver Lead Perdido, Passo 7) |
 | `send` bloqueado por "inbound recente não respondido" | Gate do whatsapp-agent: lead mandou algo há <10 min | Ler a mensagem nova (`read`), reapresentar contexto ao Eric; só usar `force_send_after_inbound: true` após ok explícito dele |
 | MCP não resolve nome/ID de vendedor em `user_id` ("Usuário não encontrado") | Vendedor fora do snapshot de usuários do `config.js` (stale ou removido do Pipedrive) | Rodar `mcp__pipedrive__sync_all` (re-sincroniza usuários) e repetir. SE seguir ausente → o erro lista os usuários ativos com IDs; confirmar com o Eric qual usar (não existe tool de listagem de usuários no MCP) |
+| `update_deal` recusa motivo de perda do funil Eventos | O `lost_reason` do `update_deal` é enum fixo de 8 valores no código do MCP, sem os motivos de evento | Usar `bulk_update_deals` com 1 operação (`lost_reason` é string livre lá). Ver E.4 |
+| Deal do funil Eventos volta sozinho pra `open` depois de marcado ganho | Automação da conta valida a etapa antes de permitir ganho | Não é caso desta skill — ganho no funil Eventos é manual do Eric. Se acontecer com ele, é configuração de automação (UI do Pipedrive, precisa de admin) |
+| Card do app e deal do Pipedrive com etapas diferentes | Escrita em um lado só, ou sync que não propagou | Passo 7.5c: reescrever o lado atrasado e reler. 2 tentativas iguais = parar e reportar. Nunca "escolher" um lado por conta própria |
+| `move_venda_status` recusa ganho/perdido | O app exige negócio do Pipedrive vinculado ao card | Passar `pipedrive_deal_id` na mesma chamada. SE não houver deal → é divergência: reportar, não criar deal aqui |
 
 ## Modelo pra Subagente (IGNORAR na execução direta)
 
@@ -638,9 +842,10 @@ Esta seção NÃO faz parte da execução normal da skill — nenhum passo acima
 
 ---
 
-*Skill v2.2 — Atualizada em 19/07/2026.*
+*Skill v2.3 — Atualizada em 05/08/2026.*
 
 **Changelog:**
+- v2.3 (05/08/2026): **funil Eventos (pipeline 14) entra na skill como PRIORIDADE 1 condicional**, a pedido do Eric. (1) Nova seção "Funil Eventos (14)" com teste de ativação (E.1 — só roda se houver evento JÁ REALIZADO com oportunidade aberta; sem isso é pulado em silêncio), mapa etapa↔stage↔`status` do app (E.2), cadência própria das 6 etapas (E.3), os 3 desfechos do documento de regras (E.4) e retomada vinculada à pessoa (E.5). (2) Passo 7.5 novo — **Protocolo de Dupla Escrita**: toda mudança de etapa/desfecho escreve no app de eventos E no Pipedrive e **relê os dois** antes de reportar; divergência não se corrige em silêncio, e 2 tentativas iguais param o ciclo. A sincronização automática existe (trigger de ida + webhook de volta, provada em produção em 05/08/2026) e mesmo assim não dispensa a releitura. (3) Decisões do Eric nesta data: sweep filtra pelo **vendedor da vez** ("cada um roda com seu usuário", default Eric); **ninguém é abordado antes do evento** — as 6 etapas entram na rodada, mas quem ficou em Confirmado depois do evento é no-show, não lead a mensagear; invariante de atividade é a **mesma** dos outros funis (com obrigação nova de listar ao Eric o que foi concluído, porque este funil tem tarefas de automação); retomada pós-perda **vinculada só à PESSOA**, sem `deal_id`. (4) Correção de fato descoberta na auditoria: o `lost_reason` do `mcp__pipedrive__update_deal` é um enum FIXO de 8 valores no código do MCP e não aceita nenhum motivo de evento — o caminho é `bulk_update_deals` (string livre). Lido da API em 05/08: o campo é `varchar_options` e hoje só tem `Migrou para condição de evento` como opção de evento; "não compareceu" e "não aproveitou a condição" ainda não existem. (5) `playbook/Regras_Funil_Eventos.md` embarcado na skill (leitura obrigatória do funil) — o `sync-playbook.ps1` já o mantém atualizado, por copiar todos os `.md` da pasta-fonte. (6) Ganho no funil Eventos é passo MANUAL do Eric: a skill apresenta e para.
 - v2.2 (19/07/2026): task Brain `i7dsv1qyecox` item [A] — gatilho: FUP do Fabrício Miranda (16/07/2026) ancorou prazo de proposta na data da imersão 29-30/07, violando a política. (1) Passo 4.1 novo, OBRIGATÓRIO (não condicional): antes de definir prazo/urgência em deal de Proposta enviada/Em negociação/Formalização, ler Política Comercial §3+§10 e Playbook de Vendas §10.1-10.4 — regras hard embutidas (validade ~5 dias, proibido ancorar em evento da EI, urgência só de fonte real, teste de 4 fontes válidas); placeholder explícito para Educacional (sem Política própria ainda — item [B] da task-mãe). (2) NUNCA/SEMPRE, edge case e checklist de validação atualizados com a mesma regra. (3) Fonte única do playbook: `scripts/sync-playbook.ps1` e o texto de manutenção nos Pré-requisitos apontavam pro OneDrive (`$HOME/OneDrive/Workspace`), que virou arquivo morto em 05/07/2026 — atualizado para `G:\Meu Drive\claude-workspace\Workspace\...` (Google Drive, canônico); os 5 arquivos do playbook já estavam com conteúdo idêntico entre repo/OneDrive/GDrive na auditoria desta versão (só line-ending divergia em 1 arquivo), então não houve conteúdo a resgatar — o problema era só o caminho-fonte do script apontar pro lugar morto.
 - v2.1 (03/07/2026): passe de executabilidade (10 ambiguidades do teste Sonnet), SEM mudança de comportamento: (1) roteamento explícito de "roda o fup" sem funil (todos os funis em sequência na mesma invocação, sem estado persistido, recomeça do Educacional); (2) regra de normalização do telefone Pipedrive → parâmetro `chat`/`to` (só dígitos, prefixo 55, fallback por nome); (3) critérios objetivos de redação + exemplo de mensagem para etapa sem objeção; (4) tabela de origem dos placeholders do template (Empresa = linha `Empresa:` do get_deal_summary); (5) caminho único para "Outro vendedor" (nome literal em `user_id`, MCP resolve); (6) regra "ciclo por DEAL" para múltiplas vencidas (1 mensagem consolidada); (7) playbook/ lido como está em execução — sync é manutenção, nunca roda no fluxo; (8) cálculo determinístico da data (menor valor do intervalo, fim de semana → segunda, feriado não verificado); (9) origem de person_id/org_id via `get_deal` (`contato_id`/`empresa_id`) nos dois caminhos do Lead Perdido + get_deal no allowed-tools; (10) seção Subagente marcada como fora da execução direta.
 - v2.0 (02/07/2026): reescrita no padrão Sonnet-executável — tools MCP nomeadas com parâmetros literais, árvores de decisão SE/SENÃO, blocos NUNCA/SEMPRE, checklist de validação final e tabela de erros/recovery. Correções de fato: removida referência a `mcp__pipedrive__list_users` (tool não existe no MCP); documentado o enum estrito de `lost_reason` do `update_deal` ("Ferramenta incompatível / Desqualificado" é valor único da API); motivos canônicos apontados para a seção 5.3 do playbook (não seção 8); documentado que `pipedrive_write` NÃO cobre `update_activity`/`update_deal`; recovery de "Usuário não encontrado" via `sync_all` (Kesia fora do snapshot atual do config). Comportamento, templates, cadências, IDs e voz preservados de v1.2.
