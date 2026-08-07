@@ -1,7 +1,7 @@
 {
   "name": "comercial",
-  "version": "2.8.2",
-  "description": "Skills comerciais Expert Integrado: prospeccao em massa, blog comercial (indice objecao->post + post-objecao sob demanda), reabordagem, campanhas WhatsApp, follow-up de leads (inclui o funil Eventos, espelhado com o app de eventos), envio de proposta (mentoria/consultoria/combo com decks HTML), pipe review diario, transferencia 1:1 de lead pessoal -> vendedor e agendamento Calendly.",
+  "version": "2.9.0",
+  "description": "Skills comerciais Expert Integrado: prospeccao em massa, blog comercial (indice objecao->post + post-objecao sob demanda), reabordagem, campanhas WhatsApp, follow-up de leads (inclui o funil Eventos, espelhado com o app de eventos), envio de proposta (mentoria/consultoria/combo com decks HTML), pipe review diario, transferencia 1:1 de lead pessoal -> vendedor e agendamento de call pelo Meeting Hub.",
   "author": {
     "name": "Eric Luciano Ferreira",
     "email": "operacoes@expertintegrado.com.br",
@@ -17,7 +17,7 @@
     "pipedrive",
     "whatsapp",
     "prospeccao",
-    "calendly",
+    "meeting-hub",
     "agendamento"
   ]
 }
