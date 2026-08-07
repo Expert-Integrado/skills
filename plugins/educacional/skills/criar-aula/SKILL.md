@@ -1,7 +1,7 @@
 ---
 name: criar-aula
 description: Cria estrutura completa de aula/curso gravado no Educacional — pasta organizada, Ementa.md+docx, apresentação HTML 16:9 (slides), materiais HTML (prompts copiáveis), HANDOFF.md + SESSAO.md (continuidade entre máquinas) e deploy Vercel + DNS Cloudflare automáticos no subdomínio <slug>.ericluciano.com.br. Processa insumos (transcrições, gravações, pesquisas) da pasta 00_Inputs pra construir a ementa. TRIGGER quando Eric pedir "cria aula", "novo curso", "monta estrutura pra curso X", "transforma esses insumos em aula", "gera ementa+slides+materiais pra X", "continua aula <slug>", ou mencionar curso/aula novo a gravar. NÃO disparar pra deck de apresentação standalone (só os slides de uma palestra, sem pacote educacional com pasta/ementa/materiais — isso é a skill apresentacao-html); já uma aula/palestra avulsa que precisa do pacote educacional próprio É desta skill (ramo 'aula avulsa' do Passo 1). Também NÃO disparar pra material complementar sem curso (não vale a fábrica inteira pra 1 PDF), nem pra aulas no PowerPoint/Slides Google (esta skill é HTML-only).
-allowed-tools: AskUserQuestion, Read, Write, Edit, Glob, Grep, Bash, mcp__expert-brain__recall, mcp__expert-brain__save_note, mcp__expert-brain__link
+allowed-tools: AskUserQuestion, Read, Write, Edit, Glob, Grep, Bash, mcp__expert-brain__recall, mcp__expert-brain__save_note, mcp__expert-brain__link, mcp__expert-brain__get_note, mcp__expert-brain__update_note
 ---
 
 # criar-aula — Fábrica de cursos gravados
@@ -35,6 +35,7 @@ Pega insumos (transcrições, vídeos, pesquisas, palestras anteriores) e devolv
 - SEMPRE nomear a ferramenta exata (Lovable, HeyGen, Suno, etc) — nunca "ferramenta de IA" genérico.
 - SEMPRE executar deploy Vercel, criação de DNS Cloudflare e renomeio de pastas SEM pedir confirmação — decisão Eric (27/05/2026); a skill assume que os tokens 1Password estão disponíveis e que reorganizar pasta é OK (não deleta nada, só move pra `_arquivo/`). Única exceção: destino teste/rascunho (ver NUNCA).
 - SEMPRE `--ssl-no-revoke` em curl HTTPS (obrigatório no Windows do Eric — sem a flag o curl Schannel falha com exit 35; em Linux/macOS a flag é aceita e ignorada). CORREÇÃO-DE-FATO: os comandos curl do original omitiam a flag, contra a regra canônica do CLAUDE.md global; adicionada em todos os curl desta skill.
+- SEMPRE registrar a aula/curso publicado no índice de apresentações do Brain (nota `ion3opi81au6`) no MESMO turno do deploy (Passo 9.4). É esse índice que responde "me dá o link da aula de hoje" em qualquer máquina — deploy sem linha no índice = entrega incompleta. Destino teste/rascunho NÃO registra.
 - SEMPRE que o destino for AULA INTERNA (Mentoria Automações Inteligentes ou outro programa contínuo do Eric): **URL ÚNICA** — os prompts entram como slides DENTRO de `apresentacao.html` (com botão de copiar, fonte única no `<pre id="prompt-pN">` de cada slide), posicionados logo após o slide da etapa que os usa; NÃO gerar `materiais/index.html` e a rota `/materiais` NÃO deve existir (validar 404). Ordem narrativa: motivação (problema + conta em dinheiro) no início; execução/pessoas perto do fim; fechamento como último slide. Regras de Eric, 04/08/2026 (memories `feedback_aula_url_unica_material_embutido` e `feedback_aula_capa_padrao_prompts_inline`; referência viva: pasta da aula "Mapa da Primeira Hora"). O layout com `/materiais` separado fica RESTRITO a curso multi-aula pra cliente externo (padrão G4/Maria) — e mesmo nesse caso, confirmar com o Eric antes.
 
 ## Pré-requisitos (checar TODOS no início; se faltar algo obrigatório, abortar com mensagem clara)
@@ -301,6 +302,12 @@ Validação: capturar URL + deploy id do 8.1, record_id do 8.3, e HTTP 200 nas D
 
 3. SE houver curso anterior do mesmo tema (achado no recall do Passo 2) → `mcp__expert-brain__link` criando edge com a nota do curso anterior (`why` substantivo ≥ 20 chars explicando o mecanismo; preferir `same_mechanism_as`).
 
+4. **Registrar no índice de apresentações (obrigatório quando houve deploy real; teste/rascunho pula).** A nota Brain `ion3opi81au6` ("Índice de apresentações e aulas — link por data") é a fonte única que responde "me dá o link da aula de hoje" em qualquer máquina:
+   - `mcp__expert-brain__get_note` com `id: "ion3opi81au6"`.
+   - Adicionar linha NOVA no TOPO da tabela do body: `| <data> | <Destino — Nome da aula/curso> | https://<slug>.ericluciano.com.br | <obs> |`. Aula avulsa: data = data do EVENTO (briefing). Curso gravado multi-aula: data = data do deploy + obs `curso gravado (link permanente)`.
+   - `mcp__expert-brain__update_note` com `id: "ion3opi81au6"` e o `body` completo atualizado (a tool substitui o body inteiro — mandar o texto todo, não só a linha).
+   - SE o Brain estiver indisponível na sessão → reportar ao Eric que o registro no índice ficou PENDENTE (não silenciar).
+
 ## Modo "continuar curso existente"
 
 Eric: "continua aula <slug>" (funciona entre máquinas — Google Drive via Drive for Desktop sincroniza a pasta automaticamente):
@@ -383,6 +390,7 @@ Scripts corrigidos no golden run de 06/07/2026: `slug.sh` não depende mais de `
 - [ ] SE destino teste/rascunho: NENHUM deploy/DNS executado
 - [ ] `SESSAO.md` com entry desta execução (mesmo em erro)
 - [ ] SE Brain na sessão: nota `kind=decision` salva + edges com curso anterior (se houver)
+- [ ] SE houve deploy real + Brain na sessão: linha registrada no índice de apresentações (Brain `ion3opi81au6`) com data + link (Passo 9.4)
 - [ ] Nada deletado — arquivos fora do padrão em `_arquivo/`, versões antigas em `_versoes-historicas/`
 
 ## Erros comuns e recovery
@@ -415,6 +423,6 @@ Eric: "Cria aula nova sobre Vibe Coding com base nos insumos que tô jogando ago
 
 ## Status
 
-- **Nasceu:** 27/05/2026 · **Versão:** 0.5.0 (04/08/2026, regras de aula interna da revisão "Mapa da Primeira Hora": URL única com prompts embutidos na sequência da aula, capa sem data/duração, nunca-papel/sempre-IA, fechamento como último slide, checks e checklist condicionais interna vs curso externo; 0.4.1 golden run 06/07/2026: slug.sh sem iconv, deploy.sh com --ssl-no-revoke, pandoc-docx.sh portável, templates SESSAO/HANDOFF sem OneDrive morto, briefing pré-respondido sem AskUserQuestion, Brain note pulada em destino teste)
+- **Nasceu:** 27/05/2026 · **Versão:** 0.5.1 (07/08/2026, registro automático no índice de apresentações do Brain — nota `ion3opi81au6`, Passo 9.4: todo deploy real ganha linha `data | nome | link`, fonte única do pedido "link da aula de hoje" em qualquer máquina; 0.5.0 de 04/08/2026, regras de aula interna da revisão "Mapa da Primeira Hora": URL única com prompts embutidos na sequência da aula, capa sem data/duração, nunca-papel/sempre-IA, fechamento como último slide, checks e checklist condicionais interna vs curso externo; 0.4.1 golden run 06/07/2026: slug.sh sem iconv, deploy.sh com --ssl-no-revoke, pandoc-docx.sh portável, templates SESSAO/HANDOFF sem OneDrive morto, briefing pré-respondido sem AskUserQuestion, Brain note pulada em destino teste)
 - **Base de evidência:** 2 cursos G4 montados manualmente seguindo este padrão — Construir Empresa (`g4-construir-empresa-com-ia`) e Automatizar Rotina (`g4-automatizar-rotina-com-ia`), ambos com deploy ativo + docx entregue. Golden run de 06/07/2026 executou o ramo TESTE ponta-a-ponta num curso novo (4 aulas, pacote completo, 5 checks anti-pattern verdes, docx via pandoc) — o ramo DEPLOY segue validado só pelos 2 cursos manuais.
 - **Pronto pra graduar:** após rodar ponta-a-ponta com DEPLOY em 1 curso novo de verdade + 0 bugs reportados
