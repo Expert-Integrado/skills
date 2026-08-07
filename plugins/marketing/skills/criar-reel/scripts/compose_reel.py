@@ -16,6 +16,7 @@ A duracao final = duracao do avatar. Os B-rolls sao concatenados na ordem
 import argparse
 import glob
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -26,6 +27,45 @@ def ffprobe_dur(path):
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]
     )
     return float(out.strip())
+
+
+def ffprobe_fmt(path):
+    """(width, height, r_frame_rate, time_base) — assinatura de formato do clipe."""
+    out = subprocess.check_output([
+        "ffprobe", "-v", "error", "-select_streams", "v:0",
+        "-show_entries", "stream=width,height,r_frame_rate,time_base",
+        "-of", "csv=p=0:s=|", path,
+    ])
+    return out.decode().strip()
+
+
+def normalizar_clips(clips, workdir):
+    """Reencoda os clipes pro MESMO formato (1080x1920 @30fps, timebase 1/15360).
+
+    Por que existe: o concat DEMUXER do ffmpeg exige arquivos com formato
+    identico. O banco de B-rolls tem familias em 24fps e outras em 30fps, com
+    resolucoes e timebases diferentes; misturar quebra os PTS e o video final
+    sai com trechos congelados e SEM o avatar (incidente 07/08/2026, reel
+    roupa-infantil: 20 de 64 segundos corrompidos).
+
+    O `scale=1080:1920` aqui e' identico ao que o filtro [bg] ja aplicava
+    depois do concat, e o `fps=30` tambem — a normalizacao so ANTECIPA essas
+    conversoes pra antes do concat, onde elas funcionam. Por isso o resultado
+    visual nao muda (medido: diferenca media 2.57/255 num reel que ja
+    funcionava, dentro do ruido de re-encode).
+    """
+    out = []
+    for i, c in enumerate(clips, 1):
+        dst = os.path.join(workdir, f"norm-{i:03d}.mp4")
+        subprocess.check_call([
+            "ffmpeg", "-y", "-v", "error", "-i", c,
+            "-vf", "scale=1080:1920,setsar=1,fps=30",
+            "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+            "-pix_fmt", "yuv420p", "-an",
+            "-video_track_timescale", "15360", dst,
+        ])
+        out.append(dst)
+    return out
 
 
 def main():
@@ -41,6 +81,9 @@ def main():
     ap.add_argument("--similarity", default="0.30")
     ap.add_argument("--blend", default="0.10")
     ap.add_argument("--fg-height", type=int, default=1320, help="altura do Eric em px (tela 1920)")
+    ap.add_argument("--no-normalizar", action="store_true",
+                    help="NAO normalizar B-rolls heterogeneos antes do concat (escape hatch; "
+                         "sem isso, formatos misturados quebram os PTS e congelam o video)")
     ap.add_argument("--sub-style", default=(
         "Style: Default,Arial,92,&H0000E6FF,&H0000E6FF,&H00000000,&H00000000,"
         "-1,0,0,0,100,100,0,0,1,9,2,8,40,40,330,1"
@@ -57,6 +100,21 @@ def main():
     while total * loops < dur:
         loops += 1
     print(f"avatar: {dur:.1f}s | brolls: {len(clips)} clipes ({total:.1f}s) x{loops} loop(s)", flush=True)
+
+    # GATE DE HOMOGENEIDADE (ver docstring de normalizar_clips).
+    # Clipes ja identicos entre si seguem intocados — mesmo comportamento de sempre.
+    normdir = None
+    if not args.no_normalizar:
+        fmts = {ffprobe_fmt(c) for c in clips}
+        if len(fmts) > 1:
+            print(f"  B-rolls heterogeneos ({len(fmts)} formatos) -> normalizando pra 1080x1920@30fps...", flush=True)
+            for f in sorted(fmts):
+                print(f"    - {f}", flush=True)
+            normdir = tempfile.mkdtemp(prefix="brollnorm-")
+            clips = normalizar_clips(clips, normdir)
+            print(f"  {len(clips)} clipes normalizados.", flush=True)
+        else:
+            print("  B-rolls homogeneos, normalizacao dispensada.", flush=True)
 
     # concat list (re-encode pra timeline limpa)
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f:
@@ -108,8 +166,12 @@ def main():
         args.out,
     ]
     print("compondo...", flush=True)
-    subprocess.check_call(cmd)
-    os.unlink(concat_list)
+    try:
+        subprocess.check_call(cmd)
+    finally:
+        os.unlink(concat_list)
+        if normdir:
+            shutil.rmtree(normdir, ignore_errors=True)
     print(f"SAVED -> {args.out} ({ffprobe_dur(args.out):.1f}s)", flush=True)
 
 

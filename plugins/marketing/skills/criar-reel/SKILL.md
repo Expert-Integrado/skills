@@ -22,6 +22,7 @@ Produz um Reel **pronto pra postar** a partir de uma pauta (tema, link, repo ou 
 - NUNCA gerar frame com figura nua/sem roupa (a moderação barra) — figuras SEMPRE vestidas.
 - NUNCA gerar B-roll novo sem antes consultar o banco remoto (etapa 6 — banco primeiro).
 - NUNCA deixar arquivo solto fora da pasta do reel (nada solto em Downloads).
+- **NUNCA entregar o vídeo sem o gate `validar_composicao.py` sair APROVADO** — e nunca trocar esse gate por "conferi 3 frames": 3 amostras não pegam defeito distribuído (incidente 07/08/2026).
 
 ## SEMPRE
 
@@ -123,7 +124,14 @@ Rodar ANTES da etapa 1; SE algum item crítico faltar → parar e reportar (não
   - Modo automático (fundo verde): só isso — o chromakey é default.
   - Modo manual (rembg): adicionar `--fg-seq "$REEL/fg-out" --fg-fps 25`.
 - Layout: B-roll em tela cheia no fundo o tempo todo + Eric recortado embaixo no centro (~69% da altura) + legenda amarela bold no terço superior (acima da cabeça).
-- **Validação:** obter a duração — `DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$REEL/video-final-<slug-do-tema>.mp4")` — e extrair 3 frames nos timestamps **`1`**, **`DUR/2`** e **`DUR-1`** segundos (início/meio/fim): `ffmpeg -y -v error -ss 1 -i "$REEL/video-final-<slug-do-tema>.mp4" -frames:v 1 "$REEL/check-ini.png"`; idem trocando `-ss 1` por `-ss "$(awk "BEGIN{print $DUR/2}")"` (→ `check-meio.png`) e por `-ss "$(awk "BEGIN{print $DUR-1}")"` (→ `check-fim.png`). Conferir os 3 com `Read` antes de entregar.
+- **Normalização automática dos B-rolls (desde 07/08/2026):** o script compara o formato (resolução/fps/timebase) de todos os `clip-*.mp4` ANTES do concat. Homogêneos → segue direto (comportamento de sempre, nada é reencodado). Heterogêneos → reencoda todos pra `1080x1920@30fps` num tmp e usa esses (~1,2s por clipe). Não é opcional nem cosmético: o concat demuxer do ffmpeg exige formato idêntico, e o banco tem famílias em 24fps e outras em 30fps — misturar quebra os PTS e o vídeo sai com trechos congelados e SEM o avatar. O log diz qual caminho tomou; `--no-normalizar` desliga (escape hatch, não usar sem motivo).
+- **Validação — GATE OBRIGATÓRIO, roda SEMPRE antes de entregar:**
+  ```
+  "$PY" scripts/validar_composicao.py "$REEL/video-final-<slug-do-tema>.mp4"
+  ```
+  Varre o vídeo inteiro (2 frames/s) procurando **frame congelado** (frames consecutivos idênticos) e **avatar ausente** (Eric sumiu do quadro). Exit 0 = aprovado; **exit 1 = NÃO ENTREGAR** — investigar antes, o vídeo está corrompido.
+  **NUNCA substituir este gate por amostragem de 3 frames.** Foi exatamente assim que o defeito de 07/08/2026 passou: 20 dos 64 segundos estavam corrompidos, os 3 frames conferidos caíram nos trechos bons, e o Eric só descobriu depois de receber o vídeo.
+- Depois do gate passar, extrair 3 frames (início/meio/fim) e conferir com `Read` — agora como checagem ESTÉTICA (enquadramento, legenda legível, B-roll coerente com a fala), não como detecção de defeito.
 
 ### 8. Thumb
 - Seção "Thumb" de `references/visual-broll-thumb.md`: fotográfico realista, headline branca caixa alta no topo (3-4 palavras) + selo/pill âmbar com **a palavra do CTA** (a MESMA definida na etapa 2).
@@ -180,9 +188,10 @@ Rodar ANTES da etapa 1; SE algum item crítico faltar → parar e reportar (não
 
 - [ ] Gate 2.5 foi aprovado ANTES de qualquer gasto (e re-simulado se houve gap no Higgsfield).
 - [ ] Cada clip novo do Higgsfield conferido com `ffprobe` (h264, duração ~4s — não é PNG salvo como .mp4).
+- [ ] **`validar_composicao.py` rodou no vídeo final e saiu APROVADO (exit 0)** — sem isso não entrega.
 - [ ] Frame do avatar conferido: fundo verde chapado (modo automático).
 - [ ] .srt revisado ("Cláudio"→"Claude", "Haja"→"Aja", palavra do CTA).
-- [ ] 3 frames do vídeo final conferidos com `Read` (início/meio/fim).
+- [ ] 3 frames do vídeo final conferidos com `Read` (início/meio/fim) — checagem estética, DEPOIS do gate.
 - [ ] `legenda-post.md` com legenda (ângulo diferente), hashtags, palavra do CTA e link da Biblioteca.
 - [ ] Thumb dentro da pasta do reel, conferida com `Read`.
 - [ ] Página da Biblioteca publicada COM capa imagem (ou emoji + aviso, se o upload falhou).
@@ -203,6 +212,8 @@ Rodar ANTES da etapa 1; SE algum item crítico faltar → parar e reportar (não
 | `1102 Account balance not enough` (Kling) | resource pack pré-pago vencido | Esperado — Kling saiu do fluxo; usar Higgsfield |
 | Cena com pronúncia errada | TTS | Regenerar SÓ a cena (`--text "..."`), substituir o scene-NN.mp4, re-concatenar e rodar o Whisper de novo (timestamps mudam) |
 | ffmpeg não acha clip-NN.mp4 na composição | Caminho relativo no compose_reel.py | Repassar TODOS os caminhos como ABSOLUTOS |
+| Vídeo final com trechos CONGELADOS e/ou SEM o avatar (só o B-roll) | B-rolls de formatos diferentes (banco tem famílias 24fps e 30fps) quebrando os PTS no concat demuxer | Corrigido na origem desde 07/08/2026 (normalização automática no compose_reel.py). SE reaparecer: conferir `ffprobe` de cada `clip-*.mp4`; se o log disser "homogeneos" mas o gate reprovar, é outra causa — investigar antes de publicar |
+| `validar_composicao.py` reprova (exit 1) | Vídeo corrompido | NÃO entregar. Ver qual defeito (congelado × sem avatar) e os timestamps que o script imprime |
 | Vídeo gravado vem 1920x1080 encaixotado | Export da UI do HeyGen | `--crop 608:1080:656:0` no rembg_video.py |
 | Vídeo gravado mais longo que os B-rolls | — | Gerar clipes extras (o compose loopa, mas repetir B-roll é feio) |
 | Upload da capa falhou | Bucket/MCP | Capa emoji como fallback + avisar |
@@ -230,7 +241,8 @@ Rodar ANTES da etapa 1; SE algum item crítico faltar → parar e reportar (não
 - **`scripts/broll_bank.py`** — banco de B-rolls remoto: `--list`/`--thumb`/`--get`; consultar na etapa 6 ANTES de gerar qualquer coisa.
 - **`scripts/kling_i2v.py`** — runner do Kling (**LEGADO**, sem saldo desde 28/07/2026).
 - **`scripts/rembg_video.py`** — recorte por IA pra vídeo sem fundo verde (isnet-general-use).
-- **`scripts/compose_reel.py`** — composição (chromakey/alpha + B-roll + legenda .ass estilizada).
+- **`scripts/compose_reel.py`** — composição (chromakey/alpha + B-roll + legenda .ass estilizada) + normalização automática de B-rolls heterogêneos antes do concat.
+- **`scripts/validar_composicao.py`** — gate obrigatório do vídeo final: detecta frame congelado e avatar ausente varrendo o vídeo inteiro. Exit 1 = não entregar.
 - **`references/voz-eric.md`** — tom, blacklist e estrutura de roteiro.
 - **`references/estrutura-viral.md`** — template "Insider de IA" dos vídeos que estouraram.
 - **`references/custos.md`** — taxas reais (Higgsfield medido em 28/07/2026).
@@ -238,3 +250,22 @@ Rodar ANTES da etapa 1; SE algum item crítico faltar → parar e reportar (não
 - **`references/kling-api.md`** — API do Kling (legado, sem saldo): manifesto e preços dos resource packs.
 - **`references/banco-broll.md`** — banco de B-rolls reutilizáveis; consultar na etapa 6 ANTES de gerar clip novo.
 - **`references/visual-broll-thumb.md`** — estilo dos frames, da thumb e da capa.
+
+---
+
+## Changelog
+
+**v2.18.0 (07/08/2026) — conserto do vídeo corrompido em reel longo + gate automático.**
+
+Gatilho: o reel `roupa-infantil-mercado-livre` (64s, 13 B-rolls) saiu com **20 dos 64 segundos corrompidos** — trechos congelados e sem o avatar, só o B-roll em tela cheia. Passou pela validação e foi entregue assim; o Eric é que viu.
+
+**Causa raiz (diagnosticada, não suposta):** o banco de B-rolls é heterogêneo — as famílias HD são `1080x1920@24fps` (timebase 1/12288) e as demais são menores em `30fps` (1/15360). O `compose_reel.py` alimentava o **concat demuxer** do ffmpeg, que exige formato idêntico entre os arquivos; com a mistura, os PTS quebram e o pipeline dessincroniza. O casamento foi exato: os 4 trechos corrompidos eram precisamente os 4 clipes de 24fps do lote (clip-05, 08, 10, 11).
+
+**Por que só apareceu agora:** reel curto sorteia 2-3 clipes e costuma cair numa família só (o reel `ia-medicina`, 3 clipes, todos 24fps homogêneos, funcionou). Reel de 60s sorteia 13 clipes de 7 famílias e a mistura vira quase certa. O bug sempre esteve lá — **a probabilidade cresce com a duração do vídeo**.
+
+Correções:
+1. **Normalização automática com gate de homogeneidade** no `compose_reel.py`. Clipes já idênticos → nada muda (nem reencoda). Heterogêneos → todos vão pra `1080x1920@30fps` antes do concat. Seguro por construção: o filtro `[bg]` já aplicava `scale=1080:1920` e `fps=30` DEPOIS do concat, então a normalização só antecipa conversões que já existiam. Medido num reel que já funcionava: diferença média de 2,57/255 (ruído de re-encode), 0 frames com diferença relevante. Custo: ~1,2s por clipe.
+2. **`validar_composicao.py`** — gate obrigatório que varre o vídeo inteiro (2 frames/s) atrás de frame congelado e avatar ausente. Rodado no vídeo defeituoso, reprova corretamente (40 frames sem avatar, 7 congelados); no recomposto, aprova.
+3. A validação de "conferir 3 frames" virou checagem **estética**, depois do gate. Foi ela que deixou passar: os 3 frames amostrados (t=1, t=32, t=63) caíram nos trechos bons enquanto o defeito estava em 20-25, 36-41 e 46-56. Amostragem esparsa não detecta defeito distribuído.
+
+Fora de escopo (avaliado e descartado): trocar o Whisper `medium` por `small` pra ganhar tempo — degradaria a transcrição. O gargalo de 6min40s da etapa 4 é máquina sem GPU; rodar reel longo no PC (RTX 3070) resolve sem tocar em código.
