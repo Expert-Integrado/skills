@@ -43,9 +43,10 @@ export async function buildAttachment(caminho) {
   if (!info.isFile()) {
     throw new Error(`Anexo não é um arquivo: ${caminho}`);
   }
-  if (info.size > MAX_ATTACHMENT_BYTES) {
+  // Doc do Graph: anexo inline só "under 3 MB" — exatamente 3 MB já exige upload session.
+  if (info.size >= MAX_ATTACHMENT_BYTES) {
     throw new Error(
-      `Anexo "${basename(caminho)}" tem ${(info.size / 1024 / 1024).toFixed(2)} MB. Limite via API inline é 3 MB.`
+      `Anexo "${basename(caminho)}" tem ${(info.size / 1024 / 1024).toFixed(2)} MB. Limite via API inline é menos de 3 MB.`
     );
   }
   const buf = await readFile(caminho);
