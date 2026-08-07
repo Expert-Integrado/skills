@@ -330,10 +330,20 @@ async function zoomRequestAllPages(path, { query = {}, resultKey = null, maxPage
 
 // ─── MCP SERVER ──────────────────────────────────────────────────────────────
 
-const server = new McpServer({
-  name: "Zoom Chat",
-  version: "2.1.0",
-});
+// Regra do time (medida em 06/08/2026: 271 msgs, 74% vivem em thread) — vai nas
+// instructions pra alcançar TODA sessão sem pagar contexto no CLAUDE.md.
+const REGRA_THREAD = `Zoom Team Chat: conversa vive DENTRO de um assunto (thread), não solta no canal. Vale para canal e para DM.
+
+- Assunto novo: use zoom_start_thread — ele cria a mensagem-raiz com a linha-título e já manda o conteúdo como primeira resposta dentro dela.
+- Continuar assunto que já existe: zoom_send_message com reply_main_message_id = ID da mensagem RAIZ (nunca o ID de uma resposta).
+- Achar a raiz: zoom_list_messages no destino (threads vivem vários dias — varra até ~7 dias) e confirme com zoom_list_thread, cujo cabeçalho traz o thread_root_id. Mensagem que NÃO tem o campo reply_main_message_id é raiz ou é solta.
+- Formato da raiz, como o time escreve: linha-título curta, sem saudação e sem emoji. "Tema", "Tema -> Ação", "Nome — situação", "[TAG] Tema", ou "@Pessoa + pedido direto". O detalhamento desce na primeira resposta, não no título.
+- EXCEÇÃO: ack e recado de uma linha ("feito", "ok", "já subi") vão soltos mesmo, ou viram reação com zoom_react_message. Não abra thread para isso.`;
+
+const server = new McpServer(
+  { name: "Zoom Chat", version: "2.2.0" },
+  { instructions: REGRA_THREAD }
+);
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ONBOARDING / STATUS
@@ -503,12 +513,12 @@ server.tool(
 
 server.tool(
   "zoom_send_message",
-  "Envia uma mensagem no Zoom Team Chat. Pode enviar para um canal (to_channel) ou como DM para um contato (to_contact). Para DM, use o email do destinatário.",
+  "Envia uma mensagem no Zoom Team Chat, em canal (to_channel) ou DM (to_contact). Assunto que já existe: passe reply_main_message_id com o ID da mensagem RAIZ para a mensagem cair DENTRO da thread — é assim que o time conversa. Assunto NOVO: não use esta tool solta, use zoom_start_thread. Sem reply_main_message_id a mensagem sai solta no destino, o que só se justifica em ack ou recado de uma linha.",
   {
     message: z.string().describe("Texto da mensagem"),
     to_channel: z.string().optional().describe("ID do canal destino (usar para mensagens em canal)"),
     to_contact: z.string().optional().describe("Email do contato destino (usar para DM)"),
-    reply_main_message_id: z.string().optional().describe("ID da mensagem para responder em thread (opcional)"),
+    reply_main_message_id: z.string().optional().describe("ID da mensagem RAIZ da thread (a primeira do assunto, nunca o ID de uma resposta). Preencha sempre que estiver continuando um assunto já aberto — é o que mantém a conversa dentro do tópico."),
   },
   async ({ message, to_channel, to_contact, reply_main_message_id }) => {
     if (!to_channel && !to_contact) {
@@ -542,6 +552,123 @@ server.tool(
       }
       throw err;
     }
+  }
+);
+
+// ─── TOOL 6B: ABRIR ASSUNTO (THREAD) ────────────────────────────────────────
+
+// Recupera o id quando o POST não devolve: relê o destino e aceita só candidato
+// MEU, posterior ao envio e ÚNICO — id ausente o humano resolve, id errado
+// publicaria o conteúdo dentro da thread de outra pessoa.
+let _meuEmailCache = null;
+async function _meuEmail() {
+  if (_meuEmailCache) return _meuEmailCache;
+  try {
+    const me = await zoomRequest("GET", "/users/me");
+    _meuEmailCache = me?.email || null;
+  } catch { _meuEmailCache = null; }
+  return _meuEmailCache;
+}
+
+async function _recuperarMessageId({ message, to_channel, to_contact, sentAt }) {
+  const email = await _meuEmail();
+  const piso = sentAt - 5000;
+  for (const offset of [0, -1]) {
+    const date = new Date(Date.now() + offset * 86_400_000).toISOString().slice(0, 10);
+    const query = { page_size: 50, date };
+    if (to_channel) query.to_channel = to_channel;
+    if (to_contact) query.to_contact = to_contact;
+    let data;
+    try { data = await zoomRequest("GET", "/chat/users/me/messages", { query }); } catch { continue; }
+    const candidatos = (data.messages || [])
+      .filter((m) => m.message === message)
+      .filter((m) => (email ? m.sender === email : true))
+      .filter((m) => {
+        const ts = typeof m.timestamp === "number" ? m.timestamp : Date.parse(m.date_time || "");
+        return Number.isFinite(ts) ? ts >= piso : false;
+      })
+      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    if (candidatos.length === 1 && candidatos[0].id) return candidatos[0].id;
+    if (candidatos.length > 1) return null;
+  }
+  return null;
+}
+
+server.tool(
+  "zoom_start_thread",
+  "ABRE UM ASSUNTO NOVO no Zoom Team Chat (canal ou DM) do jeito certo: envia a linha-título como mensagem RAIZ e já manda o conteúdo como primeira resposta dentro dela. Use esta tool sempre que for começar um assunto — é o padrão do time. Retorna o thread_root_id para continuar a conversa depois.",
+  {
+    subject: z.string().describe('Linha-título curta do assunto, que vira a mensagem RAIZ da thread. Seca, sem saudação e sem emoji: "Tema", "Tema -> Ação", "[TAG] Tema" ou "@Pessoa + pedido direto". O detalhamento NÃO vai aqui, vai na mensagem.'),
+    message: z.string().describe("O conteúdo de verdade, enviado como primeira resposta DENTRO da thread recém-criada."),
+    to_channel: z.string().optional().describe("ID do canal destino"),
+    to_contact: z.string().optional().describe("Email do contato destino (para DM)"),
+  },
+  async ({ subject, message, to_channel, to_contact }) => {
+    if (!to_channel && !to_contact) {
+      return { content: [{ type: "text", text: "Erro: informe to_channel (ID do canal) ou to_contact (email) como destino." }] };
+    }
+    const dest = to_channel ? `canal ${to_channel}` : `contato ${to_contact}`;
+
+    const bodyRaiz = { message: subject };
+    if (to_channel) bodyRaiz.to_channel = to_channel;
+    if (to_contact) bodyRaiz.to_contact = to_contact;
+    const sentAt = Date.now();
+    const raiz = await zoomRequest("POST", "/chat/users/me/messages", { body: bodyRaiz });
+
+    let rootId = raiz.id || null;
+    let rootIdFonte = rootId ? "api" : null;
+    if (!rootId) {
+      rootId = await _recuperarMessageId({ message: subject, to_channel, to_contact, sentAt });
+      if (rootId) rootIdFonte = "busca";
+    }
+
+    if (!rootId) {
+      return { content: [{ type: "text", text:
+        `RAIZ CRIADA, THREAD NÃO. A mensagem-título foi enviada para ${dest}, mas a API não devolveu o ID ` +
+        "e a releitura do destino não achou a mensagem — sem ID não dá pra encadear a resposta.\n\n" +
+        `Título enviado: "${subject}"\n` +
+        "Nada mais foi enviado. Rode zoom_list_messages no destino para pegar o ID dessa mensagem e depois " +
+        "zoom_send_message com reply_main_message_id apontando para ele. NÃO reenvie o título: ele já está lá." }] };
+    }
+
+    const linhas = [
+      `Thread aberta em ${dest}.`,
+      `thread_root_id: ${rootId}${rootIdFonte === "busca" ? " (recuperado por releitura — a API não devolveu o ID no envio)" : ""}`,
+      `Assunto (raiz): "${subject}"`,
+    ];
+
+    const bodyReply = { message, reply_main_message_id: rootId };
+    if (to_channel) bodyReply.to_channel = to_channel;
+    if (to_contact) bodyReply.to_contact = to_contact;
+    let reply;
+    try {
+      try {
+        reply = await zoomRequest("POST", "/chat/users/me/messages", { body: bodyReply });
+      } catch (err) {
+        // A raiz recém-criada leva alguns instantes pra ficar respondível — replicar
+        // imediato às vezes volta "main message does not exist" (corrida observada
+        // ao vivo em 06/08/2026, ~1 em cada 2 tentativas). Uma espera curta resolve.
+        if (err.message && (err.message.includes("main message") || err.message.includes("does not exist"))) {
+          await new Promise((r) => setTimeout(r, 1500));
+          reply = await zoomRequest("POST", "/chat/users/me/messages", { body: bodyReply });
+        } else {
+          throw err;
+        }
+      }
+    } catch (err) {
+      return { content: [{ type: "text", text:
+        linhas.join("\n") +
+        "\n\nATENÇÃO: a raiz foi criada, mas o envio da primeira resposta NÃO PÔDE SER CONFIRMADO — a falha pode ter ocorrido depois de a mensagem chegar no Zoom. " +
+        `ANTES de reenviar, confira a thread com zoom_list_thread(message_id=${rootId}): se o conteúdo já estiver lá, não faça nada. ` +
+        `Se não estiver, mande só o conteúdo com zoom_send_message usando reply_main_message_id=${rootId} (nunca recrie o título).\n\nErro: ${err.message}` }] };
+    }
+
+    linhas.push(reply?.id ? `reply_id: ${reply.id}` : "reply_id: não retornado pela API (a resposta foi enviada; só o ID dela não voltou).");
+    linhas.push(`Para continuar este assunto, use zoom_send_message com reply_main_message_id=${rootId}.`);
+    if (subject.includes("\n") || subject.length > 120) {
+      linhas.push("Obs: o título ficou longo/multilinha — a raiz funciona melhor como uma linha curta, com o detalhe descendo na resposta.");
+    }
+    return { content: [{ type: "text", text: linhas.join("\n") }] };
   }
 );
 
@@ -819,24 +946,34 @@ server.tool(
 
 server.tool(
   "zoom_list_thread",
-  "Lista as respostas de uma thread (conversa encadeada) de uma mensagem no Zoom Team Chat.",
+  "Lista as mensagens de uma thread do Zoom Team Chat e informa no cabeçalho o thread_root_id — o ID da mensagem RAIZ, que é o valor a usar em reply_main_message_id. Se você passar o ID de uma resposta, o retorno aponta qual é a raiz verdadeira.",
   {
-    message_id: z.string().describe("ID da mensagem principal da thread"),
-    to_channel: z.string().optional().describe("ID do canal"),
-    to_contact: z.string().optional().describe("Email do contato (para DMs)"),
+    message_id: z.string().describe("ID da mensagem principal (raiz) da thread. Se você passar o ID de uma resposta, o retorno aponta qual é a raiz verdadeira."),
+    to_channel: z.string().optional().describe("ID do canal. Informe sempre que souber: é o que permite confirmar a raiz quando o ID recebido é de uma resposta."),
+    to_contact: z.string().optional().describe("Email do contato (para DMs). Mesma função do to_channel."),
     from: z.string().optional().describe("Data inicial das respostas (YYYY-MM-DD). Padrão: 30 dias atrás."),
-    page_size: z.number().optional().default(50).describe("Quantidade de respostas (máx 50)"),
+    page_size: z.number().optional().default(50).describe("Quantidade de mensagens da thread (máx 100). A rota não pagina: se a thread for maior, estreite a janela com `from`."),
   },
   async ({ message_id, to_channel, to_contact, from, page_size }) => {
     // A API do Zoom exige 'from' no formato YYYY-MM-DDTHH:mm:ssZ (sem milissegundos)
     function toZoomDate(d) {
       return new Date(d).toISOString().replace(/\.\d{3}Z$/, "Z");
     }
+    // Esta rota fala outro dialeto: o identificador é msg_id (não id), o horário é
+    // timestamp em epoch ms (não date_time) e o parentesco vem como is_reply —
+    // verificado contra a API real em 06/08/2026. Ler os nomes da rota de listagem
+    // aqui fazia todo item sair sem ID e sem horário.
+    const idDe = (m) => m.msg_id ?? m.id ?? null;
+    const tsDe = (m) => (typeof m.timestamp === "number" ? m.timestamp : Date.parse(m.date_time || "") || 0);
+    const dataDe = (m) => m.date_time || (m.timestamp ? toZoomDate(m.timestamp) : "");
+
     const defaultFrom = toZoomDate(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const fromValue = from
       ? (from.includes("T") ? toZoomDate(from) : toZoomDate(from + "T00:00:00Z"))
       : defaultFrom;
-    const query = { page_size: Math.min(page_size, 50), from: fromValue };
+    // O parâmetro documentado desta rota é `limit` (máx 100) — mandar page_size
+    // fazia a API cair no default de 10 e truncar thread longa em silêncio.
+    const query = { limit: Math.min(page_size ?? 50, 100), from: fromValue };
     if (to_channel) query.to_channel = to_channel;
     if (to_contact) query.to_contact = to_contact;
 
@@ -844,15 +981,51 @@ server.tool(
     const replies = data.messages || [];
 
     if (replies.length === 0) {
-      return { content: [{ type: "text", text: "Nenhuma resposta encontrada nesta thread." }] };
+      return { content: [{ type: "text", text: [
+        `ID consultado: ${message_id} (thread sem mensagens — raiz NÃO confirmada)`,
+        "Nenhuma mensagem retornada. Pode ser uma raiz sem resposta, uma mensagem solta, ou uma resposta cujo assunto está fora da janela de `from`.",
+        "Para descobrir a raiz de verdade, rode zoom_get_message neste ID: se vier `reply_main_message_id`, ESSE é o ID raiz.",
+      ].join("\n") }] };
     }
 
-    const formatted = replies.map((m) => {
+    // A raiz é o item com is_reply === false; se a API não carimbar, confirma na
+    // rota de mensagem individual, que devolve reply_main_message_id.
+    let rootId = message_id;
+    let fonte = null;
+    const marcada = replies.find((m) => m.is_reply === false);
+    if (marcada && idDe(marcada)) {
+      rootId = idDe(marcada); fonte = "thread";
+    } else {
+      try {
+        const q2 = {};
+        if (to_channel) q2.to_channel = to_channel;
+        if (to_contact) q2.to_contact = to_contact;
+        const msg = await zoomRequest("GET", `/chat/users/me/messages/${message_id}`, { query: q2 });
+        if (msg?.reply_main_message_id) { rootId = msg.reply_main_message_id; fonte = "mensagem"; }
+        else if (msg?.id) { rootId = msg.id; fonte = "mensagem"; }
+      } catch { /* sem confirmação: melhor dizer que não verificou do que afirmar raiz errada */ }
+    }
+
+    const cabecalho = [
+      fonte
+        ? `thread_root_id: ${rootId}`
+        : `thread_root_id: ${rootId} (NÃO confirmado — é o eco do ID consultado; passe to_channel/to_contact para confirmar)`,
+    ];
+    if (fonte && rootId !== message_id) {
+      cabecalho.push(`Atenção: o ID informado ("${message_id}") é uma RESPOSTA, não a raiz. Para responder nesta thread use reply_main_message_id=${rootId}.`);
+    }
+
+    // A rota devolve do mais recente pro mais antigo, com a raiz por último —
+    // ordenar aqui coloca a conversa na ordem de leitura.
+    const ordenadas = [...replies].sort((a, b) => tsDe(a) - tsDe(b));
+
+    const formatted = ordenadas.map((m) => {
       const entry = {
-        id: m.id,
-        sender: m.sender || m.sender_display_name || "N/A",
+        id: idDe(m),
+        is_root: m.is_reply === false || (idDe(m) !== null && idDe(m) === rootId),
+        sender: m.sender_email || m.sender || m.sender_display_name || "N/A",
         message: m.message || "",
-        date_time: m.date_time || "",
+        date_time: dataDe(m),
       };
       if (m.message_type && m.message_type !== "text") {
         entry.message_type = m.message_type;
@@ -867,8 +1040,12 @@ server.tool(
       return entry;
     });
 
+    if (typeof data.total === "number" && data.total > replies.length) {
+      cabecalho.push(`Atenção: TRUNCADO — a thread tem ${data.total} mensagens e só ${replies.length} vieram. Esta rota não pagina: aumente page_size (máx 100) ou estreite a janela com \`from\`.`);
+    }
+
     return {
-      content: [{ type: "text", text: `${replies.length} resposta(s) na thread:\n\n${JSON.stringify(formatted, null, 2)}` }],
+      content: [{ type: "text", text: `${cabecalho.join("\n")}\n\n${ordenadas.length} mensagem(ns) na thread (da mais antiga para a mais recente):\n\n${JSON.stringify(formatted, null, 2)}` }],
     };
   }
 );
