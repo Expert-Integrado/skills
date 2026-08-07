@@ -334,7 +334,7 @@ async function zoomRequestAllPages(path, { query = {}, resultKey = null, maxPage
 // instructions pra alcançar TODA sessão sem pagar contexto no CLAUDE.md.
 const REGRA_THREAD = `Zoom Team Chat: conversa vive DENTRO de um assunto (thread), não solta no canal. Vale para canal e para DM.
 
-- Assunto novo: use zoom_start_thread — ele cria a mensagem-raiz com a linha-título e já manda o conteúdo como primeira resposta dentro dela.
+- Assunto novo: ANTES de abrir, confira se o tema já não tem thread viva — zoom_list_messages no destino, varrendo até ~7 dias. Achou thread do mesmo tema: continue NELA (reply_main_message_id da raiz) em vez de duplicar o assunto. Não achou: use zoom_start_thread — ele cria a mensagem-raiz com a linha-título e já manda o conteúdo como primeira resposta dentro dela.
 - Continuar assunto que já existe: zoom_send_message com reply_main_message_id = ID da mensagem RAIZ (nunca o ID de uma resposta).
 - Achar a raiz: zoom_list_messages no destino (threads vivem vários dias — varra até ~7 dias) e confirme com zoom_list_thread, cujo cabeçalho traz o thread_root_id. Mensagem que NÃO tem o campo reply_main_message_id é raiz ou é solta.
 - Formato da raiz, como o time escreve: linha-título curta, sem saudação e sem emoji. "Tema", "Tema -> Ação", "Nome — situação", "[TAG] Tema", ou "@Pessoa + pedido direto". O detalhamento desce na primeira resposta, não no título.
@@ -596,7 +596,7 @@ async function _recuperarMessageId({ message, to_channel, to_contact, sentAt }) 
 
 server.tool(
   "zoom_start_thread",
-  "ABRE UM ASSUNTO NOVO no Zoom Team Chat (canal ou DM) do jeito certo: envia a linha-título como mensagem RAIZ e já manda o conteúdo como primeira resposta dentro dela. Use esta tool sempre que for começar um assunto — é o padrão do time. Retorna o thread_root_id para continuar a conversa depois.",
+  "ABRE UM ASSUNTO NOVO no Zoom Team Chat (canal ou DM) do jeito certo: envia a linha-título como mensagem RAIZ e já manda o conteúdo como primeira resposta dentro dela. ANTES de chamar, confira com zoom_list_messages (varra até ~7 dias) se o tema já não tem thread viva — se tiver, responda nela em vez de duplicar o assunto. Retorna o thread_root_id para continuar a conversa depois.",
   {
     subject: z.string().describe('Linha-título curta do assunto, que vira a mensagem RAIZ da thread. Seca, sem saudação e sem emoji: "Tema", "Tema -> Ação", "[TAG] Tema" ou "@Pessoa + pedido direto". O detalhamento NÃO vai aqui, vai na mensagem.'),
     message: z.string().describe("O conteúdo de verdade, enviado como primeira resposta DENTRO da thread recém-criada."),
