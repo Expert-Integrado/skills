@@ -5,6 +5,20 @@
 
 ---
 
+## Bug #9 — Guardrail de ação em massa tinha dois desvios (bypass) — v5.12.0
+**Status:** ✅ Corrigido — branch `feat/3nqd1idzl2p8` (aguardando merge)
+
+Uma verificação independente do guardrail (Feature #8) encontrou dois caminhos de escrita que passavam POR FORA do `checkSingularBackstop`, anulando a proteção contra ação em massa:
+
+1. **`create_deal_full`** — a tool descrita como "PREFERENCIAL para criar novos deals" (cria pessoa+org+deal+atividades numa chamada só) não tinha nenhum gate. Era o caminho mais provável de uso e o mais desprotegido.
+2. **`pipedrive_write`** (proxy) — das 7 ações, só `update_deal_fields` herdava proteção (via `applyDealFieldsUpdate`). As outras 6 chamavam `pipedriveRequest` direto, sem backstop. Pior: a própria descrição da tool instrui usá-la "quando as tools diretas aparecerem bloqueadas" — ou seja, o desvio estava documentado dentro do produto. Gate com bypass documentado dá segurança falsa, pior que gate nenhum.
+
+**Correção:** `checkSingularBackstop` aplicado no topo de `create_deal_full` (categoria `deal_write`) e no início do handler de `pipedrive_write`, com um mapa `action → categoria` cobrindo as 6 ações de escrita (create_activity→activity_write, create_deal/create_organization/add_product_to_deal/create_note→deal_write, create_person→person_write). `update_deal_fields` fica de fora do gate direto no proxy porque já conta dentro de `applyDealFieldsUpdate` (evita contagem dobrada). Como o contador é por categoria e compartilhado, 5 chamadas via tool direta + a 6ª via proxy caem no MESMO contador — não dá pra driblar trocando de "porta".
+
+**Verificação:** 33/33 testes de fronteira novos (`test-guardrail-furos.mjs`) + 15/15 do teste original de Feature #8 (`test-guardrails.mjs`) — regressão zero. `node --check` limpo.
+
+---
+
 ## Bug #1 — Timezone UTC vs America/Sao_Paulo
 **Status:** ✅ Corrigido — commit `c1aef6d`
 

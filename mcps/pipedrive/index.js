@@ -884,6 +884,15 @@ server.tool(
   async ({ person_name, phone, email, org_name, title, value, pipeline_id, stage_id, user_id, origem, detalhe_origem, custom_fields, activities }) => {
     const log = []; // acumula o que aconteceu pra retornar no final
 
+    // ── Backstop temporal: create_deal_full cria pessoa+org+deal numa chamada só.
+    //    Sem gate, era o caminho "preferencial" que escapava do backstop das singulares. ──
+    try {
+      checkSingularBackstop("deal_write", "bulk_update_deals");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
+
     // ── 1. Resolver nomes para IDs ──
     try {
       pipeline_id = resolvePipeline(pipeline_id);
@@ -2960,6 +2969,29 @@ server.tool(
     params: z.record(z.any()).describe("Payload da operacao. Estrutura identica aos parametros da tool original correspondente."),
   },
   async ({ action, params }) => {
+    // ── Backstop temporal no PROXY: fecha o furo em que pipedrive_write chamava
+    //    pipedriveRequest direto, escapando do gate que as tools singulares têm.
+    //    Cada action mapeia pra categoria da sua tool-espelho. update_deal_fields
+    //    NÃO entra aqui: já herda o backstop dentro de applyDealFieldsUpdate (senão
+    //    contaria em dobro). create_note é aditivo/baixo dano, mas conta como deal_write
+    //    pra não deixar nenhum caminho de escrita do proxy sem trava. ──
+    const BACKSTOP_BY_ACTION = {
+      create_activity: "activity_write",
+      create_deal: "deal_write",
+      create_person: "person_write",
+      create_organization: "deal_write",
+      add_product_to_deal: "deal_write",
+      create_note: "deal_write",
+    };
+    const backstopCategory = BACKSTOP_BY_ACTION[action];
+    if (backstopCategory) {
+      try {
+        checkSingularBackstop(backstopCategory, "bulk_update_deals");
+      } catch (e) {
+        if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+        throw e;
+      }
+    }
     try {
       switch (action) {
         case "create_activity": {
