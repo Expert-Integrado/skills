@@ -88,7 +88,17 @@ export async function replyEmail(params) {
     msgId = result.value[0].id;
   }
 
-  // 3. Criar rascunho de resposta via createReply / createReplyAll (mantém threading)
+  // 3. Montar TODOS os anexos ANTES de escrever qualquer coisa no Graph — arquivo
+  // inexistente ou acima do limite falha aqui, sem deixar rascunho órfão pendurado
+  // em Rascunhos (invisível pro agente, que não tem tool de listar/apagar rascunho).
+  const attachments = [];
+  if (Array.isArray(anexos) && anexos.length > 0) {
+    for (const caminho of anexos) {
+      attachments.push(await buildAttachment(caminho));
+    }
+  }
+
+  // 4. Criar rascunho de resposta via createReply / createReplyAll (mantém threading)
   const replyEndpoint = responder_todos
     ? `/me/messages/${msgId}/createReplyAll`
     : `/me/messages/${msgId}/createReply`;
@@ -99,36 +109,40 @@ export async function replyEmail(params) {
     throw new Error("Falha ao criar rascunho de resposta. Verifique se o email_id é válido.");
   }
 
-  // 4. Atualizar o rascunho com o corpo da resposta (e CC opcional)
-  const patchBody = {
-    body: {
-      contentType: html ? "HTML" : "Text",
-      content: corpo,
-    },
-  };
+  // 5-7. Corpo, anexos e envio — qualquer falha aqui apaga o rascunho antes de
+  // propagar o erro, para não sobrar resposta pela metade em Rascunhos.
+  try {
+    const patchBody = {
+      body: {
+        contentType: html ? "HTML" : "Text",
+        content: corpo,
+      },
+    };
 
-  if (cc) {
-    patchBody.ccRecipients = cc.split(",").map((e) => ({
-      emailAddress: { address: e.trim() },
-    }));
-  }
-
-  await graphRequest("PATCH", `/me/messages/${draft.id}`, patchBody);
-
-  // 5. Adicionar anexos ao rascunho (se houver)
-  let anexosCount = 0;
-  if (Array.isArray(anexos) && anexos.length > 0) {
-    for (const caminho of anexos) {
-      const attachment = await buildAttachment(caminho);
-      await graphRequest("POST", `/me/messages/${draft.id}/attachments`, attachment);
-      anexosCount += 1;
+    if (cc) {
+      patchBody.ccRecipients = cc.split(",").map((e) => ({
+        emailAddress: { address: e.trim() },
+      }));
     }
+
+    await graphRequest("PATCH", `/me/messages/${draft.id}`, patchBody);
+
+    for (const attachment of attachments) {
+      await graphRequest("POST", `/me/messages/${draft.id}/attachments`, attachment);
+    }
+
+    await graphRequest("POST", `/me/messages/${draft.id}/send`, {});
+  } catch (err) {
+    try {
+      await graphRequest("DELETE", `/me/messages/${draft.id}`);
+    } catch {
+      err.message += " (atenção: sobrou um rascunho de resposta na pasta Rascunhos que não pôde ser removido)";
+    }
+    throw err;
   }
+  const anexosCount = attachments.length;
 
-  // 6. Enviar o rascunho
-  await graphRequest("POST", `/me/messages/${draft.id}/send`, {});
-
-  // 7. Registrar ação
+  // 8. Registrar ação
   await registerAction("email");
 
   // Montar retorno amigável

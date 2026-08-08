@@ -264,6 +264,7 @@ Desconhecido
 | recurso_de_ia | Recurso de IA | Acao executada por IA |
 
 ### Regras de atividade:
+- **Disparo em massa (campanha/template/automacao): atividade em nome do usuario "Expert Integrado" (user_id 22805147), NUNCA do Eric** — atividade no nome do Eric = so acao pessoal dele (Eric, 21/07/2026)
 - Todo negocio DEVE ter uma proxima atividade agendada
 - Atividade concluida: `done: true`
 - Atividade futura: `done: false`

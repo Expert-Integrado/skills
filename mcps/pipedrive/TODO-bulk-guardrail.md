@@ -1,7 +1,7 @@
 # TODO — Guardrail de Ação em Massa no MCP Pipedrive
 
-> **Status:** NA FILA — executar SÓ depois de finalizar o fix do `update_deal_fields` (classifier do Claude Code) que está em andamento (22/05/2026).
-> Spec definida pelo Eric. Não começar sem antes terminar o trabalho atual.
+> **Status:** IMPLEMENTADO — v5.10.0 (15/07/2026). Ver `BUG_LOG.md` Feature #8 para detalhe do que foi feito e do que falta (doc do CLAUDE.md global, teste ponta-a-ponta com API real).
+> Spec definida pelo Eric.
 
 ## Contexto
 

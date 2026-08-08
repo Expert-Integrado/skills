@@ -5,6 +5,20 @@
 
 ---
 
+## Bug #9 — Guardrail de ação em massa tinha dois desvios (bypass) — v5.12.0
+**Status:** ✅ Corrigido — branch `feat/3nqd1idzl2p8` (aguardando merge)
+
+Uma verificação independente do guardrail (Feature #8) encontrou dois caminhos de escrita que passavam POR FORA do `checkSingularBackstop`, anulando a proteção contra ação em massa:
+
+1. **`create_deal_full`** — a tool descrita como "PREFERENCIAL para criar novos deals" (cria pessoa+org+deal+atividades numa chamada só) não tinha nenhum gate. Era o caminho mais provável de uso e o mais desprotegido.
+2. **`pipedrive_write`** (proxy) — das 7 ações, só `update_deal_fields` herdava proteção (via `applyDealFieldsUpdate`). As outras 6 chamavam `pipedriveRequest` direto, sem backstop. Pior: a própria descrição da tool instrui usá-la "quando as tools diretas aparecerem bloqueadas" — ou seja, o desvio estava documentado dentro do produto. Gate com bypass documentado dá segurança falsa, pior que gate nenhum.
+
+**Correção:** `checkSingularBackstop` aplicado no topo de `create_deal_full` (categoria `deal_write`) e no início do handler de `pipedrive_write`, com um mapa `action → categoria` cobrindo as 6 ações de escrita (create_activity→activity_write, create_deal/create_organization/add_product_to_deal/create_note→deal_write, create_person→person_write). `update_deal_fields` fica de fora do gate direto no proxy porque já conta dentro de `applyDealFieldsUpdate` (evita contagem dobrada). Como o contador é por categoria e compartilhado, 5 chamadas via tool direta + a 6ª via proxy caem no MESMO contador — não dá pra driblar trocando de "porta".
+
+**Verificação:** 33/33 testes de fronteira novos (`test-guardrail-furos.mjs`) + 15/15 do teste original de Feature #8 (`test-guardrails.mjs`) — regressão zero. `node --check` limpo.
+
+---
+
 ## Bug #1 — Timezone UTC vs America/Sao_Paulo
 **Status:** ✅ Corrigido — commit `c1aef6d`
 
@@ -345,5 +359,32 @@ Nem a tool nativa `create_activity` nem o proxy `pipedrive_write/create_activity
 Schema do `update_activity` não tinha `person_id` — impossível corrigir o contato vinculado de uma atividade criada com person errado. Na sessão de 12/06, atividades do Eduardo Laureano (48547/48548) e do Sérgio Maschietto (48556/48557) foram criadas com person_id da Dani Flomin (18948); a tentativa de correção via `update_activity` passou person_id, que foi rejeitado/ignorado pelo schema Zod, e o agente registrou como "corrigido" sem estar. Mesmo padrão do Bug #2 (deal_id ausente).
 
 **Correção:** `person_id` (number, optional) adicionado ao schema e ao body do PUT. Exige restart do MCP.
+
+---
+
+## Feature #8 — Guardrail de ação em massa (v5.10.0)
+**Status:** Implementado — 15/07/2026
+
+O MCP não tinha nenhum freio contra loop em massa: o Claude podia chamar `update_deal_fields` (ou qualquer singular) 200x seguidas sem checkpoint, e `merge_persons/deals/organizations` executava direto sem confirmação (operação irreversível, deleta o registro `source_id`). Spec definida pelo Eric em `TODO-bulk-guardrail.md`.
+
+**Implementação (`guardrails.js`, novo):**
+- `checkBulkGate(operations, confirmacao_lote, options)`: 1-5 operações passa livre; 6+ bloqueia ANTES de qualquer write e devolve preview com até 20 itens (diff completo) — exige `confirmacao_lote: true` na chamada seguinte para executar. Threshold é por chamada/intenção, não contador acumulado (N lotes de 5 nunca bloqueiam).
+- `checkSingularBackstop(category, bulkToolName)`: contador em RAM por categoria (`deal_write`, `person_write`, `activity_write`), reset automático após 30s sem chamada da categoria. A 6ª chamada singular dentro da janela bloqueia e orienta a consolidar na tool `bulk_*` correspondente. Limitação honesta: as 5 primeiras já foram executadas, o backstop só impede a partir da 6ª.
+
+**Tools novas (bulk_*):** `bulk_update_deals`, `bulk_update_deal_fields`, `bulk_update_persons`, `bulk_create_activities`, `bulk_move_stage`. Cada uma valida com `checkBulkGate` antes de tocar em qualquer registro e executa com `Promise.allSettled` (falha de uma operação não trava as demais).
+
+**Backstop aplicado nas singulares:** `create_deal`/`update_deal` (`deal_write`), `create_person`/`update_person` (`person_write`), `create_activity`/`update_activity` (`activity_write`), e nas 5 variantes que convergem em `applyDealFieldsUpdate` — `update_deal_fields`, `set_deal_data`, `upsert_deal_fields`, `patch_deal_fields`, `update_deal_custom_fields` (backstop colocado uma única vez dentro da função compartilhada, cobre as 5 tools e o proxy `pipedrive_write`).
+
+**Gate hard em `merge_persons/deals/organizations`:** novo param `confirmed` (default `false`). Sem `confirmed: true`, busca os dois registros e retorna preview (nome/título, contagens de negócios/atividades/notas/pessoas conforme a entidade) sem tocar em nada. Com `confirmed: true`, executa o merge nativo da API (irreversível).
+
+**Verificado nesta sessão (testes isolados de `guardrails.js`, sem depender de rede):**
+- Lote de 5 `operations` passa livre (sem bloqueio)
+- Lote de 6 sem `confirmacao_lote` bloqueia, preview correto (formato Opção C), zero writes
+- Lote de 6 com `confirmacao_lote: true` passa
+- 5 chamadas `checkSingularBackstop` seguidas passam livre
+- 6ª chamada `checkSingularBackstop` dentro da janela bloqueia (contador não persiste em arquivo, só RAM)
+- `node --check` limpo em `index.js` e `guardrails.js`; boot smoke-test do servidor sem crash (39 tools registradas, era 34 + 5 novas `bulk_*`)
+
+**Não testado nesta sessão (exige API real/Eric no ambiente):** chamada real de `bulk_*`/`merge_*` contra a API do Pipedrive de produção, e o teste ponta-a-ponta dentro do Claude Code (reload do MCP + uso real pelo agente). Pendente também: atualizar `C:\Users\Eric Luciano\.claude\CLAUDE.md` (seção Pipedrive, subseção "Ação em massa" conforme item 5 da spec) — não fiz porque esse CLAUDE.md é fonte de verdade de outra sessão/config e prefiro não escrever nele sem o Eric revisar o comportamento primeiro.
 
 ---

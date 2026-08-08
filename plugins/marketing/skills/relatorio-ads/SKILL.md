@@ -147,7 +147,7 @@ Regras do bloco de ações:
 ### 5. Entrega
 - **Padrão:** imprima o relatório aqui na conversa e **pare por aqui**.
 - **Só enviar se o João pedir** (ou se a tarefa agendada disparar com canal já configurado). Antes de enviar, mostre o texto final e confirme o destino.
-- **Canal padrão = Zoom:** poste com `zoom_send_message`.
+- **Canal padrão = Zoom:** poste com `zoom_send_message`. O relatório é um assunto, então abre thread: mande uma linha-título curta (ex.: `Relatório de Ads — <período>`) e poste o relatório respondendo nela com `reply_main_message_id` = ID dessa mensagem raiz.
   - **Se não souber o `channel_id`:** liste com `zoom_list_channels`, pergunte **uma vez** qual usar, e fixe esse `channel_id` na tarefa agendada.
 - **Outros canais sob pedido:** WhatsApp (`whatsapp_send_message`), Telegram bot `@briefingjpbot` (mesmo do briefing diário), Discord (canal antigo).
 

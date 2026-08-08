@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { checkBulkGate, checkSingularBackstop } from "./guardrails.js";
 
 const CONFIG_PATH = fileURLToPath(new URL("./config.js", import.meta.url));
 
@@ -389,8 +390,16 @@ function resolveCustomFields(fields) {
 }
 
 // Aplica update de campos personalizados num deal com proteção contra sobrescrita.
-// Centraliza a lógica usada pela tool nativa `update_deal_fields` e pelo proxy `pipedrive_write`.
+// Centraliza a lógica usada pela tool nativa `update_deal_fields`, suas 4 variantes-experimento
+// (set_deal_data/upsert_deal_fields/patch_deal_fields/update_deal_custom_fields) e pelo proxy `pipedrive_write`.
 async function applyDealFieldsUpdate(deal_id, parsed, force) {
+  // ── Backstop temporal: 6a chamada singular em 30s orienta a consolidar em bulk_update_deal_fields ──
+  try {
+    checkSingularBackstop("deal_write", "bulk_update_deal_fields");
+  } catch (e) {
+    if (e.blocked) return { ok: false, message: e.message };
+    throw e;
+  }
   const { body, errors } = resolveCustomFields(parsed);
   if (errors.length > 0 && Object.keys(body).length === 0) {
     return { ok: false, message: `Erros de validação:\n${errors.join("\n")}` };
@@ -480,6 +489,13 @@ function resolvePersonCustomFields(fields) {
   return { body, errors };
 }
 
+// A API v1 devolve person_id/user_id/org_id como objeto expandido ({...,value:ID}) em
+// GET /deals/{id}, e como número puro nas listagens. Normaliza para o ID sempre.
+function unwrapId(v) {
+  if (v && typeof v === "object") return v.value ?? v.id ?? null;
+  return v ?? null;
+}
+
 // Traduz campos personalizados de um deal para nomes legíveis
 function translateDealFields(deal) {
   const result = {
@@ -490,12 +506,13 @@ function translateDealFields(deal) {
     status: deal.status,
     etapa: STAGE_MAP[deal.stage_id] || deal.stage_id,
     pipeline: PIPELINE_MAP[deal.pipeline_id] || deal.pipeline_id,
+    pipeline_id: unwrapId(deal.pipeline_id),
     contato: deal.person_name,
-    contato_id: deal.person_id,
+    contato_id: unwrapId(deal.person_id),
     empresa: deal.org_name,
-    empresa_id: deal.org_id,
+    empresa_id: unwrapId(deal.org_id),
     responsavel: deal.owner_name,
-    responsavel_id: deal.user_id,
+    responsavel_id: unwrapId(deal.user_id),
     criado_em: deal.add_time,
     atualizado_em: deal.update_time,
     previsao_fechamento: deal.expected_close_date,
@@ -523,6 +540,53 @@ function translateDealFields(deal) {
   return result;
 }
 
+// Traduz um contato: campos personalizados com nome legível e sem os ~40 contadores
+// da API que só poluem a leitura. Espelha translateDealFields.
+function translatePersonFields(person) {
+  const result = {
+    id: person.id,
+    nome: person.name,
+    telefones: (person.phone || []).filter((p) => p.value).map((p) => p.value),
+    emails: (person.email || []).filter((e) => e.value).map((e) => e.value),
+    empresa: person.org_name || person.org_id?.name || null,
+    empresa_id: unwrapId(person.org_id),
+    cargo: person.job_title || null,
+    responsavel: person.owner_name,
+    responsavel_id: unwrapId(person.owner_id),
+    criado_em: person.add_time,
+    atualizado_em: person.update_time,
+    deals_abertos: person.open_deals_count,
+    deals_ganhos: person.won_deals_count,
+    deals_perdidos: person.lost_deals_count,
+    atividades_pendentes: person.undone_activities_count,
+    ativo: person.active_flag,
+  };
+  for (const [apiKey, fieldName] of Object.entries(PERSON_KEY_TO_NAME)) {
+    const rawValue = person[apiKey];
+    if (rawValue === null || rawValue === undefined || rawValue === "") continue;
+    const optionsMap = PERSON_KEY_TO_OPTIONS[apiKey];
+    if (optionsMap) {
+      if (String(rawValue).includes(",")) {
+        result[fieldName] = String(rawValue).split(",").map((id) => optionsMap[id.trim()] || id).join(", ");
+      } else {
+        result[fieldName] = optionsMap[rawValue] || rawValue;
+      }
+    } else if (typeof rawValue === "object" && rawValue !== null) {
+      result[fieldName] = rawValue.name || JSON.stringify(rawValue);
+    } else {
+      result[fieldName] = rawValue;
+    }
+  }
+  // Campo personalizado presente no payload mas ausente do mapa = config defasado.
+  const desconhecidos = Object.keys(person).filter(
+    (k) => /^[a-f0-9]{40}$/.test(k) && !PERSON_KEY_TO_NAME[k] && person[k] !== null && person[k] !== ""
+  );
+  if (desconhecidos.length > 0) {
+    result._campos_nao_mapeados = `${desconhecidos.length} campo(s) personalizado(s) sem nome no cache — rode sync_all para atualizar.`;
+  }
+  return result;
+}
+
 const server = new McpServer({
   name: "pipedrive-mcp",
   version: "6.0.0",
@@ -530,9 +594,38 @@ const server = new McpServer({
 
 // ─── REFRESH DE DADOS VIA API (usa config.js como fallback se API falhar) ───
 
+// Recarrega os nomes/opções de campos personalizados da API. Sem isso, campo criado no
+// Pipedrive depois do último sync_all aparece como hash de 40 chars na leitura.
+// Preserva description/section do config.js (a API não tem esses metadados).
+async function refreshCustomFieldsFromAPI() {
+  const carregar = async (endpoint, alvo) => {
+    const data = await pipedriveRequest(endpoint);
+    const custom = (data.data || []).filter((f) => /^[a-f0-9]{40}$/.test(f.key));
+    if (custom.length === 0) return null;
+    const mapping = {};
+    for (const field of custom) {
+      const entry = { key: field.key, type: field.field_type };
+      if ((field.field_type === "enum" || field.field_type === "set") && field.options) {
+        entry.options = {};
+        for (const opt of field.options) entry.options[opt.label] = opt.id;
+      }
+      const prev = alvo[field.name];
+      if (prev?.description) entry.description = prev.description;
+      if (prev?.section) entry.section = prev.section;
+      mapping[field.name] = entry;
+    }
+    return mapping;
+  };
+  const dealMapping = await carregar("/dealFields?limit=500", DEAL_CUSTOM_FIELDS);
+  if (dealMapping) { DEAL_CUSTOM_FIELDS = dealMapping; rebuildReverseMaps(); }
+  const personMapping = await carregar("/personFields?limit=500", PERSON_CUSTOM_FIELDS);
+  if (personMapping) { PERSON_CUSTOM_FIELDS = personMapping; rebuildPersonReverseMaps(); }
+}
+
 try {
   await loadStagePipelineCache();
   await ensureActivityTypesLoaded();
+  await refreshCustomFieldsFromAPI();
   const userData = await pipedriveRequest("/users?limit=500");
   ACTIVE_USERS = (userData.data || []).filter(u => u.active_flag).map(u => ({ id: u.id, name: u.name }));
   const me = await pipedriveRequest("/users/me");
@@ -688,6 +781,13 @@ server.tool(
     force: z.boolean().optional().default(false).describe("Se true, cria mesmo se existir deal aberto para o contato. Use SOMENTE após confirmação explícita do usuário."),
   },
   async ({ title, value, currency, person_id, org_id, pipeline_id, stage_id, user_id, custom_fields, force }) => {
+    // ── Backstop temporal: 6a chamada singular em 30s orienta a consolidar em bulk_update_deals ──
+    try {
+      checkSingularBackstop("deal_write", "bulk_update_deals");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
     // ── Resolver nomes para IDs ──
     try {
       pipeline_id = resolvePipeline(pipeline_id);
@@ -783,6 +883,15 @@ server.tool(
   },
   async ({ person_name, phone, email, org_name, title, value, pipeline_id, stage_id, user_id, origem, detalhe_origem, custom_fields, activities }) => {
     const log = []; // acumula o que aconteceu pra retornar no final
+
+    // ── Backstop temporal: create_deal_full cria pessoa+org+deal numa chamada só.
+    //    Sem gate, era o caminho "preferencial" que escapava do backstop das singulares. ──
+    try {
+      checkSingularBackstop("deal_write", "bulk_update_deals");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
 
     // ── 1. Resolver nomes para IDs ──
     try {
@@ -1043,6 +1152,13 @@ server.tool(
     expected_close_date: z.string().optional().describe("Data prevista de fechamento no formato YYYY-MM-DD"),
   },
   async ({ deal_id, title, value, currency, stage_id, pipeline_id, status, lost_reason, lost_time, user_id, expected_close_date }) => {
+    // ── Backstop temporal: 6a chamada singular em 30s orienta a consolidar em bulk_update_deals ──
+    try {
+      checkSingularBackstop("deal_write", "bulk_update_deals");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
     // ── Resolver nomes para IDs ──
     try {
       pipeline_id = resolvePipeline(pipeline_id);
@@ -1482,11 +1598,46 @@ server.tool(
 
 server.tool(
   "get_person",
-  "Retorna detalhes completos de um contato pelo ID.",
-  { person_id: z.number().describe("ID do contato") },
-  async ({ person_id }) => {
+  "Retorna dados e campos personalizados de um contato (Origem do Contato, detalhes etc) com nomes legíveis.",
+  {
+    person_id: z.number().describe("ID do contato"),
+    raw: z.boolean().optional().default(false).describe("Se true, devolve o payload cru da API (hashes e contadores). Só para debug."),
+  },
+  async ({ person_id, raw }) => {
     const data = await pipedriveRequest(`/persons/${person_id}`);
-    return { content: [{ type: "text", text: JSON.stringify(data.data, null, 2) }] };
+    const out = raw ? data.data : translatePersonFields(data.data);
+    return { content: [{ type: "text", text: JSON.stringify(out, null, 2) }] };
+  }
+);
+
+server.tool(
+  "list_pipelines",
+  "Lista todos os pipelines (funis) com suas etapas na ordem correta. Use para descobrir IDs de pipeline/etapa antes de criar ou mover deals.",
+  {
+    pipeline_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID de um pipeline específico. Se omitido, lista todos."),
+  },
+  async ({ pipeline_id }) => {
+    let filtroId;
+    if (pipeline_id !== undefined) {
+      try {
+        filtroId = resolvePipeline(pipeline_id);
+      } catch (e) {
+        return { content: [{ type: "text", text: e.message }] };
+      }
+    }
+    const ids = Object.keys(PIPELINE_MAP).map(Number).filter((id) => filtroId === undefined || id === filtroId);
+    if (ids.length === 0) {
+      return { content: [{ type: "text", text: "Nenhum pipeline no cache. Rode sync_all para popular." }] };
+    }
+    const linhas = ids.map((id) => {
+      const etapas = STAGES_DATA
+        .filter((s) => s.pipeline_id === id)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((s) => `  ${s.id}: ${s.name}`);
+      const corpo = etapas.length > 0 ? etapas.join("\n") : "  (sem etapas no cache)";
+      return `${PIPELINE_MAP[id]} (pipeline_id ${id})\n${corpo}`;
+    });
+    return { content: [{ type: "text", text: linhas.join("\n\n") }] };
   }
 );
 
@@ -1503,6 +1654,13 @@ server.tool(
     force: z.boolean().optional().default(false).describe("Se true, cria mesmo se encontrar duplicata. Use SOMENTE após confirmação explícita do usuário."),
   },
   async ({ name, email, phone, org_id, owner_id, custom_fields, force }) => {
+    // ── Backstop temporal: 6a chamada singular em 30s orienta a consolidar em bulk_update_persons ──
+    try {
+      checkSingularBackstop("person_write", "bulk_update_persons");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
     // Resolver owner_id por nome se necessário
     if (owner_id) {
       owner_id = resolveUser(owner_id);
@@ -1603,6 +1761,13 @@ server.tool(
     force: z.boolean().optional().default(false).describe("Se true, aplica alterações mesmo em campos que já têm valor. Use SOMENTE após confirmação explícita do usuário."),
   },
   async ({ person_id, name, email, phone, org_id, custom_fields, force }) => {
+    // ── Backstop temporal: 6a chamada singular em 30s orienta a consolidar em bulk_update_persons ──
+    try {
+      checkSingularBackstop("person_write", "bulk_update_persons");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
     // ── Guardrail: buscar dados atuais e avisar sobre sobrescritas ──
     const current = await pipedriveRequest(`/persons/${person_id}`);
     const person = current.data;
@@ -1955,6 +2120,13 @@ server.tool(
     force: z.boolean().optional().default(false).describe("Se true, cria mesmo se encontrar atividade pendente."),
   },
   async ({ subject, type, due_date, due_time, duration, deal_id, person_id, user_id, note, org_id, done, force }) => {
+    // ── Backstop temporal: 6a chamada singular em 30s orienta a consolidar em bulk_create_activities ──
+    try {
+      checkSingularBackstop("activity_write", "bulk_create_activities");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
     // ── Resolver nome do responsável ──
     try { user_id = resolveUser(user_id); } catch (e) { return { content: [{ type: "text", text: e.message }] }; }
     await ensureActivityTypesLoaded();
@@ -2031,6 +2203,13 @@ server.tool(
     note: z.string().optional().describe("Nova nota/observação"),
   },
   async ({ activity_id, done, subject, type, due_date, due_time, duration, user_id, deal_id, person_id, note }) => {
+    // ── Backstop temporal: 6a chamada singular em 30s orienta a consolidar em bulk_create_activities ──
+    try {
+      checkSingularBackstop("activity_write", "bulk_create_activities");
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+      throw e;
+    }
     // ── Resolver nome do responsável ──
     try { user_id = resolveUser(user_id); } catch (e) { return { content: [{ type: "text", text: e.message }] }; }
     await ensureActivityTypesLoaded();
@@ -2363,6 +2542,263 @@ server.tool(
   }
 );
 
+// ─── AÇÃO EM MASSA (bulk_*) ───────────────────────────────────────────────────
+// Gate de lote (guardrails.js): 1-5 operations passa livre; 6+ bloqueia com preview
+// e exige confirmacao_lote: true na chamada seguinte. Ver TODO-bulk-guardrail.md.
+
+server.tool(
+  "bulk_update_deals",
+  "Atualiza vários negócios de uma vez (título, valor, etapa, status etc). Lote de 1-5 executa direto; 6+ bloqueia e devolve preview com diff completo — reenviar com confirmacao_lote: true para executar todas.",
+  {
+    operations: z.array(z.object({
+      deal_id: z.number().describe("ID do negócio"),
+      title: z.string().optional(),
+      value: z.number().optional(),
+      currency: z.string().optional(),
+      stage_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID da etapa"),
+      pipeline_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID do pipeline"),
+      status: z.enum(["open", "won", "lost"]).optional(),
+      lost_reason: z.string().optional(),
+      user_id: z.union([z.string(), z.number()]).optional(),
+      expected_close_date: z.string().optional(),
+    })).min(1).describe("Lista de operações, uma por negócio a atualizar"),
+    confirmacao_lote: z.boolean().optional().default(false).describe("Obrigatório true quando operations.length > 5. Só passe true após o Eric confirmar explicitamente vendo o preview."),
+  },
+  async ({ operations, confirmacao_lote }) => {
+    try {
+      checkBulkGate(operations, confirmacao_lote, {
+        entityLabel: "negócios",
+        formatItem: (op) => ({
+          id: op.deal_id,
+          nome: op.title || "",
+          diffs: Object.entries(op).filter(([k]) => k !== "deal_id").map(([k, v]) => `${k}: → ${v}`),
+        }),
+      });
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.preview }] };
+      throw e;
+    }
+    const results = await Promise.allSettled(operations.map(async (op) => {
+      const body = {};
+      if (op.title) body.title = op.title;
+      if (op.value !== undefined) body.value = op.value;
+      if (op.currency) body.currency = op.currency;
+      if (op.pipeline_id !== undefined) body.pipeline_id = resolvePipeline(op.pipeline_id);
+      if (op.stage_id !== undefined) body.stage_id = resolveStage(op.stage_id, body.pipeline_id);
+      if (op.status) body.status = op.status;
+      if (op.lost_reason) body.lost_reason = op.lost_reason;
+      if (op.user_id !== undefined) body.user_id = resolveUser(op.user_id);
+      if (op.expected_close_date) body.expected_close_date = op.expected_close_date;
+      await pipedriveRequest(`/deals/${op.deal_id}`, { method: "PUT", body: JSON.stringify(body) });
+      return op.deal_id;
+    }));
+    const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
+    const failed = results.map((r, i) => r.status === "rejected" ? { deal_id: operations[i].deal_id, erro: r.reason?.message } : null).filter(Boolean);
+    const lines = [`bulk_update_deals: ${ok.length}/${operations.length} atualizados com sucesso.`];
+    if (ok.length) lines.push(`OK: ${ok.join(", ")}`);
+    if (failed.length) lines.push(`FALHAS:\n${failed.map(f => `  #${f.deal_id}: ${f.erro}`).join("\n")}`);
+    return { content: [{ type: "text", text: lines.join("\n") }] };
+  }
+);
+
+server.tool(
+  "bulk_update_deal_fields",
+  "Atualiza campos personalizados de vários negócios de uma vez. Lote de 1-5 executa direto; 6+ bloqueia e devolve preview com diff completo — reenviar com confirmacao_lote: true para executar todas. Respeita a mesma proteção contra sobrescrita da versão singular (use force por operação se necessário).",
+  {
+    operations: z.array(z.object({
+      deal_id: z.number().describe("ID do negócio"),
+      custom_fields: z.record(z.unknown()).describe("Mapa nome do campo -> valor"),
+      force: z.boolean().optional().default(false).describe("Sobrescreve campos já preenchidos quando true"),
+    })).min(1).describe("Lista de operações, uma por negócio"),
+    confirmacao_lote: z.boolean().optional().default(false).describe("Obrigatório true quando operations.length > 5. Só passe true após o Eric confirmar explicitamente vendo o preview."),
+  },
+  async ({ operations, confirmacao_lote }) => {
+    try {
+      checkBulkGate(operations, confirmacao_lote, {
+        entityLabel: "negócios (campos)",
+        formatItem: (op) => ({
+          id: op.deal_id,
+          nome: "",
+          diffs: Object.entries(op.custom_fields || {}).map(([k, v]) => `${k}: → ${v}`),
+        }),
+      });
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.preview }] };
+      throw e;
+    }
+    const results = await Promise.allSettled(operations.map(async (op) => {
+      const r = await applyDealFieldsUpdate(op.deal_id, op.custom_fields, op.force);
+      if (!r.ok) throw new Error(r.message);
+      return op.deal_id;
+    }));
+    const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
+    const failed = results.map((r, i) => r.status === "rejected" ? { deal_id: operations[i].deal_id, erro: r.reason?.message } : null).filter(Boolean);
+    const lines = [`bulk_update_deal_fields: ${ok.length}/${operations.length} atualizados com sucesso.`];
+    if (ok.length) lines.push(`OK: ${ok.join(", ")}`);
+    if (failed.length) lines.push(`FALHAS/CONFLITOS:\n${failed.map(f => `  #${f.deal_id}: ${f.erro}`).join("\n")}`);
+    return { content: [{ type: "text", text: lines.join("\n") }] };
+  }
+);
+
+server.tool(
+  "bulk_update_persons",
+  "Atualiza vários contatos de uma vez (nome, email, telefone, organização). Lote de 1-5 executa direto; 6+ bloqueia e devolve preview com diff completo — reenviar com confirmacao_lote: true para executar todas. Email e telefone são ADICIONADOS, não substituem.",
+  {
+    operations: z.array(z.object({
+      person_id: z.number().describe("ID do contato"),
+      name: z.string().optional(),
+      email: z.string().optional(),
+      phone: z.string().optional(),
+      org_id: z.number().optional(),
+    })).min(1).describe("Lista de operações, uma por contato"),
+    confirmacao_lote: z.boolean().optional().default(false).describe("Obrigatório true quando operations.length > 5. Só passe true após o Eric confirmar explicitamente vendo o preview."),
+  },
+  async ({ operations, confirmacao_lote }) => {
+    try {
+      checkBulkGate(operations, confirmacao_lote, {
+        entityLabel: "contatos",
+        formatItem: (op) => ({
+          id: op.person_id,
+          nome: op.name || "",
+          diffs: Object.entries(op).filter(([k]) => k !== "person_id").map(([k, v]) => `${k}: → ${v}`),
+        }),
+      });
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.preview }] };
+      throw e;
+    }
+    const results = await Promise.allSettled(operations.map(async (op) => {
+      const current = await pipedriveRequest(`/persons/${op.person_id}`);
+      const person = current.data;
+      const body = {};
+      if (op.name) body.name = op.name;
+      if (op.org_id) body.org_id = op.org_id;
+      if (op.email) {
+        const existing = person.email || [];
+        if (!existing.some((e) => e.value === op.email)) body.email = [...existing, { value: op.email, primary: existing.length === 0 }];
+      }
+      if (op.phone) {
+        const existing = person.phone || [];
+        if (!existing.some((p) => p.value === op.phone)) body.phone = [...existing, { value: op.phone, primary: existing.length === 0 }];
+      }
+      if (Object.keys(body).length === 0) return op.person_id; // nada a fazer, não é falha
+      await pipedriveRequest(`/persons/${op.person_id}`, { method: "PUT", body: JSON.stringify(body) });
+      return op.person_id;
+    }));
+    const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
+    const failed = results.map((r, i) => r.status === "rejected" ? { person_id: operations[i].person_id, erro: r.reason?.message } : null).filter(Boolean);
+    const lines = [`bulk_update_persons: ${ok.length}/${operations.length} atualizados com sucesso.`];
+    if (ok.length) lines.push(`OK: ${ok.join(", ")}`);
+    if (failed.length) lines.push(`FALHAS:\n${failed.map(f => `  #${f.person_id}: ${f.erro}`).join("\n")}`);
+    return { content: [{ type: "text", text: lines.join("\n") }] };
+  }
+);
+
+server.tool(
+  "bulk_create_activities",
+  "Cria várias atividades de uma vez. Lote de 1-5 executa direto; 6+ bloqueia e devolve preview completo — reenviar com confirmacao_lote: true para executar todas.",
+  {
+    activities: z.array(z.object({
+      subject: z.string(),
+      type: z.string().describe("Tipo da atividade. Aceita key, nome ou alias."),
+      due_date: z.string().optional(),
+      due_time: z.string().optional(),
+      duration: z.number().optional(),
+      deal_id: z.number().optional(),
+      person_id: z.number().optional(),
+      user_id: z.union([z.string(), z.number()]).optional(),
+      note: z.string().optional(),
+      org_id: z.number().optional(),
+      done: z.boolean().optional(),
+    })).min(1).describe("Lista de atividades a criar"),
+    confirmacao_lote: z.boolean().optional().default(false).describe("Obrigatório true quando activities.length > 5. Só passe true após o Eric confirmar explicitamente vendo o preview."),
+  },
+  async ({ activities, confirmacao_lote }) => {
+    try {
+      checkBulkGate(activities, confirmacao_lote, {
+        entityLabel: "atividades",
+        formatItem: (a) => ({
+          id: a.deal_id || a.person_id || "—",
+          nome: a.subject,
+          empresa: a.type,
+          diffs: [a.due_date ? `data: ${a.due_date}${a.due_time ? " " + a.due_time : ""}` : "sem data"],
+        }),
+      });
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.preview }] };
+      throw e;
+    }
+    await ensureActivityTypesLoaded();
+    const results = await Promise.allSettled(activities.map(async (a) => {
+      const resolvedType = resolveActivityType(a.type);
+      const resolvedUser = a.user_id !== undefined ? resolveUser(a.user_id) : undefined;
+      const body = { subject: a.subject, type: resolvedType };
+      if (a.due_date) body.due_date = a.due_date;
+      const dur = a.duration || ACTIVITY_TYPES[resolvedType]?.default_duration;
+      if (dur) body.duration = minutesToHHMM(dur);
+      if (a.due_time) body.due_time = localToUtc(a.due_time, a.due_date);
+      if (a.deal_id) body.deal_id = a.deal_id;
+      if (a.person_id) body.person_id = a.person_id;
+      if (a.org_id) body.org_id = a.org_id;
+      if (resolvedUser) body.user_id = resolvedUser;
+      if (a.done) body.done = 1;
+      if (a.note) body.note = a.note.replace(/\n/g, "<br>");
+      const data = await pipedriveRequest("/activities", { method: "POST", body: JSON.stringify(body) });
+      return data.data.id;
+    }));
+    const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
+    const failed = results.map((r, i) => r.status === "rejected" ? { subject: activities[i].subject, erro: r.reason?.message } : null).filter(Boolean);
+    const lines = [`bulk_create_activities: ${ok.length}/${activities.length} criadas com sucesso.`];
+    if (ok.length) lines.push(`IDs criados: ${ok.join(", ")}`);
+    if (failed.length) lines.push(`FALHAS:\n${failed.map(f => `  "${f.subject}": ${f.erro}`).join("\n")}`);
+    return { content: [{ type: "text", text: lines.join("\n") }] };
+  }
+);
+
+server.tool(
+  "bulk_move_stage",
+  "Move vários negócios para uma mesma etapa de uma vez. Lote de 1-5 executa direto; 6+ bloqueia e devolve preview completo — reenviar com confirmacao_lote: true para executar todas.",
+  {
+    deal_ids: z.array(z.number()).min(1).describe("IDs dos negócios a mover"),
+    new_stage_id: z.union([z.string(), z.number()]).describe("Nome ou ID da nova etapa"),
+    pipeline_id: z.union([z.string(), z.number()]).optional().describe("Nome ou ID do pipeline (ajuda a resolver etapa por nome quando há etapas com nomes repetidos entre pipelines)"),
+    confirmacao_lote: z.boolean().optional().default(false).describe("Obrigatório true quando deal_ids.length > 5. Só passe true após o Eric confirmar explicitamente vendo o preview."),
+  },
+  async ({ deal_ids, new_stage_id, pipeline_id, confirmacao_lote }) => {
+    let resolvedPipeline, resolvedStage;
+    try {
+      resolvedPipeline = pipeline_id !== undefined ? resolvePipeline(pipeline_id) : undefined;
+      resolvedStage = resolveStage(new_stage_id, resolvedPipeline);
+    } catch (e) {
+      return { content: [{ type: "text", text: e.message }] };
+    }
+    const operations = deal_ids.map((id) => ({ deal_id: id }));
+    try {
+      checkBulkGate(operations, confirmacao_lote, {
+        entityLabel: "negócios",
+        formatItem: (op) => ({
+          id: op.deal_id,
+          nome: "",
+          diffs: [`etapa: → ${STAGE_MAP[resolvedStage] || resolvedStage}`],
+        }),
+      });
+    } catch (e) {
+      if (e.blocked) return { content: [{ type: "text", text: e.preview }] };
+      throw e;
+    }
+    const results = await Promise.allSettled(deal_ids.map(async (deal_id) => {
+      await pipedriveRequest(`/deals/${deal_id}`, { method: "PUT", body: JSON.stringify({ stage_id: resolvedStage }) });
+      return deal_id;
+    }));
+    const ok = results.filter(r => r.status === "fulfilled").map(r => r.value);
+    const failed = results.map((r, i) => r.status === "rejected" ? { deal_id: deal_ids[i], erro: r.reason?.message } : null).filter(Boolean);
+    const lines = [`bulk_move_stage: ${ok.length}/${deal_ids.length} movidos para "${STAGE_MAP[resolvedStage] || resolvedStage}".`];
+    if (ok.length) lines.push(`OK: ${ok.join(", ")}`);
+    if (failed.length) lines.push(`FALHAS:\n${failed.map(f => `  #${f.deal_id}: ${f.erro}`).join("\n")}`);
+    return { content: [{ type: "text", text: lines.join("\n") }] };
+  }
+);
+
 // ─── MERGE ────────────────────────────────────────────────────────────────────
 // Merge nativo da API do Pipedrive. O registro em `source_id` é DELETADO e seus
 // dados (atividades, notas, deals/pessoas vinculados, etc.) são herdados pelo
@@ -2370,14 +2806,32 @@ server.tool(
 
 server.tool(
   "merge_persons",
-  "Mescla duas pessoas do Pipedrive. A pessoa em `source_id` é DELETADA e suas atividades, notas e deals são herdados pela pessoa em `target_id`. Use para resolver duplicatas. Operação IRREVERSÍVEL — confirme com o usuário antes de chamar.",
+  "Mescla duas pessoas do Pipedrive. A pessoa em `source_id` é DELETADA e suas atividades, notas e deals são herdados pela pessoa em `target_id`. Use para resolver duplicatas. Operação IRREVERSÍVEL. GATE HARD: exige confirmed=true — sem isso, retorna preview do que será mesclado sem tocar em nada.",
   {
     source_id: z.number().describe("ID da pessoa que será DELETADA (perdedor da mesclagem)"),
     target_id: z.number().describe("ID da pessoa que SOBREVIVE e herda os dados (vencedor)"),
+    confirmed: z.boolean().optional().default(false).describe("Obrigatório true para executar. Só passe true após o Eric confirmar explicitamente vendo o preview. Operação irreversível."),
   },
-  async ({ source_id, target_id }) => {
+  async ({ source_id, target_id, confirmed }) => {
     if (source_id === target_id) {
       return { content: [{ type: "text", text: "Erro: source_id e target_id são iguais. Forneça IDs diferentes." }] };
+    }
+    if (!confirmed) {
+      let sourceInfo = { name: "—" }, targetInfo = { name: "—" };
+      try { sourceInfo = (await pipedriveRequest(`/persons/${source_id}`)).data || sourceInfo; } catch { /* segue com placeholder */ }
+      try { targetInfo = (await pipedriveRequest(`/persons/${target_id}`)).data || targetInfo; } catch { /* segue com placeholder */ }
+      const lines = [
+        `MESCLAGEM DE PESSOAS BLOQUEADA — nada foi alterado ainda.`,
+        ``,
+        `Origem (será DELETADA): #${source_id} | ${sourceInfo.name} | negócios abertos: ${sourceInfo.open_deals_count ?? "?"} | atividades: ${sourceInfo.activities_count ?? "?"} | notas: ${sourceInfo.notes_count ?? "?"}`,
+        `Destino (SOBREVIVE):    #${target_id} | ${targetInfo.name} | negócios abertos: ${targetInfo.open_deals_count ?? "?"} | atividades: ${targetInfo.activities_count ?? "?"} | notas: ${targetInfo.notes_count ?? "?"}`,
+        ``,
+        `Todos os dados de #${source_id} (atividades, notas, deals) serão herdados por #${target_id}. #${source_id} será DELETADA. Operação irreversível.`,
+        ``,
+        `Para executar: reenviar com confirmed: true.`,
+        `Para cancelar: não reenviar.`,
+      ];
+      return { content: [{ type: "text", text: lines.join("\n") }] };
     }
     try {
       const result = await pipedriveRequest(`/persons/${source_id}/merge`, {
@@ -2400,14 +2854,32 @@ server.tool(
 
 server.tool(
   "merge_deals",
-  "Mescla dois negócios do Pipedrive. O negócio em `source_id` é DELETADO e suas atividades/notas são herdadas pelo negócio em `target_id`. Use para resolver deals duplicados. Operação IRREVERSÍVEL — confirme com o usuário antes de chamar.",
+  "Mescla dois negócios do Pipedrive. O negócio em `source_id` é DELETADO e suas atividades/notas são herdadas pelo negócio em `target_id`. Use para resolver deals duplicados. Operação IRREVERSÍVEL. GATE HARD: exige confirmed=true — sem isso, retorna preview do que será mesclado sem tocar em nada.",
   {
     source_id: z.number().describe("ID do negócio que será DELETADO (perdedor da mesclagem)"),
     target_id: z.number().describe("ID do negócio que SOBREVIVE e herda os dados (vencedor)"),
+    confirmed: z.boolean().optional().default(false).describe("Obrigatório true para executar. Só passe true após o Eric confirmar explicitamente vendo o preview. Operação irreversível."),
   },
-  async ({ source_id, target_id }) => {
+  async ({ source_id, target_id, confirmed }) => {
     if (source_id === target_id) {
       return { content: [{ type: "text", text: "Erro: source_id e target_id são iguais. Forneça IDs diferentes." }] };
+    }
+    if (!confirmed) {
+      let sourceInfo = { title: "—" }, targetInfo = { title: "—" };
+      try { sourceInfo = (await pipedriveRequest(`/deals/${source_id}`)).data || sourceInfo; } catch { /* segue com placeholder */ }
+      try { targetInfo = (await pipedriveRequest(`/deals/${target_id}`)).data || targetInfo; } catch { /* segue com placeholder */ }
+      const lines = [
+        `MESCLAGEM DE NEGÓCIOS BLOQUEADA — nada foi alterado ainda.`,
+        ``,
+        `Origem (será DELETADO): #${source_id} | ${sourceInfo.title} | valor: ${sourceInfo.value ?? "?"} ${sourceInfo.currency ?? ""} | status: ${sourceInfo.status ?? "?"}`,
+        `Destino (SOBREVIVE):    #${target_id} | ${targetInfo.title} | valor: ${targetInfo.value ?? "?"} ${targetInfo.currency ?? ""} | status: ${targetInfo.status ?? "?"}`,
+        ``,
+        `Todos os dados de #${source_id} (atividades, notas) serão herdados por #${target_id}. #${source_id} será DELETADO. Operação irreversível.`,
+        ``,
+        `Para executar: reenviar com confirmed: true.`,
+        `Para cancelar: não reenviar.`,
+      ];
+      return { content: [{ type: "text", text: lines.join("\n") }] };
     }
     try {
       const result = await pipedriveRequest(`/deals/${source_id}/merge`, {
@@ -2430,14 +2902,32 @@ server.tool(
 
 server.tool(
   "merge_organizations",
-  "Mescla duas organizações do Pipedrive. A organização em `source_id` é DELETADA e suas pessoas/deals/atividades são herdadas pela organização em `target_id`. Use para resolver duplicatas de empresa. Operação IRREVERSÍVEL — confirme com o usuário antes de chamar.",
+  "Mescla duas organizações do Pipedrive. A organização em `source_id` é DELETADA e suas pessoas/deals/atividades são herdadas pela organização em `target_id`. Use para resolver duplicatas de empresa. Operação IRREVERSÍVEL. GATE HARD: exige confirmed=true — sem isso, retorna preview do que será mesclado sem tocar em nada.",
   {
     source_id: z.number().describe("ID da organização que será DELETADA (perdedor da mesclagem)"),
     target_id: z.number().describe("ID da organização que SOBREVIVE e herda os dados (vencedor)"),
+    confirmed: z.boolean().optional().default(false).describe("Obrigatório true para executar. Só passe true após o Eric confirmar explicitamente vendo o preview. Operação irreversível."),
   },
-  async ({ source_id, target_id }) => {
+  async ({ source_id, target_id, confirmed }) => {
     if (source_id === target_id) {
       return { content: [{ type: "text", text: "Erro: source_id e target_id são iguais. Forneça IDs diferentes." }] };
+    }
+    if (!confirmed) {
+      let sourceInfo = { name: "—" }, targetInfo = { name: "—" };
+      try { sourceInfo = (await pipedriveRequest(`/organizations/${source_id}`)).data || sourceInfo; } catch { /* segue com placeholder */ }
+      try { targetInfo = (await pipedriveRequest(`/organizations/${target_id}`)).data || targetInfo; } catch { /* segue com placeholder */ }
+      const lines = [
+        `MESCLAGEM DE ORGANIZAÇÕES BLOQUEADA — nada foi alterado ainda.`,
+        ``,
+        `Origem (será DELETADA): #${source_id} | ${sourceInfo.name} | negócios abertos: ${sourceInfo.open_deals_count ?? "?"} | pessoas: ${sourceInfo.people_count ?? "?"}`,
+        `Destino (SOBREVIVE):    #${target_id} | ${targetInfo.name} | negócios abertos: ${targetInfo.open_deals_count ?? "?"} | pessoas: ${targetInfo.people_count ?? "?"}`,
+        ``,
+        `Todos os dados de #${source_id} (pessoas, deals, atividades) serão herdados por #${target_id}. #${source_id} será DELETADA. Operação irreversível.`,
+        ``,
+        `Para executar: reenviar com confirmed: true.`,
+        `Para cancelar: não reenviar.`,
+      ];
+      return { content: [{ type: "text", text: lines.join("\n") }] };
     }
     try {
       const result = await pipedriveRequest(`/organizations/${source_id}/merge`, {
@@ -2479,6 +2969,29 @@ server.tool(
     params: z.record(z.any()).describe("Payload da operacao. Estrutura identica aos parametros da tool original correspondente."),
   },
   async ({ action, params }) => {
+    // ── Backstop temporal no PROXY: fecha o furo em que pipedrive_write chamava
+    //    pipedriveRequest direto, escapando do gate que as tools singulares têm.
+    //    Cada action mapeia pra categoria da sua tool-espelho. update_deal_fields
+    //    NÃO entra aqui: já herda o backstop dentro de applyDealFieldsUpdate (senão
+    //    contaria em dobro). create_note é aditivo/baixo dano, mas conta como deal_write
+    //    pra não deixar nenhum caminho de escrita do proxy sem trava. ──
+    const BACKSTOP_BY_ACTION = {
+      create_activity: "activity_write",
+      create_deal: "deal_write",
+      create_person: "person_write",
+      create_organization: "deal_write",
+      add_product_to_deal: "deal_write",
+      create_note: "deal_write",
+    };
+    const backstopCategory = BACKSTOP_BY_ACTION[action];
+    if (backstopCategory) {
+      try {
+        checkSingularBackstop(backstopCategory, "bulk_update_deals");
+      } catch (e) {
+        if (e.blocked) return { content: [{ type: "text", text: e.message }] };
+        throw e;
+      }
+    }
     try {
       switch (action) {
         case "create_activity": {

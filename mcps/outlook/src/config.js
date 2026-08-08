@@ -17,10 +17,16 @@ export const TENANT_ID = process.env.OUTLOOK_TENANT_ID ?? "ac4a752a-850f-4705-95
 export const AUTHORITY = `https://login.microsoftonline.com/${TENANT_ID}`;
 export const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
 
+// Mail.ReadWrite e Contacts.ReadWrite são EXIGIDOS pela doc do Graph para
+// marcar_email (PATCH /me/messages), mover_email (POST .../move) e criar_contato —
+// com Mail.Read essas tools só funcionavam porque o token vivo foi emitido sob
+// lista maior (superset-match do MSAL); numa reautenticação limpa dariam 403.
+// Sem Files.ReadWrite: este lado não tem tool de OneDrive.
 export const SCOPES = [
   "Mail.Send",
-  "Mail.Read",
+  "Mail.ReadWrite",
   "Calendars.ReadWrite",
+  "Contacts.ReadWrite",
   "People.Read",
   "offline_access",
   "User.Read",
