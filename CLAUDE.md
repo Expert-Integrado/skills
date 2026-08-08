@@ -72,6 +72,15 @@ pipedrive_write({
 
 Actions suportadas: `create_activity`, `create_deal`, `create_person`, `create_organization`, `add_product_to_deal`, `update_deal_fields`, `create_note`.
 
+## 0.1 ACAO EM MASSA (guardrail v5.10+, bypass fechados na v5.12.0)
+
+O MCP tem trava propria contra escrita em massa — o codigo enforca, isto aqui e so pra usar certo e nao tomar bloqueio no meio de um lote:
+
+- **1 a 5 entidades por chamada:** usar as tools singulares livre.
+- **6+ entidades:** usar a tool `bulk_*` correspondente (`bulk_update_deals`, `bulk_update_deal_fields`, `bulk_update_persons`, `bulk_create_activities`, `bulk_move_stage`). 1a call com `confirmacao_lote:false` devolve preview; 2a call com `confirmacao_lote:true` executa.
+- **Nunca** fazer loop manual de tool singular pra fugir do gate: ha um backstop temporal (6a chamada singular da mesma categoria em 30s bloqueia). Vale tambem via `create_deal_full` e `pipedrive_write` — os dois caminhos que ate v5.11 escapavam foram fechados; o contador e compartilhado por categoria, nao adianta trocar de porta.
+- **`merge_persons`/`merge_deals`/`merge_organizations`:** sempre `confirmed:true`, um por vez (sem `confirmed` devolve preview e nao mescla).
+
 ## 1. CHECKLIST OBRIGATORIO — Criar Pessoa + Negocio
 
 ### Passo 1: Verificar duplicata
